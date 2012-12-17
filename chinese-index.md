@@ -49,19 +49,18 @@ Backbone.js是一个构建client端代码的轻量级JavaScript框架。它可�
 
 所以，你何处需要MV*框架而何处不需要?
 
-If you’re writing an application that will likely only be communicating with an API or back-end data service, where much of the heavy lifting for viewing or manipulating that data will be occurring in the browser, you may find a JavaScript MV* framework useful.
-Good examples of applications that fall into this category are GMail and Google Docs.
+如果你要开发一个只需要跟API或者后台数据服务通讯的应用，应用随着数据在浏览器中的变化会有偏重量级的展现和控制，你将会发现MV*框架非常有用。这类比较好的例子就是GMail和Google Docs。
 
-These applications typically download a single payload containing all the scripts, stylesheets and markup users need for common tasks and then perform a lot of additional behavior in the background. It’s trivial to switch between reading an email or document to writing one and you don’t need to ask the application to render the whole page again at all.
+这种应用通常下载一个包含所有脚本、样式、用户常用任务标记的载体，然后在后台完成添加一系列的行为。你可以在阅读email或者要写的一个文档之间来回切换而根本不需要这个应用去重新渲染整个页面。
 
-If, however, you’re building an application that still relies on the server for most of the heavy-lifting of Views/pages and you’re just using a little JavaScript or jQuery to make things a little more interactive, an MV framework may be overkill. There certainly are complex Web applications where the partial rendering of views can* be coupled with a single-page application effectively, but for everything else, you may find yourself better sticking to a simpler setup.
+但是，如果你要构建一个大部分繁琐的视图/页面依然依赖服务器端的应用，只需要一点Javascript或用jQuery实现一点交互，MV框架就可能有点过重了。当然有复杂的Web应用，对视图的局部刷新可以有效的结合单页应用的方式，但不管怎样，坚持简单的原则总会让你驾驭自如。
 
-Maturity in software (framework) development isn't simply about how long a framework has been around. It's about how solid the framework is and more importantly how well it's evolved to fill its role. Has it become more effective at solving common problems? Does it continue to improve as developers build larger and more complex applications with it?
+一个软件(框架)发展的成熟度不是简单的因其存在了多长时间。而是这个框架的可靠程度和它扮演的角色的重要程度。它在解决通用问题上是否有效？随着开发人员使用它构建更大、更复杂的应用框架是否持续改进？
 
 
-### Why should you consider using Backbone.js?
+###为什么你应该考虑使用Backbone.js?
 
-Does the following describe you?:
+下面这段话是否可以描述你的经历?:
 
 "I want something flexible which offers a minimalist solution to separating concerns in my application. It should support a persistence layer and RESTful sync, models, views (with controllers), event-driven communication, templating and routing. It should be imperative, allowing one to update the View when a model changes. I’d like some decisions about the architecture left up to me. Ideally, many large companies have used the solution to build non-trivial applications.
 

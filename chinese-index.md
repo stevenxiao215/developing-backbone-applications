@@ -62,35 +62,35 @@ Backbone.js是一个构建client端代码的轻量级JavaScript框架。它可�
 
 下面这段话是否可以描述你的经历?:
 
-"I want something flexible which offers a minimalist solution to separating concerns in my application. It should support a persistence layer and RESTful sync, models, views (with controllers), event-driven communication, templating and routing. It should be imperative, allowing one to update the View when a model changes. I’d like some decisions about the architecture left up to me. Ideally, many large companies have used the solution to build non-trivial applications.
+"我想要一种灵活，能抽象分离应用中所关注的各个部分的东西。它提供了一个持久层，REST风格的同步，模型，视图(包含控制器)，基于事件驱动的通讯，模板和路由。必须支持当一个模型变化时允许更新视图。在架构上要留有自由发挥的余地。更理想点，有许多大公司都使用这个方案去构建非凡的应用。
 
-As I may be building something complex, I’d like there to be an active extension community around the framework that have already tried addressing larger problems (Marionette, Chaplin, Aura, Thorax). Ideally, there are also scaffolding tools (grunt-bbb, brunch) available for the solution."
+我可能会构建复杂的东西，我希望这个框架有活跃的扩展社区，而且框架的扩展在大量的问题(Marionette, Chaplin, Aura, Thorax)中经过尝试。理想点，还要有解决方案相关的脚本工具(grunt-bbb, brunch)。"
 
-If so, continue reading.
+如果是这样的话，请继续阅读...
 
-Backbone's main benefits, regardless of your target platform or device, include helping:
+Backbone的主要优势，无论你的目标平台和设备是什么，都将会帮助你：
 
-* Organize the structure to your application
-* Simplify server-side persistence
-* Decouple the DOM from your page's data
-* Model data, views and routers in a succinct manner
-* Provide DOM, model and collection synchronization
-
-
-### What should you expect to see in this book?
-
-The goal of this book is to create an authoritative and centralized repository of information that can help those developing real-world apps with Backbone. If you come across a section or topic which you think could be improved or expanded on, please feel free to submit a pull-request. It won't take long and you'll be helping other developers avoid problems you've run into before.
-
-Topics will include MVC theory and how to build applications using Backbone's models, views, collections and routers. I'll also be taking you through advanced topics like modular development with Backbone.js and AMD (via RequireJS), how to build applications using modern software stacks (like Node and Express), how to solve the routing problems with Backbone and jQuery Mobile, tips about scaffolding tools, and a lot more.
+* 组织应用的结构
+* 简化服务器端的持久性
+* 将DOM从页面数据中解构
+* 模型数据，视图和路由都有一种简单的风格
+* 提供DOM,模型和集合的同步
 
 
-# Fundamentals
+### 你可以从这本书中学到什么?
 
-In this section, we're going to explore how frameworks like Backbone.js fit in the world of JavaScript application architecture. Classically, developers creating desktop and server-class applications have had a wealth of design patterns available for them to lean on, but it's only been in the past few years that such patterns have come to client-side development.
+这本书的目的是提供权威和全面的关于Bakbone的信息给开发者帮助他们开发真实的应用。如果你无意中发现你认为可以改进或者补充的地方，请尽情的提交一个pull请求。无需多久，你就可以帮助其它开发人员避免你曾碰到过的问题。
 
-Before exploring any JavaScript frameworks that assist in structuring applications, it can be useful to gain a basic understanding of architectural design patterns.
+这本书的内容会包含MVC原理，如何用Backbone的模型、视图、集合和路由构建应用。我也会带给你一些跟高级的话题比如使用Backbone.js进行模块化开发和AMD(通过RequireJS)，如何使用现代的软件包(比如Node和Express)构建应用，如何使用Backbone和jQuery Mobile解决路由问题，脚本工具的小提示，以及更多其它的东西。
 
-### MVC, MVP & Backbone.js
+
+# 基本原理
+
+在这部分内容中我们将探索下像Backbone.js这类框架如何适应JavaScript应用架构。通常，开发者创建桌面和服务器类应用有丰富的设计模式供他们去选择，但是，在过去的仅仅几年中，这些模式已经应用到了客户端开发中。
+
+在开始探索任何JavaScript框架之前，非常有必要先认知一下设计模式原理。
+
+### MVC，MVP和Backbone.js
 
 Design patterns are proven solutions to common development problems and can suggest structural approaches to help guide developers in adding some organization to their applications.
 

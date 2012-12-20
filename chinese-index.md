@@ -92,32 +92,32 @@ Backbone的主要优势，无论你的目标平台和设备是什么，都将会
 
 ### MVC，MVP和Backbone.js
 
-Design patterns are proven solutions to common development problems and can suggest structural approaches to help guide developers in adding some organization to their applications.
+设计模式可以解决通用开发问题，可以引导开发者给他们的应用增加组织架构。
 
-Patterns are useful because they're a set of practices that build upon the collective experience of skilled developers who have repeatedly solved similar problems. Although developers 10 or 20 years ago may not have been using the same programming languages when implementing patterns in their projects, there are many lessons we can learn from their efforts.
+设计模式之所以这么有用是因为它是众多开发者从反复实践中总结出来的经验。尽管10或20年前开发者们在他们的项目中都使用不同的语言来实现模式，但是从中有许多值得我们学习的地方。
 
-In this section, we're going to review two popular patterns - MVC and MVP. We'll be exploring in greater detail how Backbone.js implements these patterns shortly to better appreciate where it fits in.
+在这部分章节中，我们将会回顾2种比较流行的模式——MVC和MVP。我们将会探索如何使用Backbone.js快速实现这2种模式的更多细节。
 
 
 ## MVC
 
-MVC (Model-View-Controller) is an architectural design pattern that encourages improved application organization through a separation of concerns. It enforces the isolation of business data (Models) from user interfaces (Views), with a third component (Controllers) traditionally present to manage logic, user-input and the coordination of models and views. The pattern was originally designed by [Trygve Reenskaug](http://en.wikipedia.org/wiki/Trygve_Reenskaug) while working on Smalltalk-80 (1979), where it was initially called Model-View-Controller-Editor. MVC was described in depth in [“Design Patterns: Elements of Reusable Object-Oriented Software”](http://www.amazon.co.uk/Design-patterns-elements-reusable-object-oriented/dp/0201633612) (The "GoF" or “Gang of Four” book) in 1994, which played a role in popularizing its use.
+MVC(Model-View-Controller)是一种提倡通过分层来改进应用的设计模式。它强制通过第三个组件(Controller)来分离业务数据(Model)，用户界面(View)，控制器通常管理逻辑，用户输入，协调模型与视图间的通讯。这种模式最早是[Trygve Reenskaug](http://en.wikipedia.org/wiki/Trygve_Reenskaug)在Smalltaok-80(1979)中设计的，当初被称之为Model-View-Controller-Editor。1994,[“设计模式: 面向对象软件中可重用性元素”](http://www.amazon.co.uk/Design-patterns-elements-reusable-object-oriented/dp/0201633612) (“GOF”或者“四人帮”一书)中详细定义了MVC，这本书普及了它的应用。
 
 
 ### Smalltalk-80 MVC
 
-It's important to understand what the original MVC pattern was aiming to solve as it has changed quite heavily since the days of its origin. Back in the 70's, graphical user-interfaces were few and far between. An approach known as [Separated Presentation](http://martinfowler.com/eaaDev/uiArchs.html) began to be used as a means to make a clear division between domain objects which modeled concepts in the real world (e.g a photo, a person) and the presentation objects which were rendered to the user's screen.
+随着时间的推移MVC模式变得更加笨重，非常有必要去了解下它早的设计初衷。在70年代，图形用户界面并不多见。有一种方法叫[Separated Presentation(表现分离)](http://martinfowler.com/eaaDev/uiArchs.html)，可以清晰的分离模仿现实世界概念(比如一张图片、一个人)的域对象和被渲染到用户屏幕的描述对象。
 
-The Smalltalk-80 implementation of MVC took this concept further and had an objective of separating out the application logic from the user interface. The idea was that decoupling these parts of the application would also allow the reuse of models for other interfaces in the application. There are some interesting points worth noting about Smalltalk-80's MVC architecture:
+Smalltalk-80实现的MVC把这个概念贯彻的更深入，而且有目的性的把应用逻辑从用户界面中分离出来。它的观点是解耦应用这些部分也可以把模型重用到应用中其它的用户界面。这里有些非常有趣的关于Smalltalk-80's MVC架构的事情：
 
-* A Domain element was known as a Model and were ignorant of the user-interface (Views and Controllers)
-* Presentation was taken care of by the View and the Controller, but there wasn't just a single view and controller. A View-Controller pair was required for each element being displayed on the screen and so there was no true separation between them
-* The Controller's role in this pair was handling user input (such as key-presses and click events), doing something sensible with them.
-* The Observer pattern was relied upon for updating the View whenever the Model changed
+* 一个域元素被当做一个Model，而且用户界面(Views和Controllers)并不知道。
+* 表现是View和控制器所关心的，但并不仅有一个view和controller。每个要展现到屏幕的元素都需要有一个View-Controller的组合，所以它们并没有正真的被分离。
+* 在这个组合中，Controller扮演的是处理用户输入(比如键盘和鼠标点击事件)的角色，做些用户可感知的事情。
+* 它依赖观察者模式在Model变化的时候来更新View。
 
-Developers are sometimes surprised when they learn that the Observer pattern (nowadays commonly implemented as a Publish/Subscribe system) was included as a part of MVC's architecture decades ago. In Smalltalk-80's MVC, the View and Controller both observe the Model: anytime the Model changes, the Views react. A simple example of this is an application backed by stock market data - for the application to show real-time information, any change to the data in its Models should result in the View being refreshed instantly.
+有时，当开发者知道数十年前观察者模式(现在通常在发布/订阅系统中应用)也是MVC架构的一部分的时候，他们非常的惊讶。在Smalltalk-80的MVC中，View和Controller都观察了Model：Model改变的时候，View则做出响应。一个简单的例子就是基于股票市场数据的应用——因为它要展示实时的信息，所以在Models中的数据有任何改变都 要在View中立即刷新显示。
 
-Martin Fowler has done an excellent job of writing about the [origins](http://martinfowler.com/eaaDev/uiArchs.html) of MVC over the years and if you are interested in further historical information about Smalltalk-80's MVC, I recommend reading his work.
+Martin Fowler在过去的些年中在写关于MVC起源[origins](http://martinfowler.com/eaaDev/uiArchs.html) 方面做了很多杰出的工作。如果你有兴趣了解更多关于Smalltalk-80 MVC的信息，推荐你阅读他的相关成果。
 
 
 

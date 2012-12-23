@@ -123,26 +123,26 @@ Martin Fowler在过去的些年中在写关于MVC起源[origins](http://martinfo
 
 ## MVC As We Know It
 
-We've reviewed the 70's, but let us now return to the here and now. The MVC pattern has been applied to a diverse range of programming languages. For example, the popular Ruby on Rails is an implementation of a web application framework based on MVC for the Ruby language. JavaScript now has a number of MVC frameworks, including AngularJS - a framework that extends HTML and JavaScript for dynamic content needs and of course Backbone.js. Given the importance of avoiding "spaghetti" code, a term which describes code that is very difficult to read or maintain due to its lack of structure, let's look at what the MVC pattern enables the Javascript developer to do.
+我们回顾了下70年代，回到现在。MVC模式已经应用到了各种程序语言上。比如，Ruby on Rails就是Ruby语言上实现的一个MVC web框架。JavaScript现在也有很多MVC框架，包括AngularJS—— 一个提供HTML、JavaScript扩展和动态内容渲染支持的框架，当然还有Backbone.js。“嵌套式”代码难于维护，结构混乱，让我们来看看MVC模式可以让Javascript开发人员做些什么。
 
-MVC is composed of three core components:
+MVC由三个核心部分组成:
 
-### Models
+### 模型(Models)
 
-Models manage the data for an application. They are concerned with neither the user-interface nor presentation layers, but instead represent structured data that an application may require. When a model changes (e.g when it is updated), it will typically notify its observers (e.g views, a concept we will cover shortly) that a change has occurred so that they may react accordingly.
+模型管理的应用的数据。它们不仅要关心用户界面层，同时也体现了应用需要的数据结构。当一个Model改变的时候(比如被更新)，它将立即通知它的观察者(比如View，后面会提到这个概念)做出对应的响应。
 
-To understand models better, let us imagine we have a JavaScript todo application. In a todo app, a todo item would merit its own model, as it represents a unique kind of domain-specific data. The Todo model may represent attributes such as a title and completed. A specific todo would be stored in an instance of a model. Here's an example of a simple Todo model implemented with Backbone.js:
+为了更清晰的理解model，假设我们有一个JavaScript做的todo应用。在这个todo app中，而每个待办事项都有一个自己的模型, 因为它代表着一个特定域的唯一数据。Todo的模型可能会有标题，是否完成这2个属性。一个特定的待办事项保存在一个model的实例中。这里有一个基于Backbone.js的Todo model的实现:
 
 ```javascript
   var Todo = Backbone.Model.extend({
-    // Default attributes for the todo
+    //默认属性
     defaults: {
       title: '',
       completed: false
     }
   });
 
-  // todo instantiated with default attributes 
+  //默认属性的todo实例
   var firstTodo = new Todo();
 
   console.log("Todo's default title: " + firstTodo.get('title')); // ""
@@ -151,14 +151,14 @@ To understand models better, let us imagine we have a JavaScript todo applicatio
   firstTodo.set('title', 'Enjoy reading the book');
   console.log('Title changed: ' + firstTodo.get('title'));
 
-  // new todo instantiated with todo specific data
+  //指定数据的todo实例
   var secondTodo = new Todo({ title: 'Try this code in chrome console'});
 
   console.log("Second todo title: " + secondTodo.get('title'));
   console.log("Second todo status: " + secondTodo.get('completed'));
 ```
 
-The built-in capabilities of models vary across frameworks, however it's common for them to support validation of attributes, where attributes represent the properties of the model, such as a model identifier. When using models in real-world applications we generally also need a way of persisting models. Persistence allows us to edit and update models with the knowledge that their most recent states will be saved somewhere, for example in a web browser's localStorage data-store or synchronized with a database.
+不同的框架都会内置model的功能，而且通常都支持属性的验证，就像一个model的鉴定器一样，属性代表了model的内容。在实际应用中使用model的时候通常我们还需要一种方式对model进行持久化保存。持久化保存可以让我们在对model进行编辑和更新的时候保存它的最新状态。比如在浏览器中使用本地存储，或者与数据库同步。
 
 A model may also have multiple views observing it. Imagine our Todo model contained meta-data such as the scheduled date, notes, days on which to repeat (if it's something we do on regular basis). A developer could create a single view that displayed all these attributes, or might create three separate views to display each attribute. The important detail is that the Todo model doesn't care how these views are organized, it simply announces updates to its data as necessary. We'll come back to Views in more detail later.
 

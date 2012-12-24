@@ -121,7 +121,7 @@ Martin Fowler在过去的些年中在写关于MVC起源[origins](http://martinfo
 
 
 
-## MVC As We Know It
+## 我们所知道的MVC
 
 我们回顾了下70年代，回到现在。MVC模式已经应用到了各种程序语言上。比如，Ruby on Rails就是Ruby语言上实现的一个MVC web框架。JavaScript现在也有很多MVC框架，包括AngularJS—— 一个提供HTML、JavaScript扩展和动态内容渲染支持的框架，当然还有Backbone.js。“嵌套式”代码难于维护，结构混乱，让我们来看看MVC模式可以让Javascript开发人员做些什么。
 
@@ -164,11 +164,11 @@ MVC由三个核心部分组成:
 
 对于现代MVC/MV*框架，提供一种模型组合的方法并不常见。在Backbone中，这些组合叫"Collections"(集合)。把模型组合来管理可以让我们编写应用逻辑时基于一个组合来通知，它包含了任何一个model的改变。这样也避免了手动去观察单个的model实例。
 
-Here's how we might group Todo models into a Backbone Collection:
+下面我们看下如何把Todo models分组成Backbone Collection(集合)：
 
 ```javascript
   var Todo = Backbone.Model.extend({
-    // Default attributes for the todo
+    //默认属性
     defaults: {
       title: '',
       completed: false
@@ -178,35 +178,31 @@ Here's how we might group Todo models into a Backbone Collection:
   var Todos = Backbone.Collection.extend({
     model: Todo,
     
-    // For simplicity we'll use localStorage throughout the first part of book.
-    // Save all of the todo items under the `"todos"` namespace.
+    // 为简单起见在本书的第一个部分我们都用localStorage来保存todo项。
     localStorage: new Store('todos-backbone')
     
-    // When working with REST API on back-end here would be
-    // appropriate to use:
+    // 后面会用到的REST API:
     // url: "/todos"
     
   });
 
   var firstTodo = new Todo({title:'Read whole book'});
 
-  // pass array of models on collection instantiation
+  //传入一个model的数组来初始化一个collection
   var todos = new Todos([firstTodo]);
   console.log(todos.length);
 
-  // Collection's convenience method used to create 
-  // new model instance within collection itself.
+  // 通过Collection的方法来创建一个model，创建的model也会包含在collection内部。
   todos.create({title:'Try out code examples'});
   console.log(todos.length);
 
   var thirdTodo = new Todo({title:'Make something cool'});
 
-  // Adds model to collection
+  // 往collection中添加model
   todos.add(thirdTodo);
   console.log(todos.length);
 
-  // Collection keeps models in models 
-  // property which is an array.
+  // Collection把所有models保存在models属性中，它是一个数组。 
   console.log(todos.models);
 ```
 

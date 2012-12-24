@@ -160,9 +160,9 @@ MVC由三个核心部分组成:
 
 不同的框架都会内置model的功能，而且通常都支持属性的验证，就像一个model的鉴定器一样，属性代表了model的内容。在实际应用中使用model的时候通常我们还需要一种方式对model进行持久化保存。持久化保存可以让我们在对model进行编辑和更新的时候保存它的最新状态。比如在浏览器中使用本地存储，或者与数据库同步。
 
-A model may also have multiple views observing it. Imagine our Todo model contained meta-data such as the scheduled date, notes, days on which to repeat (if it's something we do on regular basis). A developer could create a single view that displayed all these attributes, or might create three separate views to display each attribute. The important detail is that the Todo model doesn't care how these views are organized, it simply announces updates to its data as necessary. We'll come back to Views in more detail later.
+一个model有可能会有多个views观察者。假设我们的Todo model包含了一些元数据，比如计划日期，说明，需要重复的日期(如果是我们定期会做的事情)。一个开发人员可以创建一个view来展现所有这些属性，或者也可以创建3个单独的view来显示每个属性。关键是Todo model不需要关系这些view如何组织，它只要在需要的时候通知数据更新就可以了。后面我们会谈到view的更多细节。
 
-It is not uncommon for modern MVC/MV* frameworks to provide a means to group models together. In Backbone, these groups are called "Collections". Managing models in groups allows us to write application logic based on notifications from the group, should any model it contains change. This avoids the need to manually observe individual model instances.
+对于现代MVC/MV*框架，提供一种模型组合的方法并不常见。在Backbone中，这些组合叫"Collections"(集合)。把模型组合来管理可以让我们编写应用逻辑时基于一个组合来通知，它包含了任何一个model的改变。这样也避免了手动去观察单个的model实例。
 
 Here's how we might group Todo models into a Backbone Collection:
 

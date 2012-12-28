@@ -333,14 +333,13 @@ controller是在model和view之间的媒介人，通常完成两件事：model�
 
 现在我们知道controllers负责当model变化时更新view(同样也在用户改变view时更新model)。因为Backbone没有它"自己"明确的controllers，所以可以通过回顾controller来对比它和其它MVC框架的实现差异。我们先来看下[Spine.js](http://spinejs.com/):
 
+在这个例子中，我们会有一个控制器```PhotosController```，在应用中负责管理个人照片。会确保view更新时(例如用户编辑照片的元数据)相应的model也会更行。
 
-In this example, we're going to have a controller called ```PhotosController``` which will be in charge of individual photos in the application. It will ensure that when the view updates (e.g a user edited the photo meta-data) the corresponding model does too.
-
-(Note: We won't be delving heavily into Spine.js beyond this example, but it's worth looking at it to learn more about Javascript frameworks in general.)
+(提示: 在这个列子中我们并不打算深入的研究Spine.js，但是非常值得通过它去学习更多关于Javascript框架的东西。)
 
 
 ```javascript
-// Controllers in Spine are created by inheriting from Spine.Controller
+//在Spine中通过继承Spine.Controller来创建Controllers
 
 var PhotosController = Spine.Controller.sub({
   init: function(){
@@ -361,11 +360,11 @@ var PhotosController = Spine.Controller.sub({
 });
 ```
 
-In Spine, controllers are considered the glue for an application, adding and responding to DOM events, rendering templates and ensuring that views and models are kept in sync (which makes sense in the context of what we know to be a controller).
+在Spine中，controllers被认为是应用的胶水，添加和响应DOM事件，渲染模板，保持views和models的同步(在上下文环境下我们才能判断是一个控制器)。
 
-What we're doing in the above example is setting up listeners in the ```update``` and ```destroy``` events using ```render()``` and ```remove()```. When a photo entry gets updated, we re-render the view to reflect the changes to the meta-data. Similarly, if the photo gets deleted from the gallery, we remove it from the view. In case you were wondering about the ```tmpl()``` function in the code snippet: in the ```render()``` function, we're using this to render a JavaScript template called #photoTemplate which simply returns an HTML string used to replace the controller's current element.
+在上面这个例子中，把```render()```和```remove()```分别绑定给```update```和```destroy```事件。当一个照片实例被更新，根据元数据重新渲染view。同样，如果照片从库中被删除，就从view中移除。如果你想知道上面代码段中的```tmpl()```函数：在```render()```函数中，我们用它渲染一段JavaScript模板#photoTemplate，返回一段HTML字符串用于替换控制器的当前元素。
 
-What this provides us with is a very lightweight, simple way to manage changes between the model and the view.
+它给我们提供了一种轻量，简单的方式来管理model和view之间的变化。
 
 
 **Backbone.js**

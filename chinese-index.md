@@ -219,13 +219,13 @@ MVC由三个核心部分组成:
 
 我们通过一个简单的例子来进一步探索下view。下面我们用一个function来创建一个单独的Todo view，接受一个model和一个controller的实例。
 
-We define a ```render()``` utility within our view which is responsible for rendering the contents of the ```photoModel``` using a JavaScript templating engine ([Underscore](http://underscorejs.org "Underscore.js") templating) and updating the contents of our view, referenced by ```photoEl```.
+在view里定义了一个通用的方法```render()```，用JavaScript模板引擎 ([Underscore](http://underscorejs.org "Underscore.js")渲染和更新```photoModel```的内容，内容被写入```photoEl```。
 
-The ```photoModel``` then adds our ```render()``` callback as one of its subscribers, so that through the Observer pattern it can trigger the view to update when the model changes.
+```photoModel```把```render()```添加为它的一个订阅者(subscribers)回调。这样，通过观察者(Observer)模式就可以在model改变的时候触发view的更新。
 
-You may wonder where user interaction comes into play here. When users click on any elements within the view, it's not the view's responsibility to know what to do next. A Controller makes this decision. In our sample implementation, this is achieved by adding an event listener to ```photoEl``` which will delegate handling the click behavior back to the controller, passing the model information along with it in case it's needed.
+你可能想知道对用户交互行为这里是如何处理的。当用户点击view中的任何一个元素时，该做什么并不是由view决定的。应该是Controller来做决定。在这个简单的示例中，通过给```photoEl```添加事件监听，然后把click事件委派给controller，同时把需要的model传过去。
 
-The benefit of this architecture is that each component plays its own separate role in making the application function as needed.
+这种架构的好处就是各个组件复杂各自的角色，来实现应用的功能。
 
 
 
@@ -268,15 +268,15 @@ var buildPhotoView = function( photoModel, photoController ){
 ```
 
 
-**Templating**
+**模板**
 
-In the context of JavaScript frameworks that support MVC/MV*, it is worth looking more closely at JavaScript templating and its relationship to Views.
+在支持MVC/MV*的JavaScript框架中，非常值得近距离的去审视下JavaScript模板和View之间的关系。
 
-It has long been considered bad practice (and computationally expensive) to manually create large blocks of HTML markup in-memory through string concatenation. Developers using this technique often find themselves iterating through their data, wrapping it in nested divs and using outdated techniques such as ```document.write``` to inject the 'template' into the DOM. This approach often means keeping scripted markup inline with standard markup, which can quickly become difficult to read and maintain, especially when building large applications.
+长期实践证明通过手工拼接字符串来创建大块的HTML片段是非常低效的。使用这种方式的开发者们经常会发现，他们遍历自己的数据，包裹在嵌套的div里面，然后使用过时的技术，比如```document.write```把所谓的'template'插入到DOM中。这种方式意味着必须使用标准的标签，脚本代码要放在页面内，而且很快就会变得难以阅读和维护，特别是对于构建大的应用来说。
 
-JavaScript templating libraries (such as Handlebars.js or Mustache) are often used to define templates for views as HTML markup containing template variables. These template blocks can be either stored externally or within script tags with a custom type (e.g 'text/template'). Variables are delimited using a variable syntax (e.g {{name}}). Javascript template libraries typically accept data in JSON, and the grunt work of populating templates with data is taken care of by the framework itself. This has a several benefits, particularly when opting to store templates externally as this can let applications load templates dynamically on an as-needed basis.
+JavaScript模板库(比如Handlebars.js or Mustache)通常用于view中定义模板，在HMTL标签中包含了一些模板变量。这些模板块可以保存在外部也可以保存在自定义类型(比如'text/template')的script标签里。变量通过变量语法(比如{{name}})来定义。Javascript 模板库通常接受JSON的数据，并且往模板中填充数据这种繁重的工作也由框架自身来完成。使用模板库有非常多的好处，特别是当模板存在在外部时，应用可以根据需要动态的加载模板。
 
-Let's compare two examples of HTML templates. One is implemented using the popular Handlebars.js library, and the other uses Underscore's 'microtemplates'.
+让我们来比较下2个HTML模板的列子。一个使用流行的Handlebars.js库实现，另一个使用Underscore的'microtemplates'。
 
 **Handlebars.js:**
 
@@ -302,36 +302,37 @@ Let's compare two examples of HTML templates. One is implemented using the popul
 </li>
 ```
 
-You may also use double curly brackets (i.e ```{{}}```) (or any other tag you feel comfortable with) in Microtemplates. In the case of curly brackets, this can be done by setting the Underscore ```templateSettings``` attribute as follows:
+在Microtemplates中，你也可以使用双大括号(比如```{{}}```) (或者其它你认为爽的字符)。使用大括号的话，可以向下面这样设置Underscore的```templateSettings``` 属性:
 
 ```javascript
 _.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
 ```
 
-**A note on navigation and state**
+**关于导航和状态的注意事项**
 
-It is also worth noting that in classical web development, navigating between independent views required the use of a page refresh. In single-page JavaScript applications, however, once data is fetched from a server via Ajax, it can be dynamically rendered in a new view within the same page. Since this doesn't automatically update the URL, the role of navigation thus falls to a "router", which assists in managing application state (e.g allowing users to bookmark a particular view they have navigated to). As routers are however neither a part of MVC nor present in every MVC-like framework, I will not be going into them in greater detail in this section.
-
-
-###Controllers
-
-Controllers are an intermediary between models and views which are classically responsible for two tasks: they both update the view when the model changes and update the model when the user manipulates the view.
-
-In our photo gallery application, a controller would be responsible for handling changes the user made to the edit view for a particular photo, updating a specific photo model when a user has finished editing.
-
-It's with controllers that most JavaScript MVC frameworks depart from this interpretation of the MVC pattern. The reasons for this vary, but in my opinion, Javascript framework authors likely initially looked at server-side interpretations of MVC (such as Ruby on Rails), realized that that approach didn't translate 1:1 on the client-side, and so re-interpreted the C in MVC to solve their state management problem. This was a clever approach, but it can make it hard for developers coming to MVC for the first time to understand both the classical MVC pattern and the "proper" role of controllers in other non-Javascript frameworks.
-
-So does Backbone.js have Controllers? Not really. Backbone's Views typically contain "controller" logic, and Routers (discussed below) are used to help manage application state, but neither are true Controllers according to classical MVC.
-
-In this respect, contrary to what might be mentioned in the official documentation or in blog posts, Backbone is neither a truly MVC/MVP nor MVVM framework. It's in fact better to see it a member of the MV* family which approaches architecture in its own way. There is of course nothing wrong with this, but it is important to distinguish between classical MVC and MV* should you be relying on discussions of MVC to help with your Backbone projects.
+值得关注的是，在传统web开发中，在独立的view之间导航需要刷新页面。而在单页应用中，通过ajax从服务器端获取数据，可以在同一个页面里动态的渲染一个新的view，因为不会自动更新URL，导航的角色就落到了"router"(路由)的身上，路由独立的管理应用状态(比如允许用户收藏一个他们浏览过的view)。然而，路由并不是MVC或者类MVC框架的一部分，所以在这部分我并不打算介绍更多的细节。
 
 
-### Controllers in Spine.js vs Backbone.js
+###控制器(Controllers)
+
+controller是在model和view之间的媒介人，通常完成两件事：model改变时更新view和用户修改view时更新model。
+
+在我们这个图片库应用中，控制器要处理在图片编辑视图里用户触发的改变，当用户完成编辑之后要更新photo model。
+
+大部分JavaScript MVC框架都把controller从MVC模式中分离出来单独说明。在我看来，这种变化的原因，可能Javascript框架作者最初参照了服务端MVC的观念(比如Ruby on Rails)。认识到这种方式跟服务器端的并不完全一样，而且MVC中的C在服务器端也不是用于解决管理状态问题。这是一个非常聪明的途径，但对于初学者来说更难以理解传统MVC模式和无Javascript框架中controller的特定意义。
+
+那Backbone.js有Controller吗?并不真正有。Backbone的Views通常包含了"controller"的逻辑，而且Routers(后面会讨论)也用于帮助管理应用状态，但这两者都不是传统MVC模式中真正意义上的控制器。
+
+在这方面，与官方文档或者网络博客中描述的相反，Backbone并不是正真的MVC/MVP或者MVVM框架。事实上，它更适合归类到MV*家族中，有自己的实现架构。当然这并没有什么不对，只是帮助你区分和理解传统MVC与你在Backbone项目中的MV*。
+
+
+### Spine.js与Backbone.js中的Controllers对比
 
 
 **Spine.js**
 
-We now know that controllers are traditionally responsible for updating the view when the model changes (and similarly the model when the user updates the view). Since Backbone doesn't have its **own** explicit controllers, it's useful to review the controller from another MVC framework to appreciate the difference in implementations. Let's take a look at [Spine.js](http://spinejs.com/):
+现在我们知道controllers负责当model变化时更新view(同样也在用户改变view时更新model)。因为Backbone没有它"自己"明确的controllers，所以可以通过回顾controller来对比它和其它MVC框架的实现差异。我们先来看下[Spine.js](http://spinejs.com/):
+
 
 In this example, we're going to have a controller called ```PhotosController``` which will be in charge of individual photos in the application. It will ensure that when the view updates (e.g a user edited the photo meta-data) the corresponding model does too.
 

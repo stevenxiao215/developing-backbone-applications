@@ -369,11 +369,11 @@ var PhotosController = Spine.Controller.sub({
 
 **Backbone.js**
 
-Later on in this section we're going to revisit the differences between Backbone and traditional MVC, but for now let's focus on controllers.
+在这节的后面我们还会回顾一下Backbone与传统MVC之间的区别，但是现在先让我们来关注下controllers。
 
-In Backbone, controller logic is shared between Backbone.View and Backbone.Router. Earlier releases of Backbone contained something called Backbone.Controller, but it was renamed to Router to clarify its role.
+在Backbone中，controller的逻辑在Backbone.View和Backbone.Router之间共同存在。在Backbone的早期版本中有Backbone.Controlle这个东西，但是后来被重新定义成Router，更清晰的体现了它的角色。
 
-A Router's main purpose is to translate URL requests into application states. When a user browses to the URL www.example.com/photos/42, a Router could be used to show the photo with that ID, and to define what application behavior should be run in response to that request. Routers *can* contain traditional controller responsibilities, such as binding the events between models and views, or rendering parts of the page. However, Backbone contributor Tim Branyen has pointed out that it's possible to get away without needing Backbone.Router at all for this, so a way to think about it using the Router paradigm is probably:
+Router的主要目的就是把URL映射到应用对应的状态。当一个用户浏览到www.example.com/photos/42时，Router就会用于根据这个ID展现图片，并且定义对这个请求应该返回哪些行为控制。Routers*可以*包含传统的控制行为，比如绑定models和views之间的行为，或者渲染view中的某一部分。但是，Backbone的贡献者Tim Branyen指出，不用Backbone.Router也可以做这些事情。这样看来，一个使用Router的范例可能会是这样：
 
 ```javascript
 var PhotoRouter = Backbone.Router.extend({
@@ -388,45 +388,44 @@ var PhotoRouter = Backbone.Router.extend({
 }):
 ```
 
-##What does MVC give us?
+##MVC给我们带来了什么?
 
-To summarize, the separation of concerns in MVC facilitates modularization of an application's functionality and enables:
-
-* Easier overall maintenance. When updates need to be made to the application it is clear whether the changes are data-centric, meaning changes to models and possibly controllers, or merely visual, meaning changes to views.
-* Decoupling models and views means that it's straight-forward to write unit tests for business logic
-* Duplication of low-level model and controller code is eliminated across the application
-* Depending on the size of the application and separation of roles, this modularity allows developers responsible for core logic and developers working on the user-interfaces to work simultaneously
-
-
-###Delving deeper
-
-Right now, you likely have a basic understanding of what the MVC pattern provides, but for the curious, we'll explore it a little further.
-
-The GoF (Gang of Four) do not refer to MVC as a design pattern, but rather consider it a "set of classes to build a user interface". In their view, it's actually a variation of three other classical design patterns: the Observer (Pub/Sub), Strategy and Composite patterns. Depending on how MVC has been implemented in a framework, it may also use the Factory and Decorator patterns. I've covered some of these patterns in my other free book, JavaScript Design Patterns For Beginners if you would like to read into them further.
-
-As we've discussed, models represent application data, while views handle what the user is presented on screen. As such, MVC relies on Pub/Sub for some of its core communication (something that surprisingly isn't covered in many articles about the MVC pattern). When a model is changed it "publishes" to the rest of the application that it has been updated. The "subscriber"--generally a Controller--then updates the view accordingly. The observer-viewer nature of this relationship is what facilitates multiple views being attached to the same model.
-
-For developers interested in knowing more about the decoupled nature of MVC (once again, depending on the implementation), one of the goals of the pattern is to help define one-to-many relationships between a topic and its observers. When a topic changes, its observers are updated. Views and controllers have a slightly different relationship. Controllers facilitate views to respond to different user input and are an example of the Strategy pattern.
+总结来说，MVC中的分离促进了应用功能实现的模块化，而且可以：
+* 更易于维护。当应用需要升级时可以非常清是否是数据相关的，如果是数据相关的可能要修改models或者controllers，如果是视觉相关的可能就要修改views。
+* 解耦models和views， 意味着为业务逻辑编写单元测试页更简明。
+* 避免在应用中复制model和controller代码这种低级行为。
+* 如果应用规模较大分角色来开发的话，这种模块化可以让负责核心逻辑和界面的开发人员同时工作。
 
 
-###Summary
+###深入探索
 
-Having reviewed the classical MVC pattern, you should now understand how it allows developers to cleanly separate concerns in an application. You should also now appreciate how JavaScript MVC frameworks may differ in their interpretation of MVC, and how they share some of the fundamental concepts of the original pattern.
+现在，相信你对MVC模式已经有基本的了解了。为了满足大家的求知欲，这里我们将探索的更深入一点。
 
-When reviewing a new JavaScript MVC/MV* framework, remember - it can be useful to step back and consider how it's opted to approach Models, Views, Controllers or other alternatives, as this can better help you grok how the framework expects to be used.
+GoF (Gang of Four，四人组，　《Design Patterns: Elements of Reusable Object-Oriented Software》/《设计模式》一书的作者：Erich Gamma、Richard Helm、Ralph Johnson、John Vlissides)并没有把MVC提及为一种设计模式，而是把它当做"一组用于构建用户界面的类集合"。在他们看来，它其实是其它三个经典的设计模式的演变：观察者模式(Observer)(Pub/Sub), 策略模式(Strategy)和组合模式(Composite)。根据MVC在框架中的实现不同可能还会用到工厂模式(Factory)和装饰器(Decorator)模式。我在另一本免费的书"JavaScript Design Patterns For Beginners"中讲述了这些模式，如果你有兴趣可以阅读更多信息。
+
+正如我们所讨论的，models表示应用的数据，而views处理屏幕上展现给用户的内容。为此，MVC在核心通讯上基于推送/订阅模型(惊讶的是在很多关于MVC的文章中并没有提及到)。当一个model变化时它对应用其它模块发出更新通知("publishes")，订阅者(subscriber)——通常是一个Controller，然后更新对应的view。观察者——这种自然的观察关系促进了多个view关联到同一个model。
+
+对于感兴趣的开发人员想更多的了解解耦性的MVC(根据不同的实现)，这种模式的目标之一就是在一个主题和它的观察者之间建立一对多的关系。当这个主题改变的时候，它的观察者也会得到更新。Views和controllers的关系稍微有点不同。Controllers帮助views对不同用户的输入做不同的响应，是一个非常好的策略模式列子。
+
+
+###总结
+
+已经回顾了经典的MVC模式，你现在应该明白了它是如何让开发者将一个应用清晰的分离开来。你应该也能区分出JavaScript MVC框架可能在实现上与原有模式的相似与不同。
+
+当评定一个新的JavaScript MVC/MV*框架时，请记住——可以退一步想，看看它是如何实现Models, Views, Controllers或者其它备选方案，这样或许更能帮助你理解这个框架。
 
 
 ##MVP
 
-Model-view-presenter (MVP) is a derivative of the MVC design pattern which focuses on improving presentation logic. It originated at a company named [Taligent](http://en.wikipedia.org/wiki/Taligent) in the early 1990s while they were working on a model for a C++ CommonPoint environment. Whilst both MVC and MVP target the separation of concerns across multiple components, there are some fundamental differences between them.
+模型-视图-提供者(Model-view-presenter)(MVP)是一种MVC涉及模式的衍生品，更关注于表现逻辑。它是由一个叫[Taligent](http://en.wikipedia.org/wiki/Taligent)的公司早在1990年代，当他们在使用一个C++ CommonPoint环境下模型时发起的。虽然MVC和MVP的目的都是将多重组件分离，但是它们有些基本原理上的不同。
 
-For the purposes of this summary we will focus on the version of MVP most suitable for web-based architectures.
+在这个概要里我们将关注更适合基于web架构的MVP版本。
 
-###Models, Views & Presenters
+###Models, Views & Presenters(提供者)
 
-The P in MVP stands for presenter. It's a component which contains the user-interface business logic for the view. Unlike MVC, invocations from the view are delegated to the presenter, which are decoupled from the view and instead talk to it through an interface. This allows for all kinds of useful things such as being able to mock views in unit tests.
+MVP中的P代表presenter(提供者)。它是包含为view提供用户界面逻辑的组件。不同于MVC，对view的调用被委派给了presenter，它是从view上分离出来的，代替view与用户界面通讯。这使得在单元测试中可以做很多有用的事情，比如伪造views。
 
-The most common implementation of MVP is one which uses a Passive View (a view which is for all intents and purposes "dumb"), containing little to no logic. MVP models are almost identical to MVC models and handle application data. The presenter acts as a mediator which talks to both the view and model, however both of these are isolated from each other. They effectively bind models to views, a responsibility held by Controllers in MVC. Presenters are at the heart of the MVP pattern and as you can guess, incorporate the presentation logic behind views.
+大部分通常的MVP实现都是使用被动视图(Passive View，一种对所有活动组件和用途"沉默"的view)，几乎没有逻辑。MVP的models基本上跟MVC的models一样处理应用数据。presenter也更MVC中的Controllers一样也负责与view和model通讯。正如你所猜测的，Presenters是MVP模式的核心， 包含了在views只上的表现逻辑。
 
 
 Solicited by a view, presenters perform any work to do with user requests and pass data back to them. In this respect, they retrieve data, manipulate it and determine how the data should be displayed in the view. In some implementations, the presenter also interacts with a service layer to persist data (models). Models may trigger events but it's the presenter's role to subscribe to them so that it can update the view. In this passive architecture, we have no concept of direct data binding. Views expose setters which presenters can use to set data.

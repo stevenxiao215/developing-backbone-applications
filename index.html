@@ -61,14 +61,14 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#models-views-presenters提供者">Models, Views &amp; Presenters(提供者)</a></li>
 </ul></li>
 <li><a href="#mvp还是mvc">MVP还是MVC?</a></li>
-<li><a href="#mvc-mvp-and-backbone.js">MVC, MVP and Backbone.js</a></li>
-<li><a href="#fast-facts">Fast facts</a><ul>
+<li><a href="#mvc-mvp和backbone.js">MVC, MVP和Backbone.js</a></li>
+<li><a href="#背景资料">背景资料</a><ul>
 <li><a href="#backbone.js">Backbone.js</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#the-internals"><a name="theinternals">The Internals</a></a><ul>
+<li><a href="#核心内幕"><a name="theinternals">核心内幕</a></a><ul>
 <li><a href="#models"><a name="thebasics-models" id="thebasics-models">Models</a></a><ul>
-<li><a href="#initialization">Initialization</a></li>
+<li><a href="#初始化">初始化</a></li>
 <li><a href="#getters-setters">Getters &amp; Setters</a></li>
 <li><a href="#model.set">Model.set()</a></li>
 </ul></li>
@@ -600,37 +600,36 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <h2 id="mvp还是mvc"><a href="#TOC">MVP还是MVC?</a></h2>
 <p>MVP通常用于需要尽可能多复用逻辑的企业级应用中。有复杂views和大量用户交互的应用可能会发现MVC不是非常适合解决类问题，因为过多的依赖于多个控制器。而在MVP中，所有这些复杂的逻辑可以封装在presenter中，更容易维护。</p>
 <p>因为MVP的views是通过接口来定义的，而且这个接口从技术上将是系统和view之间的唯一连接点(presenter除外)，这种模式同样允许开发者编写表现逻辑而无需等待设计师提供页面布局实现。</p>
-<p>根据实现，MVP比MVC也更容易实现自动化单元测试。The reason often cited for this is that the presenter can be used as a complete mock of the user-interface and so it can be unit tested independent of other components. In my experience this really depends on the languages you are implementing MVP in (there’s quite a difference between opting for MVP for a JavaScript project over one for say, ASP.NET).</p>
-<p>At the end of the day, the underlying concerns you may have with MVC will likely hold true for MVP given that the differences between them are mainly semantic. As long as you are cleanly separating concerns into models, views and controllers (or presenters) you should be achieving most of the same benefits regardless of the pattern you opt for.</p>
-<h2 id="mvc-mvp-and-backbone.js"><a href="#TOC">MVC, MVP and Backbone.js</a></h2>
-<p>There are very few, if any architectural JavaScript frameworks that claim to implement the MVC or MVP patterns in their classical form as many JavaScript developers don’t view MVC and MVP as being mutually exclusive (we are actually more likely to see MVP strictly implemented when looking at web frameworks such as ASP.NET or GWT). This is because it’s possible to have additional presenter/view logic in your application and yet still consider it a flavor of MVC.</p>
-<p>Backbone contributor <a href="http://ireneros.com/">Irene Ros</a> subscribes to this way of thinking as when she separates Backbone views out into their own distinct components, she needs something to actually assemble them for her. This could either be a controller route (such as a <code>Backbone.Router</code>, covered later in the book) or a callback in response to data being fetched.</p>
-<p>That said, some developers do however feel that Backbone.js better fits the description of MVP than it does MVC . Their view is that:</p>
+<p>根据实现，MVP比MVC也更容易实现自动化单元测试。原因就是presenter可以作为完整的用户接口模拟，因而可以依赖其它组件进行单元测试。根据我的经验还还要依赖于MVP在何种语言上实现(选择MVP用于JavaScript项目跟ASP.NET比起来有非常大的不同)。</p>
+<p>过一天之后，你对MVC的理解可能跟MVP差不多，因为他们的区别主要在于语义上。只要你清晰的把应用核心分解成models, views和controllers(或者presenters)，你就可以享受大部分的益处，而不用在意你选择哪种模式。</p>
+<h2 id="mvc-mvp和backbone.js"><a href="#TOC">MVC, MVP和Backbone.js</a></h2>
+<p>有极少数情况，如果有JavaScript框架宣称他们用传统的架构来实现MVC或者MVP，很多JavaScript开发者也不认为它们与MVC和MVP是互相排斥的(实际上我们看到在web开发框架中比如ASP.NET或者GWT，MVP被严格的实现)。这可能是因为它必须在应用中增加presenter/view的逻辑，而且仍然认为是一种MVC风格。</p>
+<p>Backbone的贡献者<a href="http://ireneros.com/">Irene Ros</a> 赞同这种方式，当她考虑把Backbone的views分割 成她们自己独特的组件，她需要一些东西来组装它们。这可以是一个控制器路由(比如<code>Backbone.Router</code>，后面会讲到)或者在数据请求回来之后的一个回调。</p>
+<p>那些觉得与MVC相比Backbone.js更符合MVP定义的开发者认为：</p>
 <ul>
-<li>The presenter in MVP better describes the <code>Backbone.View</code> (the layer between View templates and the data bound to it) than a controller does</li>
-<li>The model fits <code>Backbone.Model</code> (it isn’t that different from the classical MVC <q>Model</q>)</li>
-<li>The views best represent templates (e.g Handlebars/Mustache markup templates)</li>
+<li>MVP的presenter比controller更好的描述了<code>Backbone.View</code> (介于View模板和数据绑定间的层) 。</li>
+<li>model适合描述<code>Backbone.Model</code> (跟传统MVC的<q>Model</q>没啥差别)。</li>
+<li>views最好的体现了模板(比如Handlebars/Mustache标记模板)。</li>
 </ul>
-<p>A response to this could be that the view can also just be a View (as per MVC) because Backbone is flexible enough to let it be used for multiple purposes. The V in MVC and the P in MVP can both be accomplished by <code>Backbone.View</code> because they’re able to achieve two purposes: both rendering atomic components and assembling those components rendered by other views.</p>
-<p>We’ve also seen that in Backbone the responsibility of a controller is shared with both the Backbone.View and Backbone.Router and in the following example we can actually see that aspects of that are certainly true.</p>
-<p>Here, our Backbone <code>PhotoView</code> uses the Observer pattern to <q>subscribe</q> to changes to a View’s model in the line <code>this.model.on('change',...)</code>. It also handles templating in the <code>render()</code> method, but unlike some other implementations, user interaction is also handled in the View (see <code>events</code>).</p>
+<p>对此的回应可能会是view也可以紧紧是一个view(按照MVC)，因为Backbone足够灵活让它可以多用途。MVC中的V和MVP中的都可以用<code>Backbone.View</code>完成， 因为它可以支持2种方式：渲染原子组件和组装通过其它view来渲染的组件。</p>
+<p>同时我们也可以看出来，Backbone中controller的功能由Backbone.View和Backbone.Router共同完成，在下面这个例子中也可以看出来这方面确实存在。</p>
+<p>在<code>this.model.on('change',...)</code>这一行，Backbone 的<code>PhotoView</code>用观察者模式订阅(<q>subscribe</q>)model的变化来更新view。同时在<code>render()</code>方法中也处理模板渲染，但是不同于其它的实现，用户交互同样也在view中处理(看<code>events</code>)。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> PhotoView = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({
 
-    <span class="co">//... is a list tag.</span>
+    <span class="co">//... 标签列表</span>
     <span class="dt">tagName</span>:  <span class="st">&quot;li&quot;</span>,
 
-    <span class="co">// Pass the contents of the photo template through a templating</span>
-    <span class="co">// function, cache it for a single photo</span>
+    <span class="co">// 传入模板并缓存</span>
     <span class="dt">template</span>: <span class="kw">_</span>.<span class="fu">template</span>($(<span class="ch">&#39;#photo-template&#39;</span>).<span class="fu">html</span>()),
 
-    <span class="co">// The DOM events specific to an item.</span>
+    <span class="co">// 指定DOM的事件</span>
     <span class="dt">events</span>: {
       <span class="st">&quot;click img&quot;</span> : <span class="st">&quot;toggleViewed&quot;</span>
     },
 
-    <span class="co">// The PhotoView listens for changes to its model, re-rendering. Since there&#39;s</span>
-    <span class="co">// a one-to-one correspondence between a **Photo** and a **PhotoView** in this</span>
-    <span class="co">// app, we set a direct reference on the model for convenience.</span>
+    <span class="co">// PhotoView监听model的变化，以便重新渲染。</span>
+    <span class="co">//因为在这个app中**Photo** and a **PhotoView**是一对一的关系, </span>
+    <span class="co">//为方便起见这里直接对model进行引用</span>
 
     <span class="dt">initialize</span>: <span class="kw">function</span>() {
       <span class="kw">_</span>.<span class="fu">bindAll</span>(<span class="kw">this</span>, <span class="ch">&#39;render&#39;</span>);
@@ -638,48 +637,48 @@ code > span.er { color: #ff0000; font-weight: bold; }
       <span class="kw">this</span>.<span class="fu">model</span>.<span class="fu">on</span>(<span class="ch">&#39;destroy&#39;</span>, <span class="kw">this</span>.<span class="fu">remove</span>);
     },
 
-    <span class="co">// Re-render the photo entry</span>
+    <span class="co">// 渲染photo对象</span>
     <span class="dt">render</span>: <span class="kw">function</span>() {
       <span class="kw">this</span>.$<span class="fu">el</span>.<span class="fu">html</span>(<span class="kw">this</span>.<span class="fu">template</span>(<span class="kw">this</span>.<span class="fu">model</span>.<span class="fu">toJSON</span>()));
       <span class="kw">return</span> <span class="kw">this</span>;
     },
 
-    <span class="co">// Toggle the `&quot;viewed&quot;` state of the model.</span>
+    <span class="co">// 切换model`&quot;viewed&quot;`状态</span>
     <span class="dt">toggleViewed</span>: <span class="kw">function</span>() {
       <span class="kw">this</span>.<span class="fu">model</span>.<span class="fu">viewed</span>();
     }
 
 });</code></pre>
-<p>Another (quite different) opinion is that Backbone more closely resembles <a href="http://martinfowler.com/eaaDev/uiArchs.html#ModelViewController">Smalltalk-80 MVC</a>, which we went through earlier.</p>
-<p>As regular Backbone user Derick Bailey has <a href="http://lostechies.com/derickbailey/2011/12/23/backbone-js-is-not-an-mvc-framework/">written</a>, it’s ultimately best not to force Backbone to fit any specific design patterns. Design patterns should be considered flexible guides to how applications may be structured and in this respect, Backbone doesn’t fit either MVC nor MVP perfectly. Instead, it borrows some of the best concepts from multiple architectural patterns and creates a flexible framework that just works well. Call it <strong>the Backbone way</strong>, MV* or whatever helps reference its flavor of application architecture.</p>
-<p>It <em>is</em> however worth understanding where and why these concepts originated, so I hope that my explanations of MVC and MVP have been of help. Most structural JavaScript frameworks will adopt their own take on classical patterns, either intentionally or by accident, but the important thing is that they help us develop applications which are organized, clean and can be easily maintained.</p>
-<h2 id="fast-facts"><a href="#TOC">Fast facts</a></h2>
+<p>另一种不同的观点是，Backbone更类似我们前面提到的<a href="http://martinfowler.com/eaaDev/uiArchs.html#ModelViewController">Smalltalk-80 MVC</a>。</p>
+<p>正如Backbone忠实用户Derick Bailey<a href="http://lostechies.com/derickbailey/2011/12/23/backbone-js-is-not-an-mvc-framework/">所写</a>，最好不要强制Backbone去适应某种设计模式。设计模式可以灵活的引导我们如何构建应用，但在这方便，Backbone都不是完美的符合MVC或者MVP。反而，它给我们带来了通过多重架构模式创建稳定框架的更好的概念。我们可以称之为<strong>Backbone式</strong>，MV*或者任何有帮助解释它别有风味的应用架构的定义。</p>
+<p>这种概念如何起源非常值得弄清除，所以希望我对MVC和MVP的解释对你有帮助。大部分JavaScript框架的结构采用传统模式的路子，无论是有意还是无意的，重要的是他们都可以帮助我们开发更有组织，清晰，易维护的应用。</p>
+<h2 id="背景资料"><a href="#TOC">背景资料</a></h2>
 <h3 id="backbone.js"><a href="#TOC">Backbone.js</a></h3>
 <ul>
-<li>Core components: Model, View, Collection, Router. Enforces its own flavor of MV*</li>
-<li>Good documentation, with more improvements on the way</li>
-<li>Used by large companies such as SoundCloud and Foursquare to build non-trivial applications</li>
-<li>Event-driven communication between views and models. As we’ll see, it’s relatively straight-forward to add event listeners to any attribute in a model, giving developers fine-grained control over what changes in the view</li>
-<li>Supports data bindings through manual events or a separate Key-value observing (KVO) library</li>
-<li>Great support for RESTful interfaces out of the box, so models can be easily tied to a backend</li>
-<li>Extensive eventing system. It’s <a href="http://lostechies.com/derickbailey/2011/07/19/references-routing-and-the-event-aggregator-coordinating-views-in-backbone-js/">trivial</a> to add support for pub/sub in Backbone</li>
-<li>Prototypes are instantiated with the <code>new</code> keyword, which some developers prefer</li>
-<li>Agnostic about templating frameworks, however Underscore’s micro-templating is available by default. Backbone works well with libraries like Handlebars</li>
-<li>Doesn’t support deeply nested models, though there are Backbone plugins such as <a href="https://github.com/PaulUithol/Backbone-relational">this</a> which can help</li>
-<li>Clear and flexible conventions for structuring applications. Backbone doesn’t force usage of all of its components and can work with only those needed.</li>
+<li>核心资料：Model, View, Collection, Router。采用自己的MV*风格。</li>
+<li>良好的文档，而且一直在改进中。</li>
+<li>被大公司用于伟大的应用，比如SoundCloud、Foursquare。</li>
+<li>views与models之间基于事件驱动通讯。正如我们所看到的，它直接给每个mode每个属性添加事件监听，可以让开发者更细粒度的控制view的改变。</li>
+<li>支持通过自定义事件，或者单独的Key-value observing (KVO) 库进行数据绑定。</li>
+<li>大力支持REST风格的接口，所以models可以轻易的与后端关联。</li>
+<li>可扩展的事件系统。在Backbone中可以非常<a href="http://lostechies.com/derickbailey/2011/07/19/references-routing-and-the-event-aggregator-coordinating-views-in-backbone-js/">精细</a>的支持pub/sub。</li>
+<li>原型通过<code>new</code>关键字来实例化，很多开发者更喜欢这种方式。</li>
+<li>模板框架无关性，不过默认提供了Underscore的micro-templating。Backbone可以与其他模板框架一起使用比如Handlebars。</li>
+<li>不支持嵌套的models，但是有<a href="https://github.com/PaulUithol/Backbone-relational">插件</a>可以帮你解决。</li>
+<li>为构建应用提供清晰和灵活的约定。Backbone不强制使用它的所有组件，有必须的组件就能正常工作。</li>
 </ul>
-<h1 id="the-internals"><a href="#TOC"><a name="theinternals">The Internals</a></a></h1>
-<p>In this section, you’ll learn the essentials of Backbone’s models, views, collections and routers, as well as about using namespacing to organize your code. This isn’t meant as a replacement for the official documentation, but it will help you understand many of the core concepts behind Backbone before you start building applications with it.</p>
+<h1 id="核心内幕"><a href="#TOC"><a name="theinternals">核心内幕</a></a></h1>
+<p>在这一章中，你将学习到Backbone的基本元素，models、views、collections和routers，同时还有如何使用命名空间(namespacing)来组织代码。但这意味着这就是官方文档的替代品，而是在你使用Backbone开发应用前帮助你理解背后的许多核心概念。</p>
 <ul>
-<li>Models</li>
-<li>Collections</li>
-<li>Routers</li>
-<li>Views</li>
-<li>Namespacing</li>
+<li>Models(模型)</li>
+<li>Collections(集合)</li>
+<li>Routers(路由)</li>
+<li>Views(视图)</li>
+<li>Namespacing(命名空间)</li>
 </ul>
 <h2 id="models"><a href="#TOC"><a name="thebasics-models" id="thebasics-models">Models</a></a></h2>
-<p>Backbone models contain interactive data for an application as well as the logic around this data. For example, we can use a model to represent the concept of a photo object including its attributes like tags, titles and a location.</p>
-<p>Models can be created by extending <code>Backbone.Model</code> as follows:</p>
+<p>Backbone的models包含了应用中的交互是数据，以及数据的相关逻辑。比如，我们可以用一个model来代表一个photo对象，包含了它的标签(tags)，标题(title)，位置(location)这些属性</p>
+<p>Models可以通过继承<code>Backbone.Model</code>来创建：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Photo = <span class="kw">Backbone.Model</span>.<span class="fu">extend</span>({
     <span class="dt">defaults</span>: {
         <span class="dt">src</span>: <span class="ch">&#39;placeholder.jpg&#39;</span>,
@@ -698,20 +697,20 @@ code > span.er { color: #ff0000; font-weight: bold; }
 });
 
 <span class="kw">var</span> somePhoto = <span class="kw">new</span> Photo({ <span class="dt">src</span>: <span class="st">&quot;test.jpg&quot;</span>, <span class="dt">title</span>:<span class="st">&quot;testing&quot;</span>});
-<span class="kw">somePhoto</span>.<span class="fu">changeSrc</span>(<span class="st">&quot;magic.jpg&quot;</span>); <span class="co">// which triggers &quot;change:src&quot; and logs an update message to the console.</span></code></pre>
-<h4 id="initialization"><a href="#TOC">Initialization</a></h4>
-<p>The <code>initialize()</code> method is called when a new instance of a model is created. Its use is optional, however you’ll see why it’s good practice to use it below.</p>
+<span class="kw">somePhoto</span>.<span class="fu">changeSrc</span>(<span class="st">&quot;magic.jpg&quot;</span>); <span class="co">// 触发&quot;change:src&quot;，在控制台打印信息</span></code></pre>
+<h4 id="初始化"><a href="#TOC">初始化</a></h4>
+<p><code>initialize()</code>方法在当一个model创建一个新的实例是调用。它是可选的，然后，后面你会发现使用它会更好。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Photo = <span class="kw">Backbone.Model</span>.<span class="fu">extend</span>({
     <span class="dt">initialize</span>: <span class="kw">function</span>(){
         <span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">&#39;this model has been initialized&#39;</span>);
     }
 });
 
-<span class="co">// We can then create our own instance of a photo as follows:</span>
+<span class="co">// 创建一个自己的Photo实例:</span>
 <span class="kw">var</span> myPhoto = <span class="kw">new</span> Photo();</code></pre>
 <h4 id="getters-setters"><a href="#TOC">Getters &amp; Setters</a></h4>
 <p><strong>Model.get()</strong></p>
-<p><code>Model.get()</code> provides easy access to a model’s attributes. Attributes which are passed through to the model on instantiation are instantly available for retrieval.</p>
+<p><code>Model.get()</code>简单的提供了对模型属性的访问。 在初始化时传给model的属性是可以立即被访问到的。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> myPhoto = <span class="kw">new</span> Photo({ <span class="dt">title</span>: <span class="st">&quot;My awesome photo&quot;</span>,
                           <span class="dt">src</span>:<span class="st">&quot;boston.jpg&quot;</span>,
                           <span class="dt">location</span>: <span class="st">&quot;Boston&quot;</span>,
@@ -721,11 +720,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
     location = <span class="kw">myPhoto</span>.<span class="fu">get</span>(<span class="st">&quot;location&quot;</span>), <span class="co">//Boston</span>
     tags = <span class="kw">myPhoto</span>.<span class="fu">get</span>(<span class="st">&quot;tags&quot;</span>), <span class="co">// [&#39;the big game&#39;,&#39;vacation&#39;]</span>
     photoSrc = <span class="kw">myPhoto</span>.<span class="fu">get</span>(<span class="st">&quot;src&quot;</span>); <span class="co">//boston.jpg</span></code></pre>
-<p>Alternatively, if you wish to directly access all of the attributes in a model’s instance directly, you can achieve this as follows:</p>
+<p>或者，你想直接访问model实例的所有属性，可以通过下面这种方式：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> myAttributes = <span class="kw">myPhoto</span>.<span class="fu">attributes</span>;
 <span class="kw">console</span>.<span class="fu">log</span>(myAttributes);</code></pre>
-<p>It is best practice to use <code>Model.set()</code> or direct instantiation to set the values of a model’s attributes.</p>
-<p>Accessing <code>Model.attributes</code> directly is generally discouraged. Instead, should you need to read or clone data, <code>Model.toJSON()</code> is recommended for this purpose. If you would like to access or copy a model’s attributes for purposes such as JSON stringification (e.g. for serialization prior to being passed to a view), this can be achieved using Model.toJSON(). Remember that this will return an object and JSON.stringify() should be used to get a string representation of the data:</p>
+<p>最好使用<code>Model.set()</code>或者model的实例来设置model的属性。</p>
+<p>通常不提倡直接访问<code>Model.attributes</code>。如果你想读取或者复制数据，提倡使用<code>Model.toJSON()</code>。 如果你想访问或者复制mode的属性用于JSON的字符串化(比如在传递给view之前序列化)，就可以用Model.toJSON()来完成。注意，它返回的是一个对象，如果要获取数据的字符串需要使用JSON.stringify()：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> myAttributes = <span class="kw">myPhoto</span>.<span class="fu">toJSON</span>();
 <span class="kw">console</span>.<span class="fu">log</span>(<span class="kw">JSON</span>.<span class="fu">stringify</span>(myattributes));
 <span class="co">/* this returns:</span>
@@ -735,7 +734,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <span class="co">   tags:[&#39;the big game&#39;, &#39;vacation&#39;]}</span>
 <span class="co">*/</span></code></pre>
 <h4 id="model.set"><a href="#TOC">Model.set()</a></h4>
-<p><code>Model.set()</code> allows us to pass attributes into an instance of our model. Attributes can either be set during initialization or at any time afterwards. It’s important to avoid trying to set a Model’s attributes directly (for example, <code>Model.caption = 'A new caption'</code>). Backbone uses Model.set() to know when to broadcast that a model’s data has changed.</p>
+<p><code>Model.set()</code> 可以给一个model的实例传入属性。属性可以再初始化的时候设置也可以在后期设置。应该避免直接给model设置属性(比如,<code>Model.caption = 'A new caption'</code>)。Backbone使用Model.set()才知道何时广播model的数据改变。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Photo = <span class="kw">Backbone.Model</span>.<span class="fu">extend</span>({
     <span class="dt">initialize</span>: <span class="kw">function</span>(){
         <span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">&#39;this model has been initialized&#39;</span>);
@@ -749,8 +748,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 <span class="co">// Setting the value of attributes through Model.set()</span>
 <span class="kw">myPhoto2</span>.<span class="fu">set</span>({ <span class="dt">title</span>:<span class="ch">&#39;Vacation in Florida&#39;</span>, <span class="dt">location</span>: <span class="ch">&#39;Florida&#39;</span> });</code></pre>
-<p><strong>Default values</strong></p>
-<p>There are times when you want your model to have a set of default values (e.g. in a scenario where a complete set of data isn’t provided by the user). This can be set using a property called <code>defaults</code> in your model.</p>
+<p><strong>默认值</strong></p>
+<p>当你想给model设置默认属性时(比如，当用户不会提供一份完整的数据时)，可以用<code>defaults</code>属性。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Photo = <span class="kw">Backbone.Model</span>.<span class="fu">extend</span>({
     <span class="dt">defaults</span>: {
         <span class="dt">title</span>: <span class="ch">&#39;Another photo!&#39;</span>,
@@ -768,8 +767,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
     location = <span class="kw">myPhoto</span>.<span class="fu">get</span>(<span class="st">&quot;location&quot;</span>), <span class="co">//Boston</span>
     tags = <span class="kw">myPhoto</span>.<span class="fu">get</span>(<span class="st">&quot;tags&quot;</span>), <span class="co">// [&#39;the big game&#39;,&#39;vacation&#39;]</span>
     photoSrc = <span class="kw">myPhoto</span>.<span class="fu">get</span>(<span class="st">&quot;src&quot;</span>); <span class="co">//placeholder.jpg</span></code></pre>
-<p><strong>Listening for changes to your model</strong></p>
-<p>Any and all of the attributes in a Backbone model can have listeners bound to them which detect when their values change. Listeners can be added to the <code>initialize()</code> function:</p>
+<p><strong>监听model的变化</strong></p>
+<p>Backbone model的任何属性都可以绑定事件监听，观察他们属性的变化。监听器可以添加到<code>initialize()</code> 方法中:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">this</span>.<span class="fu">on</span>(<span class="ch">&#39;change&#39;</span>, <span class="kw">function</span>(){
     <span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">&#39;values for this model have changed&#39;</span>);
 });</code></pre>

@@ -542,7 +542,7 @@ var PhotoView = Backbone.View.extend({
 * Namespacing(命名空间)
 
 
-##<a name="thebasics-models" id="thebasics-models">Models</a>
+##<a name="thebasics-models" id="thebasics-models">模型(Models)</a>
 
 Backbone的models包含了应用中的交互是数据，以及数据的相关逻辑。比如，我们可以用一个model来代表一个photo对象，包含了它的标签(tags)，标题(title)，位置(location)这些属性
 
@@ -745,7 +745,7 @@ myPhoto.set({ title: "On the beach" });
 这里有一个[例子](http://jsfiddle.net/2NdDY/7/)(by @fivetanley)说明这个问题。
 
 
-##<a name="thebasics-views" id="thebasics-views">Views</a>
+##<a name="thebasics-views" id="thebasics-views">视图(Views)</a>
 
 Backbone中的Views不包含应用中的标记，但是它们定义models如何呈现给用户的逻辑。通常通过JavaScript模板来完成(比如：Mustache, jQuery-tmpl等)。view的`render()`方法可以绑定到model的`change()`事件上,这样view就可以保持更新而不用刷新整个页面。
 
@@ -779,7 +779,7 @@ var PhotoSearch = Backbone.View.extend({
 });
 ```
 
-####什么是`el`?
+####什么是el?
 
 `el`通常是DOM元素的引用，所有views都必须有一个。所有view的内容都一次性插入这个DOM，可以让让浏览器执行最小化的重绘，渲染更快。
 
@@ -907,20 +907,20 @@ Backbone.emulateHTTP = false;
 Backbone.emulateJSON = false;
 ```
 
-The Backbone.sync method that uses these values is actually an integral part of Backbone.js. A jQuery-like ajax method is assumed, so HTTP parameters are organised based on jQuery’s API. Searching through the code for calls to the sync method show it’s used whenever a model is saved, fetched, or deleted (destroyed).
+Backbone.sync方法使用到的这些值实际上是Backbone.js不可分割的一部分。这个方法类似jQuery的ajax方法，所以参数结构上是基于jQuery的API。通过搜索代码里sync方法的调用会发现，任何时候，在model保存，获取，删除(销毁)时就会调用。
 
-Under the covers, `Backbone.sync` is the function called every time Backbone tries to read or save models to the server. It uses jQuery or Zepto's ajax implementations to make these RESTful requests, however this can be overridden as per your needs. :
+在后台，`Backbone.sync`方法在Backbone试图读取或保存models到server的时候就会调用。它使用jQuery或者Zepto的ajax实现来完成这些RESTful请求，当然，也可以使用你喜欢的方式去重写它。:
 
-The sync function may be overriden globally as Backbone.sync, or at a finer-grained level, by adding a sync function to a Backbone collection or to an individual model.
+sync方法可以通过Backbone.sync全局性的重写，或者在一个更精确的范围内通过给Backbone collection或者一个单独的model添加sync方法重写。
 
-There’s no fancy plugin API for adding a persistence layer – simply override Backbone.sync with the same function signature:
+没有什么花哨的插件API来添加一个持久层——简单的覆盖Backbone.sync方法就可以了：
 
 ```javascript
 Backbone.sync = function(method, model, options) {
 };
 ```
 
-The default methodMap is useful for working out what the method argument does:
+options默认参数:
 
 ```javascript
 var methodMap = {
@@ -931,7 +931,7 @@ var methodMap = {
 };
 ```
 
-In the above example if we wanted to log an event when `.sync()` was called, we could do this:
+在上面这个列子中如果想在`.sync()`调用时log一个事件，可以这样做：
 
 ```javascript
 var id_counter = 1;
@@ -942,9 +942,9 @@ Backbone.sync = function(method, model) {
 ```
 
 
-**Resetting/Refreshing Collections**
+**重置/刷新 Collections**
 
-Rather than adding or removing models individually, you might occasionally wish to update an entire collection at once. ```Collection.reset()``` allows us to replace an entire collection with new models as follows:
+不同于单独的添加或者删除models，你可能想一次性整体更新collection。```Collection.reset()```可以设置新的models来更新整个collection：
 
 ```javascript
 PhotoCollection.reset([
@@ -953,11 +953,11 @@ PhotoCollection.reset([
   {title: "Latest snap of Loch Ness", src: "lochness.jpg"}]);
 ```
 
-Note that using `Collection.reset()` doesn't fire any `add` or `remove` events. A `reset` event is fired instead.
+注意，使用`Collection.reset()`不触发任何`add`和`remove`事件。而是触发一个`reset`事件。
 
-###Underscore utility functions
+###Underscore实用方法
 
-As Backbone requires Underscore as a hard dependency, we're able to use many of the utilities it has to offer to aid with our application development. Here's an example of how Underscore's `sortBy()` method can be used to sort a collection of photos based on a particular attribute.
+因为Backbone强烈依赖Underscore，所以我们就可以使用它的许多实用方法来帮助开发。这里有一个使用Underscore的`sortBy()`方法基于某个属性对photo的collection进行排序的例子。
 
 ```javascript
 var sortedByAlphabet = PhotoCollection.sortBy(function (photo) {
@@ -965,12 +965,15 @@ var sortedByAlphabet = PhotoCollection.sortBy(function (photo) {
 });
 ```
 
-The complete list of what Underscore can do is beyond the scope of this guide, but can be found in its official [docs](http://documentcloud.github.com/underscore/).
+可以在Underscore[官方文档](http://documentcloud.github.com/underscore/)找到更完整的用法。
 
 
-### Chainable API
+###链式API
 
-Speaking of utility methods, another bit of sugar in Backbone is the support for Underscore’s chain method. This works by calling the original method with the current array of models and returning the result. In case you haven’t seen it before, the chainable API looks like this:
+/*
+This works by calling the original method with the current array of models and returning the result. In case you haven’t seen it before, the chainable API looks like this:
+*/
+跳过实用方法，Backbone的另一个甜蜜之处就是它对Underscore chain方法的支持。工作原理是使用当前的models数组调用原始方法，并且把结果返回。如果你之前从未见过，链式API就像这样：
 
 ```javascript
 var collection = new Backbone.Collection([
@@ -984,8 +987,8 @@ collection.chain()
   .map(function(item) { return item.get('name'); })
   .value();
 
-// Will return ['Ida', 'Rob']
-Some of the Backbone-specific method will return this, which means they can be chained as well:
+// 将返回['Ida', 'Rob']
+某些Backbone特定方法会返回this，同样也可以链接：
 
 var collection = new Backbone.Collection();
 
@@ -999,9 +1002,9 @@ collection.pluck('name');
 ```
 
 
-##<a name="thebasics-events" id="thebasics-events">Events</a>
+##<a name="thebasics-events" id="thebasics-events">事件(Events)</a>
 
-As we've covered, Backbone's objects are designed to be inherited from and every single one of the following objects inherits from `Backbone.Events`:
+正如我们讲述的，Backbone的对象都设计成继承而来，而且下面的每个对象都继承自`Backbone.Events`：
 
 * Backbone.Model
 * Backbone.Collection
@@ -1009,11 +1012,11 @@ As we've covered, Backbone's objects are designed to be inherited from and every
 * Backbone.History
 * Backbone.View
 
-Events are the standard way to deal with user interface actions, through the declarative event bindings on views, and also model and collection changes. Mastering events is one of the quickest ways to become more productive with Backbone.
+事件是处理用户行为的标准方式，通过对views，model和collection的变化声明事件绑定。掌控事件是使用Backbone提高生产力最快速的方式。
 
-`Backbone.Events` also has the ability to give any object a way to bind and trigger custom events. We can mix this module into any object easily and there isn't a requirement for events to be declared prior to them being bound.
+`Backbone.Events`同样提供一种方式给任何对象绑定和触发自定义事件。我们可以非常容易的把它与任何对象混合，而且不要求事件在绑定前必须声明。
 
-Example:
+示例:
 
 ```javascript
 var ourObject = {};
@@ -1030,17 +1033,17 @@ ourObject.on("dance", function(msg){
 ourObject.trigger("dance", "our event");
 ```
 
-If you're familiar with jQuery custom events or the concept of Publish/Subscribe, `Backbone.Events` provides a system that is very similar with `on` being analogous to `subscribe` and `trigger` being similar to `publish`.
+如果你对jQuery自定义事件或者发布者/订阅者(Publish/Subscribe)的概念比较熟悉的话，`Backbone.Events` 提供了一套类似的系统，`on`跟`subscribe`类似，`trigger`跟`publish`类似。
 
-`on` basically allows us to bind a callback function to any object, as we've done with `dance` in the above example. Whenever the event is fired, our callback is invoked.
+`on`基本上允许我们给任何对象绑定一个回调方法，就想上面例子中`dance`一样。任何时候事件被触发，回调函数就被执行。
 
-The official Backbone.js documentation recommends namespacing event names using colons if you end up using quite a few of these on your page. e.g:
+官方的Backbone.js文档建议对事件名称使用命名空间的方式来连接，如果你的页面中有比较多事件的话，比如：
 
 ```javascript
 ourObject.on("dance:tap", ...);
 ```
 
-A special `all` event is made available in case you would like an event to be triggered when any event occurs (e.g if you would like to screen events in a single location). The `all` event can be used as follows:
+如果你想要在任何事件触发时都触发一个事件的话(比如你想要在屏幕中某个位置显示事件触发的名称)，可以用一个特定的`all`事件。`all`事件可以像下面这样使用：
 
 
 ```javascript
@@ -1049,34 +1052,34 @@ ourObject.on("all", function(eventName){
 });
 ```
 
-`off` allows us to remove a callback function that has previously been bound from an object. Going back to our Publish/Subscribe comparison, think of it as an `unsubscribe` for custom events.
+`off`可以从一个对象中移除已经绑定的回调。回到发布者/订阅者(Publish/Subscribe)的对照关系，思考下 `退订(unsubscribe)`自定义事件。
 
-To remove the `dance` event we previously bound to `myObject`, we would simply do:
+要移除前面给`myObject`绑定的`dance`事件，可以这样做：
 
 
 ```javascript
 myObject.off("dance");
 ```
 
-This will remove all callbacks for the `dance` event. If we wish to remove just a callback by a specific name, we can do:
+这会移除所有绑定在`dance`事件上的回调。如果只想移除指定名称的回调，可以这样：
 
 
 ```javascript
 myObject.off("dance", callbackName);
 ```
 
-Finally, `trigger` triggers a callback for a specified event (or a space-separated listof events). e.g:
+最后，`trigger`触发指定事件的回调(或者以空格分隔的事件列表)。例如：
 
 
 ```javascript
-// Single event
+// 单个事件
 myObject.trigger("dance");
 
-// Multiple events
+// 多个事件
 myObject.trigger("dance jump skip");
 ```
 
-It is also possible to pass along additional arguments to each (or all) of these events via a second argument supported by `trigger`. e.g:
+也可以通过`trigger`第二个参数给每个(或所有)事件传入附加参数。例如：
 
 
 ```javascript
@@ -1084,7 +1087,7 @@ myObject.trigger("dance", {duration: "5 minutes"});
 ```
 
 
-##<a name="thebasics-routers" id="thebasics-routers">Routers</a>
+##<a name="thebasics-routers" id="thebasics-routers">路由(Routers)</a>
 
 In Backbone, routers are used to help manage application state and for connecting URLs to application events. This is achieved using hash-tags with URL fragments, or using the browser's pushState and History API. Some examples of routes may be seen below:
 

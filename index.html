@@ -67,21 +67,21 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul></li>
 </ul></li>
 <li><a href="#核心内幕"><a name="theinternals">核心内幕</a></a><ul>
-<li><a href="#models"><a name="thebasics-models" id="thebasics-models">Models</a></a><ul>
+<li><a href="#模型models-1"><a name="thebasics-models" id="thebasics-models">模型(Models)</a></a><ul>
 <li><a href="#初始化">初始化</a></li>
 <li><a href="#getters-setters">Getters &amp; Setters</a></li>
 <li><a href="#model.set">Model.set()</a></li>
 </ul></li>
-<li><a href="#views"><a name="thebasics-views" id="thebasics-views">Views</a></a><ul>
+<li><a href="#视图views-1"><a name="thebasics-views" id="thebasics-views">视图(Views)</a></a><ul>
 <li><a href="#创建一个views">创建一个views</a></li>
-<li><a href="#什么是el">什么是<code>el</code>?</a></li>
+<li><a href="#什么是el">什么是el?</a></li>
 </ul></li>
 <li><a href="#集合collections"><a name="thebasics-collections" id="thebasics-collections">集合(Collections)</a></a><ul>
-<li><a href="#underscore-utility-functions">Underscore utility functions</a></li>
-<li><a href="#chainable-api">Chainable API</a></li>
+<li><a href="#underscore实用方法">Underscore实用方法</a></li>
+<li><a href="#链式api">链式API</a></li>
 </ul></li>
-<li><a href="#events"><a name="thebasics-events" id="thebasics-events">Events</a></a></li>
-<li><a href="#routers"><a name="thebasics-routers" id="thebasics-routers">Routers</a></a><ul>
+<li><a href="#事件events"><a name="thebasics-events" id="thebasics-events">事件(Events)</a></a></li>
+<li><a href="#路由routers"><a name="thebasics-routers" id="thebasics-routers">路由(Routers)</a></a><ul>
 <li><a href="#is-there-a-limit-to-the-number-of-routers-i-should-be-using">Is there a limit to the number of routers I should be using?</a></li>
 <li><a href="#backbone.history">Backbone.history</a></li>
 <li><a href="#backbones-sync-api">Backbone’s Sync API</a></li>
@@ -177,7 +177,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#tutorial">Tutorial</a><ul>
 <li><a href="#application-files">Application Files</a></li>
 <li><a href="#backbone">Backbone</a><ul>
-<li><a href="#views-1">Views</a></li>
+<li><a href="#views">Views</a></li>
 </ul></li>
 <li><a href="#collections">Collections</a></li>
 <li><a href="#model">Model</a></li>
@@ -251,9 +251,9 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#shared-scope">Shared scope</a></li>
 <li><a href="#getting-setup">Getting setup</a></li>
 <li><a href="#tdd-with-backbone">TDD With Backbone</a></li>
-<li><a href="#models-1"><a name="testing-jasmine-models">Models</a></a></li>
+<li><a href="#models"><a name="testing-jasmine-models">Models</a></a></li>
 <li><a href="#collections-1"><a name="testing-jasmine-collections">Collections</a></a></li>
-<li><a href="#views-2"><a name="testing-jasmine-views">Views</a></a></li>
+<li><a href="#views-1"><a name="testing-jasmine-views">Views</a></a></li>
 <li><a href="#initial-setup">Initial setup</a></li>
 <li><a href="#view-rendering">View rendering</a></li>
 <li><a href="#rendering-with-a-templating-system">Rendering with a templating system</a></li>
@@ -306,10 +306,10 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul></li>
 </ul></li>
 <li><a href="#practical-3">Practical</a><ul>
-<li><a href="#models-2">Models</a></li>
+<li><a href="#models-1">Models</a></li>
 <li><a href="#collections-2">Collections</a></li>
-<li><a href="#views-3">Views</a></li>
-<li><a href="#events-1">Events</a></li>
+<li><a href="#views-2">Views</a></li>
+<li><a href="#events">Events</a></li>
 <li><a href="#app">App</a></li>
 <li><a href="#further-reading-resources">Further Reading &amp; Resources</a></li>
 </ul></li>
@@ -676,7 +676,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li>Views(视图)</li>
 <li>Namespacing(命名空间)</li>
 </ul>
-<h2 id="models"><a href="#TOC"><a name="thebasics-models" id="thebasics-models">Models</a></a></h2>
+<h2 id="模型models-1"><a href="#TOC"><a name="thebasics-models" id="thebasics-models">模型(Models)</a></a></h2>
 <p>Backbone的models包含了应用中的交互是数据，以及数据的相关逻辑。比如，我们可以用一个model来代表一个photo对象，包含了它的标签(tags)，标题(title)，位置(location)这些属性</p>
 <p>Models可以通过继承<code>Backbone.Model</code>来创建：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Photo = <span class="kw">Backbone.Model</span>.<span class="fu">extend</span>({
@@ -820,7 +820,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <span class="co">//logs Remember to set a source for your image!</span></code></pre>
 <p><strong>提示</strong>: Backbone使用Underscore <code>_.extend</code>方法对<code>attributes</code>对象进行浅拷贝，传递给<code>validate</code>函数。这就意味着，不能像JavaScript对象那样通过引用来改变任何<code>Number</code>, <code>String</code>或者<code>Boolean</code>类型的值。因为浅拷贝对对象不进行深度的复制，所以通过这些对象引用可改变属性值。</p>
 <p>这里有一个<a href="http://jsfiddle.net/2NdDY/7/">例子</a>(by @fivetanley)说明这个问题。</p>
-<h2 id="views"><a href="#TOC"><a name="thebasics-views" id="thebasics-views">Views</a></a></h2>
+<h2 id="视图views-1"><a href="#TOC"><a name="thebasics-views" id="thebasics-views">视图(Views)</a></a></h2>
 <p>Backbone中的Views不包含应用中的标记，但是它们定义models如何呈现给用户的逻辑。通常通过JavaScript模板来完成(比如：Mustache, jQuery-tmpl等)。view的<code>render()</code>方法可以绑定到model的<code>change()</code>事件上,这样view就可以保持更新而不用刷新整个页面。</p>
 <h4 id="创建一个views"><a href="#TOC">创建一个views</a></h4>
 <p>与上一章讲到的类似，创建一个view相对比较直接。需要继承自<code>Backbone.View</code>，下面代码中有详细的注解：</p>
@@ -846,7 +846,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
         <span class="co">//当class为&quot;advanced&quot;的元素点击时调用。</span>
     }
 });</code></pre>
-<h4 id="什么是el"><a href="#TOC">什么是<code>el</code>?</a></h4>
+<h4 id="什么是el"><a href="#TOC">什么是el?</a></h4>
 <p><code>el</code>通常是DOM元素的引用，所有views都必须有一个。所有view的内容都一次性插入这个DOM，可以让让浏览器执行最小化的重绘，渲染更快。</p>
 <p>有2种方式给view指定一个DOM元素：元素在页面中已存在，或者一个新创建的元素，开发者手动添加。 如果元素已经存在，你可以设置<code>el</code>为一个css选择器或者直接对DOM的引用。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="dt">el</span>: <span class="ch">&#39;#footer&#39;</span>,
@@ -907,40 +907,40 @@ id: &#39;header&#39;, // 可选</code></pre>
 <p>在配置的时候，Backbone设置了一个变量来标识扩充的HTTP方法是否被服务器支持。另外一个设置控制服务器端是否识别正确的JSON MIME类型。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">Backbone</span>.<span class="fu">emulateHTTP</span> = <span class="kw">false</span>;
 <span class="kw">Backbone</span>.<span class="fu">emulateJSON</span> = <span class="kw">false</span>;</code></pre>
-<p>The Backbone.sync method that uses these values is actually an integral part of Backbone.js. A jQuery-like ajax method is assumed, so HTTP parameters are organised based on jQuery’s API. Searching through the code for calls to the sync method show it’s used whenever a model is saved, fetched, or deleted (destroyed).</p>
-<p>Under the covers, <code>Backbone.sync</code> is the function called every time Backbone tries to read or save models to the server. It uses jQuery or Zepto’s ajax implementations to make these RESTful requests, however this can be overridden as per your needs. :</p>
-<p>The sync function may be overriden globally as Backbone.sync, or at a finer-grained level, by adding a sync function to a Backbone collection or to an individual model.</p>
-<p>There’s no fancy plugin API for adding a persistence layer – simply override Backbone.sync with the same function signature:</p>
+<p>Backbone.sync方法使用到的这些值实际上是Backbone.js不可分割的一部分。这个方法类似jQuery的ajax方法，所以参数结构上是基于jQuery的API。通过搜索代码里sync方法的调用会发现，任何时候，在model保存，获取，删除(销毁)时就会调用。</p>
+<p>在后台，<code>Backbone.sync</code>方法在Backbone试图读取或保存models到server的时候就会调用。它使用jQuery或者Zepto的ajax实现来完成这些RESTful请求，当然，也可以使用你喜欢的方式去重写它。:</p>
+<p>sync方法可以通过Backbone.sync全局性的重写，或者在一个更精确的范围内通过给Backbone collection或者一个单独的model添加sync方法重写。</p>
+<p>没有什么花哨的插件API来添加一个持久层——简单的覆盖Backbone.sync方法就可以了：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">Backbone</span>.<span class="fu">sync</span> = <span class="kw">function</span>(method, model, options) {
 };</code></pre>
-<p>The default methodMap is useful for working out what the method argument does:</p>
+<p>options默认参数:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> methodMap = {
   <span class="ch">&#39;create&#39;</span>: <span class="ch">&#39;POST&#39;</span>,
   <span class="ch">&#39;update&#39;</span>: <span class="ch">&#39;PUT&#39;</span>,
   <span class="ch">&#39;delete&#39;</span>: <span class="ch">&#39;DELETE&#39;</span>,
   <span class="ch">&#39;read&#39;</span>:   <span class="ch">&#39;GET&#39;</span>
 };</code></pre>
-<p>In the above example if we wanted to log an event when <code>.sync()</code> was called, we could do this:</p>
+<p>在上面这个列子中如果想在<code>.sync()</code>调用时log一个事件，可以这样做：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> id_counter = <span class="dv">1</span>;
 <span class="kw">Backbone</span>.<span class="fu">sync</span> = <span class="kw">function</span>(method, model) {
   <span class="kw">console</span>.<span class="fu">log</span>(<span class="st">&quot;I&#39;ve been passed &quot;</span> + method + <span class="st">&quot; with &quot;</span> + <span class="kw">JSON</span>.<span class="fu">stringify</span>(model));
   <span class="kw">if</span>(method === <span class="ch">&#39;create&#39;</span>){ <span class="kw">model</span>.<span class="fu">set</span>(<span class="ch">&#39;id&#39;</span>, id_counter++); }
 };</code></pre>
-<p><strong>Resetting/Refreshing Collections</strong></p>
-<p>Rather than adding or removing models individually, you might occasionally wish to update an entire collection at once. <code>Collection.reset()</code> allows us to replace an entire collection with new models as follows:</p>
+<p><strong>重置/刷新 Collections</strong></p>
+<p>不同于单独的添加或者删除models，你可能想一次性整体更新collection。<code>Collection.reset()</code>可以设置新的models来更新整个collection：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">PhotoCollection</span>.<span class="fu">reset</span>([
   {<span class="dt">title</span>: <span class="st">&quot;My trip to Scotland&quot;</span>, <span class="dt">src</span>: <span class="st">&quot;scotland-trip.jpg&quot;</span>},
   {<span class="dt">title</span>: <span class="st">&quot;The flight from Scotland&quot;</span>, <span class="dt">src</span>: <span class="st">&quot;long-flight.jpg&quot;</span>},
   {<span class="dt">title</span>: <span class="st">&quot;Latest snap of Loch Ness&quot;</span>, <span class="dt">src</span>: <span class="st">&quot;lochness.jpg&quot;</span>}]);</code></pre>
-<p>Note that using <code>Collection.reset()</code> doesn’t fire any <code>add</code> or <code>remove</code> events. A <code>reset</code> event is fired instead.</p>
-<h3 id="underscore-utility-functions"><a href="#TOC">Underscore utility functions</a></h3>
-<p>As Backbone requires Underscore as a hard dependency, we’re able to use many of the utilities it has to offer to aid with our application development. Here’s an example of how Underscore’s <code>sortBy()</code> method can be used to sort a collection of photos based on a particular attribute.</p>
+<p>注意，使用<code>Collection.reset()</code>不触发任何<code>add</code>和<code>remove</code>事件。而是触发一个<code>reset</code>事件。</p>
+<h3 id="underscore实用方法"><a href="#TOC">Underscore实用方法</a></h3>
+<p>因为Backbone强烈依赖Underscore，所以我们就可以使用它的许多实用方法来帮助开发。这里有一个使用Underscore的<code>sortBy()</code>方法基于某个属性对photo的collection进行排序的例子。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> sortedByAlphabet = <span class="kw">PhotoCollection</span>.<span class="fu">sortBy</span>(<span class="kw">function</span> (photo) {
     <span class="kw">return</span> <span class="kw">photo</span>.<span class="fu">get</span>(<span class="st">&quot;title&quot;</span>).<span class="fu">toLowerCase</span>();
 });</code></pre>
-<p>The complete list of what Underscore can do is beyond the scope of this guide, but can be found in its official <a href="http://documentcloud.github.com/underscore/">docs</a>.</p>
-<h3 id="chainable-api"><a href="#TOC">Chainable API</a></h3>
-<p>Speaking of utility methods, another bit of sugar in Backbone is the support for Underscore’s chain method. This works by calling the original method with the current array of models and returning the result. In case you haven’t seen it before, the chainable API looks like this:</p>
+<p>可以在Underscore<a href="http://documentcloud.github.com/underscore/">官方文档</a>找到更完整的用法。</p>
+<h3 id="链式api"><a href="#TOC">链式API</a></h3>
+<p>/* This works by calling the original method with the current array of models and returning the result. In case you haven’t seen it before, the chainable API looks like this: */ 跳过实用方法，Backbone的另一个甜蜜之处就是它对Underscore chain方法的支持。工作原理是使用当前的models数组调用原始方法，并且把结果返回。如果你之前从未见过，链式API就像这样：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> collection = <span class="kw">new</span> <span class="kw">Backbone</span>.<span class="fu">Collection</span>([
   { <span class="dt">name</span>: <span class="ch">&#39;Tim&#39;</span>, <span class="dt">age</span>: <span class="dv">5</span> },
   { <span class="dt">name</span>: <span class="ch">&#39;Ida&#39;</span>, <span class="dt">age</span>: <span class="dv">26</span> },
@@ -952,8 +952,8 @@ id: &#39;header&#39;, // 可选</code></pre>
   .<span class="fu">map</span>(<span class="kw">function</span>(item) { <span class="kw">return</span> <span class="kw">item</span>.<span class="fu">get</span>(<span class="ch">&#39;name&#39;</span>); })
   .<span class="fu">value</span>();
 
-<span class="co">// Will return [&#39;Ida&#39;, &#39;Rob&#39;]</span>
-Some of the Backbone-specific method will <span class="kw">return</span> <span class="kw">this</span>, which means they can be chained as <span class="dt">well</span>:
+<span class="co">// 将返回[&#39;Ida&#39;, &#39;Rob&#39;]</span>
+某些Backbone特定方法会返回this，同样也可以链接：
 
 <span class="kw">var</span> collection = <span class="kw">new</span> <span class="kw">Backbone</span>.<span class="fu">Collection</span>();
 
@@ -964,8 +964,8 @@ collection
 
 <span class="kw">collection</span>.<span class="fu">pluck</span>(<span class="ch">&#39;name&#39;</span>);
 <span class="co">// [&#39;John&#39;, &#39;Harry&#39;, &#39;Steve&#39;]</span></code></pre>
-<h2 id="events"><a href="#TOC"><a name="thebasics-events" id="thebasics-events">Events</a></a></h2>
-<p>As we’ve covered, Backbone’s objects are designed to be inherited from and every single one of the following objects inherits from <code>Backbone.Events</code>:</p>
+<h2 id="事件events"><a href="#TOC"><a name="thebasics-events" id="thebasics-events">事件(Events)</a></a></h2>
+<p>正如我们讲述的，Backbone的对象都设计成继承而来，而且下面的每个对象都继承自<code>Backbone.Events</code>：</p>
 <ul>
 <li>Backbone.Model</li>
 <li>Backbone.Collection</li>
@@ -973,9 +973,9 @@ collection
 <li>Backbone.History</li>
 <li>Backbone.View</li>
 </ul>
-<p>Events are the standard way to deal with user interface actions, through the declarative event bindings on views, and also model and collection changes. Mastering events is one of the quickest ways to become more productive with Backbone.</p>
-<p><code>Backbone.Events</code> also has the ability to give any object a way to bind and trigger custom events. We can mix this module into any object easily and there isn’t a requirement for events to be declared prior to them being bound.</p>
-<p>Example:</p>
+<p>事件是处理用户行为的标准方式，通过对views，model和collection的变化声明事件绑定。掌控事件是使用Backbone提高生产力最快速的方式。</p>
+<p><code>Backbone.Events</code>同样提供一种方式给任何对象绑定和触发自定义事件。我们可以非常容易的把它与任何对象混合，而且不要求事件在绑定前必须声明。</p>
+<p>示例:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> ourObject = {};
 
 <span class="co">// Mixin</span>
@@ -988,28 +988,28 @@ collection
 
 <span class="co">// Trigger the custom event</span>
 <span class="kw">ourObject</span>.<span class="fu">trigger</span>(<span class="st">&quot;dance&quot;</span>, <span class="st">&quot;our event&quot;</span>);</code></pre>
-<p>If you’re familiar with jQuery custom events or the concept of Publish/Subscribe, <code>Backbone.Events</code> provides a system that is very similar with <code>on</code> being analogous to <code>subscribe</code> and <code>trigger</code> being similar to <code>publish</code>.</p>
-<p><code>on</code> basically allows us to bind a callback function to any object, as we’ve done with <code>dance</code> in the above example. Whenever the event is fired, our callback is invoked.</p>
-<p>The official Backbone.js documentation recommends namespacing event names using colons if you end up using quite a few of these on your page. e.g:</p>
+<p>如果你对jQuery自定义事件或者发布者/订阅者(Publish/Subscribe)的概念比较熟悉的话，<code>Backbone.Events</code> 提供了一套类似的系统，<code>on</code>跟<code>subscribe</code>类似，<code>trigger</code>跟<code>publish</code>类似。</p>
+<p><code>on</code>基本上允许我们给任何对象绑定一个回调方法，就想上面例子中<code>dance</code>一样。任何时候事件被触发，回调函数就被执行。</p>
+<p>官方的Backbone.js文档建议对事件名称使用命名空间的方式来连接，如果你的页面中有比较多事件的话，比如：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">ourObject</span>.<span class="fu">on</span>(<span class="st">&quot;dance:tap&quot;</span>, ...);</code></pre>
-<p>A special <code>all</code> event is made available in case you would like an event to be triggered when any event occurs (e.g if you would like to screen events in a single location). The <code>all</code> event can be used as follows:</p>
+<p>如果你想要在任何事件触发时都触发一个事件的话(比如你想要在屏幕中某个位置显示事件触发的名称)，可以用一个特定的<code>all</code>事件。<code>all</code>事件可以像下面这样使用：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">ourObject</span>.<span class="fu">on</span>(<span class="st">&quot;all&quot;</span>, <span class="kw">function</span>(eventName){
   <span class="kw">console</span>.<span class="fu">log</span>(<span class="st">&quot;The name of the event passed was &quot;</span> + eventName);
 });</code></pre>
-<p><code>off</code> allows us to remove a callback function that has previously been bound from an object. Going back to our Publish/Subscribe comparison, think of it as an <code>unsubscribe</code> for custom events.</p>
-<p>To remove the <code>dance</code> event we previously bound to <code>myObject</code>, we would simply do:</p>
+<p><code>off</code>可以从一个对象中移除已经绑定的回调。回到发布者/订阅者(Publish/Subscribe)的对照关系，思考下 <code>退订(unsubscribe)</code>自定义事件。</p>
+<p>要移除前面给<code>myObject</code>绑定的<code>dance</code>事件，可以这样做：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">myObject</span>.<span class="fu">off</span>(<span class="st">&quot;dance&quot;</span>);</code></pre>
-<p>This will remove all callbacks for the <code>dance</code> event. If we wish to remove just a callback by a specific name, we can do:</p>
+<p>这会移除所有绑定在<code>dance</code>事件上的回调。如果只想移除指定名称的回调，可以这样：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">myObject</span>.<span class="fu">off</span>(<span class="st">&quot;dance&quot;</span>, callbackName);</code></pre>
-<p>Finally, <code>trigger</code> triggers a callback for a specified event (or a space-separated listof events). e.g:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// Single event</span>
+<p>最后，<code>trigger</code>触发指定事件的回调(或者以空格分隔的事件列表)。例如：</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// 单个事件</span>
 <span class="kw">myObject</span>.<span class="fu">trigger</span>(<span class="st">&quot;dance&quot;</span>);
 
-<span class="co">// Multiple events</span>
+<span class="co">// 多个事件</span>
 <span class="kw">myObject</span>.<span class="fu">trigger</span>(<span class="st">&quot;dance jump skip&quot;</span>);</code></pre>
-<p>It is also possible to pass along additional arguments to each (or all) of these events via a second argument supported by <code>trigger</code>. e.g:</p>
+<p>也可以通过<code>trigger</code>第二个参数给每个(或所有)事件传入附加参数。例如：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">myObject</span>.<span class="fu">trigger</span>(<span class="st">&quot;dance&quot;</span>, {<span class="dt">duration</span>: <span class="st">&quot;5 minutes&quot;</span>});</code></pre>
-<h2 id="routers"><a href="#TOC"><a name="thebasics-routers" id="thebasics-routers">Routers</a></a></h2>
+<h2 id="路由routers"><a href="#TOC"><a name="thebasics-routers" id="thebasics-routers">路由(Routers)</a></a></h2>
 <p>In Backbone, routers are used to help manage application state and for connecting URLs to application events. This is achieved using hash-tags with URL fragments, or using the browser’s pushState and History API. Some examples of routes may be seen below:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="dt">http</span>:<span class="co">//unicorns.com/#whatsup</span>
 <span class="dt">http</span>:<span class="co">//unicorns.com/#search/seasonal-horns/page2</span></code></pre>
@@ -3522,7 +3522,7 @@ app.rb
 <p>Lastly, the <code>views</code> directory hosts the Haml source files for our application’s index and templates, both of which are compiled to standard HTML markup at runtime.</p>
 <p>These can be viewed along with other note-worthy snippets of code from the application below.</p>
 <h3 id="backbone"><a href="#TOC">Backbone</a></h3>
-<h4 id="views-1"><a href="#TOC">Views</a></h4>
+<h4 id="views"><a href="#TOC">Views</a></h4>
 <p>In our main application view (AppView), we want to load any previously stored Todo items in our Mongo database when the view initializes. This is done below with the line <code>Todos.fetch()</code> in the <code>initialize()</code> method where we also bind to the relevant events on the <code>Todos</code> collection for when items are added or changed.</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// Our overall **AppView** is the top-level piece of UI.</span>
 <span class="kw">var</span> AppView = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({
@@ -5262,7 +5262,7 @@ it(<span class="st">&quot;should contain a text value if not the default value&q
 <p><strong><em>Note:</em></strong> Below this section of SpecRunner is code responsible for running the actual tests. Given that we won’t be covering modifying this code, I’m going to skip reviewing it. I do however encourage you to take a look through <a href="https://github.com/pivotal/jasmine/blob/master/lib/jasmine-core/example/spec/PlayerSpec.js">PlayerSpec.js</a> and <a href="https://github.com/pivotal/jasmine/blob/master/lib/jasmine-core/example/spec/SpecHelper.js">SpecHelper.js</a>. They’re a useful basic example to go through how a minimal set of tests might work.</p>
 <h2 id="tdd-with-backbone"><a href="#TOC">TDD With Backbone</a></h2>
 <p>When developing applications with Backbone, it can be necessary to test both individual modules of code as well as modules, views, collections and routers. Taking a TDD approach to testing, let’s review some specs for testing these Backbone components using the popular Backbone <a href="https://github.com/addyosmani/todomvc/tree/master/todo-example/backbone">Todo</a> application. For this section we will be using a modified version of Larry Myers Backbone Koans project, which can be found in the <code>practicals\jasmine-koans</code> folder.</p>
-<h2 id="models-1"><a href="#TOC"><a name="testing-jasmine-models">Models</a></a></h2>
+<h2 id="models"><a href="#TOC"><a name="testing-jasmine-models">Models</a></a></h2>
 <p>The complexity of Backbone models can vary greatly depending on what your application is trying to achieve. In the following example, we’re going to test default values, attributes, state changes and validation rules.</p>
 <p>First, we begin our suite for model testing using <code>describe()</code>:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">describe(<span class="ch">&#39;Tests for Todo&#39;</span>, <span class="kw">function</span>() {</code></pre>
@@ -5432,7 +5432,7 @@ it(<span class="st">&quot;should contain a text value if not the default value&q
         }
 
     });</code></pre>
-<h2 id="views-2"><a href="#TOC"><a name="testing-jasmine-views">Views</a></a></h2>
+<h2 id="views-1"><a href="#TOC"><a name="testing-jasmine-views">Views</a></a></h2>
 <p>Before we take a look at testing Backbone views, let’s briefly review a jQuery plugin that can assist with writing Jasmine specs for them.</p>
 <p><strong>The Jasmine jQuery Plugin</strong></p>
 <p>As we know our Todo application will be using jQuery for DOM manipulation, there’s a useful jQuery plugin called <a href="https://github.com/velesin/jasmine-jquery">jasmine-jquery</a> we can use to help simplify BDD testing rendered elements that our views may produce.</p>
@@ -6188,7 +6188,7 @@ test(<span class="st">&quot;should find a model by id&quot;</span>, <span class=
 <p>We can now begin writing test specs for our Todo application, which are listed and separated by component (e.g Models, Collections etc.). It’s useful to pay attention to the name of the test, the logic being tested and most importantly the assertions being made as this will give you some insight into how what we’ve learned can be applied to a complete application.</p>
 <p>To get the most out of this section, I recommend looking at the QUnit Koans included in the <code>practicals\qunit-koans</code> folder - this is a port of the Backbone.js Jasmine Koans over to QUnit that I converted for this post.</p>
 <p><em>In case you haven’t had a chance to try out one of the Koans kits as yet, they are a set of unit tests using a specific testing framework that both demonstrate how a set of specs for an application may be written, but also leave some tests unfilled so that you can complete them as an exercise.</em></p>
-<h3 id="models-2"><a href="#TOC">Models</a></h3>
+<h3 id="models-1"><a href="#TOC">Models</a></h3>
 <p>For our models we want to at minimum test that:</p>
 <ul>
 <li>New instances can be created with the expected default values</li>
@@ -6305,7 +6305,7 @@ test(<span class="ch">&#39;Fires custom named events when the models change.&#39
 
     ok( <span class="kw">removeModelCallback</span>.<span class="fu">called</span> );
 });</code></pre>
-<h3 id="views-3"><a href="#TOC">Views</a></h3>
+<h3 id="views-2"><a href="#TOC">Views</a></h3>
 <p>For our views we want to ensure:</p>
 <ul>
 <li>They are being correctly tied to a DOM element when created</li>
@@ -6372,7 +6372,7 @@ asyncTest(<span class="ch">&#39;Can wire up view methods to DOM elements.&#39;</
     $(<span class="ch">&#39;#todoList li input.check&#39;</span>).<span class="fu">click</span>();
     expect( <span class="kw">this</span>.<span class="fu">todoView</span>.<span class="fu">model</span>.<span class="fu">get</span>(<span class="ch">&#39;done&#39;</span>), <span class="kw">true</span> );
 });</code></pre>
-<h3 id="events-1"><a href="#TOC">Events</a></h3>
+<h3 id="events"><a href="#TOC">Events</a></h3>
 <p>For events, we may want to test a few different use cases:</p>
 <ul>
 <li>Extending plain objects to support custom events</li>

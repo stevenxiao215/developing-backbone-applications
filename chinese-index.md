@@ -711,13 +711,13 @@ myPhoto.setTitle('Fishing at sea');
 ```
 
 
-**Validation**
+**验证(Validation)**
 
-Backbone supports model validation through `Model.validate()`, which allows checking the attribute values for a model prior to them being set.
+Backbone支持通过`Model.validate()`对model进行验证，可以在设置model的属性前对值进行校验。
 
-Validation functions can be as simple or complex as necessary. If the attributes provided are valid, nothing should be returned from `.validate()`. If they are invalid, a custom error can be returned instead.
+验证函数可以简单也可以看需要而极为复杂。如果属性值验证通过，`.validate()`方法可以不返回任何值。如果验证失败，需要返回一个自定义错误(error)。
 
-A basic example for validation can be seen below:
+下面是一个简单的验证例子：
 
 ```javascript
 var Photo = Backbone.Model.extend({
@@ -740,19 +740,19 @@ myPhoto.set({ title: "On the beach" });
 //logs Remember to set a source for your image!
 ```
 
-**Note**: Backbone passes the `attributes` object by shallow copy to the `validate` function using the Underscore `_.extend` method. This means that it is not possible to change any `Number`, `String` or `Boolean` attribute by reference in the way that one might expect a JavaScript object to behave. As shallow copy doesn't copy objects by implicitly copying them, but rather, by reference, one ca change the attributes on those objects.
+**提示**: Backbone使用Underscore `_.extend`方法对`attributes`对象进行浅拷贝，传递给`validate`函数。这就意味着，不能像JavaScript对象那样通过引用来改变任何`Number`, `String`或者`Boolean`类型的值。因为浅拷贝对对象不进行深度的复制，所以通过这些对象引用可改变属性值。
 
-An example of this (by @fivetanley) is available [here](http://jsfiddle.net/2NdDY/7/).
+这里有一个[例子](http://jsfiddle.net/2NdDY/7/)(by @fivetanley)说明这个问题。
 
 
 ##<a name="thebasics-views" id="thebasics-views">Views</a>
 
-Views in Backbone don't contain the markup for your application, but rather they are there to support models by defining the logic for how they should be represented to the user. This is usually achieved using JavaScript templating (e.g. Mustache, jQuery-tmpl, etc.). A view's `render()` function can be bound to a model's `change()` event, allowing the view to always be up to date without requiring a full page refresh.
+Backbone中的Views不包含应用中的标记，但是它们定义models如何呈现给用户的逻辑。通常通过JavaScript模板来完成(比如：Mustache, jQuery-tmpl等)。view的`render()`方法可以绑定到model的`change()`事件上,这样view就可以保持更新而不用刷新整个页面。
 
 
-####Creating new views
+####创建一个views
 
-Similar to the previous sections, creating a new view is relatively straight-forward. To create a new View, simply extend `Backbone.View`. I'll explain this code in detail below:
+与上一章讲到的类似，创建一个view相对比较直接。需要继承自`Backbone.View`，下面代码中有详细的注解：
 
 ```javascript
 var PhotoSearch = Backbone.View.extend({
@@ -760,7 +760,7 @@ var PhotoSearch = Backbone.View.extend({
     render: function( event ){
         var compiled_template = _.template( $("#results-template").html() );
         this.$el.html( compiled_template(this.model.toJSON()) );
-        return this; //recommended as this enables calls to be chained.
+        return this; //建议返回this,可以链式调用。
     },
     events: {
         "submit #searchForm":  "search",
@@ -768,69 +768,69 @@ var PhotoSearch = Backbone.View.extend({
         "click .advanced": "switchContext"
     },
     search: function( event ){
-        //executed when a form '#searchForm' has been submitted
+        //当'#searchForm'表单提交时调用。
     },
     reset: function( event ){
-        //executed when an element with class "reset" has been clicked.
+        //当class为"reset"的元素点击时调用。
     },
     switchContext: function( event ){
-        //executed when an element with class "advanced" has been clicked.
+        //当class为"advanced"的元素点击时调用。
     }
 });
 ```
 
-####What is `el`?
+####什么是`el`?
 
-`el` is basically a reference to a DOM element and all views must have one. It allows for all of the contents of a view to be inserted into the DOM at once, which makes for faster rendering because the browser performs the minimum required reflows and repaints.
+`el`通常是DOM元素的引用，所有views都必须有一个。所有view的内容都一次性插入这个DOM，可以让让浏览器执行最小化的重绘，渲染更快。
 
-There are two ways to attach a DOM element to a view: the element already exists in the page or a new element is created for the view and added manually by the developer.
-If the element already exists in the page, you can set `el` as either a CSS selector that matches the element or a simple reference to the DOM element.
+有2种方式给view指定一个DOM元素：元素在页面中已存在，或者一个新创建的元素，开发者手动添加。
+如果元素已经存在，你可以设置`el`为一个css选择器或者直接对DOM的引用。
 
 ```javascript
 el: '#footer',
-// OR
+// 或
 el: document.getElementById( 'footer' )
 ```
 
-If you want to create a new element for your view, set any combination of the following view's properties: `tagName`, `id` and `className`. A new element will be created for you by the framework and a reference to it will be available at the `el` property.
+如果要给view创建一个新的元素，设置view属性的任意组合：`tagName`, `id`和`className`。框架会为你创建一个新的元素，并且可以通过`el`属性来引用这个元素。
 
 ```
-tagName: 'p', // required, but defaults to 'div' if not set
-className: 'container', // optional, you can assign multiple classes to this property like so 'container homepage'
-id: 'header', // optional
+tagName: 'p', // 必须, 但默认会设为'div'
+className: 'container', // 可选，可以设置多个class，比如：'container homepage'
+id: 'header', // 可选
 ```
 
-The above code creates the ```DOMElement``` below but doesn't append it to the DOM.
+上面这段代码表示创建下面这个```DOMElement```，但是不会添加到页面DOM中。
 
 
 	<p id="header" class="container"></p>
 
 
 
-**Understanding `render()`**
+**理解`render()`**
 
-`render()` is an optional function that defines the logic for rendering a template. We'll use Underscore's micro-templating in these examples, but remember you can use other templating frameworks if you prefer.
+`render()`是一个可选方法，定义模板的渲染逻辑。在这里示例中我们会用Underscore的micro-templating，但是你要记得，你也可以使用其它的模板框架。
 
-The `_.template` method in Underscore compiles JavaScript templates into functions which can be evaluated for rendering. In the above view, I'm passing the markup from a template with id `results-template` to `_.template()` to be compiled. Next, I set the html of the `el` DOM element to the output of processing a JSON version of the model associated with the view through the compiled template.
-
-
-Presto! This populates the template, giving you a data-complete set of markup in just a few short lines of code.
-
-**The `events` attribute**
-
-The Backbone `events` attribute allows us to attach event listeners to either custom selectors, or directly to `el` if no selector is provided. An event takes the form `{"eventName selector": "callbackFunction"}` and a number of DOM event-types are supported, including `click`, `submit`, `mouseover`, `dblclick` and more.
-
-What isn't instantly obvious is that under the bonnet, Backbone uses jQuery's `.delegate()` to provide instant support for event delegation but goes a little further, extending it so that `this` always refers to the current view object. The only thing to really keep in mind is that any string callback supplied to the events attribute must have a corresponding function with the same name within the scope of your view.
+Underscore的`_.template`方法把JavaScript模板编译成方法， 在渲染的时候执行。在上面这个view中，通过ID `results-template`获取模板标记，传给`_.template()`去编译。然后，把`el`元素的html设为用view相关联的model的JSON数据编译出来的模板结果。
 
 
-##<a name="thebasics-collections" id="thebasics-collections">Collections</a>
-
-Collections are sets of Models and are created by extending `Backbone.Collection`.
-
-Normally, when creating a collection you'll also want to pass through a property specifying the model that your collection will contain, as well as any instance properties required.
+转眼间!在短短几行代码之内，填充模板，给你一个完成数据填充的标签集合。
 
 
-In the following example, we create a PhotoCollection that will contain our Photo models:
+**`events`属性**
+
+Backbone的`events`属性可以让我们通过自定义选择器或者直接绑定到`el`来添加事件监听。事件按照格式`{"事件名称 选择器": "回调函数"}`，支持大量的DOM事件，包括`click`, `submit`, `mouseover`, `dblclick` 还有更多。
+
+不是特别明显的是，Backbone用jQuery的`.delegate()`来提供事件代理的支持，但有些改进，`this`始终指向当前的view对象。需要记住的是，events属性中指定的回调函数名称必须在view范围内有一个对应函数。
+
+
+##<a name="thebasics-collections" id="thebasics-collections">集合(Collections)</a>
+
+Collections是Models的集合，通过继承`Backbone.Collection`来创建。
+
+通常，创建collection时也传入model的属性，和一些必要的实例化属性。
+
+下面这个例子中将创建一个PhotoCollection，包含Photo的models：
 
 ```javascript
 var PhotoCollection = Backbone.Collection.extend({
@@ -838,23 +838,23 @@ var PhotoCollection = Backbone.Collection.extend({
 });
 ```
 
-**Getters and Setters**
+**Getters和Setters**
 
-There are a few different ways to retrieve a model from a collection. The most straight-forward is to use `Collection.get()` which accepts a single id as follows:
+从collection获取model有几种不同的方法。最直接的方式是使用`Collection.get()`，接受一个唯一id：
 
 
 ```javascript
 var skiingEpicness = PhotoCollection.get(2);
 ```
 
-Sometimes you may also want to get a model based on its client id. The client id is a property that Backbone automatically assigns models that have not yet been saved. You can get a model's client id from its `.cid` property.
+有时你可能想通过它的client id来获取model。client id是在model未保存前Backbone自动给它分配的一个id。可以通过model的`.cid`属性来获取它的client id。
 
 
 ```javascript
 var mySkiingCrash = PhotoCollection.getByCid(456);
 ```
 
-Backbone Collections don't have setters as such, but do support adding new models via `.add()` and removing models via `.remove()`.
+Backbone的Collections没有setters这样的方法，但可以通过`.add()`来添加models，通过`.remove()`来移除models。
 
 ```javascript
 var a = new Backbone.Model({ title: 'my vacation'}),
@@ -864,9 +864,9 @@ var photoCollection = new PhotoCollection([a,b]);
 photoCollection.remove([a,b]);
 ```
 
-**Listening for events**
+**监听事件**
 
-As collections represent a group of items, we're also able to listen for `add` and `remove` events for when new models are added or removed from the collection. Here's an example:
+collections代表了一组元素，我们同样可以监听从collection `add`和`remove` models。下面是示例：
 
 ```javascript
 var PhotoCollection = new Backbone.Collection();
@@ -881,7 +881,7 @@ PhotoCollection.add([
 ]);
 ```
 
-In addition, we're able to bind a `change` event to listen for changes to models in the collection.
+另外，也可以绑定`change`事件来监听collection中models的变化。
 
 ```javascript
 PhotoCollection.on("change:title", function(){
@@ -889,9 +889,9 @@ PhotoCollection.on("change:title", function(){
 });
 ```
 
-**Fetching models from the server**
+**从服务器端获取models**
 
-`Collections.fetch()` retrieves a default set of models from the server in the form of a JSON array. When this data returns, the current collection's contents will be replaced with the contents of the array.
+`Collections.fetch()`默认接受从服务器端获取的models json数组。当数据返回时，当前collection的内容就会被替换成这个数组。
 
 
 ```javascript
@@ -900,7 +900,7 @@ PhotoCollection.url = '/photos';
 PhotoCollection.fetch();
 ```
 
-During configuration, Backbone sets a variable to denote if extended HTTP methods are supported by the server. Another setting controls if the server understands the correct MIME type for JSON:
+在配置的时候，Backbone设置了一个变量来标识扩充的HTTP方法是否被服务器支持。另外一个设置控制服务器端是否识别正确的JSON MIME类型。
 
 ```javascript
 Backbone.emulateHTTP = false;

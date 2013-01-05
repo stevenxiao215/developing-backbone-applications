@@ -1089,59 +1089,56 @@ myObject.trigger("dance", {duration: "5 minutes"});
 
 ##<a name="thebasics-routers" id="thebasics-routers">路由(Routers)</a>
 
-In Backbone, routers are used to help manage application state and for connecting URLs to application events. This is achieved using hash-tags with URL fragments, or using the browser's pushState and History API. Some examples of routes may be seen below:
+在Backbone中，Routers是用于帮助管理应用状态，以及关联url和应用的事件。通过URL片段的hash-tags，或者使用浏览器pushState或者History API。下面是一些Routers的示例：
 
 ```javascript
 http://unicorns.com/#whatsup
 http://unicorns.com/#search/seasonal-horns/page2
 ```
 
-Note: An application will usually have at least one route mapping a URL route to a function that determines what happens when a  user reaches that particular route. This relationship is defined as follows:
+提示: 一个应用通常至少有一个路由映射，一个URL路由到一个function，这个function决定了当用户到达这个指定route的时候应该做什么。这种关系像下面这样定义：
 
 ```javascript
 "route" : "mappedFunction"
 ```
 
-Let us now define our first controller by extending `Backbone.Router`. For the purposes of this guide, we're going to continue pretending we're creating a photo gallery application that requires a GalleryRouter.
+那让我们通过继承`Backbone.Router`来定义第一个控制器吧。在这段指南中，我们继续创建图片库应用，需要一个GalleryRouter。
 
-Note the inline comments in the code example below as they continue the rest of the lesson on routers.
+请注意下面代码中的注解：
 
 ```javascript
 var GalleryRouter = Backbone.Router.extend({
-    /* define the route and function maps for this router */
+    /* 定义route和function的映射*/
     routes: {
         "about" : "showAbout",
-        /*Sample usage: http://unicorns.com/#about*/
+        /*使用范例: http://unicorns.com/#about*/
 
         "photos/:id" : "getPhoto",
-        /*This is an example of using a ":param" variable which allows us to match
-        any of the components between two URL slashes*/
-        /*Sample usage: http://unicorns.com/#photos/5*/
+        /*这是一个使用参数变量的列子(":param")，可以匹配2个斜杠之间的部分*/
+        /*使用范例: http://unicorns.com/#photos/5*/
 
         "search/:query" : "searchPhotos",
-        /*We can also define multiple routes that are bound to the same map function,
-        in this case searchPhotos(). Note below how we're optionally passing in a
-        reference to a page number if one is supplied*/
-        /*Sample usage: http://unicorns.com/#search/lolcats*/
+        /*也可以定义多个routes映射到同一个function,比如这里的searchPhotos()。
+		注意下面我们如何随意的传入一个已经存在的页码*/
+        /*使用范例: http://unicorns.com/#search/lolcats*/
 
         "search/:query/p:page" : "searchPhotos",
-        /*As we can see, URLs may contain as many ":param"s as we wish*/
-        /*Sample usage: http://unicorns.com/#search/lolcats/p1*/
+        /*我们可以看到，URL中可以包含多个":param"参数*/
+        /*使用范例: http://unicorns.com/#search/lolcats/p1*/
 
         "photos/:id/download/*imagePath" : "downloadPhoto",
-        /*This is an example of using a *splat. splats are able to match any number of
-        URL components and can be combined with ":param"s*/
-        /*Sample usage: http://unicorns.com/#photos/5/download/files/lolcat-car.jpg*/
+        /*这是一个使用通配符(*splat)的例子。通配符可以匹配任意数量的URL部分，
+		而且可以与参数":param"组合使用*/
+        /*使用范例: http://unicorns.com/#photos/5/download/files/lolcat-car.jpg*/
 
-        /*If you wish to use splats for anything beyond default routing, it's probably a good
-        idea to leave them at the end of a URL otherwise you may need to apply regular
-        expression parsing on your fragment*/
+        /*如果你想用通配符来做默认路由，最好放在URL的最后，
+		不然就要在URL片段上使用正则表达式了。*/
 
         "*other"    : "defaultRoute"
-        /*This is a default route that also uses a *splat. Consider the
+        /*这是一个使用*splat的默认路由。Consider the
         default route a wildcard for URLs that are either not matched or where
         the user has incorrectly typed in a route path manually*/
-        /*Sample usage: http://unicorns.com/#anything*/
+        /*使用范例: http://unicorns.com/#anything*/
 
     },
 
@@ -1150,7 +1147,7 @@ var GalleryRouter = Backbone.Router.extend({
 
     getPhoto: function(id){
         /*
-        Note that the id matched in the above route will be passed to this function
+        注意前面route匹配的id会传入这个方法
         */
         console.log("You are trying to reach photo " + id);
     },
@@ -1168,25 +1165,24 @@ var GalleryRouter = Backbone.Router.extend({
     }
 });
 
-/* Now that we have a router setup, remember to instantiate it*/
+/*现在我们就建立了一个router，记得实例化。*/
 
 var myGalleryRouter = new GalleryRouter();
 ```
 
+Backbone 0.5+以上版本，可以选择`window.history.pushState`对HTML5 pushState的支持。这就允许你像这样http://www.scriptjunkie.com/just/an/example来定义routes。浏览器不支持pushState时会降级处理。在这部教程中我们会使用hashtag方法。
 
-As of Backbone 0.5+, it's possible to opt-in for HTML5 pushState support via `window.history.pushState`. This permits you to define routes such as http://www.scriptjunkie.com/just/an/example. This will be supported with automatic degradation when a user's browser doesn't support pushState. For the purposes of this tutorial, we'll use the hashtag method.
 
+####对路由器(routers)的数量会有限制吗?
 
-####Is there a limit to the number of routers I should be using?
-
-Andrew de Andrade has pointed out that DocumentCloud themselves usually only use a single router in most of their applications. You're very likely to not require more than one or two routers in your own projects as the majority of your application routing can be kept organized in a single controller without it getting unwieldy.
+安德鲁·德·安德拉德(Andrew de Andrade)指出，DocumentCloud在他们大多数应用中通常只使用一个路由器(router)。 在自己大多数应用项目中最好不要超过一个router，这样路由可以放在一个controller中，不会变的笨重。
 
 
 ####Backbone.history
 
-Next, we need to initialize `Backbone.history` as it handles `hashchange` events in our application. This will automatically handle routes that have been defined and trigger callbacks when they've been accessed.
+下面，我们需要初始化`Backbone.history`，它应用中处理了`hashchange`事件。当它们被访问时会自动处理被定义的routes，并且触发回调。
 
-The `Backbone.history.start()` method will simply tell Backbone that it's OK to begin monitoring all `hashchange` events as follows:
+`Backbone.history.start()`方法会告诉Backbone监听所有`hashchange`事件，就想下面这样：
 
 ```javascript
 Backbone.history.start();

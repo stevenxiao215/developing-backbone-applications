@@ -62,7 +62,7 @@ Backbone.js是一个构建client端代码的轻量级JavaScript框架。它可�
 
 下面这段话是否可以描述你的经历?:
 
-"我想要一种灵活，能抽象分离应用中所关注的各个部分的东西。它提供了一个持久层，REST风格的同步，模型，视图(包含控制器)，基于事件驱动的通讯，模板和路由。必须支持当一个模型变化时允许更新视图。在架构上要留有自由发挥的余地。更理想点，有许多大公司都使用这个方案去构建非凡的应用。
+"我想要一种灵活，能抽象分离应用中所关注的各个部分的东西。它提供了一个持久层，RESTful的同步，模型，视图(包含控制器)，基于事件驱动的通讯，模板和路由。必须支持当一个模型变化时允许更新视图。在架构上要留有自由发挥的余地。更理想点，有许多大公司都使用这个方案去构建非凡的应用。
 
 我可能会构建复杂的东西，我希望这个框架有活跃的扩展社区，而且框架的扩展在大量的问题(Marionette, Chaplin, Aura, Thorax)中经过尝试。理想点，还要有解决方案相关的脚本工具(grunt-bbb, brunch)。"
 
@@ -522,7 +522,7 @@ var PhotoView = Backbone.View.extend({
 * 被大公司用于伟大的应用，比如SoundCloud、Foursquare。
 * views与models之间基于事件驱动通讯。正如我们所看到的，它直接给每个mode每个属性添加事件监听，可以让开发者更细粒度的控制view的改变。
 * 支持通过自定义事件，或者单独的Key-value observing (KVO) 库进行数据绑定。
-* 大力支持REST风格的接口，所以models可以轻易的与后端关联。
+* 大力支持RESTful接口，所以models可以轻易的与后端关联。
 * 可扩展的事件系统。在Backbone中可以非常[精细](http://lostechies.com/derickbailey/2011/07/19/references-routing-and-the-event-aggregator-coordinating-views-in-backbone-js/)的支持pub/sub。
 * 原型通过```new```关键字来实例化，很多开发者更喜欢这种方式。
 * 模板框架无关性，不过默认提供了Underscore的micro-templating。Backbone可以与其他模板框架一起使用比如Handlebars。
@@ -1189,54 +1189,54 @@ Backbone.history.start();
 Router.navigate();
 ```
 
-As an aside, if you would like to save application state to the URL at a particular point you can use the `.navigate()` method to achieve this. It simply updates your URL fragment without the need to trigger the `hashchange` event:
+另外，如果你想在URL中的某个特定地方保存应用的状态可以用`.navigate()`方法。它可以不触发`hashchange`事件更新URL片段：
 
 
 ```javascript
-/*Lets imagine we would like a specific fragment for when a user zooms into a photo*/
+/*假设当用户方法一张照片的时候我们需要给定一个片段(fragment)*/
 zoomPhoto: function(factor){
-    this.zoom(factor); //imagine this zooms into the image
-    this.navigate("zoom/" + factor); //updates the fragment for us, but doesn't trigger the route
+    this.zoom(factor); //假设这是放大照片
+    this.navigate("zoom/" + factor); //更新fragment，但是不触发hashchange事件。
 }
 ```
 
-It is also possible for `Router.navigate()` to trigger the route as well as updating the URL fragment.
+`Router.navigate()`也可以在更新URL fragment的同时触发路由。
 
 ```javascript
 zoomPhoto: function(factor){
-    this.zoom(factor); //imagine this zooms into the image
-    this.navigate("zoom/" + factor, true); //updates the fragment for us and triggers the route
+    this.zoom(factor); //假设这是放大照片
+    this.navigate("zoom/" + factor, true); //更新fragment，触发路由
 }
 ```
 
 
-### Backbone’s Sync API
+### Backbone的同步API
 
-The Backbone.sync method is intended to be overridden to support other backends. The built-in method is tailed to a certain breed of RESTful JSON APIs – Backbone was originally extracted from a Ruby on Rails application, which uses HTTP methods like PUT the same way.
+Backbone.sync方法就是用于被重写以对后端的支持。该内置方法是根据RESTful JSON API衍生而来的—— Backbone最初是从一个Ruby on Rails应用中提取出来的，该应用以同样的方式使用像PUT之类的HTTP方法。
 
-The way this works is the model and collection classes have a sync method that calls Backbone.sync. Both will call this.sync internally when fetching, saving, or deleting items.
+这种方式的工作原理就是model和collection类有一个sync方法，它调用Backbone.sync。当获取，保存或者删除元素时它们内部都会调用this.sync。
 
-The sync method is called with three parameters:
+sync方法有3个参数：
 
-* method: One of create, update, delete, read
-* model: The Backbone model object
-* options: May include success and error methods
+* method: 可以是create, update, delete, read
+* model: Backbone model对象
+* options: 可能包含成功和错误的回调方法。
 
-Implementing a new sync method can use the following pattern:
+可以使用下面这种模式来实现一个sync方法：
 
 ```javascript
 Backbone.sync = function(method, model, options) {
   var requestContent = {}, success, error;
 
   function success(result) {
-    // Handle results from MyAPI
+    // 处理MyAPI的返回结果
     if (options.success) {
       options.success(result);
     }
   }
 
   function error(result) {
-    // Handle results from MyAPI
+    // 处理MyAPI的返回结果
     if (options.error) {
       options.error(result);
     }
@@ -1266,9 +1266,9 @@ Backbone.sync = function(method, model, options) {
 };
 ```
 
-This pattern delegates API calls to a new object, which could be a Backbone-style class that supports events. This can be safely tested separately, and potentially used with libraries other than Backbone.
+这种模式把API的调用委派给了一个新的对象，这个对象可以是Backbone风格支持事件的的对象。它可以被安全的独立测试，而且可以用于除Backbone以外的其它库中。
 
-There are quite a few sync implementations out there:
+除此之外还有很多其它的同步实现：
 
 * Backbone localStorage
 * Backbone offline
@@ -1277,9 +1277,9 @@ There are quite a few sync implementations out there:
 * backbone-websql
 * Backbone Caching Sync
 
-### Conflict Management
+### 处理冲突
 
-Like most client-side projects, Backbone.js wraps everything in an immediately-invoked function expression:
+跟大部分客户端项目一样，Backbone.js把所有东西都包裹在一个即时执行的函数表达式中：
 
 ```javascript
 (function(){
@@ -1287,7 +1287,7 @@ Like most client-side projects, Backbone.js wraps everything in an immediately-i
 }).call(this);
 ```
 
-Several things happen during this configuration stage. A Backbone “namespace” is created, and multiple versions of Backbone on the same page are supported through the noConflict mode:
+在这个结构被执行的时候发生了几件事情。一个Backbone“名字空间(namespace)”被创建了，而且可以通过noConflict模式来让多个版本的Backbone在同一个页面中共存：
 
 ```javascript
 var root = this;
@@ -1299,16 +1299,15 @@ Backbone.noConflict = function() {
 };
 ```
 
-Multiple versions of Backbone can be used on the same page by calling noConflict like this:
+可以像下面这样调用来让多个版本Backbone在同一个页面中共存：
 
 ```javascript
 var Backbone19 = Backbone.noConflict();
-// Backbone19 refers to the most recently loaded version,
-// and `window.Backbone` will be restored to the previously
-// loaded version
+// Backbone19指向最近载入的Backbone
+// `window.Backbone`则保存的是前一个载入的版本
 ```
 
-This initial configuration code also supports CommonJS modules so Backbone can be used in Node projects:
+这段初始化代码同样支持CommonJS模块，所以Backbone可以用在Node项目中：
 
 ```javascript
 var Backbone;
@@ -1319,26 +1318,26 @@ if (typeof exports !== 'undefined') {
 }
 ```
 
-##<a name="thebasics-inheritance" id="thebasics-inheritance">Inheritance & Mixins</a>
+##<a name="thebasics-inheritance" id="thebasics-inheritance">继承(Inheritance)&混合(Mixins)</a>
 
-For its inheritance, Backbone internally uses an `inherits` function inspired by `goog.inherits`, Google’s implementation from the Closure Library. It's basically a function to correctly setup the prototype chain.
+Backbone的继承使用`inherits`方法，灵感来自于Google在Closure库中的实现。它主要是建立原型链。
 
 ```javascript
  var inherits = function(parent, protoProps, staticProps) {
       ...
 ```
 
-The only major difference here is that Backbone’s API accepts two objects containing “instance” and “static” methods.
+主要的不同是，Backbone的API接受2个对象，包括“instance(实例)”和“static(静态)”方法。
 
-Following on from this, for inheritance purposes all of Backbone's objects contain an `extend` method as follows:
+依此而论，为了达到继承的目的，Backbone对象都包含一个`extend`方法：
 
 ```javascript
 Model.extend = Collection.extend = Router.extend = View.extend = extend;
 ```
 
-Most development with Backbone is based around inheriting from these objects, and they’re designed to mimic a classical object-oriented implementation.
+大部分基于的Backbone的开发都从这几个对象中继承而来，而且它们被设计成模仿经典的面向对象的实现。
 
-If this sounds familiar, it's because `extend` is an Underscore.js utility, although Backbone itself does a lot more with this. See below for Underscore's `extend`:
+如果这听起来很熟悉，因为`extend`是Underscore.js的一个功能，虽然Backbone用它做了很多事情。看看下面Underscore的`extend`:
 
 ```
 each(slice.call(arguments, 1), function(source) {

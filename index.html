@@ -84,12 +84,12 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#路由routers"><a name="thebasics-routers" id="thebasics-routers">路由(Routers)</a></a><ul>
 <li><a href="#对路由器routers的数量会有限制吗">对路由器(routers)的数量会有限制吗?</a></li>
 <li><a href="#backbone.history">Backbone.history</a></li>
-<li><a href="#backbones-sync-api">Backbone’s Sync API</a></li>
-<li><a href="#conflict-management">Conflict Management</a></li>
+<li><a href="#backbone的同步api">Backbone的同步API</a></li>
+<li><a href="#处理冲突">处理冲突</a></li>
 </ul></li>
-<li><a href="#inheritance-mixins"><a name="thebasics-inheritance" id="thebasics-inheritance">Inheritance &amp; Mixins</a></a></li>
-<li><a href="#namespacing"><a name="thebasics-namespacing" id="thebasics-namespacing">Namespacing</a></a><ul>
-<li><a href="#what-is-namespacing">What is namespacing?</a></li>
+<li><a href="#继承inheritance混合mixins"><a name="thebasics-inheritance" id="thebasics-inheritance">继承(Inheritance)&amp;混合(Mixins)</a></a></li>
+<li><a href="#命名空间namespacing"><a name="thebasics-namespacing" id="thebasics-namespacing">命名空间(Namespacing)</a></a><ul>
+<li><a href="#什么是命名空间namespacing">什么是命名空间namespacing?</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#practical-todos---your-first-backbone.js-app"><a name="practicaltodos">Practical: Todos - Your First Backbone.js App</a></a><ul>
@@ -357,7 +357,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p>一个软件(框架)发展的成熟度不是简单的因其存在了多长时间。而是这个框架的可靠程度和它扮演的角色的重要程度。它在解决通用问题上是否有效？随着开发人员使用它构建更大、更复杂的应用框架是否持续改进？</p>
 <h3 id="为什么你应该考虑使用backbone.js"><a href="#TOC">为什么你应该考虑使用Backbone.js?</a></h3>
 <p>下面这段话是否可以描述你的经历?:</p>
-<p>&quot;我想要一种灵活，能抽象分离应用中所关注的各个部分的东西。它提供了一个持久层，REST风格的同步，模型，视图(包含控制器)，基于事件驱动的通讯，模板和路由。必须支持当一个模型变化时允许更新视图。在架构上要留有自由发挥的余地。更理想点，有许多大公司都使用这个方案去构建非凡的应用。</p>
+<p>&quot;我想要一种灵活，能抽象分离应用中所关注的各个部分的东西。它提供了一个持久层，RESTful的同步，模型，视图(包含控制器)，基于事件驱动的通讯，模板和路由。必须支持当一个模型变化时允许更新视图。在架构上要留有自由发挥的余地。更理想点，有许多大公司都使用这个方案去构建非凡的应用。</p>
 <p>我可能会构建复杂的东西，我希望这个框架有活跃的扩展社区，而且框架的扩展在大量的问题(Marionette, Chaplin, Aura, Thorax)中经过尝试。理想点，还要有解决方案相关的脚本工具(grunt-bbb, brunch)。&quot;</p>
 <p>如果是这样的话，请继续阅读…</p>
 <p>Backbone的主要优势，无论你的目标平台和设备是什么，都将会帮助你：</p>
@@ -628,7 +628,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
     },
 
     <span class="co">// PhotoView监听model的变化，以便重新渲染。</span>
-    <span class="co">//因为在这个app中**Photo** and a **PhotoView**是一对一的关系, </span>
+    <span class="co">//因为在这个app中**Photo** and a **PhotoView**是一对一的关系,</span>
     <span class="co">//为方便起见这里直接对model进行引用</span>
 
     <span class="dt">initialize</span>: <span class="kw">function</span>() {
@@ -660,7 +660,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li>被大公司用于伟大的应用，比如SoundCloud、Foursquare。</li>
 <li>views与models之间基于事件驱动通讯。正如我们所看到的，它直接给每个mode每个属性添加事件监听，可以让开发者更细粒度的控制view的改变。</li>
 <li>支持通过自定义事件，或者单独的Key-value observing (KVO) 库进行数据绑定。</li>
-<li>大力支持REST风格的接口，所以models可以轻易的与后端关联。</li>
+<li>大力支持RESTful接口，所以models可以轻易的与后端关联。</li>
 <li>可扩展的事件系统。在Backbone中可以非常<a href="http://lostechies.com/derickbailey/2011/07/19/references-routing-and-the-event-aggregator-coordinating-views-in-backbone-js/">精细</a>的支持pub/sub。</li>
 <li>原型通过<code>new</code>关键字来实例化，很多开发者更喜欢这种方式。</li>
 <li>模板框架无关性，不过默认提供了Underscore的micro-templating。Backbone可以与其他模板框架一起使用比如Handlebars。</li>
@@ -1086,39 +1086,39 @@ collection
 <p><code>Backbone.history.start()</code>方法会告诉Backbone监听所有<code>hashchange</code>事件，就想下面这样：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">Backbone.history</span>.<span class="fu">start</span>();
 <span class="kw">Router</span>.<span class="fu">navigate</span>();</code></pre>
-<p>As an aside, if you would like to save application state to the URL at a particular point you can use the <code>.navigate()</code> method to achieve this. It simply updates your URL fragment without the need to trigger the <code>hashchange</code> event:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">/*Lets imagine we would like a specific fragment for when a user zooms into a photo*/</span>
+<p>另外，如果你想在URL中的某个特定地方保存应用的状态可以用<code>.navigate()</code>方法。它可以不触发<code>hashchange</code>事件更新URL片段：</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">/*假设当用户方法一张照片的时候我们需要给定一个片段(fragment)*/</span>
 <span class="dt">zoomPhoto</span>: <span class="kw">function</span>(factor){
-    <span class="kw">this</span>.<span class="fu">zoom</span>(factor); <span class="co">//imagine this zooms into the image</span>
-    <span class="kw">this</span>.<span class="fu">navigate</span>(<span class="st">&quot;zoom/&quot;</span> + factor); <span class="co">//updates the fragment for us, but doesn&#39;t trigger the route</span>
+    <span class="kw">this</span>.<span class="fu">zoom</span>(factor); <span class="co">//假设这是放大照片</span>
+    <span class="kw">this</span>.<span class="fu">navigate</span>(<span class="st">&quot;zoom/&quot;</span> + factor); <span class="co">//更新fragment，但是不触发hashchange事件。</span>
 }</code></pre>
-<p>It is also possible for <code>Router.navigate()</code> to trigger the route as well as updating the URL fragment.</p>
+<p><code>Router.navigate()</code>也可以在更新URL fragment的同时触发路由。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="dt">zoomPhoto</span>: <span class="kw">function</span>(factor){
-    <span class="kw">this</span>.<span class="fu">zoom</span>(factor); <span class="co">//imagine this zooms into the image</span>
-    <span class="kw">this</span>.<span class="fu">navigate</span>(<span class="st">&quot;zoom/&quot;</span> + factor, <span class="kw">true</span>); <span class="co">//updates the fragment for us and triggers the route</span>
+    <span class="kw">this</span>.<span class="fu">zoom</span>(factor); <span class="co">//假设这是放大照片</span>
+    <span class="kw">this</span>.<span class="fu">navigate</span>(<span class="st">&quot;zoom/&quot;</span> + factor, <span class="kw">true</span>); <span class="co">//更新fragment，触发路由</span>
 }</code></pre>
-<h3 id="backbones-sync-api"><a href="#TOC">Backbone’s Sync API</a></h3>
-<p>The Backbone.sync method is intended to be overridden to support other backends. The built-in method is tailed to a certain breed of RESTful JSON APIs – Backbone was originally extracted from a Ruby on Rails application, which uses HTTP methods like PUT the same way.</p>
-<p>The way this works is the model and collection classes have a sync method that calls Backbone.sync. Both will call this.sync internally when fetching, saving, or deleting items.</p>
-<p>The sync method is called with three parameters:</p>
+<h3 id="backbone的同步api"><a href="#TOC">Backbone的同步API</a></h3>
+<p>Backbone.sync方法就是用于被重写以对后端的支持。该内置方法是根据RESTful JSON API衍生而来的—— Backbone最初是从一个Ruby on Rails应用中提取出来的，该应用以同样的方式使用像PUT之类的HTTP方法。</p>
+<p>这种方式的工作原理就是model和collection类有一个sync方法，它调用Backbone.sync。当获取，保存或者删除元素时它们内部都会调用this.sync。</p>
+<p>sync方法有3个参数：</p>
 <ul>
-<li>method: One of create, update, delete, read</li>
-<li>model: The Backbone model object</li>
-<li>options: May include success and error methods</li>
+<li>method: 可以是create, update, delete, read</li>
+<li>model: Backbone model对象</li>
+<li>options: 可能包含成功和错误的回调方法。</li>
 </ul>
-<p>Implementing a new sync method can use the following pattern:</p>
+<p>可以使用下面这种模式来实现一个sync方法：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">Backbone</span>.<span class="fu">sync</span> = <span class="kw">function</span>(method, model, options) {
   <span class="kw">var</span> requestContent = {}, success, error;
 
   <span class="kw">function</span> success(result) {
-    <span class="co">// Handle results from MyAPI</span>
+    <span class="co">// 处理MyAPI的返回结果</span>
     <span class="kw">if</span> (<span class="kw">options</span>.<span class="fu">success</span>) {
       <span class="kw">options</span>.<span class="fu">success</span>(result);
     }
   }
 
   <span class="kw">function</span> error(result) {
-    <span class="co">// Handle results from MyAPI</span>
+    <span class="co">// 处理MyAPI的返回结果</span>
     <span class="kw">if</span> (<span class="kw">options</span>.<span class="fu">error</span>) {
       <span class="kw">options</span>.<span class="fu">error</span>(result);
     }
@@ -1146,8 +1146,8 @@ collection
       }
   }
 };</code></pre>
-<p>This pattern delegates API calls to a new object, which could be a Backbone-style class that supports events. This can be safely tested separately, and potentially used with libraries other than Backbone.</p>
-<p>There are quite a few sync implementations out there:</p>
+<p>这种模式把API的调用委派给了一个新的对象，这个对象可以是Backbone风格支持事件的的对象。它可以被安全的独立测试，而且可以用于除Backbone以外的其它库中。</p>
+<p>除此之外还有很多其它的同步实现：</p>
 <ul>
 <li>Backbone localStorage</li>
 <li>Backbone offline</li>
@@ -1156,12 +1156,12 @@ collection
 <li>backbone-websql</li>
 <li>Backbone Caching Sync</li>
 </ul>
-<h3 id="conflict-management"><a href="#TOC">Conflict Management</a></h3>
-<p>Like most client-side projects, Backbone.js wraps everything in an immediately-invoked function expression:</p>
+<h3 id="处理冲突"><a href="#TOC">处理冲突</a></h3>
+<p>跟大部分客户端项目一样，Backbone.js把所有东西都包裹在一个即时执行的函数表达式中：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">(<span class="kw">function</span>(){
   <span class="co">// Backbone.js</span>
 }).<span class="fu">call</span>(<span class="kw">this</span>);</code></pre>
-<p>Several things happen during this configuration stage. A Backbone <q>namespace</q> is created, and multiple versions of Backbone on the same page are supported through the noConflict mode:</p>
+<p>在这个结构被执行的时候发生了几件事情。一个Backbone<q>名字空间(namespace)</q>被创建了，而且可以通过noConflict模式来让多个版本的Backbone在同一个页面中共存：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> root = <span class="kw">this</span>;
 <span class="kw">var</span> previousBackbone = <span class="kw">root</span>.<span class="fu">Backbone</span>;
 
@@ -1169,43 +1169,42 @@ collection
   <span class="kw">root</span>.<span class="fu">Backbone</span> = previousBackbone;
   <span class="kw">return</span> <span class="kw">this</span>;
 };</code></pre>
-<p>Multiple versions of Backbone can be used on the same page by calling noConflict like this:</p>
+<p>可以像下面这样调用来让多个版本Backbone在同一个页面中共存：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Backbone19 = <span class="kw">Backbone</span>.<span class="fu">noConflict</span>();
-<span class="co">// Backbone19 refers to the most recently loaded version,</span>
-<span class="co">// and `window.Backbone` will be restored to the previously</span>
-<span class="co">// loaded version</span></code></pre>
-<p>This initial configuration code also supports CommonJS modules so Backbone can be used in Node projects:</p>
+<span class="co">// Backbone19指向最近载入的Backbone</span>
+<span class="co">// `window.Backbone`则保存的是前一个载入的版本</span></code></pre>
+<p>这段初始化代码同样支持CommonJS模块，所以Backbone可以用在Node项目中：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Backbone;
 <span class="kw">if</span> (<span class="kw">typeof</span> exports !== <span class="ch">&#39;undefined&#39;</span>) {
   Backbone = exports;
 } <span class="kw">else</span> {
   Backbone = <span class="kw">root</span>.<span class="fu">Backbone</span> = {};
 }</code></pre>
-<h2 id="inheritance-mixins"><a href="#TOC"><a name="thebasics-inheritance" id="thebasics-inheritance">Inheritance &amp; Mixins</a></a></h2>
-<p>For its inheritance, Backbone internally uses an <code>inherits</code> function inspired by <code>goog.inherits</code>, Google’s implementation from the Closure Library. It’s basically a function to correctly setup the prototype chain.</p>
+<h2 id="继承inheritance混合mixins"><a href="#TOC"><a name="thebasics-inheritance" id="thebasics-inheritance">继承(Inheritance)&amp;混合(Mixins)</a></a></h2>
+<p>Backbone的继承使用<code>inherits</code>方法，灵感来自于Google在Closure库中的实现。它主要是建立原型链。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"> <span class="kw">var</span> inherits = <span class="kw">function</span>(parent, protoProps, staticProps) {
       ...</code></pre>
-<p>The only major difference here is that Backbone’s API accepts two objects containing <q>instance</q> and <q>static</q> methods.</p>
-<p>Following on from this, for inheritance purposes all of Backbone’s objects contain an <code>extend</code> method as follows:</p>
+<p>主要的不同是，Backbone的API接受2个对象，包括<q>instance(实例)</q>和<q>static(静态)</q>方法。</p>
+<p>依此而论，为了达到继承的目的，Backbone对象都包含一个<code>extend</code>方法：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">Model</span>.<span class="fu">extend</span> = <span class="kw">Collection</span>.<span class="fu">extend</span> = <span class="kw">Router</span>.<span class="fu">extend</span> = <span class="kw">View</span>.<span class="fu">extend</span> = extend;</code></pre>
-<p>Most development with Backbone is based around inheriting from these objects, and they’re designed to mimic a classical object-oriented implementation.</p>
-<p>If this sounds familiar, it’s because <code>extend</code> is an Underscore.js utility, although Backbone itself does a lot more with this. See below for Underscore’s <code>extend</code>:</p>
+<p>大部分基于的Backbone的开发都从这几个对象中继承而来，而且它们被设计成模仿经典的面向对象的实现。</p>
+<p>如果这听起来很熟悉，因为<code>extend</code>是Underscore.js的一个功能，虽然Backbone用它做了很多事情。看看下面Underscore的<code>extend</code>:</p>
 <pre><code>each(slice.call(arguments, 1), function(source) {
   for (var prop in source) {
     obj[prop] = source[prop];
   }
 });
 return obj;</code></pre>
-<p>The above isn’t quite the same as ES5’s <code>Object.create</code>, as it’s actually copying properties (methods and values) from one object to another. As this isn’t enough to support Backbone’s inheritance and class model, the following steps are performed:</p>
+<p>上面跟ES5的<code>Object.create</code>有很大不同，因为它实际上是复制一个对象的属性(方法和值)给另外一个对象。它不足以支持Backbone的继承和类模型，使用下面的步骤会更好：</p>
 <ul>
-<li>The instance methods are checked to see if there’s a constructor property. If so, the class’s constructor is used, otherwise the parent’s constructor is used (i.e., Backbone.Model)</li>
-<li>Underscore’s extend method is called to add the parent class’s methods to the new child class</li>
-<li>The <code>prototype</code> property of a blank constructor function is assigned with the parent’s prototype, and a new instance of this is set to the child’s <code>prototype</code> property Underscore’s extend method is called twice to add the static and instance methods to the child class</li>
-<li>The child’s prototype’s constructor and a <code>__super__</code> property are assigned</li>
-<li>This pattern is also used for classes in CoffeeScript, so Backbone classes are compatible with CoffeeScript classes.</li>
+<li>实例方法检查是否有constructor属性。如果有，使用当前class的constructor，否则使用parent的constructor(比如Backbone.Model)。</li>
+<li>Underscore的extend方法会把父类的方法添加到新的子类上。</li>
+<li><code>prototype</code>属性是用父类的原型(prototype)定义一个空的构造函数(constructor function)</li>
+<li>定义子类原型的constructor和一个<code>__super__</code>属性。</li>
+<li>这种模式也同样用于CoffeeScript中的class，所以Backbone中的class与CoffeeScript中的class兼容。</li>
 </ul>
-<p><code>extend</code> can be used for a great deal more and developers who are fans of mixins will like that it can be used for this too. You can define functionality on any custom object, and then quite literally copy &amp; paste all of the methods and attributes from that object to a Backbone one:</p>
-<p>For example:</p>
+<p><code>extend</code>可以更广泛的使用，对于那些忠实于mixins的开发者来说也可以这样使用。你可以把功能定义在自己的object上，然后直接把它复制到一个Backbone对象上。</p>
+<p>例如:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"> <span class="kw">var</span> MyMixin = {
   <span class="dt">foo</span>: <span class="st">&quot;bar&quot;</span>,
   <span class="dt">sayFoo</span>: <span class="kw">function</span>(){alert(<span class="kw">this</span>.<span class="fu">foo</span>);}
@@ -1219,13 +1218,13 @@ return obj;</code></pre>
 
 myView = <span class="kw">new</span> MyView();
 <span class="kw">myView</span>.<span class="fu">sayFoo</span>(); <span class="co">//=&gt; &quot;bar&quot;</span></code></pre>
-<p>We can take this further and also apply it to View inheritance. The following is an example of how to extend one View using another:</p>
+<p>我们可以借此更近一步，把它应用到View的继承上。下面是如何扩展一个View的例子：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Panel = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({
 });
 
 <span class="kw">var</span> PanelAdvanced = <span class="kw">Panel</span>.<span class="fu">extend</span>({
 });</code></pre>
-<p>However, if you have an <code>initialize()</code> method in Panel, then it won’t be called if you also have an <code>initialize()</code> method in PanelAdvanced, so you would have to call Panel’s initialize method explicitly:</p>
+<p>不过，如果Panely已经有一个<code>initialize()</code>方法，PanelAdvanced同样也有一个<code>initialize()</code>方法，上一个就不会调用，所以需要显示的调用Panel的initialize方法：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Panel = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({
    <span class="dt">initialize</span>: <span class="kw">function</span>(options){
       <span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">&#39;Panel initialized&#39;</span>);
@@ -1240,12 +1239,12 @@ myView = <span class="kw">new</span> MyView();
       <span class="kw">console</span>.<span class="fu">log</span>(<span class="kw">this</span>.<span class="fu">foo</span>); <span class="co">// Log: bar</span>
    }
 });</code></pre>
-<p>This isn’t the most elegant of solutions because if you have a lot of Views that inherit from Panel, then you’ll have to remember to call Panel’s initialize from all of them.</p>
-<p>It’s worth noting that if Panel doesn’t have an initialize method now but you choose to add it in the future, then you’ll need to go to all of the inherited classes in the future and make sure they call Panel’s initialize.</p>
-<p>So here’s an alternative way to define Panel so that your inherited views don’t need to call Panel’s initialize method:</p>
+<p>这不是最优雅的解决方案，如果有很多Views都要继承自Panel的话，就需要每个都记得调用Panel的initialize。</p>
+<p>可能Panel目前initialize方法没什么用处所以没写，将来要添加的话你就不得不检查下所有继承自它的子类都调用了它的initialize方法。</p>
+<p>所以，有另外一种方式来定义Panel，继承自它的views就不用调用它的initialize方法：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Panel = <span class="kw">function</span> (options) {
 
-    <span class="co">// put all of Panel&#39;s initialization code here</span>
+    <span class="co">// Panel的初始化代码</span>
     <span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">&#39;Panel initialized&#39;</span>);
     <span class="kw">this</span>.<span class="fu">foo</span> = <span class="ch">&#39;bar&#39;</span>;
 
@@ -1254,7 +1253,7 @@ myView = <span class="kw">new</span> MyView();
 
 <span class="kw">_</span>.<span class="fu">extend</span>(<span class="kw">Panel</span>.<span class="fu">prototype</span>, <span class="kw">Backbone.View</span>.<span class="fu">prototype</span>, {
 
-    <span class="co">// put all of Panel&#39;s methods here. For example:</span>
+    <span class="co">// 把所有Panel的方法都放这，例如：</span>
     <span class="dt">sayHi</span>: <span class="kw">function</span> () {
         <span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">&#39;hello from Panel&#39;</span>);
     }
@@ -1263,7 +1262,7 @@ myView = <span class="kw">new</span> MyView();
 <span class="kw">Panel</span>.<span class="fu">extend</span> = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>;
 
 
-<span class="co">// other classes then inherit from Panel like this:</span>
+<span class="co">// 其它继承自Panel的view：</span>
 <span class="kw">var</span> PanelAdvanced = <span class="kw">Panel</span>.<span class="fu">extend</span>({
 
     <span class="dt">initialize</span>: <span class="kw">function</span> (options) {
@@ -1274,21 +1273,21 @@ myView = <span class="kw">new</span> MyView();
 
 <span class="kw">var</span> PanelAdvanced = <span class="kw">new</span> PanelAdvanced(); <span class="co">//Log: Panel initialized, PanelAdvanced initialized, bar</span>
 <span class="kw">PanelAdvanced</span>.<span class="fu">sayHi</span>(); <span class="co">// Log: hello from Panel</span></code></pre>
-<p>When used appropriately, Backbone’s <code>extend</code> method can save a great deal of time and effort writing redundant code.</p>
-<p>(Thanks to <a href="http://dailyjs.com">Alex Young</a>, <a href="http://stackoverflow.com/users/93448/derick-bailey">Derick Bailey</a> and <a href="http://stackoverflow.com/users/188740/johnnyo">JohnnyO</a> for the heads up about these tips).</p>
-<h2 id="namespacing"><a href="#TOC"><a name="thebasics-namespacing" id="thebasics-namespacing">Namespacing</a></a></h2>
-<p>When learning how to use Backbone, an important and commonly overlooked area by tutorials is namespacing. If you already have experience with namespacing in JavaScript, the following section will provide some advice on how to specifically apply concepts you know to Backbone, however I will also be covering explanations for beginners to ensure everyone is on the same page.</p>
-<h4 id="what-is-namespacing"><a href="#TOC">What is namespacing?</a></h4>
-<p>The basic idea around namespacing is to avoid collisions with other objects or variables in the global namespace. They’re important as it’s best to safeguard your code from breaking in the event of another script on the page using the same variable names as you are. As a good <q>citizen</q> of the global namespace, it’s also imperative that you do your best to similarly not prevent other developer’s scripts executing due to the same issues.</p>
-<p>JavaScript doesn’t really have built-in support for namespaces like other languages, however it does have closures which can be used to achieve a similar effect.</p>
-<p>In this section we’ll be taking a look shortly at some examples of how you can namespace your models, views, routers and other components specifically. The patterns we’ll be examining are:</p>
+<p>只要使用得当，Backbone的<code>extend</code>方法可以节省很多时间并且减少冗余代码。</p>
+<p>(非常感谢<a href="http://dailyjs.com">Alex Young</a>, <a href="http://stackoverflow.com/users/93448/derick-bailey">Derick Bailey</a>和<a href="http://stackoverflow.com/users/188740/johnnyo">JohnnyO</a> 给出这些提示).</p>
+<h2 id="命名空间namespacing"><a href="#TOC"><a name="thebasics-namespacing" id="thebasics-namespacing">命名空间(Namespacing)</a></a></h2>
+<p>当学习使用Backbone时，通常教程会忽视命名空间这个重要点。如果你对JavaScript中命名空间已经有经验的话，后面部分会给你一些如何确切的应用Backbone一些概念的建议，不过我还是要为初学者讲解下这个话题。</p>
+<h4 id="什么是命名空间namespacing"><a href="#TOC">什么是命名空间namespacing?</a></h4>
+<p>命名空间的基本概念就是避免与全局名字空间下的对象或者变量冲突。这非常重要，所以要保护好你的代码，避免被同一个页面里其它使用相同变量的代码破坏。作为全局空间下的一个良好’公民(citizen)’，同样要尽可能的不破坏其它开发者的代码运行。</p>
+<p>JavaScript本身不想其它语言一样内置对命名空间的支持，但是有闭包可以达到类似的效果。</p>
+<p>这部分我们通过一些例子简短的看下如果对models, views, routers和其它组件用命名空间管理。有几种模式：</p>
 <ul>
-<li>Single global variables</li>
-<li>Object Literals</li>
+<li>单一全局变量(Single global variables)</li>
+<li>对象常量(Object Literals)</li>
 <li>Nested namespacing</li>
 </ul>
-<p><strong>Single global variables</strong></p>
-<p>One popular pattern for namespacing in JavaScript is opting for a single global variable as your primary object of reference. A skeleton implementation of this where we return an object with functions and properties can be found below:</p>
+<p><strong>单一全局变量</strong></p>
+<p>在JavaScript中一种常用的命名空间的方式就是使用单一全局变量作为主要对象的引用。可以像下面这样返回一个包含方法和属性的对象：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> myApplication = (<span class="kw">function</span>(){
     <span class="kw">function</span>(){
       <span class="co">// ...</span>
@@ -1297,7 +1296,7 @@ myView = <span class="kw">new</span> MyView();
       <span class="co">// ...</span>
     }
 })();</code></pre>
-<p>You’ve probably seen this technique before. A Backbone-specific example might look like this:</p>
+<p>可能前面你已经看到过这种技术了。一个Backbone特有的例子可能会像这样：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> myViews = (<span class="kw">function</span>(){
     <span class="kw">return</span> {
         <span class="dt">PhotoView</span>: <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({ .. }),
@@ -1306,24 +1305,24 @@ myView = <span class="kw">new</span> MyView();
         <span class="co">//etc.</span>
     };
 })();</code></pre>
-<p>Here we can return a set of views, but the same technique could return an entire collection of models, views and routers depending on how you decide to structure your application. Although this works for certain situations, the biggest challenge with the single global variable pattern is ensuring that no one else has used the same global variable name as you have in the page.</p>
-<p>One solution to this problem, as mentioned by Peter Michaux, is to use prefix namespacing. It’s a simple concept at heart, but the idea is you select a common prefix name (in this example, <code>myApplication_</code>) and then define any methods, variables or other objects after the prefix.</p>
+<p>这里我们可以返回一组views，使用同样的方式也可以然会整个应用中的models, views和routers。尽管在确切的情况下它可以正常的工作，但单一全局变量最大的问题就是必须确保在同一个页面中没有其它人使用同样的全局变量。</p>
+<p>Peter Michaux提到一种可以解决这个问题的方案，使用命名空间前缀。它只是一个内心的一个概念，他的观点就是使用一个通用的前缀(下面例子中，<code>myApplication_</code>)，然后所有方法，变量和其它对象的定义都加上这个前缀。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> myApplication_photoView = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({}),
 myApplication_galleryView = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({});</code></pre>
-<p>This is effective from the perspective of trying to lower the chances of a particular variable existing in the global scope, but remember that a uniquely named object can have the same effect. This aside, the biggest issue with the pattern is that it can result in a large number of global objects once your application starts to grow.</p>
-<p>For more on Peter’s views about the single global variable pattern, read his <a href="http://michaux.ca/articles/javascript-namespacing">excellent post on them</a>.</p>
-<p>Note: There are several other variations on the single global variable pattern out in the wild, however having reviewed quite a few, I felt the prefixing approach applied best to Backbone.</p>
-<p><strong>Object Literals</strong></p>
-<p>Object Literals have the advantage of not polluting the global namespace but assist in organizing code and parameters logically. They’re beneficial if you wish to create easily readable structures that can be expanded to support deep nesting. Unlike simple global variables, Object Literals often also take into account tests for the existence of a variable by the same name, which helps reduce the chances of collision.</p>
-<p>This example demonstrates two ways you can check to see if a namespace already exists before defining it. I commonly use Option 2.</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">/*Doesn&#39;t check for existence of myApplication*/</span>
+<p>这得益于减少全局域下特定变量变化的观点，不过唯一对象命名也有同样的效果。另外，这种模式的最大问题在于当应用变得庞大时就会产生大量的全局变量。</p>
+<p>更多关于Peter单一全局变量模式的观点可以阅读<a href="http://michaux.ca/articles/javascript-namespacing">更多好的文章</a>。</p>
+<p>提示：单一变量模式有很多其它的变种，不过经过一段时间评测，我觉得加前缀的方式在Backbone应用的最好。</p>
+<p><strong>对象常量</strong></p>
+<p>对象常量的好处是不会污染全局空间，但是要逻辑性的组织代码和参数。如果你想容易的创建支持深层嵌套的可读性结构代码的话，它非常有用。不像单一全局变量，对象常量经常考虑检测同样名称的变量是否存在，来减少冲突。</p>
+<p>下面有2中方式在定义前来检测一个名字是否存在。我通常使用第二种。</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">/*不会检测myApplication的存在*/</span>
 <span class="kw">var</span> myApplication = {};
 
 <span class="co">/*</span>
-<span class="co">Does check for existence. If already defined, we use that instance.</span>
-<span class="co">Option 1:   if(!myApplication) myApplication = {};</span>
-<span class="co">Option 2:   var myApplication = myApplication || {};</span>
-<span class="co">We can then populate our object literal to support models, views and collections (or any data, really):</span>
+<span class="co">检测是否存在。如果已经定义则直接使用该实例。</span>
+<span class="co">方案1:   if(!myApplication) myApplication = {};</span>
+<span class="co">方案2:   var myApplication = myApplication || {};</span>
+<span class="co">然后就可以使用它来支持models, views和collections (或者任何其它数据)：</span>
 <span class="co">*/</span>
 
 <span class="kw">var</span> myApplication = {
@@ -1333,11 +1332,11 @@ myApplication_galleryView = <span class="kw">Backbone.View</span>.<span class="f
     },
     <span class="dt">collections </span>: {}
 };</code></pre>
-<p>One can also opt for adding properties directly to the namespace (such as your views, in the following example):</p>
+<p>也可以选择直接给它添加属性：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> myGalleryViews = myGalleryViews || {};
 <span class="kw">myGalleryViews</span>.<span class="fu">photoView</span> = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({});
 <span class="kw">myGalleryViews</span>.<span class="fu">galleryView</span> = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({});</code></pre>
-<p>The benefit of this pattern is that you’re able to easily encapsulate all of your models, views, routers etc. in a way that clearly separates them and provides a solid foundation for extending your code.</p>
+<p>这种模式的好处是，可以容易的封装所有的models, views, routers等等，把他们清晰的分离，而且对代码扩展提供的坚实的基础。</p>
 <p>This pattern has a number of benefits. It’s often a good idea to decouple the default configuration for your application into a single area that can be easily modified without the need to search through your entire codebase just to alter it. Here’s an example of a hypothetical object literal that stores application configuration settings:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> myConfig = {
     <span class="dt">language</span>: <span class="ch">&#39;english&#39;</span>,

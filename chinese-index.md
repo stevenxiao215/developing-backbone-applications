@@ -483,7 +483,7 @@ var PhotoView = Backbone.View.extend({
     },
 
     // PhotoView监听model的变化，以便重新渲染。
-	//因为在这个app中**Photo** and a **PhotoView**是一对一的关系, 
+	//因为在这个app中**Photo** and a **PhotoView**是一对一的关系,
 	//为方便起见这里直接对model进行引用
 
     initialize: function() {
@@ -1348,18 +1348,18 @@ each(slice.call(arguments, 1), function(source) {
 return obj;
 ```
 
-The above isn’t quite the same as ES5’s `Object.create`, as it’s actually copying properties (methods and values) from one object to another. As this isn’t enough to support Backbone’s inheritance and class model, the following steps are performed:
+上面跟ES5的`Object.create`有很大不同，因为它实际上是复制一个对象的属性(方法和值)给另外一个对象。它不足以支持Backbone的继承和类模型，使用下面的步骤会更好：
 
-* The instance methods are checked to see if there’s a constructor property. If so, the class’s constructor is used, otherwise the parent’s constructor is used (i.e., Backbone.Model)
-* Underscore’s extend method is called to add the parent class’s methods to the new child class
-* The `prototype` property of a blank constructor function is assigned with the parent’s prototype, and a new instance of this is set to the child’s `prototype` property
-Underscore’s extend method is called twice to add the static and instance methods to the child class
-* The child’s prototype’s constructor and a `__super__` property are assigned
-* This pattern is also used for classes in CoffeeScript, so Backbone classes are compatible with CoffeeScript classes.
+* 实例方法检查是否有constructor属性。如果有，使用当前class的constructor，否则使用parent的constructor(比如Backbone.Model)。
+* Underscore的extend方法会把父类的方法添加到新的子类上。
+* `prototype`属性是用父类的原型(prototype)定义一个空的构造函数(constructor function)
+* 定义子类原型的constructor和一个`__super__`属性。
+* 这种模式也同样用于CoffeeScript中的class，所以Backbone中的class与CoffeeScript中的class兼容。
 
-`extend` can be used for a great deal more and developers who are fans of mixins will like that it can be used for this too. You can define functionality on any custom object, and then quite literally copy & paste all of the methods and attributes from that object to a Backbone one:
 
-For example:
+`extend`可以更广泛的使用，对于那些忠实于mixins的开发者来说也可以这样使用。你可以把功能定义在自己的object上，然后直接把它复制到一个Backbone对象上。
+
+例如:
 
 ```javascript
  var MyMixin = {
@@ -1377,7 +1377,7 @@ myView = new MyView();
 myView.sayFoo(); //=> "bar"
 ```
 
-We can take this further and also apply it to View inheritance. The following is an example of how to extend one View using another:
+我们可以借此更近一步，把它应用到View的继承上。下面是如何扩展一个View的例子：
 
 ```javascript
 var Panel = Backbone.View.extend({
@@ -1387,7 +1387,7 @@ var PanelAdvanced = Panel.extend({
 });
 ```
 
-However, if you have an `initialize()` method in Panel, then it won't be called if you also have an `initialize()` method in PanelAdvanced, so you would have to call Panel's initialize method explicitly:
+不过，如果Panely已经有一个`initialize()`方法，PanelAdvanced同样也有一个`initialize()`方法，上一个就不会调用，所以需要显示的调用Panel的initialize方法：
 
 ```javascript
 var Panel = Backbone.View.extend({
@@ -1406,16 +1406,16 @@ var PanelAdvanced = Panel.extend({
 });
 ```
 
-This isn't the most elegant of solutions because if you have a lot of Views that inherit from Panel, then you'll have to remember to call Panel's initialize from all of them.
+这不是最优雅的解决方案，如果有很多Views都要继承自Panel的话，就需要每个都记得调用Panel的initialize。
 
-It's worth noting that if Panel doesn't have an initialize method now but you choose to add it in the future, then you'll need to go to all of the inherited classes in the future and make sure they call Panel's initialize.
+可能Panel目前initialize方法没什么用处所以没写，将来要添加的话你就不得不检查下所有继承自它的子类都调用了它的initialize方法。
 
-So here's an alternative way to define Panel so that your inherited views don't need to call Panel's initialize method:
+所以，有另外一种方式来定义Panel，继承自它的views就不用调用它的initialize方法：
 
 ```javascript
 var Panel = function (options) {
 
-    // put all of Panel's initialization code here
+    // Panel的初始化代码
     console.log('Panel initialized');
     this.foo = 'bar';
 
@@ -1424,7 +1424,7 @@ var Panel = function (options) {
 
 _.extend(Panel.prototype, Backbone.View.prototype, {
 
-    // put all of Panel's methods here. For example:
+    // 把所有Panel的方法都放这，例如：
     sayHi: function () {
         console.log('hello from Panel');
     }
@@ -1433,7 +1433,7 @@ _.extend(Panel.prototype, Backbone.View.prototype, {
 Panel.extend = Backbone.View.extend;
 
 
-// other classes then inherit from Panel like this:
+// 其它继承自Panel的view：
 var PanelAdvanced = Panel.extend({
 
     initialize: function (options) {
@@ -1446,30 +1446,30 @@ var PanelAdvanced = new PanelAdvanced(); //Log: Panel initialized, PanelAdvanced
 PanelAdvanced.sayHi(); // Log: hello from Panel
 ```
 
-When used appropriately, Backbone's `extend` method can save a great deal of time and effort writing redundant code.
+只要使用得当，Backbone的`extend`方法可以节省很多时间并且减少冗余代码。
 
-(Thanks to [Alex Young](http://dailyjs.com), [Derick Bailey](http://stackoverflow.com/users/93448/derick-bailey) and [JohnnyO](http://stackoverflow.com/users/188740/johnnyo) for the heads up about these tips).
+(非常感谢[Alex Young](http://dailyjs.com), [Derick Bailey](http://stackoverflow.com/users/93448/derick-bailey)和[JohnnyO](http://stackoverflow.com/users/188740/johnnyo) 给出这些提示).
 
 
-##<a name="thebasics-namespacing" id="thebasics-namespacing">Namespacing</a>
+##<a name="thebasics-namespacing" id="thebasics-namespacing">命名空间(Namespacing)</a>
 
-When learning how to use Backbone, an important and commonly overlooked area by tutorials is namespacing. If you already have experience with namespacing in JavaScript, the following section will provide some advice on how to specifically apply concepts you know to Backbone, however I will also be covering explanations for beginners to ensure everyone is on the same page.
+当学习使用Backbone时，通常教程会忽视命名空间这个重要点。如果你对JavaScript中命名空间已经有经验的话，后面部分会给你一些如何确切的应用Backbone一些概念的建议，不过我还是要为初学者讲解下这个话题。
 
-####What is namespacing?
+####什么是命名空间namespacing?
 
-The basic idea around namespacing is to avoid collisions with other objects or variables in the global namespace. They're important as it's best to safeguard your code from breaking in the event of another script on the page using the same variable names as you are. As a good 'citizen' of the global namespace, it's also imperative that you do your best to similarly not prevent other developer's scripts executing due to the same issues.
+命名空间的基本概念就是避免与全局名字空间下的对象或者变量冲突。这非常重要，所以要保护好你的代码，避免被同一个页面里其它使用相同变量的代码破坏。作为全局空间下的一个良好'公民(citizen)'，同样要尽可能的不破坏其它开发者的代码运行。
 
-JavaScript doesn't really have built-in support for namespaces like other languages, however it does have closures which can be used to achieve a similar effect.
+JavaScript本身不想其它语言一样内置对命名空间的支持，但是有闭包可以达到类似的效果。
 
-In this section we'll be taking a look shortly at some examples of how you can namespace your models, views, routers and other components specifically. The patterns we'll be examining are:
+这部分我们通过一些例子简短的看下如果对models, views, routers和其它组件用命名空间管理。有几种模式：
 
-* Single global variables
-* Object Literals
+* 单一全局变量(Single global variables)
+* 对象常量(Object Literals)
 * Nested namespacing
 
-**Single global variables**
+**单一全局变量**
 
-One popular pattern for namespacing in JavaScript is opting for a single global variable as your primary object of reference. A skeleton implementation of this where we return an object with functions and properties can be found below:
+在JavaScript中一种常用的命名空间的方式就是使用单一全局变量作为主要对象的引用。可以像下面这样返回一个包含方法和属性的对象：
 
 ```javascript
 var myApplication = (function(){
@@ -1482,7 +1482,7 @@ var myApplication = (function(){
 })();
 ```
 
-You've probably seen this technique before. A Backbone-specific example might look like this:
+可能前面你已经看到过这种技术了。一个Backbone特有的例子可能会像这样：
 
 ```javascript
 var myViews = (function(){
@@ -1495,36 +1495,36 @@ var myViews = (function(){
 })();
 ```
 
-Here we can return a set of views, but the same technique could return an entire collection of models, views and routers depending on how you decide to structure your application. Although this works for certain situations, the biggest challenge with the single global variable pattern is ensuring that no one else has used the same global variable name as you have in the page.
+这里我们可以返回一组views，使用同样的方式也可以然会整个应用中的models, views和routers。尽管在确切的情况下它可以正常的工作，但单一全局变量最大的问题就是必须确保在同一个页面中没有其它人使用同样的全局变量。
 
-One solution to this problem, as mentioned by Peter Michaux, is to use prefix namespacing. It's a simple concept at heart, but the idea is you select a common prefix name (in this example, `myApplication_`) and then define any methods, variables or other objects after the prefix.
+Peter Michaux提到一种可以解决这个问题的方案，使用命名空间前缀。它只是一个内心的一个概念，他的观点就是使用一个通用的前缀(下面例子中，`myApplication_`)，然后所有方法，变量和其它对象的定义都加上这个前缀。
 
 ```javascript
 var myApplication_photoView = Backbone.View.extend({}),
 myApplication_galleryView = Backbone.View.extend({});
 ```
 
-This is effective from the perspective of trying to lower the chances of a particular variable existing in the global scope, but remember that a uniquely named object can have the same effect. This aside, the biggest issue with the pattern is that it can result in a large number of global objects once your application starts to grow.
+这得益于减少全局域下特定变量变化的观点，不过唯一对象命名也有同样的效果。另外，这种模式的最大问题在于当应用变得庞大时就会产生大量的全局变量。
 
-For more on Peter's views about the single global variable pattern, read his [excellent post on them](http://michaux.ca/articles/javascript-namespacing).
+更多关于Peter单一全局变量模式的观点可以阅读[更多好的文章](http://michaux.ca/articles/javascript-namespacing)。
 
-Note: There are several other variations on the single global variable pattern out in the wild, however having reviewed quite a few, I felt the prefixing approach applied best to Backbone.
+提示：单一变量模式有很多其它的变种，不过经过一段时间评测，我觉得加前缀的方式在Backbone应用的最好。
 
-**Object Literals**
+**对象常量**
 
-Object Literals have the advantage of not polluting the global namespace but assist in organizing code and parameters logically. They're beneficial if you wish to create easily readable structures that can be expanded to support deep nesting. Unlike simple global variables, Object Literals often also take into account tests for the existence of a variable by the same name, which helps reduce the chances of collision.
+对象常量的好处是不会污染全局空间，但是要逻辑性的组织代码和参数。如果你想容易的创建支持深层嵌套的可读性结构代码的话，它非常有用。不像单一全局变量，对象常量经常考虑检测同样名称的变量是否存在，来减少冲突。
 
-This example demonstrates two ways you can check to see if a namespace already exists before defining it. I commonly use Option 2.
+下面有2中方式在定义前来检测一个名字是否存在。我通常使用第二种。
 
 ```javascript
-/*Doesn't check for existence of myApplication*/
+/*不会检测myApplication的存在*/
 var myApplication = {};
 
 /*
-Does check for existence. If already defined, we use that instance.
-Option 1:   if(!myApplication) myApplication = {};
-Option 2:   var myApplication = myApplication || {};
-We can then populate our object literal to support models, views and collections (or any data, really):
+检测是否存在。如果已经定义则直接使用该实例。
+方案1:   if(!myApplication) myApplication = {};
+方案2:   var myApplication = myApplication || {};
+然后就可以使用它来支持models, views和collections (或者任何其它数据)：
 */
 
 var myApplication = {
@@ -1536,7 +1536,7 @@ var myApplication = {
 };
 ```
 
-One can also opt for adding properties directly to the namespace (such as your views, in the following example):
+也可以选择直接给它添加属性：
 
 ```javascript
 var myGalleryViews = myGalleryViews || {};
@@ -1544,7 +1544,7 @@ myGalleryViews.photoView = Backbone.View.extend({});
 myGalleryViews.galleryView = Backbone.View.extend({});
 ```
 
-The benefit of this pattern is that you're able to easily encapsulate all of your models, views, routers etc. in a way that clearly separates them and provides a solid foundation for extending your code.
+这种模式的好处是，可以容易的封装所有的models, views, routers等等，把他们清晰的分离，而且对代码扩展提供的坚实的基础。
 
 This pattern has a number of benefits. It's often a good idea to decouple the default configuration for your application into a single area that can be easily modified without the need to search through your entire codebase just to alter it. Here's an example of a hypothetical object literal that stores application configuration settings:
 

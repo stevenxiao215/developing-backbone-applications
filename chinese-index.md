@@ -1781,9 +1781,9 @@ var app = app || {};
 
 ##Application View
 
-So let's look at the core of the application's logic, the views. Since each todo has a fair bit of logic associated with it, such as edit in place, we're going to use the element controller pattern - a pattern which consists of two views, one that controls a collection of items, and the other deals with each individual item.
+现在我们来看下应用的核心逻辑，views。因为每个todo都有自己的一小块逻辑，比如就地编辑，我们将使用元素控制器模式——包含2个views，一个控制collection的项，一个控制每个独立的Todo项。
 
-In other words, we're going to have one view `AppView`, which will be in charge creating new todos, and rendering the initial todo list. Then we'll have another view called TodoView instances of which will be associated with an individual Todo record. Todo instances will be in charge of editing, updating and destroying their associated todo.
+换句话说，我们将创建一个`AppView`，包含新建todo，渲染todo列表。同时另外一个TodoView，关联到单个的Todo记录。Todo实例会负责它们的编辑，更新和销毁。
 
 To keep thing simple, we'll keep things 'read-only' at the moment, and won't provide any functionality for creating, editing or deleting todos:
 
@@ -1792,19 +1792,17 @@ To keep thing simple, we'll keep things 'read-only' at the moment, and won't pro
   // The Application
   // ---------------
 
-  // Our overall **AppView** is the top-level piece of UI.
+  // **AppView**，总体UI
   app.AppView = Backbone.View.extend({
 
-    // Instead of generating a new element, bind to the existing skeleton of
-    // the App already present in the HTML.
+    // 把view绑定到一个已经存在的DOM上
     el: '#todoapp',
 
-    // Our template for the line of statistics at the bottom of the app.
+    // 底部统计信息块的模板
     statsTemplate: _.template( $('#stats-template').html() ),
 
-    // At initialization we bind to the relevant events on the `Todos`
-    // collection, when items are added or changed. Kick things off by
-    // loading any preexisting todos that might be saved in *localStorage*.
+    // 初始化的时候绑定相关事件到`Todos` collection,
+	// 当元素添加或改变的时候。触发从*localStorage*载入已存在的todos。
     initialize: function() {
       this.input = this.$('#new-todo');
       this.allCheckbox = this.$('#toggle-all')[0];
@@ -1818,8 +1816,7 @@ To keep thing simple, we'll keep things 'read-only' at the moment, and won't pro
       app.Todos.fetch();
     },
 
-    // Re-rendering the App just means refreshing the statistics -- the rest
-    // of the app doesn't change.
+    // 重新渲染，只刷新统计信息，其它部分不改变。    
     render: function() {
       var completed = app.Todos.completed().length;
       var remaining = app.Todos.remaining().length;
@@ -1841,14 +1838,14 @@ To keep thing simple, we'll keep things 'read-only' at the moment, and won't pro
       this.allCheckbox.checked = !remaining;
     },
 
-    // Add a single todo item to the list by creating a view for it, and
-    // appending its element to the `<ul>`.
+    // 通过创建一个view来新建一个单独的todo项，
+    // 追加到`<ul>`中。
     addOne: function( todo ) {
       var view = new app.TodoView({ model: todo });
       $('#todo-list').append( view.render().el );
     },
 
-    // Add all items in the **Todos** collection at once.
+    // 一次性添加**Todos** collection中的所有项。
     addAll: function() {
       this.$('#todo-list').html('');
       app.Todos.each(this.addOne, this);
@@ -1857,60 +1854,55 @@ To keep thing simple, we'll keep things 'read-only' at the moment, and won't pro
   });
 ```
 
+我们完成了很多事情，el，`statsTemplate`，构造函数，几个view的特定方法。el指向的是todoapp元素。
 
-You can see we've got a couple of things going on, an el (element), a `statsTemplate`, a constructor function and several view specific methods. On the left of the el: key is a DOM element selector for the element with ID `todoapp`. The value of this is just a string and Backbone will create a reference pointing to any element matching the selector #todoapp, where here it will be the `<section id=”todoapp />` element, defined in the HTML section earlier.
+我们来看下构造函数。它在Todo model上绑定了几个事件，add, reset和all。因为我们把更新和删除操作转向给`TodoView`去处理，所以这里我们暂时不管。这2部分的逻辑是：
 
-In a nutshell this means we can now refer to this.el in our controller, which points to the `<section class="todoapp" />` element. As you can see, we're referring to el in the `addOne()` function, appending an element to the list.
+* 当一个新的todo创建时，`add`事件会被触发，调用`addAll()`。遍历Todos，触发每个项的`addOne()`。
 
-Now let's take a look at the constructor function. It's binding to several events on the Todo model, such as add, reset and all. Since we're delegating handling of updates and deletes to the `TodoView` view, we don't need to to worry about that here. The two pieces of logic are:
+* `addOne()` 实例化一个TodoView view，渲染并且添加到Todo列表中。
 
-* When a new todo is created, the `add` event will be fired, calling `addAll()`. This iterates over all of the Todos currently in our collection and fires `addOne()` for each item.
+* 当一个`reset`事件触发时(比如，从本地存储载入后大量更新colletion)，`addAll()`同样也会再次触发。
 
-* `addOne()` instantiates the TodoView view, rendering it and appending the resultant element to our Todo list.
+然后，我们可以添加创建新todos，编辑，根据是否完成来过滤等逻辑。
 
-* When a `reset` event is called (i.e. we wish to update the collection in bulk such as when the Todos have been loaded from Local Storage), `addAll()` is similarly called again.
-
-We can then add in the logic for creating new todos, editing them and filtering them based on whether they are complete.
-
-* events: We define an events hash containing declarative callbacks for our DOM events.
-  * `createOnEnter()`: When a user hits return inside the `<input/>` field, this creates a  new Todo item and resets the main `<input/>` field value to prepare it for the next   entry.
-  * `clearCompleted()`: Removes the items in the todo list that have been marked as   completed
-  * `toggleAllComplete()`: Allows a user to set all of the items in the todo list to  completed.
+* events: 我们定义一个事件hash，包含DOM事件的回调。
+  * `createOnEnter()`: 用户在`<input/>`回车时，创建一个新的todo，然后重置`<input/>`为下一次输入。
+  * `clearCompleted()`: 移除todo列表中已标记完成的项。
+  * `toggleAllComplete()`: 允许用户把列表中所有的项都设为已完成。
   * `initialize()`:
-    We bind a callback for a change:completed event, letting us know a change has     been made as well to an existing todo item
-    We also bind a callback for a filter event, which works a little similar to     addOne() and addAll(). It’s responsibility is to toggle what todo items are     visible based on the filter currently selected in the UI (all, completed or     remaining) through filterOne() and filterAll().
+    绑定一个change:completed事件回调，让我们知道对一个存在的项发生了改变。
+	同时，绑定filter事件回调，有点类似addOne() and addAll()。，通过filterOne() and filterAll()实现过滤当前UI中哪些需要显示(所有，已完成或者遗留的)。
   * `render()`:
-    We add some conditional CSS styling based on the filter currently selected so     that the route that has been selected is highlighted
+	给选中项添加一些高亮样式。
   * `createOnEnter()`:
-    Creates a new Todo model which persists in localStorage when a user hits    return. This creates the model via newAttributes(), which is an object    literal composed of the title, order and completed state of the new item    being added.
+    当用户回车时创建一个新的Todo model。 newAttributes()来设置默认属性。
   * `clearCompleted()`:
-    Clears all the todo items that have been marked as complete
+    清空所有标记已完成的项。
 
 ```javascript
 
 // The Application
   // ---------------
 
-  // Our overall **AppView** is the top-level piece of UI.
+  // **AppView**，顶级主要的UI。
   app.AppView = Backbone.View.extend({
 
-    // Instead of generating a new element, bind to the existing skeleton of
-    // the App already present in the HTML.
+    // 把view绑定到一个已经存在的DOM上
     el: '#todoapp',
 
-    // Our template for the line of statistics at the bottom of the app.
+    // 底部统计信息块的模板
     statsTemplate: _.template( $('#stats-template').html() ),
 
-    // Delegated events for creating new items, and clearing completed ones.
+    // 委托事件，新建，清空完成项
     events: {
       'keypress #new-todo': 'createOnEnter',
       'click #clear-completed': 'clearCompleted',
       'click #toggle-all': 'toggleAllComplete'
     },
 
-    // At initialization we bind to the relevant events on the `Todos`
-    // collection, when items are added or changed. Kick things off by
-    // loading any preexisting todos that might be saved in *localStorage*.
+    // 初始化的时候绑定相关事件到`Todos` collection,
+	// 当元素添加或改变的时候。触发从*localStorage*载入已存在的todos。
     initialize: function() {
       this.input = this.$('#new-todo');
       this.allCheckbox = this.$('#toggle-all')[0];
@@ -1927,8 +1919,7 @@ We can then add in the logic for creating new todos, editing them and filtering 
       app.Todos.fetch();
     },
 
-    // Re-rendering the App just means refreshing the statistics -- the rest
-    // of the app doesn't change.
+    // 重新渲染，只刷新统计信息，其它部分不改变。
     render: function() {
       var completed = app.Todos.completed().length;
       var remaining = app.Todos.remaining().length;
@@ -1954,14 +1945,14 @@ We can then add in the logic for creating new todos, editing them and filtering 
       this.allCheckbox.checked = !remaining;
     },
 
-    // Add a single todo item to the list by creating a view for it, and
-    // appending its element to the `<ul>`.
+    // 通过创建一个view来新建一个单独的todo项，
+    // 追加到`<ul>`中。
     addOne: function( todo ) {
       var view = new app.TodoView({ model: todo });
       $('#todo-list').append( view.render().el );
     },
 
-    // Add all items in the **Todos** collection at once.
+    // 一次性添加**Todos** collection中的所有项。
     addAll: function() {
       this.$('#todo-list').html('');
       app.Todos.each(this.addOne, this);
@@ -1975,7 +1966,7 @@ We can then add in the logic for creating new todos, editing them and filtering 
       app.Todos.each(this.filterOne, this);
     },
 
-    // Generate the attributes for a new Todo item.
+    // 创建todo model默认属性
     newAttributes: function() {
       return {
         title: this.input.val().trim(),
@@ -1984,8 +1975,7 @@ We can then add in the logic for creating new todos, editing them and filtering 
       };
     },
 
-    // If you hit return in the main input field, create new **Todo** model,
-    // persisting it to *localStorage*.
+    // 回车时新建**Todo** model，并保存到*localStorage*中。
     createOnEnter: function( e ) {
       if ( e.which !== ENTER_KEY || !this.input.val().trim() ) {
         return;
@@ -1995,7 +1985,7 @@ We can then add in the logic for creating new todos, editing them and filtering 
       this.input.val('');
     },
 
-    // Clear all completed todo items, destroying their models.
+    // 清空所有完成项，销毁它们的方法。
     clearCompleted: function() {
       _.each( window.app.Todos.completed(), function( todo ) {
         todo.destroy();

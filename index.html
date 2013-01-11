@@ -1516,26 +1516,24 @@ myApplication_galleryView = <span class="kw">Backbone.View</span>.<span class="f
   <span class="co">// 创建一个全局的**Todos** collection。</span>
   <span class="kw">app</span>.<span class="fu">Todos</span> = <span class="kw">new</span> TodoList();</code></pre>
 <h2 id="application-view"><a href="#TOC">Application View</a></h2>
-<p>So let’s look at the core of the application’s logic, the views. Since each todo has a fair bit of logic associated with it, such as edit in place, we’re going to use the element controller pattern - a pattern which consists of two views, one that controls a collection of items, and the other deals with each individual item.</p>
-<p>In other words, we’re going to have one view <code>AppView</code>, which will be in charge creating new todos, and rendering the initial todo list. Then we’ll have another view called TodoView instances of which will be associated with an individual Todo record. Todo instances will be in charge of editing, updating and destroying their associated todo.</p>
+<p>现在我们来看下应用的核心逻辑，views。因为每个todo都有自己的一小块逻辑，比如就地编辑，我们将使用元素控制器模式——包含2个views，一个控制collection的项，一个控制每个独立的Todo项。</p>
+<p>换句话说，我们将创建一个<code>AppView</code>，包含新建todo，渲染todo列表。同时另外一个TodoView，关联到单个的Todo记录。Todo实例会负责它们的编辑，更新和销毁。</p>
 <p>To keep thing simple, we’ll keep things <q>read-only</q> at the moment, and won’t provide any functionality for creating, editing or deleting todos:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">
   <span class="co">// The Application</span>
   <span class="co">// ---------------</span>
 
-  <span class="co">// Our overall **AppView** is the top-level piece of UI.</span>
+  <span class="co">// **AppView**，总体UI</span>
   <span class="kw">app</span>.<span class="fu">AppView</span> = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({
 
-    <span class="co">// Instead of generating a new element, bind to the existing skeleton of</span>
-    <span class="co">// the App already present in the HTML.</span>
+    <span class="co">// 把view绑定到一个已经存在的DOM上</span>
     <span class="dt">el</span>: <span class="ch">&#39;#todoapp&#39;</span>,
 
-    <span class="co">// Our template for the line of statistics at the bottom of the app.</span>
+    <span class="co">// 底部统计信息块的模板</span>
     <span class="dt">statsTemplate</span>: <span class="kw">_</span>.<span class="fu">template</span>( $(<span class="ch">&#39;#stats-template&#39;</span>).<span class="fu">html</span>() ),
 
-    <span class="co">// At initialization we bind to the relevant events on the `Todos`</span>
-    <span class="co">// collection, when items are added or changed. Kick things off by</span>
-    <span class="co">// loading any preexisting todos that might be saved in *localStorage*.</span>
+    <span class="co">// 初始化的时候绑定相关事件到`Todos` collection,</span>
+    <span class="co">// 当元素添加或改变的时候。触发从*localStorage*载入已存在的todos。</span>
     <span class="dt">initialize</span>: <span class="kw">function</span>() {
       <span class="kw">this</span>.<span class="fu">input</span> = <span class="kw">this</span>.$(<span class="ch">&#39;#new-todo&#39;</span>);
       <span class="kw">this</span>.<span class="fu">allCheckbox</span> = <span class="kw">this</span>.$(<span class="ch">&#39;#toggle-all&#39;</span>)[<span class="dv">0</span>];
@@ -1549,8 +1547,7 @@ myApplication_galleryView = <span class="kw">Backbone.View</span>.<span class="f
       <span class="kw">app.Todos</span>.<span class="fu">fetch</span>();
     },
 
-    <span class="co">// Re-rendering the App just means refreshing the statistics -- the rest</span>
-    <span class="co">// of the app doesn&#39;t change.</span>
+    <span class="co">// 重新渲染，只刷新统计信息，其它部分不改变。    </span>
     <span class="dt">render</span>: <span class="kw">function</span>() {
       <span class="kw">var</span> completed = <span class="kw">app.Todos</span>.<span class="fu">completed</span>().<span class="fu">length</span>;
       <span class="kw">var</span> remaining = <span class="kw">app.Todos</span>.<span class="fu">remaining</span>().<span class="fu">length</span>;
@@ -1572,63 +1569,60 @@ myApplication_galleryView = <span class="kw">Backbone.View</span>.<span class="f
       <span class="kw">this</span>.<span class="fu">allCheckbox</span>.<span class="fu">checked</span> = !remaining;
     },
 
-    <span class="co">// Add a single todo item to the list by creating a view for it, and</span>
-    <span class="co">// appending its element to the `&lt;ul&gt;`.</span>
+    <span class="co">// 通过创建一个view来新建一个单独的todo项，</span>
+    <span class="co">// 追加到`&lt;ul&gt;`中。</span>
     <span class="dt">addOne</span>: <span class="kw">function</span>( todo ) {
       <span class="kw">var</span> view = <span class="kw">new</span> <span class="kw">app</span>.<span class="fu">TodoView</span>({ <span class="dt">model</span>: todo });
       $(<span class="ch">&#39;#todo-list&#39;</span>).<span class="fu">append</span>( <span class="kw">view</span>.<span class="fu">render</span>().<span class="fu">el</span> );
     },
 
-    <span class="co">// Add all items in the **Todos** collection at once.</span>
+    <span class="co">// 一次性添加**Todos** collection中的所有项。</span>
     <span class="dt">addAll</span>: <span class="kw">function</span>() {
       <span class="kw">this</span>.$(<span class="ch">&#39;#todo-list&#39;</span>).<span class="fu">html</span>(<span class="ch">&#39;&#39;</span>);
       <span class="kw">app.Todos</span>.<span class="fu">each</span>(<span class="kw">this</span>.<span class="fu">addOne</span>, <span class="kw">this</span>);
     }
 
   });</code></pre>
-<p>You can see we’ve got a couple of things going on, an el (element), a <code>statsTemplate</code>, a constructor function and several view specific methods. On the left of the el: key is a DOM element selector for the element with ID <code>todoapp</code>. The value of this is just a string and Backbone will create a reference pointing to any element matching the selector #todoapp, where here it will be the <code>&lt;section id=”todoapp /&gt;</code> element, defined in the HTML section earlier.</p>
-<p>In a nutshell this means we can now refer to this.el in our controller, which points to the <code>&lt;section class=&quot;todoapp&quot; /&gt;</code> element. As you can see, we’re referring to el in the <code>addOne()</code> function, appending an element to the list.</p>
-<p>Now let’s take a look at the constructor function. It’s binding to several events on the Todo model, such as add, reset and all. Since we’re delegating handling of updates and deletes to the <code>TodoView</code> view, we don’t need to to worry about that here. The two pieces of logic are:</p>
+<p>我们完成了很多事情，el，<code>statsTemplate</code>，构造函数，几个view的特定方法。el指向的是todoapp元素。</p>
+<p>我们来看下构造函数。它在Todo model上绑定了几个事件，add, reset和all。因为我们把更新和删除操作转向给<code>TodoView</code>去处理，所以这里我们暂时不管。这2部分的逻辑是：</p>
 <ul>
-<li><p>When a new todo is created, the <code>add</code> event will be fired, calling <code>addAll()</code>. This iterates over all of the Todos currently in our collection and fires <code>addOne()</code> for each item.</p></li>
-<li><p><code>addOne()</code> instantiates the TodoView view, rendering it and appending the resultant element to our Todo list.</p></li>
-<li><p>When a <code>reset</code> event is called (i.e. we wish to update the collection in bulk such as when the Todos have been loaded from Local Storage), <code>addAll()</code> is similarly called again.</p></li>
+<li><p>当一个新的todo创建时，<code>add</code>事件会被触发，调用<code>addAll()</code>。遍历Todos，触发每个项的<code>addOne()</code>。</p></li>
+<li><p><code>addOne()</code> 实例化一个TodoView view，渲染并且添加到Todo列表中。</p></li>
+<li><p>当一个<code>reset</code>事件触发时(比如，从本地存储载入后大量更新colletion)，<code>addAll()</code>同样也会再次触发。</p></li>
 </ul>
-<p>We can then add in the logic for creating new todos, editing them and filtering them based on whether they are complete.</p>
+<p>然后，我们可以添加创建新todos，编辑，根据是否完成来过滤等逻辑。</p>
 <ul>
-<li>events: We define an events hash containing declarative callbacks for our DOM events.</li>
-<li><code>createOnEnter()</code>: When a user hits return inside the <code>&lt;input/&gt;</code> field, this creates a new Todo item and resets the main <code>&lt;input/&gt;</code> field value to prepare it for the next entry.</li>
-<li><code>clearCompleted()</code>: Removes the items in the todo list that have been marked as completed</li>
-<li><code>toggleAllComplete()</code>: Allows a user to set all of the items in the todo list to completed.</li>
-<li><code>initialize()</code>: We bind a callback for a change:completed event, letting us know a change has been made as well to an existing todo item We also bind a callback for a filter event, which works a little similar to addOne() and addAll(). It’s responsibility is to toggle what todo items are visible based on the filter currently selected in the UI (all, completed or remaining) through filterOne() and filterAll().</li>
-<li><code>render()</code>: We add some conditional CSS styling based on the filter currently selected so that the route that has been selected is highlighted</li>
-<li><code>createOnEnter()</code>: Creates a new Todo model which persists in localStorage when a user hits return. This creates the model via newAttributes(), which is an object literal composed of the title, order and completed state of the new item being added.</li>
-<li><code>clearCompleted()</code>: Clears all the todo items that have been marked as complete</li>
+<li>events: 我们定义一个事件hash，包含DOM事件的回调。</li>
+<li><code>createOnEnter()</code>: 用户在<code>&lt;input/&gt;</code>回车时，创建一个新的todo，然后重置<code>&lt;input/&gt;</code>为下一次输入。</li>
+<li><code>clearCompleted()</code>: 移除todo列表中已标记完成的项。</li>
+<li><code>toggleAllComplete()</code>: 允许用户把列表中所有的项都设为已完成。</li>
+<li><code>initialize()</code>: 绑定一个change:completed事件回调，让我们知道对一个存在的项发生了改变。 同时，绑定filter事件回调，有点类似addOne() and addAll()。，通过filterOne() and filterAll()实现过滤当前UI中哪些需要显示(所有，已完成或者遗留的)。</li>
+<li><code>render()</code>: 给选中项添加一些高亮样式。</li>
+<li><code>createOnEnter()</code>: 当用户回车时创建一个新的Todo model。 newAttributes()来设置默认属性。</li>
+<li><code>clearCompleted()</code>: 清空所有标记已完成的项。</li>
 </ul>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">
 <span class="co">// The Application</span>
   <span class="co">// ---------------</span>
 
-  <span class="co">// Our overall **AppView** is the top-level piece of UI.</span>
+  <span class="co">// **AppView**，顶级主要的UI。</span>
   <span class="kw">app</span>.<span class="fu">AppView</span> = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({
 
-    <span class="co">// Instead of generating a new element, bind to the existing skeleton of</span>
-    <span class="co">// the App already present in the HTML.</span>
+    <span class="co">// 把view绑定到一个已经存在的DOM上</span>
     <span class="dt">el</span>: <span class="ch">&#39;#todoapp&#39;</span>,
 
-    <span class="co">// Our template for the line of statistics at the bottom of the app.</span>
+    <span class="co">// 底部统计信息块的模板</span>
     <span class="dt">statsTemplate</span>: <span class="kw">_</span>.<span class="fu">template</span>( $(<span class="ch">&#39;#stats-template&#39;</span>).<span class="fu">html</span>() ),
 
-    <span class="co">// Delegated events for creating new items, and clearing completed ones.</span>
+    <span class="co">// 委托事件，新建，清空完成项</span>
     <span class="dt">events</span>: {
       <span class="ch">&#39;keypress #new-todo&#39;</span>: <span class="ch">&#39;createOnEnter&#39;</span>,
       <span class="ch">&#39;click #clear-completed&#39;</span>: <span class="ch">&#39;clearCompleted&#39;</span>,
       <span class="ch">&#39;click #toggle-all&#39;</span>: <span class="ch">&#39;toggleAllComplete&#39;</span>
     },
 
-    <span class="co">// At initialization we bind to the relevant events on the `Todos`</span>
-    <span class="co">// collection, when items are added or changed. Kick things off by</span>
-    <span class="co">// loading any preexisting todos that might be saved in *localStorage*.</span>
+    <span class="co">// 初始化的时候绑定相关事件到`Todos` collection,</span>
+    <span class="co">// 当元素添加或改变的时候。触发从*localStorage*载入已存在的todos。</span>
     <span class="dt">initialize</span>: <span class="kw">function</span>() {
       <span class="kw">this</span>.<span class="fu">input</span> = <span class="kw">this</span>.$(<span class="ch">&#39;#new-todo&#39;</span>);
       <span class="kw">this</span>.<span class="fu">allCheckbox</span> = <span class="kw">this</span>.$(<span class="ch">&#39;#toggle-all&#39;</span>)[<span class="dv">0</span>];
@@ -1645,8 +1639,7 @@ myApplication_galleryView = <span class="kw">Backbone.View</span>.<span class="f
       <span class="kw">app.Todos</span>.<span class="fu">fetch</span>();
     },
 
-    <span class="co">// Re-rendering the App just means refreshing the statistics -- the rest</span>
-    <span class="co">// of the app doesn&#39;t change.</span>
+    <span class="co">// 重新渲染，只刷新统计信息，其它部分不改变。</span>
     <span class="dt">render</span>: <span class="kw">function</span>() {
       <span class="kw">var</span> completed = <span class="kw">app.Todos</span>.<span class="fu">completed</span>().<span class="fu">length</span>;
       <span class="kw">var</span> remaining = <span class="kw">app.Todos</span>.<span class="fu">remaining</span>().<span class="fu">length</span>;
@@ -1672,14 +1665,14 @@ myApplication_galleryView = <span class="kw">Backbone.View</span>.<span class="f
       <span class="kw">this</span>.<span class="fu">allCheckbox</span>.<span class="fu">checked</span> = !remaining;
     },
 
-    <span class="co">// Add a single todo item to the list by creating a view for it, and</span>
-    <span class="co">// appending its element to the `&lt;ul&gt;`.</span>
+    <span class="co">// 通过创建一个view来新建一个单独的todo项，</span>
+    <span class="co">// 追加到`&lt;ul&gt;`中。</span>
     <span class="dt">addOne</span>: <span class="kw">function</span>( todo ) {
       <span class="kw">var</span> view = <span class="kw">new</span> <span class="kw">app</span>.<span class="fu">TodoView</span>({ <span class="dt">model</span>: todo });
       $(<span class="ch">&#39;#todo-list&#39;</span>).<span class="fu">append</span>( <span class="kw">view</span>.<span class="fu">render</span>().<span class="fu">el</span> );
     },
 
-    <span class="co">// Add all items in the **Todos** collection at once.</span>
+    <span class="co">// 一次性添加**Todos** collection中的所有项。</span>
     <span class="dt">addAll</span>: <span class="kw">function</span>() {
       <span class="kw">this</span>.$(<span class="ch">&#39;#todo-list&#39;</span>).<span class="fu">html</span>(<span class="ch">&#39;&#39;</span>);
       <span class="kw">app.Todos</span>.<span class="fu">each</span>(<span class="kw">this</span>.<span class="fu">addOne</span>, <span class="kw">this</span>);
@@ -1693,7 +1686,7 @@ myApplication_galleryView = <span class="kw">Backbone.View</span>.<span class="f
       <span class="kw">app.Todos</span>.<span class="fu">each</span>(<span class="kw">this</span>.<span class="fu">filterOne</span>, <span class="kw">this</span>);
     },
 
-    <span class="co">// Generate the attributes for a new Todo item.</span>
+    <span class="co">// 创建todo model默认属性</span>
     <span class="dt">newAttributes</span>: <span class="kw">function</span>() {
       <span class="kw">return</span> {
         <span class="dt">title</span>: <span class="kw">this</span>.<span class="fu">input</span>.<span class="fu">val</span>().<span class="fu">trim</span>(),
@@ -1702,8 +1695,7 @@ myApplication_galleryView = <span class="kw">Backbone.View</span>.<span class="f
       };
     },
 
-    <span class="co">// If you hit return in the main input field, create new **Todo** model,</span>
-    <span class="co">// persisting it to *localStorage*.</span>
+    <span class="co">// 回车时新建**Todo** model，并保存到*localStorage*中。</span>
     <span class="dt">createOnEnter</span>: <span class="kw">function</span>( e ) {
       <span class="kw">if</span> ( <span class="kw">e</span>.<span class="fu">which</span> !== ENTER_KEY || !<span class="kw">this</span>.<span class="fu">input</span>.<span class="fu">val</span>().<span class="fu">trim</span>() ) {
         <span class="kw">return</span>;
@@ -1713,7 +1705,7 @@ myApplication_galleryView = <span class="kw">Backbone.View</span>.<span class="f
       <span class="kw">this</span>.<span class="fu">input</span>.<span class="fu">val</span>(<span class="ch">&#39;&#39;</span>);
     },
 
-    <span class="co">// Clear all completed todo items, destroying their models.</span>
+    <span class="co">// 清空所有完成项，销毁它们的方法。</span>
     <span class="dt">clearCompleted</span>: <span class="kw">function</span>() {
       <span class="kw">_</span>.<span class="fu">each</span>( <span class="kw">window</span>.<span class="fu">app</span>.<span class="fu">Todos</span>.<span class="fu">completed</span>(), <span class="kw">function</span>( todo ) {
         <span class="kw">todo</span>.<span class="fu">destroy</span>();

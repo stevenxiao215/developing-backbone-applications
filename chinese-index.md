@@ -1546,7 +1546,7 @@ myGalleryViews.galleryView = Backbone.View.extend({});
 
 这种模式的好处是，可以容易的封装所有的models, views, routers等等，把他们清晰的分离，而且对代码扩展提供的坚实的基础。
 
-This pattern has a number of benefits. It's often a good idea to decouple the default configuration for your application into a single area that can be easily modified without the need to search through your entire codebase just to alter it. Here's an example of a hypothetical object literal that stores application configuration settings:
+这种模式有很多好处。它可以把应用的默认配置单独解耦出来成单独的一块，当你需要改造的时候就不用到整个代码里去找配置。下面有个例子，假设是一个保存应用的配置对象：
 
 
 ```javascript
@@ -1567,24 +1567,24 @@ var myConfig = {
 }
 ```
 
-Note that there are really only minor syntactical differences between the Object Literal pattern and a standard JSON data set. If for any reason you wish to use JSON for storing your configurations instead (e.g. for simpler storage when sending to the back-end), feel free to.
+这是一个纯粹的js对象，不过跟标准的JSON对象语法稍微有一点区别。至于为什么要用JSON对象来保存配置(比如传给后端的参数)，那只能说是随意了。
 
-For more on the Object Literal pattern, I recommend reading Rebecca Murphey's [excellent article on the topic](http://rmurphey.com/blog/2009/10/15/using-objects-to-organize-your-code).
+想进一步了解字面对象，推荐你阅读Rebecca Murphey的[优秀文章](http://rmurphey.com/blog/2009/10/15/using-objects-to-organize-your-code).
 
-**Nested namespacing**
+**嵌套的命名空间**
 
-An extension of the Object Literal pattern is nested namespacing. It's another common pattern used that offers a lower risk of collision due to the fact that even if a top-level namespace already exists, it's unlikely the same nested children do. For example, Yahoo's YUI uses the nested object namespacing pattern extensively:
+字面对象的一种扩展模式就是嵌套命名空间。这是一种在已经存在的顶级命名下避免冲突的常用模式，it's unlikely the same nested children do. 比如，Yahoo的YUId大量的使用了嵌套对象来做命名空间:
 
 ```javascript
 YAHOO.util.Dom.getElementsByClassName('test');
 ```
 
-Yahoo's YUI uses the nested object namespacing pattern regularly and even DocumentCloud (the creators of Backbone) use the nested namespacing pattern in their main applications. A sample implementation of nested namespacing with Backbone may look like this:
+Yahoo的YUI跟DocumentCloud(Backbone创建者)在他们的主要项目中一样都使用嵌套对象命名空间。下面是Backbone中使用嵌套命名空间的例子：
 
 ```javascript
 var galleryApp =  galleryApp || {};
 
-// perform similar check for nested children
+// 对嵌套的子对象进行检测
 galleryApp.routers = galleryApp.routers || {};
 galleryApp.model = galleryApp.model || {};
 galleryApp.model.special = galleryApp.model.special || {};
@@ -1601,41 +1601,39 @@ galleryApp.model.Comment = Backbone.Model.extend({});
 galleryApp.model.special.Admin = Backbone.Model.extend({});
 ```
 
-This is readable, clearly organized, and is a relatively safe way of namespacing your Backbone application. The only real caveat however is that it requires your browser's JavaScript engine to first locate the galleryApp object, then dig down until it gets to the function you're calling. However, developers such as Juriy Zaytsev (kangax) have tested and found the performance differences between single object namespacing vs the 'nested' approach to be quite negligible.
+这对于你的Backbone应用，可读性强，结构清晰，非常安全的命名空间管理。唯一的要求就是JavaScript引擎要先找到 galleryApp对象，知道找到你调用的对象。不过，Juriy Zaytsev已经对使用嵌套命名空间的性能进行了测试，与使用单层对象命名基本上没什么差异。
 
 
-**Recommendation**
+**推荐(Recommendation)**
 
-Reviewing the namespace patterns above, the option that I prefer when writing Backbone applications is nested object namespacing with the object literal pattern.
+回顾上面的命名模式，在开发Backbone应用中我更喜欢用嵌套对象命名空间模式，而不是对象直接量模式。
 
-Single global variables may work fine for applications that are relatively trivial. However, larger codebases requiring both namespaces and deep sub-namespaces require a succinct solution that's both readable and scalable. I feel this pattern achieves both of these objectives and is a good choice for most Backbone development.
+单一全局变量可能会工作起来很好。但是，对大量代码的应用更需要一个具有可读性和扩展性的命名空间管理方式。我觉得这种方式对于大多数Backbone开发来说是个很不错的选择。
 
+# <a name="practicaltodos">实践：Todos - 你的第一个Backbone.js应用</a>
 
-# <a name="practicaltodos">Practical: Todos - Your First Backbone.js App</a>
+现在，我们已经完成了基本概念的旅程，让我们开始写第一个Backbone.js应用——一个Todo列表应用。构建一个Todo应用是一个学习Backbone约定的很好方式。这是一个非常简单的应用，但是包含很多有趣而实用的问题，比如绑定(binding)，解析model数据，路由(routing)和模板渲染。
 
-Now that we've journeyed through the fundamentals, let's move on to writing our first Backbone.js app - a Todo List application. Building a Todo List is a great way to learn about Backbone’s conventions. It's a simple enough app, but contains enough interesting problems to be useful, such as binding, persisting model data, routing and template rendering.
-
-
-For this chapter, we’re going to learn how to create the Backbone.js Todo app listed on [TodoMVC.com](http://todomvc.com).
+这一章我们将学习如何创建一个[TodoMVC.com](http://todomvc.com)上面的Backbone.js Todo应用。
 
 <img src="img/todoapp.png" width="700px"/>
 
-Let's think about what we need from a high level architectural standpoint.
+我们先站在一个较高的架构角度想想我们需要些什么东西。
 
-* A `Todo` model to describe individual todo items
-* A `TodoList` collection to store and persist todos
-* A way of creating todos
-* Listing todos
-* Editing existing todos
-* Completing todos
-* Deleting todos
-* A way to bookmark the items that have been completed or are remaining
+* 一个`Todo` model来描述todo项实体
+* 一个`TodoList` collection对todos的持久化保存
+* 一种创建todos的方式
+* 列举todos
+* 编辑存在的todos
+* 完成todos
+* 删除todos
+* 一种方式去标记项目已完成或者是遗留
 
-Basically your classic [CRUD](http://en.wikipedia.org/wiki/Create,_read,_update_and_delete) methods. Let's get started!
+基本上是经典的[CRUD](http://en.wikipedia.org/wiki/Create,_read,_update_and_delete)方法。让我们开始吧!
 
 ##Index
 
-The first step is to setup the basic application dependencies, which in this case will be: [jQuery](http://jquery.com), [Underscore](http://underscorejs.org), Backbone.js and the [Backbone LocalStorage adapter](https://github.com/jeromegn/Backbone.localStorage). These will be loaded in our main (and only) HTML file, index.html:
+首先，第一步是建立应用的依赖，在这个案例中会使用：[jQuery](http://jquery.com), [Underscore](http://underscorejs.org), Backbone.js和[Backbone本地存储转换器](https://github.com/jeromegn/Backbone.localStorage)。这些东西必须在主页面index.html中加载：
 
 
 ```
@@ -1665,12 +1663,12 @@ The first step is to setup the basic application dependencies, which in this cas
 
 ```
 
-To help demonstrate how the various parts of our application can be split up, individual concerns are cleanly organized into folders representing our models, views, collections and routers. An app.js file is used to kick everything off.
+为了展示应用的各个部分是如何被单独分开的，每个部分都分别放在了单独的文件夹下，分别有models, views, collections和routers。app.js文件用于启动整个应用。
 
 
 ##Application HTML
 
-Now let's take a look at our application's static HTML. We're going to need an `<input>` for creating new todos, a `<ul id="todo-list" />` for listing the actual todos, and a section containing some operations, such as clearing completed todos.
+现在来看下应用的静态HTML。需要一个`<input>`来创建todos，一个`<ul id="todo-list" />`来列举todos项，一个section包含一些操作，比如清空完成的todos。
 
 ```
   <section id="todoapp">
@@ -1692,13 +1690,13 @@ Now let's take a look at our application's static HTML. We're going to need an `
   </div>
 ```
 
-We’ll be populating our todo-list and adding a statistics section with details about what items are left to be completed later on.
+后面我们会填充todo-list，添加一个部分统计哪些项待完成。
 
-So far so good. Now in order to tie this into our Backbone Todo app, we're going to have to go back to the fundamentals - a Todo model.
+回到基本概念——Todo model。
 
 ## Todo model
 
-The `Todo` model is remarkably straightforward. Firstly a todo has two attributes, a `title` and a `completed` status that indicates whether it's been completed. These attributes are passed as defaults, as you can see in the example below:
+`Todo` model非常简单明了。有2个属性`title`和`completed`状态表示是否完成。这些属性有默认值传入：
 
 ```javascript
 
@@ -1706,18 +1704,17 @@ var app = app || {};
 
   // Todo Model
   // ----------
-  // Our basic **Todo** model has `title`, `order`, and `completed` attributes.
+  // **Todo** model 有`title`, `order`，和`completed`属性。//
 
   app.Todo = Backbone.Model.extend({
 
-    // Default attributes for the todo
-    // and ensure that each todo created has `title` and `completed` keys.
+    // todo默认属性，确保每个todo创建之后可以读到`title` 和 `completed`。
     defaults: {
       title: '',
       completed: false
     },
 
-    // Toggle the `completed` state of this todo item.
+    // 切换`completed`状态。
     toggle: function() {
       this.save({
         completed: !this.get('completed')
@@ -1727,47 +1724,44 @@ var app = app || {};
   });
 ```
 
-We also have a `toggle()` function which allows to set whether a Todo item has been completed.
+同样有一个`toggle()`方法，设置todo是否已经完成。
 
 
 ##Todo collection
 
+接下来，用一个`TodoList` collection把models组合起来。这个collection是扩展自localStorage， 通过Backbone本地存储转换器自动使用HTML5进行本地存储，所以可以在页面请求之间保存。
 
-Next we have our `TodoList` collection used to group our models. The collection is being extended by localStorage which automatically persists Todo records to HTML5 Local Storage via the Backbone LocalStorage adapter, so they're saved between page requests.
+然后有一些静态方法，`completed()`和`remaining()`, 分别返回已完成和未完成的todos数组。
 
-We've then got some static methods, `completed()` and `remaining()`, which return an array of unfinished and finished todos respectively.
-
-Finally we have a `nextOrder()` function, that keeps our Todo items in sequential order as well as a `comparator()` used to sort items by their insertion order.
+最后有一个`nextOrder()`函数，通过`comparator()`比较保证他们按添加时的顺序排序。
 
 ```javascript
 
   // Todo Collection
   // ---------------
 
-  // The collection of todos is backed by *localStorage* instead of a remote
-  // server.
+  // 使用*localStorage*来替代远程服务器存储
   var TodoList = Backbone.Collection.extend({
 
-    // Reference to this collection's model.
+    // collection引用的model
     model: app.Todo,
 
-    // Save all of the todo items under the `"todos"` namespace.
+    // 保存所有todos到`"todos"命名空间下。
     localStorage: new Store('todos-backbone'),
 
-    // Filter down the list of all todo items that are finished.
+    // 过滤出所有已完成项
     completed: function() {
       return this.filter(function( todo ) {
         return todo.get('completed');
       });
     },
 
-    // Filter down the list to only todo items that are still not finished.
+    // 过滤出所有未完成项
     remaining: function() {
       return this.without.apply( this, this.completed() );
     },
 
-    // We keep the Todos in sequential order, despite being saved by unordered
-    // GUID in the database. This generates the next order number for new items.
+    // 虽然保存的时候是无序的，但是可以通过分配一个GUID来保证它的顺序。
     nextOrder: function() {
       if ( !this.length ) {
         return 1;
@@ -1775,13 +1769,13 @@ Finally we have a `nextOrder()` function, that keeps our Todo items in sequentia
       return this.last().get('order') + 1;
     },
 
-    // Todos are sorted by their original insertion order.
+    // 按添加时的顺序保存
     comparator: function( todo ) {
       return todo.get('order');
     }
   });
 
-  // Create our global collection of **Todos**.
+  // 创建一个全局的**Todos** collection。
   app.Todos = new TodoList();
 ```
 

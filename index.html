@@ -99,11 +99,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#todo-collection">Todo collection</a></li>
 <li><a href="#application-view">Application View</a></li>
 <li><a href="#setup">Setup</a></li>
-<li><a href="#creating-new-todos">Creating new todos</a></li>
-<li><a href="#in-action">In action</a></li>
-<li><a href="#templates">Templates</a></li>
-<li><a href="#in-action-1">In action</a></li>
-<li><a href="#completing-deleting-todos">Completing &amp; deleting todos</a></li>
+<li><a href="#创建新的todos">创建新的todos</a></li>
+<li><a href="#行动">行动</a></li>
+<li><a href="#模板">模板</a></li>
+<li><a href="#行动-1">行动</a></li>
+<li><a href="#完成删除todos">完成&amp;删除todos</a></li>
 <li><a href="#todo-routing">Todo routing</a></li>
 <li><a href="#conclusions">Conclusions</a></li>
 </ul></li>
@@ -1725,21 +1725,21 @@ myApplication_galleryView = <span class="kw">Backbone.View</span>.<span class="f
     }
   });</code></pre>
 <h2 id="setup"><a href="#TOC">Setup</a></h2>
-<p>So now we have two views: <code>AppView</code> and <code>TodoView</code>. The former needs to get instantiated when the page loads, so some code actually gets run. You can do this simply enough, by using jQuery’s <code>ready()</code> utility, which will execute a function when the DOM’s loaded.</p>
+<p>先自我们有2个view：<code>AppView</code>和<code>TodoView</code>。前者需要在页面载入的时候实例化，代码才能执行。这非常简单，可以用jQuery的 <code>ready()</code>方法，在DOM载入之后执行。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">
 <span class="kw">var</span> app = app || {};
 <span class="kw">var</span> ENTER_KEY = <span class="dv">13</span>;
 
 $(<span class="kw">function</span>() {
 
-  <span class="co">// Kick things off by creating the **App**.</span>
+  <span class="co">// 创建**App**.</span>
   <span class="kw">new</span> <span class="kw">app</span>.<span class="fu">AppView</span>();
 
 });</code></pre>
-<h2 id="creating-new-todos"><a href="#TOC">Creating new todos</a></h2>
-<p>It’s all very good creating todos from the console, but we can hardly expect our users to do that. Let’s hook up the todo creation section to provide a better interface. All the HTML is already there (in index.html); all we have to do is add some event listeners to that section, creating some todos.</p>
+<h2 id="创建新的todos"><a href="#TOC">创建新的todos</a></h2>
+<p>从控制台创建todos当然非常好，但是不能要求用户那么做。我们给创建的section做个钩子，提供更好的接口。所有HTML都在index.html；我们要做的就是给section添加些事件。</p>
 <img src="img/todoview.png" width="590px"/>
-<p>Let’s look at the <code>TodoView</code> view. This will be in charge of individual Todo records, making sure the view updates then the todo does.</p>
+<p>我们看下<code>TodoView</code>。它负责单个Todo记录，确保view和todo的同步更新。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">
   <span class="co">// Todo Item View</span>
   <span class="co">// --------------</span>
@@ -1753,34 +1753,33 @@ $(<span class="kw">function</span>() {
     <span class="co">// Cache the template function for a single item.</span>
     <span class="dt">template</span>: <span class="kw">_</span>.<span class="fu">template</span>( $(<span class="ch">&#39;#item-template&#39;</span>).<span class="fu">html</span>() ),
 
-    <span class="co">// The DOM events specific to an item.</span>
+    <span class="co">// DOM事件</span>
     <span class="dt">events</span>: {
       <span class="ch">&#39;dblclick label&#39;</span>: <span class="ch">&#39;edit&#39;</span>,
       <span class="ch">&#39;keypress .edit&#39;</span>: <span class="ch">&#39;updateOnEnter&#39;</span>,
       <span class="ch">&#39;blur .edit&#39;</span>:   <span class="ch">&#39;close&#39;</span>
     },
 
-    <span class="co">// The TodoView listens for changes to its model, re-rendering. Since there&#39;s</span>
-    <span class="co">// a one-to-one correspondence between a **Todo** and a **TodoView** in this</span>
-    <span class="co">// app, we set a direct reference on the model for convenience.</span>
+    <span class="co">// TodoView监听model的变化，然后重新渲染。 Since there&#39;s</span>
+    <span class="co">// **Todo**和**TodoView**是一对一的关系，为方便起见这里直接引用model。</span>
     <span class="dt">initialize</span>: <span class="kw">function</span>() {
       <span class="kw">this</span>.<span class="fu">model</span>.<span class="fu">on</span>( <span class="ch">&#39;change&#39;</span>, <span class="kw">this</span>.<span class="fu">render</span>, <span class="kw">this</span> );
     },
 
-    <span class="co">// Re-render the titles of the todo item.</span>
+    <span class="co">// 重新渲染todo</span>
     <span class="dt">render</span>: <span class="kw">function</span>() {
       <span class="kw">this</span>.$<span class="fu">el</span>.<span class="fu">html</span>( <span class="kw">this</span>.<span class="fu">template</span>( <span class="kw">this</span>.<span class="fu">model</span>.<span class="fu">toJSON</span>() ) );
       <span class="kw">this</span>.<span class="fu">input</span> = <span class="kw">this</span>.$(<span class="ch">&#39;.edit&#39;</span>);
       <span class="kw">return</span> <span class="kw">this</span>;
     },
 
-    <span class="co">// Switch this view into `&quot;editing&quot;` mode, displaying the input field.</span>
+    <span class="co">// 把view切换到`&quot;editing&quot;` 模式，显示input输入框。</span>
     <span class="dt">edit</span>: <span class="kw">function</span>() {
       <span class="kw">this</span>.$<span class="fu">el</span>.<span class="fu">addClass</span>(<span class="ch">&#39;editing&#39;</span>);
       <span class="kw">this</span>.<span class="fu">input</span>.<span class="fu">focus</span>();
     },
 
-    <span class="co">// Close the `&quot;editing&quot;` mode, saving changes to the todo.</span>
+    <span class="co">// 关闭`&quot;editing&quot;`模式，保存todo的修改。</span>
     <span class="dt">close</span>: <span class="kw">function</span>() {
       <span class="kw">var</span> value = <span class="kw">this</span>.<span class="fu">input</span>.<span class="fu">val</span>().<span class="fu">trim</span>();
 
@@ -1791,28 +1790,28 @@ $(<span class="kw">function</span>() {
       <span class="kw">this</span>.$<span class="fu">el</span>.<span class="fu">removeClass</span>(<span class="ch">&#39;editing&#39;</span>);
     },
 
-    <span class="co">// If you hit `enter`, we&#39;re through editing the item.</span>
+    <span class="co">// 回车完成编辑</span>
     <span class="dt">updateOnEnter</span>: <span class="kw">function</span>( e ) {
       <span class="kw">if</span> ( <span class="kw">e</span>.<span class="fu">which</span> === ENTER_KEY ) {
         <span class="kw">this</span>.<span class="fu">close</span>();
       }
     }
   });</code></pre>
-<p>In the <code>initialize()</code> constructor, we’re setting up a listener to the todo model’s change event. In other words, when the todo updates, we want to re-render the view to reflect its changes.</p>
-<p>In the <code>render()</code> method, we’re rendering an Underscore.js JavaScript template, called <code>#item-template</code>, which we’ve previously compiled into this.template using Underscore’s <code>_.template()</code> method. This returns a piece of HTML that we’re using to replace the view’s current element. In other words, the rendered template is now present under <code>this.el</code>, and can be appended to the todo list.</p>
-<p>Our events hash includes three callbacks:</p>
+<p>在<code>initialize()</code>构造函数中，注册了一个监听model change的事件，当todo更新时，重新渲染view。</p>
+<p><code>render()</code>方法， 渲染了一个Underscore模板，<code>#item-template</code>，前面已调用<code>_.template()</code>编译到this.template。它返回一段用当前view元素替换的HTML片段。编译的模板结果存放在<code>this.el</code>， 就可以添加到todo列表中了。</p>
+<p>我们这里的事件hash包括3个回调：</p>
 <ul>
-<li><code>edit()</code>: Changes the current view into editing mode when a user double-clicks on an existing item in the todo list. This allows them to change the existing value of the item’s title attribute</li>
-<li><code>updateOnEnter()</code>: checks that the user has hit the return/enter key and executes the close() function.</li>
-<li><code>close()</code>: This trims the value of the current text in our <code>&lt;input/&gt;</code> field, ensuring that we don’t process it further if it contains no text (e.g ‘’). If a valid value has been provided, we save the changes to the current todo model and close editing mode, by removing the corresponding CSS class.</li>
+<li><code>edit()</code>: 当用户双击todo列表中的项时切换view到编辑模式。就可以修改title属性了。</li>
+<li><code>updateOnEnter()</code>: 用户回车，然后执行close()函数。</li>
+<li><code>close()</code>: 对<code>&lt;input/&gt;</code>的输入值trim和验证，如果通过则保存todo，移除CSS class，关闭编辑模式。</li>
 </ul>
-<h2 id="in-action"><a href="#TOC">In action</a></h2>
-<p>Now we’ve gone far enough without checking that things work as they should. Open up index.html and, if everything’s going to plan, you shouldn’t see any errors in the console. The todo list will be blank (we haven’t created any todos yet), and the todo-list won’t work, as we haven’t yet hooked it up. However, we can create a Todo from the console.</p>
-<p>Type in: <code>window.app.Todos.create({ title: ‘My first Todo item});</code> and hit return.</p>
+<h2 id="行动"><a href="#TOC">行动</a></h2>
+<p>现在我们来验证下它是否像我们预想的那样运行。打开index.html，如果正常，在控制台应该看不到errors。todo列表是空白，因为还没添加任何todo。现在还不能完全正常工作，不过我们可以从控制台创建一个todo。</p>
+<p><code>window.app.Todos.create({ title: ‘My first Todo item});</code></p>
 <img src="img/todoconsole.png" width="700px"/>
-<p>Once you’ve run the above in the console, we should be looking at a brand new todo in the list of todos. Notice that if you refresh the page, the todo still persists using Local Storage.</p>
-<h2 id="templates"><a href="#TOC">Templates</a></h2>
-<p>The <code>#item-template</code> used in the <code>TodoView</code> view needs defining, so let’s do that. One way of including templates in the page is by using custom script tags. These don’t get evaluated by the browser, which just interprets them as plain text. Underscore micro-templating can then access the templates, rendering pieces of HTML.</p>
+<p>todos列表就多了一个todo了，刷新页面仍会保留，因为被本地存储保存了。</p>
+<h2 id="模板"><a href="#TOC">模板</a></h2>
+<p><code>TodoView</code>中使用的模板<code>#item-template</code>需要定义。在页面中包含模板的一种方式就是使用自定义类型的script标签。它不会被浏览器解析，只会当成普通的文本。Underscore micro-templating然后就可以访问到这段模板，渲染成HTML。</p>
 <pre class="sourceCode html"><code class="sourceCode html">  <span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/template&quot;</span><span class="ot"> id=</span><span class="st">&quot;item-template&quot;</span><span class="kw">&gt;</span>
     &lt;div class=<span class="st">&quot;view&quot;</span>&gt;
       &lt;input class=<span class="st">&quot;toggle&quot;</span> type=<span class="st">&quot;checkbox&quot;</span> &lt;%= completed ? <span class="ch">&#39;checked&#39;</span> : <span class="ch">&#39;&#39;</span> %&gt;&gt;
@@ -1821,9 +1820,9 @@ $(<span class="kw">function</span>() {
     &lt;/div&gt;
     &lt;input class=<span class="st">&quot;edit&quot;</span> value=<span class="st">&quot;&lt;%- title %&gt;&quot;</span>&gt;
   <span class="kw">&lt;/script&gt;</span></code></pre>
-<p>The template tags demonstrated above, such as <code>&lt;%=</code> , are specific to Underscore.js, and documented on the Underscore site. In your own applications, you have a choice of template libraries, such as Mustache or Handlebars. Use whichever you prefer, Backbone doesn’t mind.</p>
-<p>Now when <code>_.template( $('#item-template').html() )</code> is called in the <code>TodoView</code> view our template will render correctly.</p>
-<p>We also need to define #stats-template template we use to display how many items have been completed, as well as allowing the user to clear these items.</p>
+<p>上面模板中<code>&lt;%=</code>之类的标签是Underscore.js的语法标签。在你自己的应用中也可以选择其它的模板库，比如Mustache或者Handlebars，而Backbone不关心。</p>
+<p><code>TodoView</code>中调用<code>_.template( $('#item-template').html() )</code>时模板就会被渲染。</p>
+<p>我们还需要定义#stats-template模板，显示有多少条已完成项，同时包含清空按钮。</p>
 <pre class="sourceCode html"><code class="sourceCode html">  <span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/template&quot;</span><span class="ot"> id=</span><span class="st">&quot;stats-template&quot;</span><span class="kw">&gt;</span>
     &lt;span id=<span class="st">&quot;todo-count&quot;</span>&gt;&lt;strong&gt;&lt;%= remaining %&gt;&lt;/strong&gt; &lt;%= remaining === <span class="dv">1</span> ? <span class="ch">&#39;item&#39;</span> : <span class="ch">&#39;items&#39;</span> %&gt; left&lt;/span&gt;
     &lt;ul id=<span class="st">&quot;filters&quot;</span>&gt;
@@ -1841,13 +1840,13 @@ $(<span class="kw">function</span>() {
     &lt;button id=<span class="st">&quot;clear-completed&quot;</span>&gt;Clear completed (&lt;%= completed %&gt;)&lt;/button&gt;
     &lt;% } %&gt;
   <span class="kw">&lt;/script&gt;</span></code></pre>
-<h2 id="in-action-1"><a href="#TOC">In action</a></h2>
-<p>Now refresh index.html to see the fruits of our labour. We should be able to type a todo name, and press return to submit the form, creating a new todo.</p>
+<h2 id="行动-1"><a href="#TOC">行动</a></h2>
+<p>现在刷新index.html看下我们的劳动成果。可以输入todo名称，回车来创建一个新的todo了。</p>
 <figure>
 <img src="img/todocompleted.png"><figcaption></figcaption>
 </figure>
-<p>Excellent, we’re making great progress, but how about completing and deleting todos?</p>
-<h2 id="completing-deleting-todos"><a href="#TOC">Completing &amp; deleting todos</a></h2>
+<p>非常好，我们现在有很大进步了，那如何完成和删除todos呢？</p>
+<h2 id="完成删除todos"><a href="#TOC">完成&amp;删除todos</a></h2>
 <p>So the next part of our tutorial is going to cover completing and deleting todos. These two actions are specific to each Todo item, so we need to add this functionality to the TodoView view.</p>
 <p>The key part of this is the two event handlers we’ve added, a togglecompleted event on the todo’s checkbox, and a click event on the todo’s <code>&lt;button class=&quot;destroy&quot; /&gt;</code> button.</p>
 <p>The checkbox’s togglecompleted event invokes the toggle() function, which toggles the todos’s completed status, then resaving the todo - very straightforward! The button’s click event invokes <code>clear()</code>, which will simply destroy the todo.</p>

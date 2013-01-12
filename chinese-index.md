@@ -2106,7 +2106,7 @@ $(function() {
 * `close()`: 对`<input/>`的输入值trim和验证，如果通过则保存todo，移除CSS class，关闭编辑模式。
 
 
-##行动
+##预览
 
 现在我们来验证下它是否像我们预想的那样运行。打开index.html，如果正常，在控制台应该看不到errors。todo列表是空白，因为还没添加任何todo。现在还不能完全正常工作，不过我们可以从控制台创建一个todo。
 
@@ -2160,7 +2160,7 @@ todos列表就多了一个todo了，刷新页面仍会保留，因为被本地�
 ```
 
 
-##行动
+##预览
 
 现在刷新index.html看下我们的劳动成果。可以输入todo名称，回车来创建一个新的todo了。
 
@@ -2181,9 +2181,9 @@ button的click事件执行`clear()`，销毁todo。
 
 That's all there is to it. Since we're binding to the change event, whenever the todo changes the view will automatically be re-rendered, checking or un-checking the checkbox as appropriate. Similarly, when the todo is destroyed, the model's `destroy()` function will be called, removing the todo from the view as we’re binding to the destroy event too.
 
-One more piece to mention is that we’ve also binded to a visible event to handle the visibility state of the todo item. This is used in conjunction with the filtering in our routes and collections so that we only display an item if its completed state falls in line with the current filter.
+另外我们还绑定了一个visible事件来处理是否可见的状态。它连同routers和coloection中的过滤器一起使用，如果当前需要过滤已完成的todo就可以只显示已完成的项。
 
-This tutorial is long enough as is, so we won't go into in-place editing or updating. If you want an example of that, see the [complete source](https://github.com/addyosmani/todomvc/tree/master/architecture-examples/backbone/).
+这片教程已经够长了，所以不再做更新了。整个示例的[完整代码](https://github.com/addyosmani/todomvc/tree/master/architecture-examples/backbone/)在github上。
 
 ```javascript
 
@@ -2280,19 +2280,19 @@ This tutorial is long enough as is, so we won't go into in-place editing or upda
 
 
 
-##Todo routing
+##Todo路由
 
-Finally, we move on to routing, which will allow us to easily bookmark the list of items that are active as well as those which have been completed. We’ll be supporting the following routes:
+最后，我们来看下路由，可以允许我们把整个todo列表和已完成的列表加入收藏。我们会支持下列路由：
 
 ```javascript
-#/ (all - default)
+#/ (all - 默认)
 #/active
 #/completed
 ```
 
 <img src="img/todorouting.png" width="700px"/>
 
-When the route changes the todo list will be filtered on a model level and the selected class on the filter links will be toggled. When an item is updated while in a filtered state, it will be updated accordingly. E.g. if the filter is active and the item is checked, it will be hidden. The active filter is persisted on reload.
+当route改变时todo list将会在model级别过滤出来，selected class的样式也会被切换。当一个项在有过滤状态下改变时，它也会相应的更新。比如，如果过滤状态是active，然后这个项是被选中(checked)的，将会被影藏。active过滤状态在页面重新载入时也会持续保存。
 
 ```javascript
 
@@ -2308,8 +2308,7 @@ When the route changes the todo list will be filtered on a model level and the s
       // Set the current filter to be used
       window.app.TodoFilter = param.trim() || '';
 
-      // Trigger a collection filter event, causing hiding/unhiding
-      // of Todo view items
+      // 触发collection的filter事件，触发Todo view 项的hiding/unhiding。
       window.app.Todos.trigger('filter');
     }
   });
@@ -2318,21 +2317,21 @@ When the route changes the todo list will be filtered on a model level and the s
   Backbone.history.start();
 ```
 
-As we can see in the line  `window.app.Todos.trigger('filter')`, once a string filter has been set, we simply trigger our filter at a collection level to toggle which items are displayed and which of those are hidden.
+看到`window.app.Todos.trigger('filter')`这一行，只要设置了一个filter，就会触发collection的filter，切换需要显示和影藏的项。
 
-Finally, we call `Backbone.history.start()` to route the initial URL during page load.
+最后，调用`Backbone.history.start()`路由到页面载入是最初的URL。
 
-##Conclusions
+##总结
 
-We’ve now learned how to build our first complete Backbone.js application. The app can be viewed online at any time and the sources are readily available via [TodoMVC](http://www.todomvc.com).
+现在我们已经学完了如何创建一个完整的Backbone.js应用。这个应用可以通过[TodoMVC](http://www.todomvc.com)在线访问。
 
-Later on in the book, we’ll learn how to further modularize this application using Require.js, swap out our persistence layer to a database back-end and finally unit test the application with a few different testing frameworks.
+后面我们会学到如何使用Require.js来对这个应用进行进一步的模块化，把对数据的持久化切换到后端数据库，最后还有使用不同的测试框架对这个应用进行单元测试。
 
 
 
-# <a name="backboneboilerplate">Backbone Boilerplate And Grunt-BBB</a>
+# <a name="backboneboilerplate">Backbone Boilerplate和Grunt-BBB</a>
 
-[Backbone Boilerplate](https://github.com/tbranyen/backbone-boilerplate/) is an excellent set of best practices and utilities for building Backbone.js applications, created by Backbone contributor [Tim Branyen](https://github.com/tbranyen). He organized this boilerplate out of the gotchas, pitfalls and common tasks he ran into over a year of heavily using Backbone to build apps at Bocoup. This includes apps such [StartupDataTrends.com](http://startupdatatrends).
+[Backbone Boilerplate](https://github.com/tbranyen/backbone-boilerplate/) 是个非常好的构建Backbone.js应用的工具，由Backbone的贡献者[Tim Branyen](https://github.com/tbranyen)开发的。他在Bocoup超过一年以上大量使用Backbone构建apps，他从过去遇到的陷阱，误区和通用功能中提取和构建了boilerplate。包括app [StartupDataTrends.com](http://startupdatatrends.com).
 
 With scaffolding and built in build tasks that take care of minification, concatentation, server, template compilation and more, Backbone Boilerplate (and sister project [Grunt-BBB](https://github.com/backbone-boilerplate/grunt-bbb)) are an excellent choice for developers of all levels. I heavily recommend using them as they will give you an enormous start when it comes to getting setup for development. They also have some great inline documentation which is also another excellent time-saver.
 

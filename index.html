@@ -100,14 +100,14 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#application-view">Application View</a></li>
 <li><a href="#setup">Setup</a></li>
 <li><a href="#创建新的todos">创建新的todos</a></li>
-<li><a href="#行动">行动</a></li>
+<li><a href="#预览">预览</a></li>
 <li><a href="#模板">模板</a></li>
-<li><a href="#行动-1">行动</a></li>
+<li><a href="#预览-1">预览</a></li>
 <li><a href="#完成删除todos">完成&amp;删除todos</a></li>
-<li><a href="#todo-routing">Todo routing</a></li>
-<li><a href="#conclusions">Conclusions</a></li>
+<li><a href="#todo路由">Todo路由</a></li>
+<li><a href="#总结-1">总结</a></li>
 </ul></li>
-<li><a href="#backbone-boilerplate-and-grunt-bbb"><a name="backboneboilerplate">Backbone Boilerplate And Grunt-BBB</a></a><ul>
+<li><a href="#backbone-boilerplate和grunt-bbb"><a name="backboneboilerplate">Backbone Boilerplate和Grunt-BBB</a></a><ul>
 <li><a href="#getting-started">Getting Started</a><ul>
 <li><a href="#backbone-boilerplate">Backbone Boilerplate</a></li>
 <li><a href="#grunt-bbb">Grunt-BBB</a></li>
@@ -120,7 +120,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#creating-backbone-boilerplate-modules">Creating Backbone Boilerplate Modules</a></li>
 <li><a href="#router.js">router.js</a></li>
 </ul></li>
-<li><a href="#conclusions-1">Conclusions</a></li>
+<li><a href="#conclusions">Conclusions</a></li>
 <li><a href="#related-tools-projects">Related Tools &amp; Projects</a></li>
 </ul></li>
 <li><a href="#common-problems-solutions"><a name="commonproblems" id="commonproblems">Common Problems &amp; Solutions</a></a><ul>
@@ -187,7 +187,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#index.haml">index.haml</a></li>
 <li><a href="#todo.haml">todo.haml</a></li>
 </ul></li>
-<li><a href="#conclusions-2">Conclusions</a></li>
+<li><a href="#conclusions-1">Conclusions</a></li>
 </ul></li>
 <li><a href="#modular-development"><a name="advanced">Modular Development</a></a><ul>
 <li><a href="#introduction-1"><a name="modularjs">Introduction</a></a></li>
@@ -257,7 +257,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#initial-setup">Initial setup</a></li>
 <li><a href="#view-rendering">View rendering</a></li>
 <li><a href="#rendering-with-a-templating-system">Rendering with a templating system</a></li>
-<li><a href="#conclusions-3">Conclusions</a></li>
+<li><a href="#conclusions-2">Conclusions</a></li>
 <li><a href="#exercise">Exercise</a></li>
 <li><a href="#further-reading">Further reading</a></li>
 <li><a href="#unit-testing-backbone-applications-with-qunit-and-sinonjs"><a name="unittestingqunit">Unit Testing Backbone Applications With QUnit And SinonJS</a></a></li>
@@ -314,7 +314,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#further-reading-resources">Further Reading &amp; Resources</a></li>
 </ul></li>
 <li><a href="#resources"><a name="resources">Resources</a></a></li>
-<li><a href="#conclusions-4"><a name="conclusions">Conclusions</a></a><ul>
+<li><a href="#conclusions-3"><a name="conclusions">Conclusions</a></a><ul>
 <li><a href="#notes">Notes</a></li>
 </ul></li>
 </ul>
@@ -1805,7 +1805,7 @@ $(<span class="kw">function</span>() {
 <li><code>updateOnEnter()</code>: 用户回车，然后执行close()函数。</li>
 <li><code>close()</code>: 对<code>&lt;input/&gt;</code>的输入值trim和验证，如果通过则保存todo，移除CSS class，关闭编辑模式。</li>
 </ul>
-<h2 id="行动"><a href="#TOC">行动</a></h2>
+<h2 id="预览"><a href="#TOC">预览</a></h2>
 <p>现在我们来验证下它是否像我们预想的那样运行。打开index.html，如果正常，在控制台应该看不到errors。todo列表是空白，因为还没添加任何todo。现在还不能完全正常工作，不过我们可以从控制台创建一个todo。</p>
 <p><code>window.app.Todos.create({ title: ‘My first Todo item});</code></p>
 <img src="img/todoconsole.png" width="700px"/>
@@ -1840,19 +1840,19 @@ $(<span class="kw">function</span>() {
     &lt;button id=<span class="st">&quot;clear-completed&quot;</span>&gt;Clear completed (&lt;%= completed %&gt;)&lt;/button&gt;
     &lt;% } %&gt;
   <span class="kw">&lt;/script&gt;</span></code></pre>
-<h2 id="行动-1"><a href="#TOC">行动</a></h2>
+<h2 id="预览-1"><a href="#TOC">预览</a></h2>
 <p>现在刷新index.html看下我们的劳动成果。可以输入todo名称，回车来创建一个新的todo了。</p>
 <figure>
 <img src="img/todocompleted.png"><figcaption></figcaption>
 </figure>
 <p>非常好，我们现在有很大进步了，那如何完成和删除todos呢？</p>
 <h2 id="完成删除todos"><a href="#TOC">完成&amp;删除todos</a></h2>
-<p>So the next part of our tutorial is going to cover completing and deleting todos. These two actions are specific to each Todo item, so we need to add this functionality to the TodoView view.</p>
-<p>The key part of this is the two event handlers we’ve added, a togglecompleted event on the todo’s checkbox, and a click event on the todo’s <code>&lt;button class=&quot;destroy&quot; /&gt;</code> button.</p>
-<p>The checkbox’s togglecompleted event invokes the toggle() function, which toggles the todos’s completed status, then resaving the todo - very straightforward! The button’s click event invokes <code>clear()</code>, which will simply destroy the todo.</p>
+<p>下面我们将下完成和删除todos。这是对每个todo项的特定操作，所以要给TodoView增加函数。</p>
+<p>我们增加2个事件处理，一个togglecompleted事件绑定到todo的checkbox，和一个click事件绑定到<code>&lt;button class=&quot;destroy&quot; /&gt;</code>按钮。</p>
+<p>checkbox的togglecompleted事件触发toggle()函数，切换todos的完成状态，然后重新保存todo——非常的直接。 button的click事件执行<code>clear()</code>，销毁todo。</p>
 <p>That’s all there is to it. Since we’re binding to the change event, whenever the todo changes the view will automatically be re-rendered, checking or un-checking the checkbox as appropriate. Similarly, when the todo is destroyed, the model’s <code>destroy()</code> function will be called, removing the todo from the view as we’re binding to the destroy event too.</p>
-<p>One more piece to mention is that we’ve also binded to a visible event to handle the visibility state of the todo item. This is used in conjunction with the filtering in our routes and collections so that we only display an item if its completed state falls in line with the current filter.</p>
-<p>This tutorial is long enough as is, so we won’t go into in-place editing or updating. If you want an example of that, see the <a href="https://github.com/addyosmani/todomvc/tree/master/architecture-examples/backbone/">complete source</a>.</p>
+<p>另外我们还绑定了一个visible事件来处理是否可见的状态。它连同routers和coloection中的过滤器一起使用，如果当前需要过滤已完成的todo就可以只显示已完成的项。</p>
+<p>这片教程已经够长了，所以不再做更新了。整个示例的<a href="https://github.com/addyosmani/todomvc/tree/master/architecture-examples/backbone/">完整代码</a>在github上。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">
   <span class="co">// Todo Item View</span>
   <span class="co">// --------------</span>
@@ -1942,13 +1942,13 @@ $(<span class="kw">function</span>() {
       <span class="kw">this</span>.<span class="fu">model</span>.<span class="fu">destroy</span>();
     }
   });</code></pre>
-<h2 id="todo-routing"><a href="#TOC">Todo routing</a></h2>
-<p>Finally, we move on to routing, which will allow us to easily bookmark the list of items that are active as well as those which have been completed. We’ll be supporting the following routes:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript">#/ (all - <span class="kw">default</span>)
+<h2 id="todo路由"><a href="#TOC">Todo路由</a></h2>
+<p>最后，我们来看下路由，可以允许我们把整个todo列表和已完成的列表加入收藏。我们会支持下列路由：</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">#/ (all - 默认)
 #/active
 #/completed</code></pre>
 <img src="img/todorouting.png" width="700px"/>
-<p>When the route changes the todo list will be filtered on a model level and the selected class on the filter links will be toggled. When an item is updated while in a filtered state, it will be updated accordingly. E.g. if the filter is active and the item is checked, it will be hidden. The active filter is persisted on reload.</p>
+<p>当route改变时todo list将会在model级别过滤出来，selected class的样式也会被切换。当一个项在有过滤状态下改变时，它也会相应的更新。比如，如果过滤状态是active，然后这个项是被选中(checked)的，将会被影藏。active过滤状态在页面重新载入时也会持续保存。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">
   <span class="co">// Todo Router</span>
   <span class="co">// ----------</span>
@@ -1962,21 +1962,20 @@ $(<span class="kw">function</span>() {
       <span class="co">// Set the current filter to be used</span>
       <span class="kw">window</span>.<span class="fu">app</span>.<span class="fu">TodoFilter</span> = <span class="kw">param</span>.<span class="fu">trim</span>() || <span class="ch">&#39;&#39;</span>;
 
-      <span class="co">// Trigger a collection filter event, causing hiding/unhiding</span>
-      <span class="co">// of Todo view items</span>
+      <span class="co">// 触发collection的filter事件，触发Todo view 项的hiding/unhiding。</span>
       <span class="kw">window</span>.<span class="fu">app</span>.<span class="fu">Todos</span>.<span class="fu">trigger</span>(<span class="ch">&#39;filter&#39;</span>);
     }
   });
 
   <span class="kw">app</span>.<span class="fu">TodoRouter</span> = <span class="kw">new</span> Workspace();
   <span class="kw">Backbone.history</span>.<span class="fu">start</span>();</code></pre>
-<p>As we can see in the line <code>window.app.Todos.trigger('filter')</code>, once a string filter has been set, we simply trigger our filter at a collection level to toggle which items are displayed and which of those are hidden.</p>
-<p>Finally, we call <code>Backbone.history.start()</code> to route the initial URL during page load.</p>
-<h2 id="conclusions"><a href="#TOC">Conclusions</a></h2>
-<p>We’ve now learned how to build our first complete Backbone.js application. The app can be viewed online at any time and the sources are readily available via <a href="http://www.todomvc.com">TodoMVC</a>.</p>
-<p>Later on in the book, we’ll learn how to further modularize this application using Require.js, swap out our persistence layer to a database back-end and finally unit test the application with a few different testing frameworks.</p>
-<h1 id="backbone-boilerplate-and-grunt-bbb"><a href="#TOC"><a name="backboneboilerplate">Backbone Boilerplate And Grunt-BBB</a></a></h1>
-<p><a href="https://github.com/tbranyen/backbone-boilerplate/">Backbone Boilerplate</a> is an excellent set of best practices and utilities for building Backbone.js applications, created by Backbone contributor <a href="https://github.com/tbranyen">Tim Branyen</a>. He organized this boilerplate out of the gotchas, pitfalls and common tasks he ran into over a year of heavily using Backbone to build apps at Bocoup. This includes apps such <a href="http://startupdatatrends">StartupDataTrends.com</a>.</p>
+<p>看到<code>window.app.Todos.trigger('filter')</code>这一行，只要设置了一个filter，就会触发collection的filter，切换需要显示和影藏的项。</p>
+<p>最后，调用<code>Backbone.history.start()</code>路由到页面载入是最初的URL。</p>
+<h2 id="总结-1"><a href="#TOC">总结</a></h2>
+<p>现在我们已经学完了如何创建一个完整的Backbone.js应用。这个应用可以通过<a href="http://www.todomvc.com">TodoMVC</a>在线访问。</p>
+<p>后面我们会学到如何使用Require.js来对这个应用进行进一步的模块化，把对数据的持久化切换到后端数据库，最后还有使用不同的测试框架对这个应用进行单元测试。</p>
+<h1 id="backbone-boilerplate和grunt-bbb"><a href="#TOC"><a name="backboneboilerplate">Backbone Boilerplate和Grunt-BBB</a></a></h1>
+<p><a href="https://github.com/tbranyen/backbone-boilerplate/">Backbone Boilerplate</a> 是个非常好的构建Backbone.js应用的工具，由Backbone的贡献者<a href="https://github.com/tbranyen">Tim Branyen</a>开发的。他在Bocoup超过一年以上大量使用Backbone构建apps，他从过去遇到的陷阱，误区和通用功能中提取和构建了boilerplate。包括app <a href="http://startupdatatrends.com">StartupDataTrends.com</a>.</p>
 <p>With scaffolding and built in build tasks that take care of minification, concatentation, server, template compilation and more, Backbone Boilerplate (and sister project <a href="https://github.com/backbone-boilerplate/grunt-bbb">Grunt-BBB</a>) are an excellent choice for developers of all levels. I heavily recommend using them as they will give you an enormous start when it comes to getting setup for development. They also have some great inline documentation which is also another excellent time-saver.</p>
 <p>By default, Backbone Boilerplate provides you with:</p>
 <ul>
@@ -2440,7 +2439,7 @@ Initialized from template &quot;module&quot;.</code></pre>
   <span class="kw">return</span> Router;
 
 });</code></pre>
-<h2 id="conclusions-1"><a href="#TOC">Conclusions</a></h2>
+<h2 id="conclusions"><a href="#TOC">Conclusions</a></h2>
 <p>In this section we reviewed Backbone Boilerplate and learned how to use the BBB tool to help us scaffold out our application.</p>
 <p>If you would like to learn more about how this project helps structure your app, BBB includes some built-in boilerplate sample apps that can be easily generated for review.</p>
 <p>These include a boilerplate tutorial project (<code>bbb init:tutorial</code>) and an implementation of my <a href="http://todomvc">TodoMVC</a> project (<code>bbb init:todomvc</code>). I recommend checking these out as they’ll provide you with a more complete picture of how Backbone Boilerplate, its templates and so on fit into the overall setup for a web app.</p>
@@ -3743,7 +3742,7 @@ put <span class="st">&#39;/api/:thing/:id&#39;</span> <span class="kw">do</span>
       completed
       %span.word-done <span class="er">&lt;</span>%= done == 1 ? &#39;item&#39; : &#39;items&#39; %&gt;
   <span class="er">&lt;</span>% } %&gt;</code></pre>
-<h2 id="conclusions-2"><a href="#TOC">Conclusions</a></h2>
+<h2 id="conclusions-1"><a href="#TOC">Conclusions</a></h2>
 <p>In this chapter, we looked at creating a Backbone application backed by an API powered by Ruby, Sinatra, Haml, MongoDB and the MongoDB driver. I personally found developing APIs with Sinatra a relatively painless experience and one which I felt was on-par with the effort required for the Node/Express implementation of the same application.</p>
 <p>This section is by no means the most comprehensive guide on building complex apps using all of the items in this particular stack. I do however hope it was an introduction sufficient enough to help you decide on what stack to try out for your next project.</p>
 <h1 id="modular-development"><a href="#TOC"><a name="advanced">Modular Development</a></a></h1>
@@ -5658,7 +5657,7 @@ expect(<span class="ch">&#39;click&#39;</span>).<span class="fu">toHaveBeenTrigg
   });
 });</code></pre>
 <p>This will now also pass without any issues. Remember that jasmine-jquery also supports loading external fixtures into your specs easily using its build in <code>loadFixtures()</code> and <code>readFixtures()</code> methods. For more information, consider reading the official jasmine-jquery <a href="https://github.com/velesin/jasmine-jquery">docs</a>.</p>
-<h2 id="conclusions-3"><a href="#TOC">Conclusions</a></h2>
+<h2 id="conclusions-2"><a href="#TOC">Conclusions</a></h2>
 <p>We have now covered how to write Jasmine tests for models, views and collections with Backbone.js. Whilst testing routing can at times be desirable, some developers feel it can be more optimal to leave this to third-party tools such as Selenium, so do keep this in mind.</p>
 <p>James Newbery was kind enough to help me with writing the Views section above and his articles on <a href="http://tinnedfruit.com/2011/04/26/testing-backbone-apps-with-jasmine-sinon-3.html">Testing Backbone Apps With SinonJS</a> were of great inspiration (you’ll actually find some Handlebars examples of the view specs in part 3 of his article). If you would like to learn more about writing spies and mocks for Backbone using <a href="http://sinonjs.org">SinonJS</a> as well as how to test Backbone routers, do consider reading his series.</p>
 <h2 id="exercise"><a href="#TOC">Exercise</a></h2>
@@ -6528,7 +6527,7 @@ test( <span class="ch">&#39;Should bind Collection events to View creation.&#39;
 <li><a href="https://github.com/n-time/backbone.validations">Backbone Validations - HTML5 inspired validations</a></li>
 </ul>
 <p>In time, there will be tutorials in the book covering some of these resources but until then, please feel free to check them out.</p>
-<h1 id="conclusions-4"><a href="#TOC"><a name="conclusions">Conclusions</a></a></h1>
+<h1 id="conclusions-3"><a href="#TOC"><a name="conclusions">Conclusions</a></a></h1>
 <p>That’s it for <q>Developing Backbone.js Applications</q>. I hope you found this book both useful, enlightening and a good start for your journey into exploring Backbone.js.</p>
 <p>If there are other topics or areas of this book you feel could be expanded further, please feel free to let me know, or better yet, send a pull request upstream. I’m always interested in making this title as comprehensive as possible.</p>
 <p>Until next time, the very best of luck with the rest of your journey!</p>

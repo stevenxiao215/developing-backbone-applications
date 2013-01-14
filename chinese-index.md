@@ -2617,40 +2617,40 @@ function($, _, Backbone) {
 
   // Mix Backbone.Events, modules, and layout management into the app object.
   return _.extend(app, {
-    // Create a custom object with a nested Views object.
+    // 创建一个嵌套Views的自定义对象.
     module: function(additionalProps) {
       return _.extend({ Views: {} }, additionalProps);
     },
 
     // Helper for using layouts.
     useLayout: function(name) {
-      // If already using this Layout, then don't re-inject into the DOM.
+      // 如果已经存在这个Layout, 就不再注入到DOM。
       if (this.layout && this.layout.options.template === name) {
         return this.layout;
       }
 
-      // If a layout already exists, remove it from the DOM.
+      // 如果已经存在一个layout，从DOM中移除。
       if (this.layout) {
         this.layout.remove();
       }
 
-      // Create a new Layout.
+      // 创建一个新的layout
       var layout = new Backbone.Layout({
         template: name,
         className: "layout " + name,
         id: "layout"
       });
 
-      // Insert into the DOM.
+      // 插入到DOM
       $("#main").empty().append(layout.el);
 
-      // Render the layout.
+      // 渲染布局(layout)
       layout.render();
 
-      // Cache the reference.
+      // 缓存引用
       this.layout = layout;
 
-      // Return the reference, for chainability.
+      // 返回引用，可以链式调用。
       return layout;
     }
   }, Backbone.Events);
@@ -2658,21 +2658,21 @@ function($, _, Backbone) {
 });
 ```
 
-### Creating Backbone Boilerplate Modules
+### 创建Backbone Boilerplate模块
 
-Not to be confused with simply being just an AMD module, a Backbone Boilerplate `module` is a script composed of a:
+不要与简单的AMD混淆，一个Backbone Boilerplate`模块(module)`由下列部分组成的脚本：
 
 * Model
 * Collection
-* Views (optional)
+* Views (可选)
 
-We can easily create a new Boilerplate module using `grunt-bbb` once again using `init`:
+我们可以再次使用`grunt-bbb`的`init`来创建一个Boilerplate模块：
 
 ```shell
-# Create a new module
+# 新建模块
 bbb init:module
 
-# Grunt prompt
+# Grunt提示
 Please answer the following:
 [?] Module Name foo
 [?] Do you need to make any changes to the above before continuing? (y/N) n
@@ -2682,7 +2682,7 @@ Writing app/modules/foo.js...OK
 Initialized from template "module".
 ```
 
-This will generate a module `foo.js` as follows:
+它会创建一个下面这样的模块`foo.js`：
 
 ```javascript
 define([
@@ -2713,9 +2713,7 @@ function(app) {
 
 ```
 
-Notice how boilerplate code for our model and collection has already been written for us, as well as code for consuming the layout utilities defined in `app.js`.
-
-Now, you may be wondering where or how Views fit into this setup. Although Backbone Boilerplate doesn't include Views in its generated modules by default, we can easily add them ourselves as needed.
+现在，你可能想知道Views是如何引入进来。尽管Backbone Boilerplate创建模块时默认没有包含Views，我们可以手动添加。
 
 e.g:
 
@@ -2753,7 +2751,7 @@ function(app, Views) {
 });
 ```
 
-Optionally, we may also wish to include references to plugins such as the Backbone LocalStorage or Offline adapters. One clean way of including a plugin in the above boilerplate could be:
+另外，我们也可以选择性的引入插件，比如Backbone本地存储或者离线适配器。
 
 ```javascript
 define([
@@ -2791,7 +2789,7 @@ function(app, Backbone, Views) {
 });
 ```
 
-You may have spotted that in our module sample we're using the plural, "Views", rather than just View. This is because a View module can contain references to as many Views as needed. In the above, our `/modules/foo/views.js` file may look as follows:
+在这个示例中我们使用了view的复数，因为一个View模块可以包含多个views。上例中`/modules/foo/views.js`文件代码像下面这样：
 
 ```javascript
 define([
@@ -2822,12 +2820,12 @@ function(app, Backbone) {
 });
 ```
 
-Where the `template` references in our Views, correspond to files in the `app/templates` directory. e.g `foo/bar` is located at `app/templates/foo/bar.html` and is a HTML template that can contain Lodash/Underscore.js Micro-templating logic.
+Views中引用的模板(`template`)，相当于`app/templates`目录下对应的文件。比如`foo/bar`定位到`app/templates/foo/bar.html`，HTML模板可以包含Lodash/Underscore.js Micro-templating逻辑。
 
 
 ### router.js
 
-Finally, let's look at our application router, used for handling navigation. The default router Backbone Boilerplate generates for us inclues sane defaults for no routes being specified.
+最后，看下路由。Backbone Boilerplate默认创建的路由包含一个默认路由路径。
 
 ```javascript
 define([
@@ -2837,7 +2835,7 @@ define([
 
 function(app) {
 
-  // Defining the application router, you can attach sub routers here.
+  // 定义应用的router，可以在这里附加子路由。
   var Router = Backbone.Router.extend({
     routes: {
       "": "index"
@@ -2853,7 +2851,7 @@ function(app) {
 });
 ```
 
-If however we would like to execute some module-specific logic, when the page loads (i.e when a user hits the default route), we can pull in a module as a dependency and optionally use the Backbone LayoutManager to attach Views to our layout as follows:
+如果我们想执行一些特定模块逻辑，当页面载入时(比如用户输出入了默认路由路径)，我们可以把一个模块拉入依赖项，选择性的使用Backbone LayoutManager附加Views到layout，就想下面这样：
 
 ```javascript
 define([
@@ -2894,26 +2892,26 @@ function(app, Foo) {
 });
 ```
 
-## Conclusions
+## 总结
 
-In this section we reviewed Backbone Boilerplate and learned how to use the BBB tool to help us scaffold out our application.
+这章我们回顾了下ackbone Boilerplate，学习了如何使用BBB工具来构建应用。
 
-If you would like to learn more about how this project helps structure your app, BBB includes some built-in boilerplate sample apps that can be easily generated for review.
+如果你想学习更多关于如何构建app，BBB包含一些内置的模板样例app，可以非常简单的创建，reivew。
 
-These include a boilerplate tutorial project (`bbb init:tutorial`) and an implementation of my [TodoMVC](http://todomvc) project (`bbb init:todomvc`). I recommend checking these out as they'll provide you with a more complete picture of how Backbone Boilerplate, its templates and so on fit into the overall setup for a web app.
+里面包含一个教程project (`bbb init:tutorial`) 和一个[TodoMVC](http://todomvc)项目的实现 (`bbb init:todomvc`)。推荐大家从代码库中check out下来，有个更清晰完整的理解。
 
-For more about Grunt-BBB, remember to take a look at the official project [repositoryy](https://github.com/backbone-boilerplate/grunt-bbb). There is also a related [slide-deck](https://dl.dropbox.com/u/79007/talks/Modern_Web_Applications/slides/index.html) available for those interested in reading more.
+更多关于Grunt-BBB，记得参考官方项目[repositoryy](https://github.com/backbone-boilerplate/grunt-bbb)。还有一个相关的项目[slide-deck](https://dl.dropbox.com/u/79007/talks/Modern_Web_Applications/slides/index.html)。
 
-## Related Tools & Projects
+## 相关工具Tools和Projects
 
-As we've seen, scaffolding tools can assist in expediting how quickly you can begin a new application by creating the basic files required for a project automatically. If you appreciate such tools, I'm happy to also recommend checking out [Yeoman](http://yeoman.io) (one of my upcoming projects) and [Brunch](https://github.com/brunch/brunch).
+构建工具(scaffolding tools)可以快速的自动帮我们创建应用的基本文件。如果你因有这些工具而兴奋，推荐你check out [Yeoman](http://yeoman.io)(一个我即将面世的项目)和[Brunch](https://github.com/brunch/brunch)。
 
-Brunch works very well with Backbone, Underscore, jQuery and CoffeeScript and is even used by companies such as Red Bull and Jim Beam. You may have to update any third party dependencies (e.g. latest jQuery or Zepto) when using it, but other than that it should be fairly stable to use right out of the box.
+Brunch可以非常的同Backbone, Underscore, jQuery和CoffeeScript一起工作，而且被一些公司使用，比如Red Bull和Jim Beam。使用前可能需要更新一些第三方依赖模块(比如，最新的jQuery和Zepto)，初次之外，它可以非常稳定的使用。
 
-Brunch can be installed via the nodejs package manager and is easy to get started with. If you happen to use Vim or Textmate as your editor of choice, you'll be happy to know that there are Brunch bundles available for both.
+Brunch可以通过nodejs包管理器来安装，非常容易上手。如果你使用Vim或者Textmate编辑器的话，你会发现这两者都有Brunch的绑定。
 
 
-# <a name="commonproblems" id="commonproblems">Common Problems & Solutions</a>
+# <a name="commonproblems" id="commonproblems">常见问题和解决方案</a>
 
 In this section, we will review a number of common problems developers often experience once they've started to work on relatively non-trivial projects using Backbone.js, as well as present potential solutions.
 

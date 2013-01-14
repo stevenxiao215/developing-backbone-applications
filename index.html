@@ -117,13 +117,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#config.js">config.js</a></li>
 <li><a href="#main.js">main.js</a></li>
 <li><a href="#app.js">app.js</a></li>
-<li><a href="#creating-backbone-boilerplate-modules">Creating Backbone Boilerplate Modules</a></li>
+<li><a href="#创建backbone-boilerplate模块">创建Backbone Boilerplate模块</a></li>
 <li><a href="#router.js">router.js</a></li>
 </ul></li>
-<li><a href="#conclusions">Conclusions</a></li>
-<li><a href="#related-tools-projects">Related Tools &amp; Projects</a></li>
+<li><a href="#总结-2">总结</a></li>
+<li><a href="#相关工具tools和projects">相关工具Tools和Projects</a></li>
 </ul></li>
-<li><a href="#common-problems-solutions"><a name="commonproblems" id="commonproblems">Common Problems &amp; Solutions</a></a><ul>
+<li><a href="#常见问题和解决方案"><a name="commonproblems" id="commonproblems">常见问题和解决方案</a></a><ul>
 <li><a href="#nesting-what-is-the-best-approach-for-rendering-and-appending-sub-views-in-backbone.js">Nesting: What is the best approach for rendering and appending Sub-Views in Backbone.js?</a></li>
 <li><a href="#what-is-the-best-way-to-manage-models-in-nested-views">What is the best way to manage models in nested Views?</a></li>
 <li><a href="#is-it-possible-to-have-one-backbone.js-view-trigger-updates-in-other-views">Is it possible to have one Backbone.js View trigger updates in other Views?</a></li>
@@ -187,7 +187,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#index.haml">index.haml</a></li>
 <li><a href="#todo.haml">todo.haml</a></li>
 </ul></li>
-<li><a href="#conclusions-1">Conclusions</a></li>
+<li><a href="#conclusions">Conclusions</a></li>
 </ul></li>
 <li><a href="#modular-development"><a name="advanced">Modular Development</a></a><ul>
 <li><a href="#introduction-1"><a name="modularjs">Introduction</a></a></li>
@@ -257,7 +257,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#initial-setup">Initial setup</a></li>
 <li><a href="#view-rendering">View rendering</a></li>
 <li><a href="#rendering-with-a-templating-system">Rendering with a templating system</a></li>
-<li><a href="#conclusions-2">Conclusions</a></li>
+<li><a href="#conclusions-1">Conclusions</a></li>
 <li><a href="#exercise">Exercise</a></li>
 <li><a href="#further-reading">Further reading</a></li>
 <li><a href="#unit-testing-backbone-applications-with-qunit-and-sinonjs"><a name="unittestingqunit">Unit Testing Backbone Applications With QUnit And SinonJS</a></a></li>
@@ -314,7 +314,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#further-reading-resources">Further Reading &amp; Resources</a></li>
 </ul></li>
 <li><a href="#resources"><a name="resources">Resources</a></a></li>
-<li><a href="#conclusions-3"><a name="conclusions">Conclusions</a></a><ul>
+<li><a href="#conclusions-2"><a name="conclusions">Conclusions</a></a><ul>
 <li><a href="#notes">Notes</a></li>
 </ul></li>
 </ul>
@@ -2192,57 +2192,57 @@ bbb init</code></pre>
 
   <span class="co">// Mix Backbone.Events, modules, and layout management into the app object.</span>
   <span class="kw">return</span> <span class="kw">_</span>.<span class="fu">extend</span>(app, {
-    <span class="co">// Create a custom object with a nested Views object.</span>
+    <span class="co">// 创建一个嵌套Views的自定义对象.</span>
     <span class="dt">module</span>: <span class="kw">function</span>(additionalProps) {
       <span class="kw">return</span> <span class="kw">_</span>.<span class="fu">extend</span>({ <span class="dt">Views</span>: {} }, additionalProps);
     },
 
     <span class="co">// Helper for using layouts.</span>
     <span class="dt">useLayout</span>: <span class="kw">function</span>(name) {
-      <span class="co">// If already using this Layout, then don&#39;t re-inject into the DOM.</span>
+      <span class="co">// 如果已经存在这个Layout, 就不再注入到DOM。</span>
       <span class="kw">if</span> (<span class="kw">this</span>.<span class="fu">layout</span> &amp;&amp; <span class="kw">this</span>.<span class="fu">layout</span>.<span class="fu">options</span>.<span class="fu">template</span> === name) {
         <span class="kw">return</span> <span class="kw">this</span>.<span class="fu">layout</span>;
       }
 
-      <span class="co">// If a layout already exists, remove it from the DOM.</span>
+      <span class="co">// 如果已经存在一个layout，从DOM中移除。</span>
       <span class="kw">if</span> (<span class="kw">this</span>.<span class="fu">layout</span>) {
         <span class="kw">this</span>.<span class="fu">layout</span>.<span class="fu">remove</span>();
       }
 
-      <span class="co">// Create a new Layout.</span>
+      <span class="co">// 创建一个新的layout</span>
       <span class="kw">var</span> layout = <span class="kw">new</span> <span class="kw">Backbone</span>.<span class="fu">Layout</span>({
         <span class="dt">template</span>: name,
         <span class="dt">className</span>: <span class="st">&quot;layout &quot;</span> + name,
         <span class="dt">id</span>: <span class="st">&quot;layout&quot;</span>
       });
 
-      <span class="co">// Insert into the DOM.</span>
+      <span class="co">// 插入到DOM</span>
       $(<span class="st">&quot;#main&quot;</span>).<span class="fu">empty</span>().<span class="fu">append</span>(<span class="kw">layout</span>.<span class="fu">el</span>);
 
-      <span class="co">// Render the layout.</span>
+      <span class="co">// 渲染布局(layout)</span>
       <span class="kw">layout</span>.<span class="fu">render</span>();
 
-      <span class="co">// Cache the reference.</span>
+      <span class="co">// 缓存引用</span>
       <span class="kw">this</span>.<span class="fu">layout</span> = layout;
 
-      <span class="co">// Return the reference, for chainability.</span>
+      <span class="co">// 返回引用，可以链式调用。</span>
       <span class="kw">return</span> layout;
     }
   }, <span class="kw">Backbone</span>.<span class="fu">Events</span>);
 
 });</code></pre>
-<h3 id="creating-backbone-boilerplate-modules"><a href="#TOC">Creating Backbone Boilerplate Modules</a></h3>
-<p>Not to be confused with simply being just an AMD module, a Backbone Boilerplate <code>module</code> is a script composed of a:</p>
+<h3 id="创建backbone-boilerplate模块"><a href="#TOC">创建Backbone Boilerplate模块</a></h3>
+<p>不要与简单的AMD混淆，一个Backbone Boilerplate<code>模块(module)</code>由下列部分组成的脚本：</p>
 <ul>
 <li>Model</li>
 <li>Collection</li>
-<li>Views (optional)</li>
+<li>Views (可选)</li>
 </ul>
-<p>We can easily create a new Boilerplate module using <code>grunt-bbb</code> once again using <code>init</code>:</p>
-<pre class="shell"><code># Create a new module
+<p>我们可以再次使用<code>grunt-bbb</code>的<code>init</code>来创建一个Boilerplate模块：</p>
+<pre class="shell"><code># 新建模块
 bbb init:module
 
-# Grunt prompt
+# Grunt提示
 Please answer the following:
 [?] Module Name foo
 [?] Do you need to make any changes to the above before continuing? (y/N) n
@@ -2250,7 +2250,7 @@ Please answer the following:
 Writing app/modules/foo.js...OK
 
 Initialized from template &quot;module&quot;.</code></pre>
-<p>This will generate a module <code>foo.js</code> as follows:</p>
+<p>它会创建一个下面这样的模块<code>foo.js</code>：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([
   <span class="co">// Application.</span>
   <span class="st">&quot;app&quot;</span>
@@ -2276,8 +2276,7 @@ Initialized from template &quot;module&quot;.</code></pre>
   <span class="kw">return</span> Foo;
 
 });</code></pre>
-<p>Notice how boilerplate code for our model and collection has already been written for us, as well as code for consuming the layout utilities defined in <code>app.js</code>.</p>
-<p>Now, you may be wondering where or how Views fit into this setup. Although Backbone Boilerplate doesn’t include Views in its generated modules by default, we can easily add them ourselves as needed.</p>
+<p>现在，你可能想知道Views是如何引入进来。尽管Backbone Boilerplate创建模块时默认没有包含Views，我们可以手动添加。</p>
 <p>e.g:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([
   <span class="co">// Application.</span>
@@ -2310,7 +2309,7 @@ Initialized from template &quot;module&quot;.</code></pre>
   <span class="kw">return</span> Foo;
 
 });</code></pre>
-<p>Optionally, we may also wish to include references to plugins such as the Backbone LocalStorage or Offline adapters. One clean way of including a plugin in the above boilerplate could be:</p>
+<p>另外，我们也可以选择性的引入插件，比如Backbone本地存储或者离线适配器。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([
   <span class="st">&quot;app&quot;</span>,
 
@@ -2344,7 +2343,7 @@ Initialized from template &quot;module&quot;.</code></pre>
   <span class="co">// Return the module for AMD compliance.</span>
   <span class="kw">return</span> Foo;
 });</code></pre>
-<p>You may have spotted that in our module sample we’re using the plural, <q>Views</q>, rather than just View. This is because a View module can contain references to as many Views as needed. In the above, our <code>/modules/foo/views.js</code> file may look as follows:</p>
+<p>在这个示例中我们使用了view的复数，因为一个View模块可以包含多个views。上例中<code>/modules/foo/views.js</code>文件代码像下面这样：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([
   <span class="st">&quot;app&quot;</span>,
 
@@ -2371,9 +2370,9 @@ Initialized from template &quot;module&quot;.</code></pre>
    <span class="kw">return</span> Views;
 
 });</code></pre>
-<p>Where the <code>template</code> references in our Views, correspond to files in the <code>app/templates</code> directory. e.g <code>foo/bar</code> is located at <code>app/templates/foo/bar.html</code> and is a HTML template that can contain Lodash/Underscore.js Micro-templating logic.</p>
+<p>Views中引用的模板(<code>template</code>)，相当于<code>app/templates</code>目录下对应的文件。比如<code>foo/bar</code>定位到<code>app/templates/foo/bar.html</code>，HTML模板可以包含Lodash/Underscore.js Micro-templating逻辑。</p>
 <h3 id="router.js"><a href="#TOC">router.js</a></h3>
-<p>Finally, let’s look at our application router, used for handling navigation. The default router Backbone Boilerplate generates for us inclues sane defaults for no routes being specified.</p>
+<p>最后，看下路由。Backbone Boilerplate默认创建的路由包含一个默认路由路径。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([
   <span class="co">// Application.</span>
   <span class="st">&quot;app&quot;</span>
@@ -2381,7 +2380,7 @@ Initialized from template &quot;module&quot;.</code></pre>
 
 <span class="kw">function</span>(app) {
 
-  <span class="co">// Defining the application router, you can attach sub routers here.</span>
+  <span class="co">// 定义应用的router，可以在这里附加子路由。</span>
   <span class="kw">var</span> Router = <span class="kw">Backbone.Router</span>.<span class="fu">extend</span>({
     <span class="dt">routes</span>: {
       <span class="st">&quot;&quot;</span>: <span class="st">&quot;index&quot;</span>
@@ -2395,7 +2394,7 @@ Initialized from template &quot;module&quot;.</code></pre>
   <span class="kw">return</span> Router;
 
 });</code></pre>
-<p>If however we would like to execute some module-specific logic, when the page loads (i.e when a user hits the default route), we can pull in a module as a dependency and optionally use the Backbone LayoutManager to attach Views to our layout as follows:</p>
+<p>如果我们想执行一些特定模块逻辑，当页面载入时(比如用户输出入了默认路由路径)，我们可以把一个模块拉入依赖项，选择性的使用Backbone LayoutManager附加Views到layout，就想下面这样：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([
   <span class="co">// Application.</span>
   <span class="st">&quot;app&quot;</span>,
@@ -2432,16 +2431,16 @@ Initialized from template &quot;module&quot;.</code></pre>
   <span class="kw">return</span> Router;
 
 });</code></pre>
-<h2 id="conclusions"><a href="#TOC">Conclusions</a></h2>
-<p>In this section we reviewed Backbone Boilerplate and learned how to use the BBB tool to help us scaffold out our application.</p>
-<p>If you would like to learn more about how this project helps structure your app, BBB includes some built-in boilerplate sample apps that can be easily generated for review.</p>
-<p>These include a boilerplate tutorial project (<code>bbb init:tutorial</code>) and an implementation of my <a href="http://todomvc">TodoMVC</a> project (<code>bbb init:todomvc</code>). I recommend checking these out as they’ll provide you with a more complete picture of how Backbone Boilerplate, its templates and so on fit into the overall setup for a web app.</p>
-<p>For more about Grunt-BBB, remember to take a look at the official project <a href="https://github.com/backbone-boilerplate/grunt-bbb">repositoryy</a>. There is also a related <a href="https://dl.dropbox.com/u/79007/talks/Modern_Web_Applications/slides/index.html">slide-deck</a> available for those interested in reading more.</p>
-<h2 id="related-tools-projects"><a href="#TOC">Related Tools &amp; Projects</a></h2>
-<p>As we’ve seen, scaffolding tools can assist in expediting how quickly you can begin a new application by creating the basic files required for a project automatically. If you appreciate such tools, I’m happy to also recommend checking out <a href="http://yeoman.io">Yeoman</a> (one of my upcoming projects) and <a href="https://github.com/brunch/brunch">Brunch</a>.</p>
-<p>Brunch works very well with Backbone, Underscore, jQuery and CoffeeScript and is even used by companies such as Red Bull and Jim Beam. You may have to update any third party dependencies (e.g. latest jQuery or Zepto) when using it, but other than that it should be fairly stable to use right out of the box.</p>
-<p>Brunch can be installed via the nodejs package manager and is easy to get started with. If you happen to use Vim or Textmate as your editor of choice, you’ll be happy to know that there are Brunch bundles available for both.</p>
-<h1 id="common-problems-solutions"><a href="#TOC"><a name="commonproblems" id="commonproblems">Common Problems &amp; Solutions</a></a></h1>
+<h2 id="总结-2"><a href="#TOC">总结</a></h2>
+<p>这章我们回顾了下ackbone Boilerplate，学习了如何使用BBB工具来构建应用。</p>
+<p>如果你想学习更多关于如何构建app，BBB包含一些内置的模板样例app，可以非常简单的创建，reivew。</p>
+<p>里面包含一个教程project (<code>bbb init:tutorial</code>) 和一个<a href="http://todomvc">TodoMVC</a>项目的实现 (<code>bbb init:todomvc</code>)。推荐大家从代码库中check out下来，有个更清晰完整的理解。</p>
+<p>更多关于Grunt-BBB，记得参考官方项目<a href="https://github.com/backbone-boilerplate/grunt-bbb">repositoryy</a>。还有一个相关的项目<a href="https://dl.dropbox.com/u/79007/talks/Modern_Web_Applications/slides/index.html">slide-deck</a>。</p>
+<h2 id="相关工具tools和projects"><a href="#TOC">相关工具Tools和Projects</a></h2>
+<p>构建工具(scaffolding tools)可以快速的自动帮我们创建应用的基本文件。如果你因有这些工具而兴奋，推荐你check out <a href="http://yeoman.io">Yeoman</a>(一个我即将面世的项目)和<a href="https://github.com/brunch/brunch">Brunch</a>。</p>
+<p>Brunch可以非常的同Backbone, Underscore, jQuery和CoffeeScript一起工作，而且被一些公司使用，比如Red Bull和Jim Beam。使用前可能需要更新一些第三方依赖模块(比如，最新的jQuery和Zepto)，初次之外，它可以非常稳定的使用。</p>
+<p>Brunch可以通过nodejs包管理器来安装，非常容易上手。如果你使用Vim或者Textmate编辑器的话，你会发现这两者都有Brunch的绑定。</p>
+<h1 id="常见问题和解决方案"><a href="#TOC"><a name="commonproblems" id="commonproblems">常见问题和解决方案</a></a></h1>
 <p>In this section, we will review a number of common problems developers often experience once they’ve started to work on relatively non-trivial projects using Backbone.js, as well as present potential solutions.</p>
 <p>Perhaps the most frequent of these questions surround how to do more with Views. If you are interested in discovering how to work with nested Views, learn about view disposal and inheritance, this section will hopefully have you covered.</p>
 <h4 id="nesting-what-is-the-best-approach-for-rendering-and-appending-sub-views-in-backbone.js"><a href="#TOC">Nesting: What is the best approach for rendering and appending Sub-Views in Backbone.js?</a></h4>
@@ -3735,7 +3734,7 @@ put <span class="st">&#39;/api/:thing/:id&#39;</span> <span class="kw">do</span>
       completed
       %span.word-done <span class="er">&lt;</span>%= done == 1 ? &#39;item&#39; : &#39;items&#39; %&gt;
   <span class="er">&lt;</span>% } %&gt;</code></pre>
-<h2 id="conclusions-1"><a href="#TOC">Conclusions</a></h2>
+<h2 id="conclusions"><a href="#TOC">Conclusions</a></h2>
 <p>In this chapter, we looked at creating a Backbone application backed by an API powered by Ruby, Sinatra, Haml, MongoDB and the MongoDB driver. I personally found developing APIs with Sinatra a relatively painless experience and one which I felt was on-par with the effort required for the Node/Express implementation of the same application.</p>
 <p>This section is by no means the most comprehensive guide on building complex apps using all of the items in this particular stack. I do however hope it was an introduction sufficient enough to help you decide on what stack to try out for your next project.</p>
 <h1 id="modular-development"><a href="#TOC"><a name="advanced">Modular Development</a></a></h1>
@@ -5650,7 +5649,7 @@ expect(<span class="ch">&#39;click&#39;</span>).<span class="fu">toHaveBeenTrigg
   });
 });</code></pre>
 <p>This will now also pass without any issues. Remember that jasmine-jquery also supports loading external fixtures into your specs easily using its build in <code>loadFixtures()</code> and <code>readFixtures()</code> methods. For more information, consider reading the official jasmine-jquery <a href="https://github.com/velesin/jasmine-jquery">docs</a>.</p>
-<h2 id="conclusions-2"><a href="#TOC">Conclusions</a></h2>
+<h2 id="conclusions-1"><a href="#TOC">Conclusions</a></h2>
 <p>We have now covered how to write Jasmine tests for models, views and collections with Backbone.js. Whilst testing routing can at times be desirable, some developers feel it can be more optimal to leave this to third-party tools such as Selenium, so do keep this in mind.</p>
 <p>James Newbery was kind enough to help me with writing the Views section above and his articles on <a href="http://tinnedfruit.com/2011/04/26/testing-backbone-apps-with-jasmine-sinon-3.html">Testing Backbone Apps With SinonJS</a> were of great inspiration (you’ll actually find some Handlebars examples of the view specs in part 3 of his article). If you would like to learn more about writing spies and mocks for Backbone using <a href="http://sinonjs.org">SinonJS</a> as well as how to test Backbone routers, do consider reading his series.</p>
 <h2 id="exercise"><a href="#TOC">Exercise</a></h2>
@@ -6520,7 +6519,7 @@ test( <span class="ch">&#39;Should bind Collection events to View creation.&#39;
 <li><a href="https://github.com/n-time/backbone.validations">Backbone Validations - HTML5 inspired validations</a></li>
 </ul>
 <p>In time, there will be tutorials in the book covering some of these resources but until then, please feel free to check them out.</p>
-<h1 id="conclusions-3"><a href="#TOC"><a name="conclusions">Conclusions</a></a></h1>
+<h1 id="conclusions-2"><a href="#TOC"><a name="conclusions">Conclusions</a></a></h1>
 <p>That’s it for <q>Developing Backbone.js Applications</q>. I hope you found this book both useful, enlightening and a good start for your journey into exploring Backbone.js.</p>
 <p>If there are other topics or areas of this book you feel could be expanded further, please feel free to let me know, or better yet, send a pull request upstream. I’m always interested in making this title as comprehensive as possible.</p>
 <p>Until next time, the very best of luck with the rest of your journey!</p>

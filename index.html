@@ -108,11 +108,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#总结-1">总结</a></li>
 </ul></li>
 <li><a href="#backbone-boilerplate和grunt-bbb"><a name="backboneboilerplate">Backbone Boilerplate和Grunt-BBB</a></a><ul>
-<li><a href="#getting-started">Getting Started</a><ul>
+<li><a href="#初探">初探</a><ul>
 <li><a href="#backbone-boilerplate">Backbone Boilerplate</a></li>
 <li><a href="#grunt-bbb">Grunt-BBB</a></li>
 </ul></li>
-<li><a href="#creating-a-new-project">Creating a new project</a><ul>
+<li><a href="#创建一个新的项目">创建一个新的项目</a><ul>
 <li><a href="#index.html">index.html</a></li>
 <li><a href="#config.js">config.js</a></li>
 <li><a href="#main.js">main.js</a></li>
@@ -160,7 +160,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul></li>
 </ul></li>
 <li><a href="#mongodb-ruby-driver">MongoDB Ruby Driver</a><ul>
-<li><a href="#getting-started-1">Getting started</a></li>
+<li><a href="#getting-started">Getting started</a></li>
 </ul></li>
 <li><a href="#practical-1">Practical</a><ul>
 <li><a href="#installing-the-prerequisites"><a id="preq">Installing The Prerequisites</a></a><ul>
@@ -238,7 +238,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#backbone-jquery-mobile">Backbone &amp; jQuery Mobile</a><ul>
 <li><a href="#resolving-the-routing-conflicts">Resolving the routing conflicts</a></li>
 <li><a href="#practical-a-backbone-require.jsamd-app-with-jquery-mobile">Practical: A Backbone, Require.js/AMD app with jQuery Mobile</a></li>
-<li><a href="#getting-started-2">Getting started</a></li>
+<li><a href="#getting-started-1">Getting started</a></li>
 <li><a href="#jquery-mobile-going-beyond-mobile-application-development">jQuery Mobile: Going beyond mobile application development</a></li>
 </ul></li>
 </ul></li>
@@ -1976,47 +1976,47 @@ $(<span class="kw">function</span>() {
 <p>后面我们会学到如何使用Require.js来对这个应用进行进一步的模块化，把对数据的持久化切换到后端数据库，最后还有使用不同的测试框架对这个应用进行单元测试。</p>
 <h1 id="backbone-boilerplate和grunt-bbb"><a href="#TOC"><a name="backboneboilerplate">Backbone Boilerplate和Grunt-BBB</a></a></h1>
 <p><a href="https://github.com/tbranyen/backbone-boilerplate/">Backbone Boilerplate</a> 是个非常好的构建Backbone.js应用的工具，由Backbone的贡献者<a href="https://github.com/tbranyen">Tim Branyen</a>开发的。他在Bocoup超过一年以上大量使用Backbone构建apps，他从过去遇到的陷阱，误区和通用功能中提取和构建了boilerplate。包括app <a href="http://startupdatatrends.com">StartupDataTrends.com</a>.</p>
-<p>With scaffolding and built in build tasks that take care of minification, concatentation, server, template compilation and more, Backbone Boilerplate (and sister project <a href="https://github.com/backbone-boilerplate/grunt-bbb">Grunt-BBB</a>) are an excellent choice for developers of all levels. I heavily recommend using them as they will give you an enormous start when it comes to getting setup for development. They also have some great inline documentation which is also another excellent time-saver.</p>
-<p>By default, Backbone Boilerplate provides you with:</p>
+<p>Backbone Boilerplate (和它的姐妹项目<a href="https://github.com/backbone-boilerplate/grunt-bbb">Grunt-BBB</a>)内置了很多构建任务模板，代码压缩，合并，server(web服务器)，模板编译等。对各个层次的开发者来说都是个很好的选择。不过得沉重的提醒各位，使用它们会让你在开始构建项目的时候变得庞大。它们有很多内联文档，可以节省不少时间。</p>
+<p>Backbone Boilerplate默认会给你提供：</p>
 <ul>
-<li>Backbone, <a href="https://github.com/bestiejs/lodash">Lodash</a> (an <a href="http://underscorejs.org/">Underscore.js</a> alternative) and <a href="http://jquery.com">jQuery</a> with an <a href="http://html5boilerplate.com">HTML5 Boilerplate</a> foundation</li>
-<li>Boilerplate module code</li>
-<li>A Windows/Mac/Linux build tool for template precompilation and, concatenation &amp; minification of all your libraries, application code and CSS</li>
-<li>Scaffolding support (via grunt-bbb - [B]ackbone [B]oilerplate [B]uild) so you have to spend minimal time writing boilerplate for modules, collections and so on.</li>
-<li>A Lightweight node.js webserver</li>
-<li>Numerous other Backbone.js snippets for making your life easier</li>
+<li>Backbone, <a href="https://github.com/bestiejs/lodash">Lodash</a> (一个<a href="http://underscorejs.org/">Underscore.js</a>的替代方案)和携带<a href="http://html5boilerplate.com">HTML5 Boilerplate</a>的<a href="http://jquery.com">jQuery</a>。</li>
+<li>Boilerplate模块代码</li>
+<li>Windows/Mac/Linux模板预编，合并、压缩js和css代码的build工具。</li>
+<li>模板支持 (使用grunt-bbb - [B]ackbone [B]oilerplate [B]uild)，所以只需要花一点时间编写模块，集合(collections)等模板。</li>
+<li>一个轻量的node.js webserver。</li>
+<li>很多其它的Backbone.js片段，然任务更轻松。</li>
 </ul>
-<h2 id="getting-started"><a href="#TOC">Getting Started</a></h2>
+<h2 id="初探"><a href="#TOC">初探</a></h2>
 <h3 id="backbone-boilerplate"><a href="#TOC">Backbone Boilerplate</a></h3>
-<p>We can use Boilerplate to easily begin creating an application, but first, we’ll need to install it. This can be done by grabbing the latest version of it by cloning the Boilerplate repo directly:</p>
+<p>在开始使用Boilerplate创建应用前线安装它，可以直接从git库中克隆：</p>
 <pre class="shell"><code>$ git clone git://github.com/tbranyen/backbone-boilerplate.git</code></pre>
-<p>or alternatively, just fetching the latest tarball as follows:</p>
+<p>或者获取最新的已经打好的包：</p>
 <pre class="shell"><code>curl -C - -O https://github.com/tbranyen/backbone-boilerplate/zipball/master</code></pre>
 <h3 id="grunt-bbb"><a href="#TOC">Grunt-BBB</a></h3>
-<p>As Tim covers in the Boilerplate docs, we have to install <a href="http://gruntjs.org">Grunt</a> if we want to use the build tools and grunt-bbb helpers he recommends.</p>
-<p>Grunt is an excellent Node-based JavaScript build tool by another <a href="http://bocoup.com">Bocoup</a> developer (<a href="http://benalman.com">Ben Alman</a>). Think of it as similar to <a href="http://ant.apache.org/">Ant</a> or <a href="https://github.com/jimweirich/rake">Rake</a>. The grunt-bbb helper is also useful to have as it provides several Backbone-specific utilities for scaffolding out your project, without the need to write boilerplate yourself.</p>
-<p>To install grunt and grunt-bbb via NPM:</p>
-<pre class="shell"><code># first run
+<p>正如Tim在Boilerplate文档中所说的，如果要使用build工具和他推荐的grunt-bbb帮助工具，必须安装<a href="http://gruntjs.org">Grunt</a>。</p>
+<p>Grunt是(<a href="http://benalman.com">Ben Alman</a>)开发的一个基于Node的JavaScript构建工具。grunt-bbb helper非常实用，它提供了几个Backbone特定的工具来构建你的项目，而不用自己编写模板。</p>
+<p>通过NPM安装grunt和grunt-bbb：</p>
+<pre class="shell"><code># 先运行
 $ npm install -g grunt
 
-# followed by
+# 然后
 $ npm install -g bbb
 
-# Create a new project
+# 创建一个新的project
 bbb init</code></pre>
-<p>That’s it. We should now be good to go.</p>
-<p>A typical workflow for using grunt-bbb, which we can use later on is:</p>
+<p>好的，我们继续。</p>
+<p>使用grunt-bbb的典型流程是：</p>
 <ul>
-<li>Initialize a new project (<code>bbb init</code>)</li>
-<li>Add new modules and templates (<code>bbb init:module</code>)</li>
-<li>Develop using the built in server (<code>bbb server</code>)</li>
-<li>Run the build tool (<code>bbb build</code>)</li>
-<li>Deploy and map to production assets (using <code>bbb release</code>)</li>
+<li>初始化一个新的项目(<code>bbb init</code>)</li>
+<li>添加新的模块和模板(<code>bbb init:module</code>)</li>
+<li>使用内置的server开发(<code>bbb server</code>)</li>
+<li>运行build工具(<code>bbb build</code>)</li>
+<li>部署和映射到生产环境静态资源(using <code>bbb release</code>)</li>
 </ul>
-<h2 id="creating-a-new-project"><a href="#TOC">Creating a new project</a></h2>
-<p>Let’s create a new folder for our project and run <code>bbb init</code> to kick things off. If everything has been correctly installed, this will sub out some project directories and files for us. Let’s review what is generated.</p>
+<h2 id="创建一个新的项目"><a href="#TOC">创建一个新的项目</a></h2>
+<p>新建一个项目文件夹，执行<code>bbb init</code> 。如果一切都安装正常的话，就会自动生成一些项目目录和文件。我们来看下到底做了哪些事情。</p>
 <h3 id="index.html"><a href="#TOC">index.html</a></h3>
-<p>This is a fairly standard stripped-down HTML5 Boilerplate foundation with the notable exception of including <a href="http://requirejs.org">Require.js</a> at the bottom of the page.</p>
+<p>这是一个标准的基本HTML5样板文件，除了在底部引入了<a href="http://requirejs.org">Require.js</a> 之外。</p>
 <pre class="sourceCode html"><code class="sourceCode html"><span class="er">&lt;</span>!doctype html&gt;
 <span class="kw">&lt;html</span><span class="ot"> lang=</span><span class="st">&quot;en&quot;</span><span class="kw">&gt;</span>
 <span class="kw">&lt;head&gt;</span>
@@ -2038,44 +2038,44 @@ bbb init</code></pre>
   <span class="kw">&lt;script</span><span class="ot"> data-main=</span><span class="st">&quot;/app/config&quot;</span><span class="ot"> src=</span><span class="st">&quot;/assets/js/libs/require.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span>
 <span class="kw">&lt;/body&gt;</span>
 <span class="kw">&lt;/html&gt;</span></code></pre>
-<p>Require.js is an <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD</a> (Asynchronous Module Definition) module and script loader, which will assist us with managing the modules in our application. We’ll be covering it in a lot more detail later on in the book, but for now, let’s cover at a high-level what this particular block does:</p>
+<p>Require.js是一个<a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD</a> (异步模块定义) 模块和脚本加载器，可以帮助我们在应用中管理模块。 这本书的后面部分我会讲到关于require.js的更多细节，不过还是先看下这里做了什么：</p>
 <pre><code>&lt;script data-main=&quot;app/config&quot; src=&quot;/assets/js/libs/require.js&quot;&gt;&lt;/script&gt;</code></pre>
-<p>The <code>data-main</code> attribute is used to inform Require.js to load <code>app/config.js</code> (a configuration object) after it has finished loading itself. You’ll notice that we’ve omitted the <code>.js</code> extension here as require.js can automatically add this for us, however it will respect your paths if we do choose to include it regardless. Let’s now look at the config file being referenced.</p>
+<p><code>data-main</code>属性是告诉Require.js在加载完自身文件之后加载<code>app/config.js</code>(一个配置对象)。 你可能注意到了，它会自动加上省略的<code>.js</code>扩展名，不管你加还是不加它都会保持正确的路径。下面来看下这个引入的配置对象。</p>
 <h3 id="config.js"><a href="#TOC">config.js</a></h3>
-<p>A Require.js configuration object allows us to specify aliases and paths for dependencies we’re likely to reference often (e.g jQuery), bootstrap properties like our base application URL and <code>shim</code> libraries that don’t support AMD natively.</p>
-<p>This is what the config file in Backbone Boilerplate looks like:</p>
+<p>Require.js配置对象可以配置依赖，经常引用(比如jquery)的模块路径别名，启动属性比如基本应用URL，以及<code>shim</code>这种不支持AMD的库。</p>
+<p>下面是Backbone Boilerplate的一个配置对象：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// Set the require.js configuration for your application.</span>
 <span class="kw">require</span>.<span class="fu">config</span>({
 
-  <span class="co">// Initialize the application with the main application file.</span>
+  <span class="co">// 使用main文件初始化整个应用。</span>
   <span class="dt">deps</span>: [<span class="st">&quot;main&quot;</span>],
 
   <span class="dt">paths</span>: {
-    <span class="co">// JavaScript folders.</span>
+    <span class="co">// JavaScript目录</span>
     <span class="dt">libs</span>: <span class="st">&quot;../assets/js/libs&quot;</span>,
     <span class="dt">plugins</span>: <span class="st">&quot;../assets/js/plugins&quot;</span>,
 
-    <span class="co">// Libraries.</span>
+    <span class="co">// 库路径</span>
     <span class="dt">jquery</span>: <span class="st">&quot;../assets/js/libs/jquery&quot;</span>,
     <span class="dt">lodash</span>: <span class="st">&quot;../assets/js/libs/lodash&quot;</span>,
     <span class="dt">backbone</span>: <span class="st">&quot;../assets/js/libs/backbone&quot;</span>
   },
 
   <span class="dt">shim</span>: {
-    <span class="co">// Backbone library depends on lodash and jQuery.</span>
+    <span class="co">// Backbone库依赖lodash和jQuery。</span>
     <span class="dt">backbone</span>: {
       <span class="dt">deps</span>: [<span class="st">&quot;lodash&quot;</span>, <span class="st">&quot;jquery&quot;</span>],
       <span class="dt">exports</span>: <span class="st">&quot;Backbone&quot;</span>
     },
 
-    <span class="co">// Backbone.LayoutManager depends on Backbone.</span>
+    <span class="co">// Backbone.LayoutManager依赖Backbone。</span>
     <span class="st">&quot;plugins/backbone.layoutmanager&quot;</span>: [<span class="st">&quot;backbone&quot;</span>]
   }
 
 });</code></pre>
-<p>The first option defined in the above config is <code>deps: [&quot;main&quot;]</code>. This informs Require.js to load up our main.js file, which is considered the entry point for our application. You may notice that we haven’t specified any other path information for <code>main</code>.</p>
-<p>This is because as we haven’t overridden the path to our scripts using the <code>baseUrl</code> option, Require will infer this using the path from our <code>data-main</code> attribute in index.html. In other words, our <code>baseUrl</code> is <code>app/</code> and any scripts we require will be loaded relative to this location.</p>
-<p>The next block is <code>paths</code>, which we can use to specify paths relative to the <code>baseUrl</code> as well as the paths/aliases to dependencies we’re likely to regularly reference.</p>
+<p>上面定义的第一个配置项<code>deps: [&quot;main&quot;]</code>，是高速Require.js加载main.js文件，作为应用的入口。你可能注意到了，我么并没有定义<code>main</code>文件的路径。</p>
+<p>这是因为我们没有重写<code>baseUrl</code>这个配置项，引入的文件都会基于index.html页面中脚本的<code>data-main</code>属性路径自动判断。换而言之，这里的<code>baseUrl</code>就是<code>app/</code>，我们引入的任何脚本都会相对于这个路径。</p>
+<p>后面的一块是<code>paths</code>，可以对经常引用的基于<code>baseUrl</code>和paths/aliases的路径设定特定的别名。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">  <span class="dt">paths</span>: {
     <span class="co">// JavaScript folders.</span>
     <span class="dt">libs</span>: <span class="st">&quot;../assets/js/libs&quot;</span>,
@@ -2086,7 +2086,7 @@ bbb init</code></pre>
     <span class="dt">lodash</span>: <span class="st">&quot;../assets/js/libs/lodash&quot;</span>,
     <span class="dt">backbone</span>: <span class="st">&quot;../assets/js/libs/backbone&quot;</span>
   },</code></pre>
-<p>Next we have the <code>shim</code> config:</p>
+<p>后面是<code>shim</code>配置：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">  <span class="dt">shim</span>: {
     <span class="co">// Backbone library depends on lodash and jQuery.</span>
     <span class="dt">backbone</span>: {
@@ -2097,19 +2097,19 @@ bbb init</code></pre>
     <span class="co">// Backbone.LayoutManager depends on Backbone.</span>
     <span class="st">&quot;plugins/backbone.layoutmanager&quot;</span>: [<span class="st">&quot;backbone&quot;</span>]
   }</code></pre>
-<p><code>shim</code> is an important part of our Require.js configuration which allows us to load libraries which are not AMD compliant. The basic idea here is that rather than requiring all libraries to implement support for AMD, the <code>shim</code> takes care of the hard work for us.</p>
-<p>For example, in the block below, we state that Backbone.js is dependent on Lodash (a fork of Underscore.js) and jQuery being loaded before it. Once they’ve been loaded, we then use the global export <code>Backbone</code> as the module value.</p>
+<p><code>shim</code>是Require.js配置里非常重要的一部分，可以允许我们家在不遵循AMD的库。这样我们引入库时就不用关系它是否支持AMD。</p>
+<p>比如，下面这段代码中，我们规定Backbone.js依赖于Lodash(一个Underscore.js的分支)和jQuery，在Backbone载入前这2个库必须先载入。当它们完成载入之后导出一个全局的<code>Backbone</code>模块。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">    <span class="dt">backbone</span>: {
       <span class="dt">deps</span>: [<span class="st">&quot;lodash&quot;</span>, <span class="st">&quot;jquery&quot;</span>],
       <span class="dt">exports</span>: <span class="st">&quot;Backbone&quot;</span>
     }</code></pre>
-<p>Finally, we inform Require.js that the Backbone <a href="https://github.com/tbranyen/backbone.layoutmanager">LayoutManager</a> plugin (a template and layout manager, also included) requires that Backbone be loaded before it should be.</p>
+<p>最后，告诉Require.js Backbone <a href="https://github.com/tbranyen/backbone.layoutmanager">LayoutManager</a>插件(模板和布局管理)在载入前必须先加载Backbone。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">    <span class="co">// Backbone.LayoutManager depends on Backbone.</span>
     <span class="st">&quot;plugins/backbone.layoutmanager&quot;</span>: [<span class="st">&quot;backbone&quot;</span>]</code></pre>
-<p>This entire setup ensures that our scripts correctly get loaded in the order in which we expect.</p>
+<p>整个部分可以确保脚本按预期的顺序正确加载。</p>
 <h3 id="main.js"><a href="#TOC">main.js</a></h3>
-<p>Next, we have <code>main.js</code>, which defines the entry point for our application. We use a global <code>require()</code> method to load an array any other scripts needed, such as our application <code>app.js</code> and our main router <code>router.js</code>. Note that most of the time, we will only use <code>require()</code> for bootstrapping an application and a similar method called <code>define()</code> for all other purposes.</p>
-<p>The function defined after our array of dependencies is a callback which doesn’t fire until these scripts have loaded. Notice howe we’re able to locally alias references to <q>app</q> and <q>router</q> as <code>app</code> and <code>Router</code> for convenience.</p>
+<p>接下来是<code>main.js</code>，定义了应用的入口。我们用一个全局的<code>require()</code>方法加载一个组需要引入的脚本，比如<code>app.js</code> 和路由<code>router.js</code>。在大多数时候，我们都会使用<code>require()</code>来引导一个应用，类似的用<code>define()</code>来做其它事情。(备: for bootstrapping an application and a similar method called for all other purposes.)</p>
+<p>依赖列表数组后面是一个回调函数，所有依赖的脚本加载完成之后才执行。注意，<code>app</code>分别<code>Router</code>引用的是数组中<q>app</q>和<q>router</q>别名对应的模块。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">require([
   <span class="co">// Application.</span>
   <span class="st">&quot;app&quot;</span>,
@@ -2120,39 +2120,33 @@ bbb init</code></pre>
 
 <span class="kw">function</span>(app, Router) {
 
-  <span class="co">// Define your master router on the application namespace and trigger all</span>
-  <span class="co">// navigation from this instance.</span>
+  <span class="co">// 定义主要路由，通过这个实例来触发所有导航(navigation)</span>
   <span class="kw">app</span>.<span class="fu">router</span> = <span class="kw">new</span> Router();
 
-  <span class="co">// Trigger the initial route and enable HTML5 History API support, set the</span>
-  <span class="co">// root folder to &#39;/&#39; by default.  Change in app.js.</span>
+  <span class="co">// 触发初始路由，设置HTML5 History API 支持，默认根路径&#39;/&#39; ，在app.js中会改变。</span>
   <span class="kw">Backbone.history</span>.<span class="fu">start</span>({ <span class="dt">pushState</span>: <span class="kw">true</span>, <span class="dt">root</span>: <span class="kw">app</span>.<span class="fu">root</span> });
 
-  <span class="co">// All navigation that is relative should be passed through the navigate</span>
-  <span class="co">// method, to be processed by the router. If the link has a `data-bypass`</span>
-  <span class="co">// attribute, bypass the delegation completely.</span>
+  <span class="co">// 所有相对的导航跳转都传给navigate方法，通过路由来处理。</span>
+  <span class="co">//如果a标签有`data-bypass`属性，就忽略。  </span>
   $(<span class="kw">document</span>).<span class="fu">on</span>(<span class="st">&quot;click&quot;</span>, <span class="st">&quot;a:not([data-bypass])&quot;</span>, <span class="kw">function</span>(evt) {
     <span class="co">// Get the absolute anchor href.</span>
     <span class="kw">var</span> href = $(<span class="kw">this</span>).<span class="fu">attr</span>(<span class="st">&quot;href&quot;</span>);
 
-    <span class="co">// If the href exists and is a hash route, run it through Backbone.</span>
+    <span class="co">// 如果有href，而且是hash路径，通过Backbone来执行。</span>
     <span class="kw">if</span> (href &amp;&amp; <span class="kw">href</span>.<span class="fu">indexOf</span>(<span class="st">&quot;#&quot;</span>) === <span class="dv">0</span>) {
-      <span class="co">// Stop the default event to ensure the link will not cause a page</span>
-      <span class="co">// refresh.</span>
+      <span class="co">// 组织默认行为，避免刷新</span>
       <span class="kw">evt</span>.<span class="fu">preventDefault</span>();
 
-      <span class="co">// `Backbone.history.navigate` is sufficient for all Routers and will</span>
-      <span class="co">// trigger the correct events. The Router&#39;s internal `navigate` method</span>
-      <span class="co">// calls this anyways.  The fragment is sliced from the root.</span>
+      <span class="co">// `Backbone.history.navigate`触发路由和绑定的事件。</span>
       <span class="kw">Backbone.history</span>.<span class="fu">navigate</span>(href, <span class="kw">true</span>);
     }
   });
 
 });</code></pre>
-<p>Inline, Backbone Boilerplate includes boilerplate code for initializing our router with HTML5 History API support and handling other navigation scenarios, so we don’t have to.</p>
+<p>Backbone Boilerplate包含了样板代码包含了使用HTML5 History API支持初始化router，处理其他navigation，所以这里就不必需要了。</p>
 <h3 id="app.js"><a href="#TOC">app.js</a></h3>
-<p>Let us now look at our <code>app.js</code> module. Typically, in non-Backbone Boilerplate applications, an <code>app.js</code> file may contain the core logic or module references needed to kick start an app.</p>
-<p>In this case however, this file is used to define templating and layout configuration options as well as utilities for consuming layouts. To a beginner, this might look like a lot of code to comprehend, but the good news is that for basic apps, you’re unlikely to need to heavily modify this. Instead, you’ll be more concerned with modules for your app, which we’ll look at next.</p>
+<p>现在来看下<code>app.js</code>模块。通常，在没有Backbone Boilerplate的应用中，<code>app.js</code>包含核心逻辑和启动app需要的模块引入。</p>
+<p>不过，在这个实例中，这个文件用来定义模板和布局配置，(备：as well as utilities for consuming layouts)。作为初学者，这部分代码可能比较难理解，但是作为基本的应用，你基本上不需要大量修改它。你只需要关心后面会讲到的app的模块就可以了。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([
 
   <span class="co">// Libraries.</span>
@@ -2167,17 +2161,16 @@ bbb init</code></pre>
 
 <span class="kw">function</span>($, _, Backbone) {
 
-  <span class="co">// Provide a global location to place configuration settings and module</span>
-  <span class="co">// creation.</span>
+  <span class="co">// 用一个全局变量来保存配置和模块</span>
   <span class="kw">var</span> app = {
-    <span class="co">// The root path to run the application.</span>
+    <span class="co">// 运行应用的根路径</span>
     <span class="dt">root</span>: <span class="st">&quot;/&quot;</span>
   };
 
-  <span class="co">// Localize or create a new JavaScript Template object.</span>
+  <span class="co">// 定义一个本地JavaScript模板对象。</span>
   <span class="kw">var</span> JST = <span class="kw">window</span>.<span class="fu">JST</span> = <span class="kw">window</span>.<span class="fu">JST</span> || {};
 
-  <span class="co">// Configure LayoutManager with Backbone Boilerplate defaults.</span>
+  <span class="co">// 设定LayoutManager默认配置。</span>
   <span class="kw">Backbone.LayoutManager</span>.<span class="fu">configure</span>({
     <span class="dt">paths</span>: {
       <span class="dt">layout</span>: <span class="st">&quot;app/templates/layouts/&quot;</span>,
@@ -3399,7 +3392,7 @@ get <span class="st">&#39;/members/*&#39;</span> <span class="kw">do</span>
 <span class="st">  Or even like this</span></code></pre>
 <p>Note: Haml is whitespace sensitive and will not correctly work if it isn’t indented by an even number of spaces. This is due to whitespace being used for nesting in place of the classic HTML markup approach of closing tags.</p>
 <h1 id="mongodb-ruby-driver"><a href="#TOC">MongoDB Ruby Driver</a></h1>
-<h2 id="getting-started-1"><a href="#TOC">Getting started</a></h2>
+<h2 id="getting-started"><a href="#TOC">Getting started</a></h2>
 <p>Once the MongoDB Ruby driver is installed, we can begin to use it to connect to a Mongo database. To create a connection using localhost, we simply specify the driver as a dependency. Assuming we’re using the default port we can then connect as follows:</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">require <span class="st">&#39;mongo&#39;</span>
 
@@ -5019,7 +5012,7 @@ $.<span class="fu">mobile</span>.<span class="fu">changePage</span>( url , { <sp
 <p><strong>Note:</strong> For some parallel work being done to explore how well the jQuery Mobile Router plugin works with Backbone, you may be interested in checking out <a href="https://github.com/Filirom1/jquery-mobile-backbone-requirejs">https://github.com/Filirom1/jquery-mobile-backbone-requirejs</a>.</p>
 <h3 id="practical-a-backbone-require.jsamd-app-with-jquery-mobile"><a href="#TOC">Practical: A Backbone, Require.js/AMD app with jQuery Mobile</a></h3>
 <p><strong>Note:</strong> The code for this practical can be found in <code>practicals/modular-mobile-app</code>.</p>
-<h3 id="getting-started-2"><a href="#TOC">Getting started</a></h3>
+<h3 id="getting-started-1"><a href="#TOC">Getting started</a></h3>
 <p>Once you feel comfortable with the <a href="http://msdn.microsoft.com/en-us/scriptjunkie/hh377172.aspx">Backbone fundamentals</a> and you’ve put together a rough wireframe of the app you may wish to build, start to think about your application architecture. Ideally, you’ll want to logically separate concerns so that it’s as easy as possible to maintain the app in the future.</p>
 <p><strong>Namespacing</strong></p>
 <p>For this application, I opted for the nested namespacing pattern. Implemented correctly, this enables you to clearly identify if items being referenced in your app are views, other modules and so on. This initial structure is a sane place to also include application defaults (unless you prefer maintaining those in a separate file).</p>

@@ -3052,25 +3052,22 @@ var InnerView = Backbone.View.extend({
 });
 ```
 
-Generally speaking, more developers opt for the first solution as:
+通常，更多的开发者选择第一种方案，因为：
 
-* The majority of their views may already rely on being in the DOM in their render() method
-* When the OuterView is re-rendered, views don't have to be re-initialized where re-initialization has the potential to cause memory leaks and issues with existing bindings
-
-(Thanks to [Lukas](http://stackoverflow.com/users/299189/lukas)  and [Ian Taylor](http://stackoverflow.com/users/154765/ian-storm-taylor) for these tips).
+* 大多数的veiws可能已经依赖于render()方法中的DOM
+* 当OuterView重新渲染时，views不需要重新初始化，因为重新初始化可能会导致内存泄露和导致现有绑定出问题。(感谢[Lukas](http://stackoverflow.com/users/299189/lukas)和[Ian Taylor](http://stackoverflow.com/users/154765/ian-storm-taylor)给的这些提示)。
 
 
 
-#### What is the best way to manage models in nested Views?
+#### 在嵌套views中管理models最佳方式是什么？
 
-In order to reach attributes on related models in a nested setup, the models involved need to have some prior knowledge about which models this refers to. Backbone.js doesn't implicitly handle relations or nesting, meaning it's up to us to ensure models have a knowledge of each other.
+为了能在嵌套的views中能访问到对应的models的属性，models需要知道自己引用的是哪个。Backbone.js本身不处理这些关系或者嵌套，意味着我们要自己来确保各各个models的关系。
 
-One approach is to make sure each child model has a 'parent' attribute. This way you can traverse the nesting first up to the parent and then down to any siblings that you know of. So, assuming we have models modelA, modelB and modelC:
+有一种方式就是，让每个子model都有一个'parent'属性。这样就可以遍历父子关系的model了。假设有modelA, modelB和modelC：
 
 ```javascript
 
-// When initializing modelA, I would suggest setting a link to the parent
-// model when doing this, like this:
+// 当初始化modelA时，建立parent model连接：
 
 ModelA = Backbone.Model.extend({
 
@@ -3083,9 +3080,9 @@ ModelA = Backbone.Model.extend({
 }
 ```
 
-This allows you to reach the parent model in any child model function by calling this.parent.
+在子model中就可以通过this.parent访问到父model。
 
-When you have a need to nest Backbone.js views, you might find it easier to let each view represent a single HTML tag using the tagName option of the View. This may be written as:
+当要使用嵌套views时，你会发现用tagName属性，让每个View都对应到一个单独的HTML标签会更容易：
 
 ```javascript
 ViewA = Backbone.View.extend({
@@ -3117,9 +3114,9 @@ ViewB = Backbone.View.extend({
 });
 ```
 
-Then in your application initialization code , you would initiate ViewA and place its element inside the body element.
+当应用初始化的时候，就会初始化ViewA然后把它插入到body中。
 
-An alternative approach is to use an extension called [Backbone-Forms](https://github.com/powmedia/backbone-forms). Using a similar schema to what we wrote earlier, nesting could be achieved as follows:
+另一种变种方法就是使用[Backbone-Forms](https://github.com/powmedia/backbone-forms)。跟我们前面写的方式很类似，可以像下面这样处理嵌套：
 
 ```javascript
 var ModelB = Backbone.Model.extend({
@@ -3145,20 +3142,20 @@ var ModelA = Backbone.Model.extend({
 });
 ```
 
-There is more information about this technique available on [GitHub](https://github.com/powmedia/backbone-forms#customising-templates).
+关于这种技术的更多信息可以看这里[GitHub](https://github.com/powmedia/backbone-forms#customising-templates).
 
-(Thanks to [Jens Alm](http://stackoverflow.com/users/100952/jens-alm) and [Artem Oboturov](http://stackoverflow.com/users/801466/artem-oboturov) for these tips)
+(感谢[Jens Alm](http://stackoverflow.com/users/100952/jens-alm)和[Artem Oboturov](http://stackoverflow.com/users/801466/artem-oboturov)提供这些信息)
 
-#### Is it possible to have one Backbone.js View trigger updates in other Views?
+#### 可以在其他Views中触发另一个view的更新吗？
 
 
-The Mediator pattern is an excellent option for implementing a solution to this problem.
+中介者(Mediator)模式是解决这种问题非常好的选择。
 
-Without going into too much detail about the pattern, it can effectively be used an event manager that lets you to subscribe to and publish events. So an ApplicationViewA could subscribe to an event, i.e. 'selected' and then the ApplicationViewB would publish the 'selected' event.
+不必过多的去了解这种模式的细节，实际上就是使用一个事件管理器可以订阅和发布事件。ApplicationViewA可以订阅一个事件，比如'selected'，ApplicationViewB可以发布'selected'事件。
 
-The reason I like this is it allows you to send events between views, without the views being directly bound together.
+我喜欢这种方式的原因就是可以在views之间发送事件，而不用直接把他们绑定在一起。
 
-For Example:
+例如:
 
 ```javascript
 
@@ -3187,15 +3184,13 @@ var ApplicationViewA = Backbone.View.extend({
 });
 ```
 
-This way your ApplicationViewA doesn't care if it is an ApplicationViewB or FooView that publishes the 'selected' event, only that the event occurred. As a result, you may find it a maintainable way to manage events between parts of your application, not just views.
+ApplicationViewA不用关心是ApplicationViewB还是FooView发布了'selected' 事件，只需要知道它发生了就行了。所以，你就会发现应用中的各个部分的事件可维护性更强，而不仅仅是views。
 
-(Thanks to [John McKim](http://stackoverflow.com/users/937577/john-mckim) for this tip and for referencing my Large Scale JavaScript Patterns article).
+(感谢[John McKim](http://stackoverflow.com/users/937577/john-mckim) 的提示和大量引用我的关于JavaScript设计模式的文章)。
 
-#### How would one render a Parent View from one of its Children?
+#### 如何从子view中渲染(render)父view?
 
-If you say, have a view which contains another view (e.g a main view containing a modal view) and  would like to render or re-render the parent view from the child, this is extremely straight-forward.
-
-In such a scenario, you would most likely want to execute the rendering when a particular event has occurred. For the sake of example, let us call this event 'somethingHappened'. The parent view can bind notifications on the child view to know when the event has occurred. It can then render itself.
+在这种情况下，需要在当某个事件触发时执行渲染。比如下面这个例子，假设是'somethingHappened'事件。父view可以绑定子view的通知，知道何时事件触发了，然后调用自己的render。
 
 On the parent view:
 
@@ -3216,16 +3211,17 @@ this.trigger('somethingHappened');
 
 ```
 
-The child will trigger a "somethingHappened" event and the parent's render function will be called.
+子view触发一个"somethingHappened"事件，父view就会调用render函数。
 
-(Thanks to Tal [Bereznitskey](http://stackoverflow.com/users/269666/tal-bereznitskey) for this tip)
+(感谢[Bereznitskey](http://stackoverflow.com/users/269666/tal-bereznitskey)给的这点提示)。
 
 
 
-#### How do you cleanly dispose Views to avoid memory leaks?
+#### 如何清除Vies以避免内存泄露？
 
-As your application grows, keeping live views around which aren't being used can quickly become difficult to maintain. Instead, you may find it more optimal to destroy views that are no longer required and simply create new ones as the necessity arises.
+随着应用的变大，如果让不再使用的views还存活的话将变得难以维护。所以，最好销毁不再使用的views，在需要的时候创建新的views。
 
+一种方案就是创建一个BaseView，其它的views都继承自这个BaseView。主要思路就是需要在view中维护
 A solution to help with this is to create a BaseView from which the rest of your views inherit from. The idea here is that your view will maintain a reference to all of the events to which its subscribed to so that when it is time to dispose of a view, all of those bindings will be automatically unbound.
 
 Here is a sample implementation of this:

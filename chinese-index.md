@@ -2913,19 +2913,19 @@ Brunch可以通过nodejs包管理器来安装，非常容易上手。如果你�
 
 # <a name="commonproblems" id="commonproblems">常见问题和解决方案</a>
 
-In this section, we will review a number of common problems developers often experience once they've started to work on relatively non-trivial projects using Backbone.js, as well as present potential solutions.
+在这一章中，我们会回顾下一些开发者在使用Backbone.js开发的项目中经常会遇到的一些问题，并提出些可能的解决方案。
 
-Perhaps the most frequent of these questions surround how to do more with Views. If you are interested in discovering how to work with nested Views, learn about view disposal and inheritance, this section will hopefully have you covered.
+可能大部分问题都是跟Views相关。如果你对如何使用嵌套Views感兴趣的话，可以学习下view的处理和继承，这一章将会讲到这些。
 
 
-#### Nesting: What is the best approach for rendering and appending Sub-Views in Backbone.js?
+#### 嵌套(Nesting)：在Backbone.js中渲染和添加子的最好方式是什么？
 
-Nesting is generally considered a good way to maintain hierarchal views for writing maintainable code. As a beginner, one might try writing a very simple setup with sub-views (e.g inner views) as follows:
+嵌套通常是保持views层次和编写可维护代码的较好方式。对于新手，可能会像下面这样使用子view：
 
 ```javascript
 
-// Where we have previously defined a View, SubView
-// in a parent View we could do:
+// 前面已经定义好了View, SubView
+// 在父View中可能会这样：
 
 ...
 initialize : function () {
@@ -2943,9 +2943,9 @@ render : function () {
 }
 ```
 
-This works in that one doesn't need to worry about maintaining the order of your DOM elements when appending. Views are initialized early and the render() method doesn't need to take on too many responsibilities at once. Unfortunately, a downside is that you don't have the ability to set the `tagName` of elements and events need to be re-delegated.
+这种方式不用担心维护DOM元素插入的顺序。Views的初始化提前了，render()方法也不用一次处理那么多事情。不幸的是，不能设置元素的`tagName`和重新委派事件。
 
-An alternative approach which doesn't suffer from the re-delegation problem could be written as follows:
+有一种方式可以解决这个问题：
 
 ```javascript
 
@@ -2966,9 +2966,9 @@ render : function () {
 
 ```
 
-In this version, we also don't require a template containing empty placeholders and the issue with `tagName`s is solved as they are defined by the view once again.
+这个版本中，同样也没有引入包含空占位符的模板，`tagName`的问题也通过view来定义得以解决。
 
-Yet another variation which moves logic into an `onRender` event, could be written with only a few subtle changes:
+另一个变化就是把逻辑转移到`onRender`事件，可以通过一点微妙的变化来改变：
 
 
 ```javascript
@@ -2994,7 +2994,7 @@ onRender : function () {
 }
 ```
 
-If you find yourself nesting views in your application, there are more optimal approaches possible for initializing, rendering and appending your sub-views. One such solution could be written:
+如果你在你的应用中发现嵌套views，有多重方法初始化，渲染和append子view。下面也是一种方案：
 
 ```javascript
 
@@ -3019,13 +3019,13 @@ var InnerView = Backbone.View.extend({
 
 ```
 
-This tackles a few specific design decisions:
+这种方案基于下面这几个设计思路：
 
-* The order in which you append the sub-elements matters
-* The OuterView doesn't contain the HTML elements to be set in the InnerView(s), meaning that we can still specify tagName in the InnerView
-* render() is called after the InnerView element has been placed into the DOM. This is useful if your InnerViews render() method is sizing itself on the page based on the dimensions of another element. This is a common use case.
+* append子元素的顺序是相关的(The order in which you append the sub-elements matters)
+* OuterView不包含InnerView中要设置的DOMHTML元素，意味着可以在InnerView中指定tagName。
+* render() 在InnerView中元素被插入DOM之后调用。当InnerViews render()方法基于其它元素来渲染到页面时这非常有用。这是一个常见的案例。
 
-A second potential solution is this, which may appear cleaner but in reality has a tendency to affect performance:
+第二种可能的方案，看起来更精简但会影响性能：
 
 ```javascript
 

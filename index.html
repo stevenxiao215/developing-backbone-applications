@@ -129,15 +129,15 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#可以在其他views中触发另一个view的更新吗">可以在其他Views中触发另一个view的更新吗？</a></li>
 <li><a href="#如何从子view中渲染render父view">如何从子view中渲染(render)父view?</a></li>
 <li><a href="#如何清除vies以避免内存泄露">如何清除Vies以避免内存泄露？</a></li>
-<li><a href="#how-does-one-handle-view-disposal-on-a-parent-or-child-view">How does one handle View disposal on a Parent or Child View?</a></li>
+<li><a href="#如何在父view或者子view中处理view的清理disposal">如何在父View或者子View中处理View的清理(disposal)?</a></li>
 <li><a href="#whats-the-best-way-to-combine-or-append-views-to-each-other">What’s the best way to combine or append Views to each other?</a></li>
 </ul></li>
-<li><a href="#better-model-property-validation">Better Model Property Validation</a></li>
-<li><a href="#restful-applications"><a name="restfulapps">RESTful Applications</a></a><ul>
-<li><a href="#building-restful-applications-with-backbone"><a name="restful">Building RESTful applications with Backbone</a></a></li>
-<li><a href="#stack-1-building-a-backbone-app-with-node.js-express-mongoose-and-mongodb"><a name="stack1">Stack 1: Building A Backbone App With Node.js, Express, Mongoose and MongoDB</a></a><ul>
+<li><a href="#更好的model属性验证">更好的Model属性验证</a></li>
+<li><a href="#restful应用"><a name="restfulapps">RESTful应用</a></a><ul>
+<li><a href="#用backbone构建restful应用"><a name="restful">用Backbone构建RESTful应用</a></a></li>
+<li><a href="#stack-1-使用node.js-express-mongoose和mongodb构建backbone-app"><a name="stack1">Stack 1: 使用Node.js, Express, Mongoose和MongoDB构建Backbone App</a></a><ul>
 <li><a href="#reviewing-the-stack">Reviewing the stack</a></li>
-<li><a href="#practical">Practical</a></li>
+<li><a href="#实践">实践</a></li>
 <li><a href="#practical-setup">Practical Setup</a><ul>
 <li><a href="#mongodb">MongoDB</a></li>
 <li><a href="#express-and-mongoose">Express and Mongoose</a></li>
@@ -162,7 +162,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#mongodb-ruby-driver">MongoDB Ruby Driver</a><ul>
 <li><a href="#getting-started">Getting started</a></li>
 </ul></li>
-<li><a href="#practical-1">Practical</a><ul>
+<li><a href="#practical">Practical</a><ul>
 <li><a href="#installing-the-prerequisites"><a id="preq">Installing The Prerequisites</a></a><ul>
 <li><a href="#ruby">Ruby</a></li>
 <li><a href="#ruby-gems">Ruby Gems</a></li>
@@ -213,7 +213,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul></li>
 <li><a href="#decoupling-backbone-with-the-mediator-and-facade-patterns"><a name="decouplingbackbone">Decoupling Backbone with the Mediator and Facade patterns</a></a><ul>
 <li><a href="#summary">Summary</a></li>
-<li><a href="#practical-2">Practical</a></li>
+<li><a href="#practical-1">Practical</a></li>
 </ul></li>
 <li><a href="#paginating-backbone.js-requests-collections"><a name="pagination">Paginating Backbone.js Requests &amp; Collections</a></a></li>
 <li><a href="#paginators-pieces">Paginator’s pieces</a></li>
@@ -305,7 +305,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#mocks">Mocks</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#practical-3">Practical</a><ul>
+<li><a href="#practical-2">Practical</a><ul>
 <li><a href="#models-1">Models</a></li>
 <li><a href="#collections-2">Collections</a></li>
 <li><a href="#views-2">Views</a></li>
@@ -2672,8 +2672,7 @@ ViewB = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({
 <p>(感谢<a href="http://stackoverflow.com/users/269666/tal-bereznitskey">Bereznitskey</a>给的这点提示)。</p>
 <h4 id="如何清除vies以避免内存泄露"><a href="#TOC">如何清除Vies以避免内存泄露？</a></h4>
 <p>随着应用的变大，如果让不再使用的views还存活的话将变得难以维护。所以，最好销毁不再使用的views，在需要的时候创建新的views。</p>
-<p>一种方案就是创建一个BaseView，其它的views都继承自这个BaseView。主要思路就是需要在view中维护 A solution to help with this is to create a BaseView from which the rest of your views inherit from. The idea here is that your view will maintain a reference to all of the events to which its subscribed to so that when it is time to dispose of a view, all of those bindings will be automatically unbound.</p>
-<p>Here is a sample implementation of this:</p>
+<p>一种方案就是创建一个BaseView，其它的views都继承自这个BaseView。主要思路就是需要在view中维护一个对所有订阅的事件的引用，当要销毁view是，所有绑定的事件都将解除绑定。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> BaseView = <span class="kw">function</span> (options) {
 
     <span class="kw">this</span>.<span class="fu">bindings</span> = [];
@@ -2696,14 +2695,14 @@ ViewB = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({
     },
 
     <span class="dt">dispose</span>: <span class="kw">function</span> () {
-        <span class="kw">this</span>.<span class="fu">unbindFromAll</span>(); <span class="co">// this will unbind all events that this view has bound to</span>
-        <span class="kw">this</span>.<span class="fu">unbind</span>(); <span class="co">// this will unbind all listeners to events from this view. This is probably not necessary because this view will be garbage collected.</span>
-        <span class="kw">this</span>.<span class="fu">remove</span>(); <span class="co">// uses the default Backbone.View.remove() method which removes this.el from the DOM and removes DOM events.</span>
+        <span class="kw">this</span>.<span class="fu">unbindFromAll</span>(); <span class="co">// 移除view绑定的所有事件。</span>
+        <span class="kw">this</span>.<span class="fu">unbind</span>(); <span class="co">// 移除当前view的所有事件监听。不是必须做，因为会被垃圾回收。</span>
+        <span class="kw">this</span>.<span class="fu">remove</span>(); <span class="co">// 调用Backbone.View.remove()方法，把this.el从DOM中移除，同时移除DOM事件。</span>
     }
 
 });</code></pre>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">BaseView</span>.<span class="fu">extend</span> = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>;</code></pre>
-<p>Then, whenever a view has the need to bind to an event on a model or a collection, you would use the bindTo method. e.g:</p>
+<p>然后，如果view要给model或者collection绑定事件，就需要调用bindTo方法：</p>
 <pre><code>var SampleView = BaseView.extend({
 
     initialize: function(){
@@ -2711,14 +2710,14 @@ ViewB = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({
         this.bindTo(this.collection, &#39;reset&#39;, this.doSomething);
     }
 });</code></pre>
-<p>When you remove a view, simply call the dispose() method which will clean everything up for you automatically:</p>
+<p>当移除view是，调用dispose()方法就会自动调清除所有东西：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> sampleView = <span class="kw">new</span> SampleView({<span class="dt">model</span>: some_model, <span class="dt">collection</span>: some_collection});
 <span class="kw">sampleView</span>.<span class="fu">dispose</span>();</code></pre>
-<p>(Thanks to <a href="http://stackoverflow.com/users/188740/johnnyo">JohnnyO</a> for this tip).</p>
-<h4 id="how-does-one-handle-view-disposal-on-a-parent-or-child-view"><a href="#TOC">How does one handle View disposal on a Parent or Child View?</a></h4>
-<p>In the last question, we looked at how to effectively dispose views to decreases memory usage (analogous to a type of garbage collection).</p>
-<p>Where your application is setup with multiple Parent and Child Views, it is also common to desire removing any DOM elements associated with such views as well as unbinding any event handlers tied to child elements when you no longer require them.</p>
-<p>The solution in the last question should be enough to handle this use-case, but if you require a more-explicit example that handles children, we can see one below:</p>
+<p>(感谢<a href="http://stackoverflow.com/users/188740/johnnyo">JohnnyO</a> 给的这些提示)。</p>
+<h4 id="如何在父view或者子view中处理view的清理disposal"><a href="#TOC">如何在父View或者子View中处理View的清理(disposal)?</a></h4>
+<p>最后一个问题，如何有效的销毁views，减少内存使用(有点像一种垃圾回收)。</p>
+<p>无论是多个Parent还是Child Views，当不再使用的时候，都需要移除与view关联的DOM元素和绑定在这些所有子元素上的事件。</p>
+<p>其实上一个问题的解决方案也可以处理这个问题，不过下面有一个要更明确的处理子view的例子：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">Backbone.View.prototype</span>.<span class="fu">close</span> = <span class="kw">function</span>() {
     <span class="kw">if</span> (<span class="kw">this</span>.<span class="fu">onClose</span>) {
         <span class="kw">this</span>.<span class="fu">onClose</span>();
@@ -2748,27 +2747,26 @@ NewChildView = <span class="kw">Backbone.View</span>.<span class="fu">extend</sp
     <span class="dt">render</span>: <span class="kw">function</span>() {
     }
 });</code></pre>
-<p>Here, a close() method for views is implemented which disposes of a view when it is no longer needed or needs to be reset. In most cases the view removal should be done at a view layer so that it won’t affect any of our models.</p>
-<p>For example, if you are working on a blogging application and you remove a view with comments, perhaps another view in your app shows a selection of comments and resetting the collection would affect those views too.</p>
-<p>(Thanks to <a href="http://stackoverflow.com/users/906136/dira">dira</a> for this tip)</p>
+<p>这里的close()方法就是实现当view不再需要或者重置的时候进行销毁。大多数案例中view的移除都是在view层，所以不会影响到models。</p>
+<p>比如，使用一个博客应用时移除一个评论的view，可能app中另一个view展示了评论选择，重置collection就会影响这些views。</p>
+<p>(感谢<a href="http://stackoverflow.com/users/906136/dira">dira</a>给出这些提示)</p>
 <h4 id="whats-the-best-way-to-combine-or-append-views-to-each-other"><a href="#TOC">What’s the best way to combine or append Views to each other?</a></h4>
-<p>Let us say you have a Collection, where each item in the Collection could itself be a Collection. You can render each item in the Collection, and indeed can render any items which themselves are Collections. The problem you might have is how to render this structure where the HTML reflects the hierarchical nature of the data structure.</p>
-<p>The most straight-forward way to approach this problem is to use a framework like Derick Baileys <a href="http://marionettejs.com">Backbone.Marionette</a>. In this framework is a type of view called a CompositeView.</p>
-<p>The basic idea of a CompositeView is that it can render a model and a collection within the same view.</p>
-<p>It can render a single model with a template. It can also take a collection from that model and for each model in that collection, render a view. By default it uses the same composite view type that you’ve defined, to render each of the models in the collection. All you have to do is tell the view instance where the collection is, via the initialize method, and you’ll get a recursive hierarchy rendered.</p>
-<p>There is a working demo of this in action available <a href="http://jsfiddle.net/derickbailey/AdWjU/">online</a>.</p>
-<p>And you can get the source code and documentation for <a href="http://marionettejs.com">Marionette</a> too.</p>
-<h1 id="better-model-property-validation"><a href="#TOC">Better Model Property Validation</a></h1>
-<p>As we learned earlier in the book, the <code>validate</code> method on a Model is called before <code>set</code> and <code>save</code>, and is passed the model attributes updated with the values from these methods.</p>
-<p>By default, where we define a custom <code>validate</code> method, Backbone passes all of a Model’s attributes through this validation each time, regardless of which model attributes are being set.</p>
-<p>This means that it can be a challenge to determine which specific fields are being set or validated without being concerned about the others that aren’t being set at the same time.</p>
-<p>To illustrate this problem better, let us look at a typical registration form use case that:</p>
+<p>假设有一个Collection，里面的每个元素也是一个Collection。你可以渲染里面嵌套的元素。但是如何渲染这种嵌套的数据结构，映射到HTML结构。</p>
+<p>最直接的方法就是使用由Derick Baileys开发的<a href="http://marionettejs.com">Backbone.Marionette</a>这样的框架。在这个框架里有一种CompositeView(复合view)。</p>
+<p>CompositeView可以在同一个view中渲染model和collection。</p>
+<p>它可以用一个模板渲染一个单独的model。也可以渲染一个collection中的每个model。它默认使用定义的同一个复合类型的view来渲染collection中的每个model。你只需要在view的实例initialize方法中指定collection即可，就可以递归的渲染。</p>
+<p>这里有一个在线的<a href="http://jsfiddle.net/derickbailey/AdWjU/">例子</a>.</p>
+<p>另外可以从这里获取<a href="http://marionettejs.com">Marionette</a>的代码和文档。</p>
+<h1 id="更好的model属性验证"><a href="#TOC">更好的Model属性验证</a></h1>
+<p>在这本书的前面已经提到，<code>validate</code>方法是Model在<code>set</code>和<code>save</code>之前调用的，然后把在这个方法中处理得到的值传给model的属性。</p>
+<p>默认情况下，我们定义了一个自己的<code>validate</code>方法的话，Backbone就会每次把所有Model的属性通过这个方法来校验，无用使用哪种方式来设置属性。</p>
+<p>这就意味着它不能区分哪些属性是需要校验，哪些是不需要校验可以直接设置的。</p>
+<p>为解决这个问题，我们来看一个典型的注册表单的例子：</p>
 <ul>
-<li>Validates form fields using the blur event</li>
-<li>Validates each field regardless of whether other model attributes (aka other form data) are valid or not.</li>
+<li>通过blur事件触发表单项的验证</li>
+<li>验证每个表单域，不管其他的model属性是否已验证过。</li>
 </ul>
-<p>Here is one example of a desired use case:</p>
-<p>We have a form where a user focuses and blurs first name, last name, and email HTML input boxes without entering any data. A <q>this field is required</q> message should be presented next to each form field.</p>
+<p>first name, last name, 和email输出框为空时，后面会出现必填项提示。</p>
 <p>HTML:</p>
 <pre><code>&lt;!doctype html&gt;
 &lt;html&gt;
@@ -2795,7 +2793,7 @@ NewChildView = <span class="kw">Backbone.View</span>.<span class="fu">extend</sp
   &lt;/form&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-<p>Some simple validation that could be written using the current Backbone <code>validate</code> method to work with this form could be implemented using something like:</p>
+<p>如果简单的使用Backbone <code>validate</code>方法的话可以像下面这样：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="dt">validate</span>: <span class="kw">function</span>(attrs) {
 
     <span class="kw">if</span>(!<span class="kw">attrs</span>.<span class="fu">firstname</span>) <span class="kw">return</span> <span class="ch">&#39;first name is empty&#39;</span>;
@@ -2803,8 +2801,8 @@ NewChildView = <span class="kw">Backbone.View</span>.<span class="fu">extend</sp
     <span class="kw">if</span>(!<span class="kw">attrs</span>.<span class="fu">email</span>) <span class="kw">return</span> <span class="ch">&#39;email is empty&#39;</span>;
 
 }</code></pre>
-<p>Unfortunately, this method would trigger a first name error each time any of the fields were blurred and only an error message next to the first name field would be presented.</p>
-<p>One potential solution to the problem could be to validate all fields and return all of the errors:</p>
+<p>不幸的是，如果第一项为空，当在其它域触发验证时也会只出现first name域的错误提示。</p>
+<p>另一种方案就是验证所有域，并且返回所有错误：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="dt">validate</span>: <span class="kw">function</span>(attrs) {
 
   <span class="kw">var</span> errors = {};
@@ -2816,7 +2814,7 @@ NewChildView = <span class="kw">Backbone.View</span>.<span class="fu">extend</sp
   <span class="kw">if</span> (!<span class="kw">_</span>.<span class="fu">isEmpty</span>(errors)) <span class="kw">return</span> errors;
 
 }</code></pre>
-<p>This can be adapted into a complete solution that defines a Field model for each input in our form and works within the parameters of our use-case as follows:</p>
+<p>我们可以把它转换成一个完整的方案，为每个表单域定义一个Field model：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">
 $(<span class="kw">function</span>($) {
 
@@ -2865,11 +2863,11 @@ $(<span class="kw">function</span>($) {
   });
 
 });</code></pre>
-<p>This works great as the solution checks the validation for each attribute individually and sets the message for the correct blurred field.</p>
-<p><strong>Note</strong>: A <a href="http://jsbin.com/afetez/2/edit">demo</a> of the above solution by <a href="http://github.com/braddunbar">@braddunbar</a> is also available.</p>
-<p>Unfortunately, this solution forces each form field to be validated every time a blur event is fired. If we have multiple client-side validation methods with our particular use case, we may not want to have to call each validation method on every attribute every time, so this solution might not be ideal for everyone.</p>
-<p>A potentially better alternative to the above solution is to use <a href="http://github.com/gfranko">@gfranko</a>’s <a href="https://github.com/gfranko/Backbone.validateAll">Backbone.validateAll</a> plugin, which was specifically created to provide an option to validate only Model properties that are currently being set/saved.</p>
-<p>Here is how we would setup a partial User Model and validate method using this plugin, that caters to our use-case:</p>
+<p>这样就可以单独的验证每个属性和设置message。</p>
+<p><strong>提示</strong>: <a href="http://github.com/braddunbar">@braddunbar</a>也使用上面这种方案做写了一个<a href="http://jsbin.com/afetez/2/edit">demo</a></p>
+<p>上面这种方案强制需要对表单的每个域都进行验证。如果我么在特定的案例中使用多个客户端验证方法，不想对每个属性都进行验证，所以这种方案并不是所有人想要的。</p>
+<p>另一种选择就是<a href="http://github.com/gfranko">@gfranko</a>的<a href="https://github.com/gfranko/Backbone.validateAll">Backbone.validateAll</a> 插件，提供一种可选的对当前set/saved的model属性进行验证。</p>
+<p>下面是一个示例：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">
 <span class="co">// Create a new User Model</span>
 <span class="kw">var</span> User = <span class="kw">Backbone.Model</span>.<span class="fu">extend</span>({
@@ -2936,17 +2934,16 @@ $(<span class="kw">function</span>($) {
         <span class="kw">else</span> <span class="kw">if</span>(<span class="kw">this</span>.<span class="fu">validators</span>.<span class="fu">hasSpecialCharacter</span>(<span class="kw">attrs</span>.<span class="fu">lastname</span>)) <span class="kw">errors</span>.<span class="fu">lastname</span> = <span class="ch">&#39;lastname cannot contain special characters&#39;</span>;
 
       }</code></pre>
-<p>This allows the logic inside of our validate methods to determine which form fields are currently being set/validated, and does not care about the other model properties that are not trying to be set.</p>
-<p><strong>Note</strong>: A <a href="http://jsbin.com/afetez/11/edit">demo</a> of the above solution by <a href="http://github.com/gfranko">@gfranko</a> is also available.</p>
-<p>It’s fairly straight-forward to use as well. We can simply define a new Model instance and then set the data on our model using the <code>validateAll</code> option to use the behavior defined by the plugin:</p>
+<p>可以在validate内部方法逻辑里决定哪些表单域是当前set/validated，而不关系其它没有设置的属性。</p>
+<p><strong>提示</strong>: <a href="http://github.com/gfranko">@gfranko</a>有一个相关的<a href="http://jsbin.com/afetez/11/edit">demo</a>。</p>
+<p>创建user实例时就可以通过定义<code>validateAll</code>来使用该插件的行为：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> user = <span class="kw">new</span> User();
 <span class="kw">user</span>.<span class="fu">set</span>({ <span class="st">&quot;firstname&quot;</span>: <span class="st">&quot;Greg&quot;</span> }, {<span class="dt">validateAll</span>: <span class="kw">false</span>});</code></pre>
-<p>That’s it!</p>
-<p>The Backbone.validateAll logic doesn’t override the default Backbone logic by default and so it’s perfectly capable of being used for scenarios where you might care more about field-validation <a href="http://jsperf.com/backbone-validateall">performance</a> as well as those where you don’t. Both solutions presented in this section should work fine however.</p>
-<h1 id="restful-applications"><a href="#TOC"><a name="restfulapps">RESTful Applications</a></a></h1>
-<h2 id="building-restful-applications-with-backbone"><a href="#TOC"><a name="restful">Building RESTful applications with Backbone</a></a></h2>
-<p>In this section of the book, we’re going to take a look at developing RESTful applications using Backbone.js and modern technology stacks. When the data for your back-end is exposed through a purely RESTful API, tasks such as retrieving (GET), creating (POST), updating (PUT) and deleting (DELETE) models are made easy through Backbone’s Model API. This API is so intuitive in fact that switching from storing records in a local data-store (e.g localStorage) to a database/noSQL data-store is a lot simpler than you may think.</p>
-<h2 id="stack-1-building-a-backbone-app-with-node.js-express-mongoose-and-mongodb"><a href="#TOC"><a name="stack1">Stack 1: Building A Backbone App With Node.js, Express, Mongoose and MongoDB</a></a></h2>
+<p>Backbone.validateAll不会覆盖默认的Backbone逻辑，所以它可以用于任何域验证的<a href="http://jsperf.com/backbone-validateall">场景</a>。这一章中提到的2种方案都不错。</p>
+<h1 id="restful应用"><a href="#TOC"><a name="restfulapps">RESTful应用</a></a></h1>
+<h2 id="用backbone构建restful应用"><a href="#TOC"><a name="restful">用Backbone构建RESTful应用</a></a></h2>
+<p>这一章我们来看下如何使用Backbone.js开发RESTful应用，和一些当下比较先进的技术。当后端提供纯粹的RESTful 数据API时，对models的获取(GET)，新建(POST)，更新(PUT)和删除(DELETE)操作可以非常简单的使用Backbone的Model API。这些API从本地存储切换到数据库/noSQL存储会比你预想的都简单。</p>
+<h2 id="stack-1-使用node.js-express-mongoose和mongodb构建backbone-app"><a href="#TOC"><a name="stack1">Stack 1: 使用Node.js, Express, Mongoose和MongoDB构建Backbone App</a></a></h2>
 <p>The first stack we’ll be looking at is:</p>
 <ul>
 <li><a href="nodejs.org">Node.js</a></li>
@@ -2954,14 +2951,14 @@ $(<span class="kw">function</span>($) {
 <li><a href="http://mongoosejs.com/">Mongoose</a></li>
 <li>and <a href="http://www.mongodb.org/">MongoDB</a></li>
 </ul>
-<p>with <a href="http://jade-lang.com/">Jade</a> used optionally as a view/templating engine.</p>
+<p>使用<a href="http://jade-lang.com/">Jade</a>作为view的模板引擎。</p>
 <h3 id="reviewing-the-stack"><a href="#TOC">Reviewing the stack</a></h3>
-<p>As you may know, node.js is an event-driven platform (built on the <a href="http://code.google.com/apis/v8/design.html">V8</a> runtime), designed for writing fast, scalable network applications. It’s reasonably lightweight, efficient and great for real-time applications that are data-intensive.</p>
-<p>Express is a small web-development framework written with node.js, based on <a href="http://www.sinatrarb.com/">Sinatra</a>. It supports a number of useful features such as intuitive views, robust routing and a focus on high performance.</p>
-<p>Next on the list are MongoDB and Mongoose. MongoDB is an open-source, document-oriented database store designed with scalability and agility in mind. As a <a href="http://en.wikipedia.org/wiki/NoSQL">noSQL</a> database, rather than storing data in tables and rows (something we’re very used to doing with relational databases), with MongoDB we instead store JSON-like documents using dynamic schemas. One of the goals of Mongo is to try bridging the gap between key-value stores (speed, scalability) and <a href="http://en.wikipedia.org/wiki/Relational_database">relational</a> databases (rich functionality).</p>
-<p>Mongoose is a JavaScript library that simplifies how we interact with Mongo. Like Express, it’s designed to work within the node.js environment and tries to solve some of the complexities with asynchronous data storage by offering a more user-friendly API. It also adds chaining features into the mix, allowing for a slightly more expressive way of dealing with our data.</p>
-<p>Jade is a template engine influenced by Haml (which we’ll be looking at later). It’s implemented with JavaScript (and also runs under node). In addition to supporting Express out of the box, it boasts a number of useful features including support for mixins, includes, caching, template inheritance and much more. Whilst abstractions like Jade certainly aren’t for everyone, our practical will cover working both with and without it.</p>
-<h3 id="practical"><a href="#TOC">Practical</a></h3>
+<p>node.js是基于事件驱动的一个平台(内置<a href="http://code.google.com/apis/v8/design.html">V8</a>引擎)，为快速和可扩展的web应用而设计。轻量，高效，并且非常适合数据密集型的实时应用。</p>
+<p>Express是使用node.js编写的一个小型web开发框架，基于<a href="http://www.sinatrarb.com/">Sinatra</a>。它支持很多有用的特性，比如直观(intuitive)的views，强健的路由(routing)和关注高性能。</p>
+<p>MongoDB是一个开源面向文档的数据库，设计非常有扩展性和灵活性。作为一种<a href="http://en.wikipedia.org/wiki/NoSQL">noSQL</a>数据库，不同于关系型数据库，MongoDB使用动态的schema保存类似JSON的文档。Mongo的一个目的就是消除key-value数据库(快速，可扩展性)和<a href="http://en.wikipedia.org/wiki/Relational_database">关系型</a>数据库(功能丰富)之间的空缺。</p>
+<p>Mongoose是一个简化与Mongo交互的一个JavaScript库。就像Express，它基于node.js环境设计，并且通过提供更友好的API尝试解决一些复杂的一步数据存储。同时加入了链式调用的特性，处理数据更加富有表现力。</p>
+<p>Jade是一个受Haml(后面会提到)影响的模板引擎。 使用JavaScript实现(同样可以运行于node)。 为了支持Express，它自称支持很多特性，包括mixins, includes, caching, template inheritance(模板继承)等等。Jade虽然抽象，但不一定适合所有人，我们会分别讲述使用和不适用Jade的情况。</p>
+<h3 id="实践"><a href="#TOC">实践</a></h3>
 <p>For this practical, we’re going to once again look at extending the popular Backbone Todo application. Rather than relying on localStorage for data persistence, we’re going to switch to storing Todos in a MongoDB document-store instead. The code for this practical can be found in <code>practicals\stacks\option2</code></p>
 <p><strong>app.js</strong></p>
 <p>(See <a href="https://github.com/addyosmani/backbone-boilerplates/blob/master/option2/app.js">here</a> for the source)</p>
@@ -3411,7 +3408,7 @@ notes.update({ <span class="st">:_id</span> =&gt; note_id }, note)</code></pre>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">notes.update({ <span class="st">:_id</span> =&gt; note_id }, <span class="st">&#39;$set&#39;</span> =&gt; { <span class="st">:text</span> = &gt; <span class="st">&#39;Remember the bread&#39;</span> })</code></pre>
 <p>Useful to know: Almost each MongoDB document has an _id field as its first attribute. This can normally be of any type, however a special BSON datatype is provided for object ids. It’s a 12-byte binary value that has a high probability of being unique when allocated.</p>
 <p>Note: Whilst we opted for the MongoDB Ruby Driver for this stack, you may also be interested in <strong>DataMapper</strong> - a solution which allows us to use the same API to talk to a number of different datastores. This works well for both relational and non-relational databases and more information is available on the official <a href="http://datamapper.org/why.html">project page</a>. <a href="http://sinatra-book.gittr.com/#datamapper">Sinatra: The Book</a> also contains a brief tutorial on DataMapper for anyone interested in exploring it further.</p>
-<h1 id="practical-1"><a href="#TOC">Practical</a></h1>
+<h1 id="practical"><a href="#TOC">Practical</a></h1>
 <p>We’re going to use Sinatra in a similar manner to how we used Express in the last chapter. It will power a RESTful API supporting CRUD operations. Together with a MongoDB data store, this will allow us to easily persist data (todo items) whilst ensuring they are stored in a database. If you’ve read the previous chapter or have gone through any of the Todo examples covered so far, you will find this surprisingly straight-forward.</p>
 <p>Remember that the default Todo example included with Backbone.js already persists data, although it does this via a localStorage adapter. Luckily there aren’t a great deal of changes needed to switch over to using our Sinatra-based API. Let’s briefly review the code that will be powering the CRUD operations for this sections practical, as we won’t be starting off with a near-complete base for most of our real world applications.</p>
 <h3 id="installing-the-prerequisites"><a href="#TOC"><a id="preq">Installing The Prerequisites</a></a></h3>
@@ -4466,7 +4463,7 @@ require([<span class="ch">&#39;views/app&#39;</span>], <span class="kw">function
 <li><strong>Mediator</strong>: The mediator has a varying role depending on just how you wish to implement it. In my article, I mention using it as a module manager with the ability to start and stop modules at will, however when it comes to Backbone, I feel that simplifying it down to the role of a central <q>controller</q> that provides pub/sub capabilities should suffice. One can of course go all out in terms of building a module system that supports module starting, stopping, pausing etc, however the scope of this is outside of this chapter.</li>
 <li><strong>Facade</strong>: This acts as a secure middle-layer that both abstracts an application core (Mediator) and relays messages from the modules back to the Mediator so they don’t touch it directly. The Facade also performs the duty of application security guard; it checks event notifications from modules against a configuration (permissions.js, which we will look at later) to ensure requests from modules are only processed if they are permitted to execute the behavior passed.</li>
 </ul>
-<h3 id="practical-2"><a href="#TOC">Practical</a></h3>
+<h3 id="practical-1"><a href="#TOC">Practical</a></h3>
 <p>For the practical section of this chapter, we’ll be extending the well-known Backbone Todo application using the three patterns mentioned above.</p>
 <p>The application is broken down into AMD modules that cover everything from Backbone models through to application-level modules. The views publish events of interest to the rest of the application and modules can then subscribe to these event notifications.</p>
 <p>All subscriptions from modules go through a facade (or sandbox). What this does is check against the subscriber name and the <q>channel/notification</q> it’s attempting to subscribe to. If a channel <em>doesn’t</em> have permissions to be subscribed to (something established through permissions.js), the subscription isn’t permitted.</p>
@@ -6156,7 +6153,7 @@ test(<span class="st">&quot;should find a model by id&quot;</span>, <span class=
     <span class="kw">mock</span>.<span class="fu">verify</span>();
     ok( <span class="kw">spy</span>.<span class="fu">calledOnce</span> );
 });</code></pre>
-<h1 id="practical-3"><a href="#TOC">Practical</a></h1>
+<h1 id="practical-2"><a href="#TOC">Practical</a></h1>
 <p>We can now begin writing test specs for our Todo application, which are listed and separated by component (e.g Models, Collections etc.). It’s useful to pay attention to the name of the test, the logic being tested and most importantly the assertions being made as this will give you some insight into how what we’ve learned can be applied to a complete application.</p>
 <p>To get the most out of this section, I recommend looking at the QUnit Koans included in the <code>practicals\qunit-koans</code> folder - this is a port of the Backbone.js Jasmine Koans over to QUnit that I converted for this post.</p>
 <p><em>In case you haven’t had a chance to try out one of the Koans kits as yet, they are a set of unit tests using a specific testing framework that both demonstrate how a set of specs for an application may be written, but also leave some tests unfilled so that you can complete them as an exercise.</em></p>

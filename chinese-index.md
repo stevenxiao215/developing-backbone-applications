@@ -3613,7 +3613,7 @@ Jade是一个受Haml(后面会提到)影响的模板引擎。 使用JavaScript�
 
 (源代码参考[这里](https://github.com/addyosmani/backbone-boilerplates/blob/master/option2/app.js))
 
-We must first include the node dependencies required by our application. These are Express, Mongoose and Path (a module containing utilities for dealing with file paths).
+首先我们要引入依赖模块。Express, Mongoose和Path (一个处理文件路径的模块)。
 
 ```javascript
 var application_root = __dirname,
@@ -3622,19 +3622,19 @@ var application_root = __dirname,
   mongoose = require('mongoose');
 ```
 
-Next, create a new Express server. `express.createServer()` is a simple way of creating an instance of express.HTTPServer, which we'll be using to pass in our routes.
+然后创建一个Express server。`express.createServer()`可以简单的创建一个express.HTTPServer实例，后面会传入到routes。
 
 ```javascript
 var app = express.createServer();
 ```
 
-After this, connect Mongoose up to a database (in our case, localhost should suffice). Should you require the ability to pass in authentication information, here's a sample containing all of the supported URL parameters: `mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]`
+之后，要连接Mongoose数据库(这里我们使用localhost)。需要传入验证信息，URL中支持的参数为：`mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]`
 
 ```javascript
 mongoose.connect('mongodb://localhost/my_database');
 ```
 
-A Mongoose model for any Todo item can now be easily defined by passing a schema instance to `mongoose.model`. In our case the schema covers a Todo item's `text` content, its `done` state and `order` position in the overall Todo list.
+传入一个schema实例就可以非常容易的定义一个Mongoose model了。比如创建一个Todo model。
 
 ```javascript
 var Todo = mongoose.model('Todo', new mongoose.Schema({
@@ -3644,7 +3644,8 @@ var Todo = mongoose.model('Todo', new mongoose.Schema({
 }));
 ```
 
-The `configure()` methods allows us to setup what we need for the current environment with our Express server. Note that lower down in the configuration are two view/view related lines. The last one explicitly sets the viewing/templating engine to be used as Jade `app.set('view engine', 'jade')`. We can avoid these if we wish to use plain HTML/JS for our templates instead.
+
+在`configure()`方法中可以用 Express server来建立当前环境。下面最后二行是配置view相关的，最后一行是指定模板view的模板引擎`app.set('view engine', 'jade')`。如果使用纯粹的HTML/JS的话可以忽略。
 
 ```javascript
 app.configure(function(){
@@ -3660,11 +3661,11 @@ app.configure(function(){
 
 ```
 
-Should you prefer to switch out Jade for an alternative view engine, this can be done fairly trivially. See the section under 'Templating' here:
-https://github.com/joyent/node/wiki/modules. For example, to switch to EJS, you would simply write `app.set('view engine', 'ejs')`
+如果想使用其它模板引擎的话可以参考这里['Templating'](https://github.com/joyent/node/wiki/modules#wiki-templating)
+https://github.com/joyent/node/wiki/modules。比如要使用EJS，`app.set('view engine', 'ejs')`
 
 
-Express makes use of common HTTP verbs (get, put, post etc.) to provide easy to use, expressive routing API based on CRUD (Create, Read, Update and Delete). Below for example, we can define what happens when the browser requests the root '/'. As a trivial route in this application, it doesn't do anything particularly exciting, however getters typically read or retrieve data.
+Express可以基于通用的HTTP请求动作(get,put,post)映射到基于CRUD(Create, Read, Update 和 Delete)的API。下面的例子中，我们可以定义当浏览器请求根路径'/'时的响应。
 
 ```javascript
 app.get('/', function(req, res){
@@ -3672,7 +3673,7 @@ app.get('/', function(req, res){
 });
 ```
 
-Onto something a little more useful and in our next route, navigating to '/todo' will actually render our Jade view 'todo.jade', as seen in the callback. Additional configuration values can be passed as the second parameter, such as the custom title specified below.
+来看下更有用的的route，浏览到'/todo'，在回调函数中会使用Jade view 'todo.jade'渲染。配置参数可以通过第二个参数传进去。
 
 ```javascript
 app.get('/todo', function(req, res){
@@ -3680,7 +3681,7 @@ app.get('/todo', function(req, res){
 });
 ```
 
-Next, we can see the first of our '/api/' routes.
+下面看下'/api/' routes。
 
 ```javascript
 app.get('/api/todos', function(req, res){
@@ -3690,7 +3691,7 @@ app.get('/api/todos', function(req, res){
 });
 ```
 
-The callback to our next route supports querying for todos based on a specific ID. The route string itself (once compiled) will be converted from '/api/todos/:id' to a regular expression. As you might have guessed, this is a hint that routes can also be regular expression literals if we wished to do something more complex.
+下面这个route的回调函数中支持基于ID来查询todos。route字符串(一旦编译)会从'/api/todos/:id'转换成一个正则表达式。所以，如果要做些更复杂的事情，可以在routes中包含正则表达式字符。
 
 ```javascript
 app.get('/api/todos/:id', function(req, res){
@@ -3702,7 +3703,7 @@ app.get('/api/todos/:id', function(req, res){
 });
 ```
 
-Similarly, we want to support updating todos based on a specific ID as well. The following allows us to query a todo by ID and then update the values of its three attributes (text, done, order) easily.
+同样的，我们要支持根据指定ID更新todos。下面这个例子通过ID查询todo，然后更新它的三个属性(text, done, order)。
 
 ```javascript
 app.put('/api/todos/:id', function(req, res){
@@ -3720,7 +3721,7 @@ app.put('/api/todos/:id', function(req, res){
 });
 ```
 
-We've so far covered requesting todos and updating them, but a core part of the application requires us to insert (or add) new todos to our data-store. Below we can create new <code>Todo</code> models and simply save them.
+另一个核心的请求就是添加todos。下面代码新建<code>Todo</code> models并且保存。
 
 ```javascript
 app.post('/api/todos', function(req, res){
@@ -3739,7 +3740,7 @@ app.post('/api/todos', function(req, res){
 });
 ```
 
-We of course also want to support deleting todos (e.g if a todo has been 'cleared', it should be deleted). This also works based on a specific todo ID.
+我们还需要支持删除。
 
 ```javascript
 app.delete('/api/todos/:id', function(req, res){
@@ -3754,17 +3755,17 @@ app.delete('/api/todos/:id', function(req, res){
 });
 ```
 
-Finally, this last line is to ensure we're only listening on the port app.js is running.
+最后，app运行时监听3000端口。
 
 ```javascript
 app.listen(3000);
 ```
 
-**script.js - updating our Backbone.js app**
+**script.js - 更新Backbone.js app**
 
-In the `/public/js` folder of options 1 (HTML templates) and 2 (Jade) for the practical, you'll find a version of the Backbone Todo app originally by Jerome Gravel-Niquet. Let's pay attention to [script.js](https://github.com/addyosmani/backbone-boilerplates/blob/master/option2/public/js/script.js). In order to change the application to work with our new back-end, we'll need to make some very minor changes to this.
+在options 1(HTML模板) 和 2 (Jade)的`/public/js`目录下，你会看到Jerome Gravel-Niquet实现的Backbone Todo app。我们来看下[script.js](https://github.com/addyosmani/backbone-boilerplates/blob/master/option2/public/js/script.js)。为了能适应现在新的后端存储方式，我们要对它做一些小的修改。
 
-Reviewing `window.TodoList` (a Backbone Collection), you'll notice that it has a property called `localStorage`, which uses the Backbone [localStorage](https://github.com/jeromegn/Backbone.localStorage) adapter in order to facilitate storing data using the browser's localStorage features.
+`window.TodoList` (Backbone Collection) 有一个`localStorage`属性，使用了Backbone [localStorage](https://github.com/jeromegn/Backbone.localStorage) 适配器来利用浏览器的本地存储。
 
 ```javascript
 window.TodoList = Backbone.Collection.extend({
@@ -3777,20 +3778,19 @@ window.TodoList = Backbone.Collection.extend({
     localStorage: new Store("todos"),
 ```
 
-In order to switch it over to our RESTful backend, we're going to make use of the `url` property or function on a collection to reference its location on the server. Models inside of a collection then use `url` to construct URLs of their own. As all of the CRUD for our RESTful API works on the base route '/api/todos', this is the value we set `url` to.
+为了切换成RESTful服务，使用`url`属性或者函数来指定服务器端的位置。然后collection内的Models使用`url`来构建它们自己的URLs。所有RESTful API的CRUD都基于'/api/todos'路径，所以可以像下面这样设置`url`。
 
 ```javascript
     // localStorage: new Store("todos"),
     url: '/api/todos',
 ```
 
-This is the only change necessary to our existing Backbone application in order to get things working. Pretty easy, right?
-
+这就是唯一需要修改的地方，怎么样，很简单吧？
 
 
 **todo.jade**
 
-The Jade templates for our application cover declarative markup for both the index (layout.jade) of the application and the main Todo container (todo.jade). It also covers the script-tag templates used for rendering each new Todo item that's added.
+这个应用中包含2个Jade模板,index页面(layout.jade)和主要的Todo容器页面(todo.jade)。也包含了页面中渲染每个Todo元素的script标签的模板。
 
 ```html
 // Todo App Interface
@@ -3887,7 +3887,7 @@ body
 
 **static.html**
 
-Alternatively, a static version of our index which doesn't rely on Jade can be put together as follows. See [here](https://github.com/addyosmani/backbone-boilerplates/blob/master/option1/public/static.html) for the complete file or below for a sample.
+另外，不使用Jade的纯静态的html模板可以参考[这里](https://github.com/addyosmani/backbone-boilerplates/blob/master/option1/public/static.html)，下面是部分片段。
 
 ```html
 <div id="container">

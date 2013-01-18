@@ -138,16 +138,16 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#stack-1-使用node.js-express-mongoose和mongodb构建backbone-app"><a name="stack1">Stack 1: 使用Node.js, Express, Mongoose和MongoDB构建Backbone App</a></a><ul>
 <li><a href="#reviewing-the-stack">Reviewing the stack</a></li>
 <li><a href="#实践">实践</a></li>
-<li><a href="#practical-setup">Practical Setup</a><ul>
+<li><a href="#运行">运行</a><ul>
 <li><a href="#mongodb">MongoDB</a></li>
-<li><a href="#express-and-mongoose">Express and Mongoose</a></li>
+<li><a href="#express和mongoose">Express和Mongoose</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
-<li><a href="#building-backbone.js-apps-with-ruby-sinatra-mongodb-and-haml"><a name="stack2">Building Backbone.js Apps With Ruby, Sinatra, MongoDB and Haml</a></a><ul>
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#what-is-sinatra">What Is Sinatra?</a></li>
-<li><a href="#getting-started-with-sinatra">Getting Started With Sinatra</a><ul>
+<li><a href="#使用ruby-sinatra-mongodb和haml构建backbone.js-apps"><a name="stack2">使用Ruby, Sinatra, MongoDB和Haml构建Backbone.js Apps</a></a><ul>
+<li><a href="#简介">简介</a></li>
+<li><a href="#什么是sinatra">什么是Sinatra?</a></li>
+<li><a href="#开始使用sinatra">开始使用Sinatra</a><ul>
 <li><a href="#routes">Routes</a><ul>
 <li><a href="#redirection">Redirection</a></li>
 <li><a href="#halting">Halting</a></li>
@@ -190,7 +190,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#conclusions">Conclusions</a></li>
 </ul></li>
 <li><a href="#modular-development"><a name="advanced">Modular Development</a></a><ul>
-<li><a href="#introduction-1"><a name="modularjs">Introduction</a></a></li>
+<li><a href="#introduction"><a name="modularjs">Introduction</a></a></li>
 <li><a href="#organizing-modules-with-require.js-and-amd"><a name="organizingmodules">Organizing modules with Require.js and AMD</a></a><ul>
 <li><a href="#writing-amd-modules-with-require.js">Writing AMD modules with Require.js</a><ul>
 <li><a href="#alternate-syntax">Alternate syntax</a></li>
@@ -244,7 +244,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul></li>
 <li><a href="#unit-testing"><a name="testing">Unit Testing</a></a><ul>
 <li><a href="#unit-testing-backbone-applications-with-jasmine"><a name="unittestingjasmine">Unit Testing Backbone Applications With Jasmine</a></a></li>
-<li><a href="#introduction-2">Introduction</a></li>
+<li><a href="#introduction-1">Introduction</a></li>
 <li><a href="#jasmine">Jasmine</a></li>
 <li><a href="#suites-specs-spies">Suites, Specs &amp; Spies</a></li>
 <li><a href="#beforeeach-and-aftereach">beforeEach and afterEach()</a></li>
@@ -261,7 +261,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#exercise">Exercise</a></li>
 <li><a href="#further-reading">Further reading</a></li>
 <li><a href="#unit-testing-backbone-applications-with-qunit-and-sinonjs"><a name="unittestingqunit">Unit Testing Backbone Applications With QUnit And SinonJS</a></a></li>
-<li><a href="#introduction-3">Introduction</a></li>
+<li><a href="#introduction-2">Introduction</a></li>
 </ul></li>
 <li><a href="#qunit">QUnit</a><ul>
 <li><a href="#getting-setup-1">Getting Setup</a><ul>
@@ -3204,26 +3204,24 @@ body
   <span class="kw">&lt;/div&gt;</span>
 
   <span class="co">&lt;!--! end of #container--&gt;</span></code></pre>
-<h3 id="practical-setup"><a href="#TOC">Practical Setup</a></h3>
-<p>We’ve now gone through the major points of developing a RESTful backend using Node.js, Express and Mongoose. Next, let’s make sure you can get your environment setup to run the updated Todo app.</p>
+<h3 id="运行"><a href="#TOC">运行</a></h3>
+<p>我们已经使用Node.js, Express and Mongoose开发了一个RESTful应用。我们来尝试下运行修改之后的Todo app。</p>
 <h4 id="mongodb"><a href="#TOC">MongoDB</a></h4>
-<p>Once you’ve downloaded <a href="http://www.mongodb.org/downloads">MongoDB</a>, you’ll need to complete two steps to get it up and running.</p>
-<p><strong>Data directories</strong></p>
-<p>MongoDB stores data in the bin/data/db folder but won’t actually create this directory for you. Navigate to where you’ve downloaded and extracted MongoDB and run the following from terminal:</p>
+<p>下载<a href="http://www.mongodb.org/downloads">MongoDB</a>之后， 运行前需要2个步骤。</p>
+<p><strong>Data目录</strong></p>
+<p>MongoDB把数据保存在bin/data/db目录，但不会自动创建。 切换到下载目录然后解压MongoDB，运行下面的命令：</p>
 <pre class="sourceCode html"><code class="sourceCode html">sudo mkdir -p /data/db/
 sudo chown `id -u` /data/db</code></pre>
-<p><strong>Running and connecting to your server</strong></p>
-<p>Once this is done, open up two terminal windows.</p>
-<p>In the first, <code>cd</code> to your MongoDB bin directory or type in the complete path to it. You’ll need to start <code>mongod</code>.</p>
-<pre class="sourceCode html"><code class="sourceCode html">$ ./bin/mongod</code></pre>
-<p>Next, in the second terminal, start the <code>mongo</code> shell which will connect up to localhost by default.</p>
+<p><strong>运行和连接到server</strong></p>
+<p>打开2个控制台窗口。</p>
+<p>第一个控制台，<code>cd</code>到MongoDB bin目录或者使用完整路基。启动<code>mongod</code>。</p>
+<p><code>html $ ./bin/mongod</code> 然后，第二个控制台，启动<code>mongo</code> shell会默认连接到localhost服务器。</p>
 <pre class="sourceCode html"><code class="sourceCode html">$ ./bin/mongo</code></pre>
-<p>That’s it!.</p>
-<h4 id="express-and-mongoose"><a href="#TOC">Express and Mongoose</a></h4>
-<p>Option 1 (HTML) and Option 2 (Jade) of the practical download both come with an install.sh bash script. This allows you to easily install Express, Mongoose, Jade (and optionally MongoDB if you prefer to) through npm (the node package manager).</p>
+<h4 id="express和mongoose"><a href="#TOC">Express和Mongoose</a></h4>
+<p>Option1(使用HTML)和Option2(使用Jade)目录下都有一个install.sh脚本。可以通过npm(node包管理)快速的安装Express, Mongoose, Jade (MongoDB可选)。</p>
 <ul>
-<li>Make sure you have Node.js installed. If not, you can grab it <a href="http://nodejs.org/#download">here</a></li>
-<li>Next run <code>$ ./install.sh</code> at the terminal to install the rest of our dependencies. To see the exact contents of the install.sh file, see below:</li>
+<li>确保已安装Node.js。如果还没装，从<a href="http://nodejs.org/#download">这里</a>获取。</li>
+<li>然后运行<code>$ ./install.sh</code>安装依赖模块。install.sh文件内容：</li>
 </ul>
 <p><strong>install.sh</strong></p>
 <pre class="sourceCode html"><code class="sourceCode html">#!/bin/bash
@@ -3232,31 +3230,30 @@ npm install mongodb --mongodb:native
 npm install mongoose
 npm install jade</code></pre>
 <ul>
-<li>After you’ve installed all of the dependencies for the stack, we can get to cloning the repo containing our practicals and running them. Start by running the below lines:</li>
+<li>安装完所有依赖模块之后，可以从下面获取代码，然后运行：</li>
 </ul>
 <pre class="sourceCode html"><code class="sourceCode html">git clone git://github.com/addyosmani/backbone-boilerplates.git
 cd option2
 node app.js</code></pre>
-<p>For option1 (without Jade), simply cd into option1 and run <code>node app.js</code> from there.</p>
-<p>Finally, either of the example apps can now be accessed by navigating to:</p>
+<p>如果要运行option1(没有使用Jade)cd到option1，执行<code>node app.js</code>即可。</p>
+<p>最后，上面2个案例都可以通过下面地址访问：</p>
 <ul>
 <li>Option 1: <code>http://localhost:3000/static.html</code></li>
 <li>Option 2: <code>http://localhost:3000/todo</code></li>
 </ul>
-<p>That’s it! Whilst there’s a lot more than can be done to expand on the concepts covered so far, the base we’re reviewed should be enough to get you up and running with this stack if you wish to use it with Backbone.</p>
-<h1 id="building-backbone.js-apps-with-ruby-sinatra-mongodb-and-haml"><a href="#TOC"><a name="stack2">Building Backbone.js Apps With Ruby, Sinatra, MongoDB and Haml</a></a></h1>
-<h2 id="introduction"><a href="#TOC">Introduction</a></h2>
-<p>In this chapter we’re going to explore writing Backbone.js applications with a Ruby back-end. To assist with this, we’re going to use <a href="http://www.sinatrarb.com/">Sinatra</a> - a DSL (domain specific language) for rapidly creating web applications in Ruby. Similar to the <a href="https://github.com/addyosmani/backbone-fundamentals/#stack1">section</a> on writing an application with Node.js, our server-side language (Ruby) will be used to power an API whilst Backbone.js will be the client consuming it.</p>
-<h2 id="what-is-sinatra"><a href="#TOC">What Is Sinatra?</a></h2>
-<p>In the past, you’ve likely come across or used <a href="http://rubyonrails.org">Ruby on Rails</a> (RoR) - a popular web application framework for the Ruby programming language that helps organize applications using the MVC pattern. Sinatra is a much smaller, more light-weight alternative to it.</p>
-<p>Whilst a very basic Rails application may require a more strict project structure (such as requiring the use of controllers, views and routing etc.), Sinatra doesn’t require as many of these dependencies, sacrificing the helpers needed to connect to databases, tools to create forms or any of the other utilities Rails comes with out of the box.</p>
-<p>What Sinatra does have is a <strong>minimal</strong> set of features most useful for tying specific URLs and RESTful HTTP actions to blocks of Ruby code and returning this code’s output as a response. Sinatra is particularly useful for getting projects up and running quickly where we don’t have a need for the extra pieces RoR provides.</p>
-<p>For those who are familiar with more Rails, you probably know that it requires a separate routes file to define how an application should be responding to requests. These are then piped into the relevant models and controllers as needed.</p>
-<p>Sinatra takes a more straight-forward approach, providing us with the most simple path to handling routing. By declaring <code>get</code>,<code>post</code>, <code>put</code> or <code>delete</code> actions, we can inform Sinatra to add a new route, which we can then have respond to requests.</p>
-<p>The framework is particularly useful for writing APIs, widgets and small-scale applications that can power the backend of a client-heavy application. As mentioned, we will be using it to power our API.</p>
-<h2 id="getting-started-with-sinatra"><a href="#TOC">Getting Started With Sinatra</a></h2>
-<p>Let’s review how to write and run a very basic Sinatra application. As most programming languages and frameworks typically start with some variation of <q>Hello World</q>, we’ll start with a similar example.</p>
-<p>Note: Before beginning this section, I recommend installing Sinatra on your system. A guide to doing this can be found in the <a href="#preq">prerequisites</a> section lower down in the article.</p>
+<h1 id="使用ruby-sinatra-mongodb和haml构建backbone.js-apps"><a href="#TOC"><a name="stack2">使用Ruby, Sinatra, MongoDB和Haml构建Backbone.js Apps</a></a></h1>
+<h2 id="简介"><a href="#TOC">简介</a></h2>
+<p>这一章我们将探索使用Ruby作为后端来开发Backbone.js应用。我们会使用<a href="http://www.sinatrarb.com/">Sinatra</a>——一种快速创建Ruby应用的DSL (domain specific language，特定领域语言)。类似于使用Node.js的<a href="https://github.com/addyosmani/backbone-fundamentals/#stack1">章节</a> ，Ruby服务端将会提供Backbone.js应用的API。</p>
+<h2 id="什么是sinatra"><a href="#TOC">什么是Sinatra?</a></h2>
+<p>过去，通常使用<a href="http://rubyonrails.org">Ruby on Rails</a> (RoR)——一个流行的Ruby MVC web开发框架。Sinatra是一个更小，更轻量的框架。</p>
+<p>Rails需要更严格的项目结构(比如需要使用controllers，views和routing等)，Sinatra则不需要这么多依赖，牺牲了数据连接，创建表单和Rails其它一些开箱即用的功能。</p>
+<p>Sinatra有最小化的URLs映射和RESTful HTTP请求的响应功能。Sinatra对于不需要额外的RoR支持快速创建项目非常实用。</p>
+<p>熟悉Rails的都知道，需要定义一个单独的routes文件来映射请求的响应。这就是controllers和其它相关模块所需要的。</p>
+<p>Sinatra使用一种更直观的方法来处理路由。通过声明<code>get</code>,<code>post</code>, <code>put</code> 或者 <code>delete</code> 操作，就可以告诉Sinatra添加一个新的route，来响应请求。</p>
+<p>这个框架非常适合写API，widget和小规模应用。正如前面提到的，我们将用它来编写API。</p>
+<h2 id="开始使用sinatra"><a href="#TOC">开始使用Sinatra</a></h2>
+<p>然我们从一个经典的<q>Hello World</q>例子开始。</p>
+<p>提示: 开始前请先安装Sinatra。后面的<a href="#preq">prerequisites</a>部分有安装指导。</p>
 <h3 id="routes"><a href="#TOC">Routes</a></h3>
 <p>As mentioned, Sinatra allows us to define new routes using HTTP actions. Semantically, a route follows quite a simple structure:</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">&lt;a <span class="dt">HTTP</span> action&gt; &lt;the desired route&gt; <span class="kw">do</span>
@@ -3732,7 +3729,7 @@ put <span class="st">&#39;/api/:thing/:id&#39;</span> <span class="kw">do</span>
 <p>In this chapter, we looked at creating a Backbone application backed by an API powered by Ruby, Sinatra, Haml, MongoDB and the MongoDB driver. I personally found developing APIs with Sinatra a relatively painless experience and one which I felt was on-par with the effort required for the Node/Express implementation of the same application.</p>
 <p>This section is by no means the most comprehensive guide on building complex apps using all of the items in this particular stack. I do however hope it was an introduction sufficient enough to help you decide on what stack to try out for your next project.</p>
 <h1 id="modular-development"><a href="#TOC"><a name="advanced">Modular Development</a></a></h1>
-<h2 id="introduction-1"><a href="#TOC"><a name="modularjs">Introduction</a></a></h2>
+<h2 id="introduction"><a href="#TOC"><a name="modularjs">Introduction</a></a></h2>
 <p>When we say an application is modular, we generally mean it’s composed of a set of highly decoupled, distinct pieces of functionality stored in modules. As you probably know, loose coupling facilitates easier maintainability of apps by removing dependencies where possible. When this is implemented efficiently, its quite easy to see how changes to one part of a system may affect another.</p>
 <p>Unlike some more traditional programming languages however, the current iteration of JavaScript (ECMA-262) doesn’t provide developers with the means to import such modules of code in a clean, organized manner. It’s one of the concerns with specifications that haven’t required great thought until more recent years where the need for more organized JavaScript applications became apparent.</p>
 <p>Instead, developers at present are left to fall back on variations of the module or object literal patterns. With many of these, module scripts are strung together in the DOM with namespaces being described by a single global object where it’s still possible to incur naming collisions in your architecture. There’s also no clean way to handle dependency management without some manual effort or third party tools.</p>
@@ -5049,7 +5046,7 @@ $.<span class="fu">mobile</span>.<span class="fu">changePage</span>( url , { <sp
 <p>The takeaway here is just to remember that if you’re not (already) going through the hassle of conditional script/style loading based on screen-resolution (using matchMedia.js etc), there are simpler approaches that can be taken to cross-device component theming.</p>
 <h1 id="unit-testing"><a href="#TOC"><a name="testing">Unit Testing</a></a></h1>
 <h2 id="unit-testing-backbone-applications-with-jasmine"><a href="#TOC"><a name="unittestingjasmine">Unit Testing Backbone Applications With Jasmine</a></a></h2>
-<h2 id="introduction-2"><a href="#TOC">Introduction</a></h2>
+<h2 id="introduction-1"><a href="#TOC">Introduction</a></h2>
 <p>One definition of unit testing is the process of taking the smallest piece of testable code in an application, isolating it from the remainder of your codebase and determining if it behaves exactly as expected. In this section, we’ll be taking a look at how to unit test Backbone applications using a popular JavaScript testing framework called <a href="http://pivotal.github.com/jasmine/">Jasmine</a> from Pivotal Labs.</p>
 <p>For an application to be considered <q>well</q>-tested, distinct functionality should ideally have its own separate unit tests where it’s tested against the different conditions you expect it to work under. All tests must pass before functionality is considered <q>complete</q>. This allows developers to both modify a unit of code and its dependencies with a level of confidence about whether these changes have caused any breakage.</p>
 <p>As a basic example of unit testing is where a developer may wish to assert whether passing specific values through to a sum function results in the correct output being returned. For an example more relevant to this book, we may wish to assert whether a user adding a new Todo item to a list correctly adds a Model of a specific type to a Todos Collection.</p>
@@ -5654,7 +5651,7 @@ expect(<span class="ch">&#39;click&#39;</span>).<span class="fu">toHaveBeenTrigg
 <li><a href="http://japhr.blogspot.com/2011/12/phantomjs-and-backbonejs-and-requirejs.html">Backbone, PhantomJS and Jasmine</a></li>
 </ul>
 <h2 id="unit-testing-backbone-applications-with-qunit-and-sinonjs"><a href="#TOC"><a name="unittestingqunit">Unit Testing Backbone Applications With QUnit And SinonJS</a></a></h2>
-<h2 id="introduction-3"><a href="#TOC">Introduction</a></h2>
+<h2 id="introduction-2"><a href="#TOC">Introduction</a></h2>
 <p>QUnit is a powerful JavaScript test suite written by jQuery team member <a href="http://bassistance.de/">Jörn Zaefferer</a> and used by many large open-source projects (such as jQuery and Backbone.js) to test their code. It’s both capable of testing standard JavaScript code in the browser as well as code on the server-side (where environments supported include Rhino, V8 and SpiderMonkey). This makes it a robust solution for a large number of use-cases.</p>
 <p>Quite a few Backbone.js contributors feel that QUnit is a better introductory framework for testing if you don’t wish to start off with Jasmine and BDD right away. As we’ll see later on in this chapter, QUnit can also be combined with third-party solutions such as SinonJS to produce an even more powerful testing solution supporting spies and mocks, which some say is preferable over Jasmine.</p>
 <p>My personal recommendation is that it’s worth comparing both frameworks and opting for the solution that you feel the most comfortable with.</p>

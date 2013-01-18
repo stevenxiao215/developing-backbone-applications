@@ -3941,47 +3941,44 @@ body
 ```
 
 
-### Practical Setup
+### 运行
 
-We've now gone through the major points of developing a RESTful backend using Node.js, Express and Mongoose. Next, let's make sure you can get your environment setup to run the updated Todo app.
+我们已经使用Node.js, Express and Mongoose开发了一个RESTful应用。我们来尝试下运行修改之后的Todo app。
 
 ####MongoDB
 
-Once you've downloaded [MongoDB](http://www.mongodb.org/downloads), you'll need to complete two steps to get it up and running.
+下载[MongoDB](http://www.mongodb.org/downloads)之后， 运行前需要2个步骤。
 
-**Data directories**
+**Data目录**
 
-MongoDB stores data in the bin/data/db folder but won't actually create this directory for you. Navigate to where you've downloaded and extracted MongoDB and run the following from terminal:
+MongoDB把数据保存在bin/data/db目录，但不会自动创建。 切换到下载目录然后解压MongoDB，运行下面的命令：
 
 ```html
 sudo mkdir -p /data/db/
 sudo chown `id -u` /data/db
 ```
 
-**Running and connecting to your server**
+**运行和连接到server**
 
-Once this is done, open up two terminal windows.
+打开2个控制台窗口。
 
-In the first, `cd` to your MongoDB bin directory or type in the complete path to it. You'll need to start `mongod`.
+第一个控制台，`cd`到MongoDB bin目录或者使用完整路基。启动`mongod`。
 
 ```html
 $ ./bin/mongod
 ```
-
-Next, in the second terminal, start the `mongo` shell which will connect up to localhost by default.
+然后，第二个控制台，启动`mongo` shell会默认连接到localhost服务器。
 
 ```html
 $ ./bin/mongo
 ```
 
-That's it!.
+####Express和Mongoose
 
-####Express and Mongoose
+Option1(使用HTML)和Option2(使用Jade)目录下都有一个install.sh脚本。可以通过npm(node包管理)快速的安装Express, Mongoose, Jade (MongoDB可选)。
 
-Option 1 (HTML) and Option 2 (Jade) of the practical download both come with an install.sh bash script. This allows you to easily install Express, Mongoose, Jade (and optionally MongoDB if you prefer to) through npm (the node package manager).
-
-* Make sure you have Node.js installed. If not, you can grab it [here](http://nodejs.org/#download)
-* Next run `$ ./install.sh` at the terminal to install the rest of our dependencies. To see the exact contents of the install.sh file, see below:
+* 确保已安装Node.js。如果还没装，从[这里](http://nodejs.org/#download)获取。
+* 然后运行`$ ./install.sh`安装依赖模块。install.sh文件内容：
 
 **install.sh**
 
@@ -3994,7 +3991,7 @@ npm install jade
 ```
 
 
-* After you've installed all of the dependencies for the stack, we can get to cloning the repo containing our practicals and running them. Start by running the below lines:
+* 安装完所有依赖模块之后，可以从下面获取代码，然后运行：
 
 ```html
 git clone git://github.com/addyosmani/backbone-boilerplates.git
@@ -4002,49 +3999,48 @@ cd option2
 node app.js
 ```
 
-For option1 (without Jade), simply cd into option1 and run `node app.js` from there.
+如果要运行option1(没有使用Jade)cd到option1，执行`node app.js`即可。
 
-Finally, either of the example apps can now be accessed by navigating to:
+最后，上面2个案例都可以通过下面地址访问：
 
 * Option 1: `http://localhost:3000/static.html`
 * Option 2: `http://localhost:3000/todo`
 
-That's it! Whilst there's a lot more than can be done to expand on the concepts covered so far, the base we're reviewed should be enough to get you up and running with this stack if you wish to use it with Backbone.
 
 
-#<a name="stack2">Building Backbone.js Apps With Ruby, Sinatra, MongoDB and Haml</a>
+#<a name="stack2">使用Ruby, Sinatra, MongoDB和Haml构建Backbone.js Apps</a>
 
-##Introduction
+##简介
 
-In this chapter we're going to explore writing Backbone.js applications with a Ruby back-end. To assist with this, we're going to use [Sinatra](http://www.sinatrarb.com/) - a DSL (domain specific language) for rapidly creating web applications in Ruby. Similar to the [section](https://github.com/addyosmani/backbone-fundamentals/#stack1) on writing an application with Node.js, our server-side language (Ruby) will be used to power an API whilst Backbone.js will be the client consuming it.
-
-
-## What Is Sinatra?
+这一章我们将探索使用Ruby作为后端来开发Backbone.js应用。我们会使用[Sinatra](http://www.sinatrarb.com/)——一种快速创建Ruby应用的DSL (domain specific language，特定领域语言)。类似于使用Node.js的[章节](https://github.com/addyosmani/backbone-fundamentals/#stack1) ，Ruby服务端将会提供Backbone.js应用的API。
 
 
-In the past, you've likely come across or used [Ruby on Rails](http://rubyonrails.org) (RoR) - a popular web application framework for the Ruby programming language that helps organize applications using the MVC pattern. Sinatra is a much smaller, more light-weight alternative to it.
+## 什么是Sinatra?
 
-Whilst a very basic Rails application may require a more strict project structure (such as requiring the use of controllers, views and routing etc.), Sinatra doesn't require as many of these dependencies, sacrificing the helpers needed to connect to databases, tools to create forms or any of the other utilities Rails comes with out of the box.
+过去，通常使用[Ruby on Rails](http://rubyonrails.org) (RoR)——一个流行的Ruby MVC web开发框架。Sinatra是一个更小，更轻量的框架。
 
-What Sinatra does have is a **minimal** set of features most useful for tying specific URLs and RESTful HTTP actions to blocks of Ruby code and returning this code's output as a response. Sinatra is particularly useful for getting projects up and running quickly where we don't have a need for the extra pieces RoR provides.
+Rails需要更严格的项目结构(比如需要使用controllers，views和routing等)，Sinatra则不需要这么多依赖，牺牲了数据连接，创建表单和Rails其它一些开箱即用的功能。
 
-For those who are familiar with more Rails, you probably know that it requires a separate routes file to define how an application should be responding to requests. These are then piped into the relevant models and controllers as needed.
+Sinatra有最小化的URLs映射和RESTful HTTP请求的响应功能。Sinatra对于不需要额外的RoR支持快速创建项目非常实用。
 
-Sinatra takes a more straight-forward approach, providing us with the most simple path to handling routing. By declaring ```get```,```post```, ```put``` or ```delete``` actions, we can inform Sinatra to add a new route, which we can then have respond to requests.
+熟悉Rails的都知道，需要定义一个单独的routes文件来映射请求的响应。这就是controllers和其它相关模块所需要的。
 
-The framework is particularly useful for writing APIs, widgets and small-scale applications that can power the backend of a client-heavy application. As mentioned, we will be using it to power our API.
+Sinatra使用一种更直观的方法来处理路由。通过声明```get```,```post```, ```put``` 或者 ```delete``` 操作，就可以告诉Sinatra添加一个新的route，来响应请求。
+
+这个框架非常适合写API，widget和小规模应用。正如前面提到的，我们将用它来编写API。
 
 
 
-## Getting Started With Sinatra
+## 开始使用Sinatra
 
-Let's review how to write and run a very basic Sinatra application. As most programming languages and frameworks typically start with some variation of "Hello World", we'll start with a similar example.
+然我们从一个经典的"Hello World"例子开始。
 
-Note: Before beginning this section, I recommend installing Sinatra on your system. A guide to doing this can be found in the [prerequisites](#preq) section lower down in the article.
+提示: 开始前请先安装Sinatra。后面的[prerequisites](#preq)部分有安装指导。
 
 ###Routes
 
-As mentioned, Sinatra allows us to define new routes using HTTP actions. Semantically, a route follows quite a simple structure:
+
+Sinatra可以通过HTTP行为来定义路由。所有route有一个非常简单的结构：
 
 ```ruby
 <a HTTP action> <the desired route> do
@@ -4052,7 +4048,7 @@ As mentioned, Sinatra allows us to define new routes using HTTP actions. Semanti
 end
 ```
 
-A tiny route that outputs a "Hello World"-like message when we attempt to "get" the root could thus be written as follows:
+输出"Hello World"的路由就想下面这样：
 
 ```ruby
 require 'sinatra'
@@ -4062,17 +4058,17 @@ get '/' do
 end
 ```
 
-To run this snippet, we can can simply save it to a local '.rb' file and execute it as follows:
+保存为'.rb'文件然后运行：
 
 ```ruby
 ruby -rubygems example.rb
 ```
 
-If we now navigated to http://localhost:4567 in our browser we could now see the application running successfully.
+在浏览器中通过http://localhost:4567浏览。
 
-The HTTP verbs we commonly work with when writing RESTful web services are: `get`, `post`, `delete` and `put`. As we now know, all Sinatra routes are basically HTTP actions (```get``` etc.) that are paired with a URL-matching pattern. We associate a pair of an action and route with code we would like sent back to the browser (executed)if the route is reached. Sinatra doesn't enforce much in the way of architectural structure, instead relying on simplicity to supporting writing powerful APIs.
+RESTful 服务通常HTTP动作有：`get`, `post`, `delete`和`put`。所有Sinatra的routes都是基于HTTP行为，映射到URL。我们把对路由的响应关联起来。Sinatra不强制要求总体结构，而是以简单的方式支持强大的APIs。
 
-Here's an example of a skeleton service we could put together supporting four common HTTP actions:
+下面是一个例子：
 
 ```ruby
 get '/items' do
@@ -4096,7 +4092,7 @@ delete '/item/:id' do
 end
 ```
 
-Sinatra's routing is both easy for beginners to get started with but is also flexible enough for those wishing to define more complex routes. As you probably noticed in the above example, routes can include named parameters (e.g ```/item/:id```). We can actually access the content of these routes using the ```params``` hash as follows:
+Sinatra的路由非常容易上手，同时也支持更复杂的模式。你可能已经注意到上面的例子了，它可以支持命名参数(比如 ```/item/:id```)。可以通过```params```哈希来访问里面的值：
 
 ```ruby
 get '/item/:id' do

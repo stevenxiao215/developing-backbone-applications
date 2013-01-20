@@ -4102,13 +4102,13 @@ get '/item/:id' do
 end
 ```
 
-Sinatra also supports route matching via splats, wildcards and regular expressions. For more information on this I recommend reading the official [docs](http://www.sinatrarb.com/documentation). Let's now take a look at handlers.
+Sinatra同样支持通配符，正则表达式的路由匹配。更多信息可参考官方[文档](http://www.sinatrarb.com/documentation)。 我们来看下handlers(处理器)。
 
-Sinatra includes convenient handler methods for tasks such as redirection, halting and passing.
+Sinatra包含非常方便的方法来处理跳转(redirection)，终止(halting)和传递(passing)。
 
-####Redirection
+####跳转(redirection)
 
-A simple route supporting redirection which returns a 302 response can be written as follows:
+支持简单的302跳转响应：
 
 ```ruby
 get '/items' do
@@ -4116,18 +4116,18 @@ get '/items' do
 end
 ```
 
-And if we wish to pass additional parameters such as arguments we can do so like this:
+还可以传递参数：
 redirect 'http://site.com/', 'Oops! I think we have a problem!'
 
-####Halting
+####终止(Halting)
 
-To immediately stop a request (halting) we can use 'halt'. Heres an example of halting a request where we specify the message body:
+要立即停止一个请求可以使用'halt'：
 
 ```halt "who goes there!?"```
 
-####Passing
+####传递(Passing)
 
-'Passing' is the concept of deferring processing of a block to the next matching route. We do this using `pass`. In the following example if a parameter isnt the username we expect (rick-astley) we simply pass it on:
+'Passing'是把一个流程传递给另外一个对应的route。使用`pass`。下面这个例子中如果username不是(rick-astley) 就继续传递：
 
 ```ruby
 get '/members/:username' do
@@ -4140,13 +4140,13 @@ get '/members/*' do
 end
 ```
 
-There are also handler methods that can assist with sessions (specifically, cookie-based session handling). To use Sinatra's session handling, first enable it in your application with:
+同样有一些方法处理sessions(指基于cookie的session处理)。要使用Sinatra的session处理，先要开启：
 
 ```ruby
 enable :sessions
 ```
 
-You can then use the session handling capabilities as follows:
+然后像下面这样使用：
 
 ```ruby
 get '/items' do
@@ -4156,15 +4156,13 @@ get '/items' do
 end
 ```
 
-Note: By default enable:sessions will store all data in cookies. If this is not desired, you can not call this and instead use some Rack middleware instead. For more on this see [here](http://www.sinatrarb.com/intro#Using%20Sessions).
-
-This only touches the surface of what can be done using routes and handlers, but is sufficient for us to write the Sinatra-powered API service we require in the practical section of this chapter.
+提示：默认enable:sessions将会把说有数据保存在cookies中。如果你不想这样的话，可以用一些中间件来替代。可以参考[这里](http://www.sinatrarb.com/intro#Using%20Sessions)。
 
 
-##Templating And HAML
+##模板和HAML
 
 
-Let's now discuss templating.Out of the box, we can begin using templates in our Sinatra applications with ERB. ERB is included with Ruby and allows Ruby code to be added to any plain text document for the purpose of generating information or flow control. In the following example using an ERB template, note that views are by default located in the ```views``` directory of our application.
+我们可以在Sinatra应用中使用ERB模板。ERB可以允许使用Ruby代码来输出内容和控制流程。下面是一个例子，view默认指向```views```目录。
 
 ```ruby
 get '/items' do
@@ -4173,7 +4171,7 @@ get '/items' do
 end
 ```
 
-A useful Sinatra convention worth noting is how layouts are handled. Layouts automatically search for a views/layout template which is rendered before any other views are loaded. With ERB, our views/layout.erb file could look as follows:
+在渲染其它模板前，默认都会先加载views/layout模板。views/layout.erb文件像下面这样：
 
 ```html
 <html>
@@ -4184,15 +4182,15 @@ A useful Sinatra convention worth noting is how layouts are handled. Layouts aut
 </html>
 ```
 
-Haml is a popular alternative to ERB which offers an abstract syntax for writing application templates. It has been said to be:
+与ERB相比，另一个流行的模板是使用Haml来编写。 Haml有下面几个优点：
 
-* Straight-forward to learn
-* Very easy to read and use for visually expressing a hierarchy of DOM elements
-* Popular with web designers as it builds on top of CSS syntax
-* Well documented with a large community backing it
-* Almost as fast as ERB
+* 学些起来非常直接简单
+* 对嵌套的DOM元素表达很形象，容易阅读
+* 基于CSS语法之上，在web设计中很流行
+* 有庞大的社区支持
+* 跟ERB一样快
 
-For the purpose of comparison, below we can see an ERB template compared to its Haml equivalent.
+下面我们来看下ERB与Haml的比较：
 
 ####ERB
 
@@ -4212,45 +4210,45 @@ For the purpose of comparison, below we can see an ERB template compared to its 
 ```
 
 
-One of the first things we notice is that the Haml snippet looks significantly more like CSS than it does traditional markup. It's much easier to read and we no longer need to be concerned with divs, spans, closing tags or other semantic rules that usually mean more keystrokes. The approach taken to making whitespace a part of the syntax also means it can be much easier to compare changes between multiple documents (especially if you're doing a diff).
+可以看到Haml非常像CSS的标记。跟容易阅读，而且不用在关心div,span,结束标记和其它语法规则，也不用在输入那么多代码。空格是语法的一部分，所以多个文档间会更容易对比变化(比如diff的时候)。
 
-In the list of Haml features, we briefly mentioned web designers. As developers, we regularly need to communicate and work with designers, but we always have to remember that at the end of the day, they are not programmers. They're usually more concerned with the look and the feel of an application, but if we want them to write mark-up as a part of the templates or skins they create, Haml is a simpler option that has worked well for teams at a number of companies.
+上面我们提到了设计师，作为开发者，通常需要于设计设交流。在很多公司，设计师需要为他们的设计写模板时，Haml是一个不错的选择。
 
 
 ```ruby
-%h1 This is some h1 text
-%h2 This is some h2 text.
+%h1 这是h1
+%h2 这是h2
 
-%p Now we have a line containing a single instance variable: @content
+%p 下面一行有一个变量：@content
 %p= @content
 
-%p Embedding Ruby code in the middle of a line can be done using ==.
+%p 在一行中包含Ruby代码可以使用 ==.
 %p== Here is an example: #{@foobar}
 
-%p We can also add attributes using {}
+%p 属性可以使用 {}
 %p{:style => "color:green"} We just made this paragraph green!
 
-%p You'll want to apply classes and ids to your DOM, too.
+%p 如果想给DOM指定class或者ID
 %p.foo This has the foo class
 %p.bar This has the bar class
 %p#foobar This has the foobar id
 %p.foo#foobar Or you can combine them!
 
-%p Nesting can be done like this
+%p 嵌套可以这样
 %p
-  Or even like this
+  或者这样
 
 ```
 
-Note: Haml is whitespace sensitive and will not correctly work if it isn't indented by an even number of spaces. This is due to whitespace being used for nesting in place of the classic HTML markup approach of closing tags.
+提示：Haml是空格严格的语法，如果空格不严格可能出错。它使用空格来表达HTML标签的嵌套。
 
 
-#MongoDB Ruby Driver
+#MongoDB Ruby驱动
 
 
 ##Getting started
 
-Once the MongoDB Ruby driver is installed, we can begin to use it to connect to a Mongo database. To create a  connection using localhost, we simply specify the driver as a dependency. Assuming we're using the default port we can then connect as follows:
+MongoDB Ruby驱动安装好之后就可以链接Mongo数据库了。使用localhost和默认端口创建一个连接：
 
 ```ruby
 require 'mongo'
@@ -4259,31 +4257,29 @@ require 'mongo'
 db = Connection.new.db('learning-mongo');
 ```
 
-We probably also want to place some data into 'learning-mongo'. It could be as simple as a note, so why don't we go ahead and begin a notes collection?:
+我们想要保存一些数据到'learning-mongo'。比如简单的note信息，我们notes collection开始：
 
 ```ruby
 notes = db.collection('notes')
 ```
-Something interesting worth noting is that at this point, we haven't actually created the database nor the collection we're referencing above.
+目前没有数据，因为我们还没有创建任何信息。
 
-Neither of these items exist in Mongo (just yet) but as we're working with a new database but they will once we insert some real data.
-
-A new note could be defined using key/value pairs as follows and then inserted into 'learning-mongo' using `collection.insert()`:
+note可以使用key/value对来定义，调用`collection.insert()`插入到数据'learning-mongo':
 
 ```ruby
 our_note = { :text => 'Remember the milk', :remindInterval => 'weekly'}
 note_id = notes.insert(our_note)
 ```
 
-What is returned from inserting a note into the notes collection is an `ObjectId` reference for the note from Mongo. This is useful as we can re-use it to locate the same document in our database.
+插入到notes collection之后，返回的是一个Mongo的note对象`ObjectId`的引用。对于重新定位该对象非常有用。
 
 ```ruby
 note = notes.find( :id => note_id ).first
 ```
 
-This can also be used in conjunction with Mongo's `collection.update()` method and [query](http://www.mongodb.org/display/DOCS/Updating) operators (i.e `$set`) to replace fields in an existing document.
+也可以结合`collection.update()`方法和[query](http://www.mongodb.org/display/DOCS/Updating)操作(比如`$set`) 替换一个已存在的对象。
 
-We might update an entire document as follows:
+可以像下面这样更新document对象：
 
 ```ruby
 note = notes.find( :id => note_id ).first
@@ -4291,18 +4287,16 @@ note[:text] = 'Remember the bread'
 notes.update({ :_id => note_id }, note)
 ```
 
-or using `$set`, update an existing document without overwriting the entire object as like this:
+或使用`$set`，在不重写该对象的情况写保存实体：
 
 ```ruby
 notes.update({ :_id => note_id }, '$set' => { :text = > 'Remember the bread' })
 ```
 
-Useful to know: Almost each MongoDB document has an _id field as its first attribute. This can normally
-be of any type, however a special BSON datatype is provided for object ids. It's a
-12-byte binary value that has a high probability of being unique when allocated.
+几乎每个MongoDB document都有一个_id字段作为它的第一个属性。它可以是任何类型，虽然MongoDB 为id提供了一个特定的BSON类型。它是12-位二进制值，分配时有高度的唯一性。
 
 
-Note: Whilst we opted for the MongoDB Ruby Driver for this stack, you may also be interested in **DataMapper** - a solution which allows us to use the same API to talk to a number of different datastores. This works well for both relational and non-relational databases and more information is available on the official [project page](http://datamapper.org/why.html). [Sinatra: The Book](http://sinatra-book.gittr.com/#datamapper) also contains a brief tutorial on DataMapper for anyone interested in exploring it further.
+提示：Whilst we opted for the MongoDB Ruby Driver for this stack, you may also be interested in **DataMapper** - a solution which allows us to use the same API to talk to a number of different datastores. This works well for both relational and non-relational databases and more information is available on the official [project page](http://datamapper.org/why.html). [Sinatra: The Book](http://sinatra-book.gittr.com/#datamapper) also contains a brief tutorial on DataMapper for anyone interested in exploring it further.
 
 
 #Practical

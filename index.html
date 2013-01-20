@@ -149,17 +149,17 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#什么是sinatra">什么是Sinatra?</a></li>
 <li><a href="#开始使用sinatra">开始使用Sinatra</a><ul>
 <li><a href="#routes">Routes</a><ul>
-<li><a href="#redirection">Redirection</a></li>
-<li><a href="#halting">Halting</a></li>
-<li><a href="#passing">Passing</a></li>
+<li><a href="#跳转redirection">跳转(redirection)</a></li>
+<li><a href="#终止halting">终止(Halting)</a></li>
+<li><a href="#传递passing">传递(Passing)</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#templating-and-haml">Templating And HAML</a><ul>
+<li><a href="#模板和haml">模板和HAML</a><ul>
 <li><a href="#erb">ERB</a></li>
 <li><a href="#haml">Haml</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#mongodb-ruby-driver">MongoDB Ruby Driver</a><ul>
+<li><a href="#mongodb-ruby驱动">MongoDB Ruby驱动</a><ul>
 <li><a href="#getting-started">Getting started</a></li>
 </ul></li>
 <li><a href="#practical">Practical</a><ul>
@@ -172,7 +172,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#data-directories">1.Data directories</a></li>
 <li><a href="#running-and-connecting-to-your-server">2.Running and connecting to your server</a></li>
 </ul></li>
-<li><a href="#mongodb-ruby-driver-1">MongoDB Ruby Driver</a></li>
+<li><a href="#mongodb-ruby-driver">MongoDB Ruby Driver</a></li>
 </ul></li>
 <li><a href="#tutorial">Tutorial</a><ul>
 <li><a href="#application-files">Application Files</a></li>
@@ -3255,21 +3255,21 @@ node app.js</code></pre>
 <p>然我们从一个经典的<q>Hello World</q>例子开始。</p>
 <p>提示: 开始前请先安装Sinatra。后面的<a href="#preq">prerequisites</a>部分有安装指导。</p>
 <h3 id="routes"><a href="#TOC">Routes</a></h3>
-<p>As mentioned, Sinatra allows us to define new routes using HTTP actions. Semantically, a route follows quite a simple structure:</p>
+<p>Sinatra可以通过HTTP行为来定义路由。所有route有一个非常简单的结构：</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">&lt;a <span class="dt">HTTP</span> action&gt; &lt;the desired route&gt; <span class="kw">do</span>
    <span class="co"># some behaviour</span>
 <span class="kw">end</span></code></pre>
-<p>A tiny route that outputs a <q>Hello World</q>-like message when we attempt to <q>get</q> the root could thus be written as follows:</p>
+<p>输出<q>Hello World</q>的路由就想下面这样：</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">require <span class="st">&#39;sinatra&#39;</span>
 
 get <span class="st">&#39;/&#39;</span> <span class="kw">do</span>
    <span class="st">&quot;Hello World! Is it me you&#39;re looking for?&quot;</span>
 <span class="kw">end</span></code></pre>
-<p>To run this snippet, we can can simply save it to a local ’.rb’ file and execute it as follows:</p>
+<p>保存为’.rb’文件然后运行：</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">ruby -rubygems example.rb</code></pre>
-<p>If we now navigated to http://localhost:4567 in our browser we could now see the application running successfully.</p>
-<p>The HTTP verbs we commonly work with when writing RESTful web services are: <code>get</code>, <code>post</code>, <code>delete</code> and <code>put</code>. As we now know, all Sinatra routes are basically HTTP actions (<code>get</code> etc.) that are paired with a URL-matching pattern. We associate a pair of an action and route with code we would like sent back to the browser (executed)if the route is reached. Sinatra doesn’t enforce much in the way of architectural structure, instead relying on simplicity to supporting writing powerful APIs.</p>
-<p>Here’s an example of a skeleton service we could put together supporting four common HTTP actions:</p>
+<p>在浏览器中通过http://localhost:4567浏览。</p>
+<p>RESTful 服务通常HTTP动作有：<code>get</code>, <code>post</code>, <code>delete</code>和<code>put</code>。所有Sinatra的routes都是基于HTTP行为，映射到URL。我们把对路由的响应关联起来。Sinatra不强制要求总体结构，而是以简单的方式支持强大的APIs。</p>
+<p>下面是一个例子：</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">get <span class="st">&#39;/items&#39;</span> <span class="kw">do</span>
   <span class="co"># list all items available</span>
 <span class="kw">end</span>
@@ -3289,25 +3289,25 @@ put <span class="st">&#39;/item/:id&#39;</span> <span class="kw">do</span>
 delete <span class="st">&#39;/item/:id&#39;</span> <span class="kw">do</span>
   <span class="co"># delete an item</span>
 <span class="kw">end</span></code></pre>
-<p>Sinatra’s routing is both easy for beginners to get started with but is also flexible enough for those wishing to define more complex routes. As you probably noticed in the above example, routes can include named parameters (e.g <code>/item/:id</code>). We can actually access the content of these routes using the <code>params</code> hash as follows:</p>
+<p>Sinatra的路由非常容易上手，同时也支持更复杂的模式。你可能已经注意到上面的例子了，它可以支持命名参数(比如 <code>/item/:id</code>)。可以通过<code>params</code>哈希来访问里面的值：</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">get <span class="st">&#39;/item/:id&#39;</span> <span class="kw">do</span>
   <span class="co"># this matches &quot;GET /item/10&quot; and &quot;GET /item/11&quot;</span>
   <span class="co"># params[:id] is &quot;10&quot; or &quot;11&quot;</span>
   <span class="st">&quot;You reached </span><span class="ot">#{</span>params[<span class="st">:id</span>]<span class="ot">}</span><span class="st">&quot;</span>
 <span class="kw">end</span></code></pre>
-<p>Sinatra also supports route matching via splats, wildcards and regular expressions. For more information on this I recommend reading the official <a href="http://www.sinatrarb.com/documentation">docs</a>. Let’s now take a look at handlers.</p>
-<p>Sinatra includes convenient handler methods for tasks such as redirection, halting and passing.</p>
-<h4 id="redirection"><a href="#TOC">Redirection</a></h4>
-<p>A simple route supporting redirection which returns a 302 response can be written as follows:</p>
+<p>Sinatra同样支持通配符，正则表达式的路由匹配。更多信息可参考官方<a href="http://www.sinatrarb.com/documentation">文档</a>。 我们来看下handlers(处理器)。</p>
+<p>Sinatra包含非常方便的方法来处理跳转(redirection)，终止(halting)和传递(passing)。</p>
+<h4 id="跳转redirection"><a href="#TOC">跳转(redirection)</a></h4>
+<p>支持简单的302跳转响应：</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">get <span class="st">&#39;/items&#39;</span> <span class="kw">do</span>
       redirect <span class="st">&#39;/items/welcome&#39;</span>
 <span class="kw">end</span></code></pre>
-<p>And if we wish to pass additional parameters such as arguments we can do so like this: redirect <q>http://site.com/</q>, <q>Oops! I think we have a problem!</q></p>
-<h4 id="halting"><a href="#TOC">Halting</a></h4>
-<p>To immediately stop a request (halting) we can use <q>halt</q>. Heres an example of halting a request where we specify the message body:</p>
+<p>还可以传递参数： redirect <q>http://site.com/</q>, <q>Oops! I think we have a problem!</q></p>
+<h4 id="终止halting"><a href="#TOC">终止(Halting)</a></h4>
+<p>要立即停止一个请求可以使用’halt’：</p>
 <p><code>halt &quot;who goes there!?&quot;</code></p>
-<h4 id="passing"><a href="#TOC">Passing</a></h4>
-<p><q>Passing</q> is the concept of deferring processing of a block to the next matching route. We do this using <code>pass</code>. In the following example if a parameter isnt the username we expect (rick-astley) we simply pass it on:</p>
+<h4 id="传递passing"><a href="#TOC">传递(Passing)</a></h4>
+<p>’Passing’是把一个流程传递给另外一个对应的route。使用<code>pass</code>。下面这个例子中如果username不是(rick-astley) 就继续传递：</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">get <span class="st">&#39;/members/:username&#39;</span> <span class="kw">do</span>
  pass <span class="kw">unless</span> params[<span class="st">:username</span>] == <span class="st">&#39;rick-astley&#39;</span>
  <span class="st">&#39;Never gonna give you up, never gonna let you down&#39;</span>
@@ -3316,38 +3316,37 @@ delete <span class="st">&#39;/item/:id&#39;</span> <span class="kw">do</span>
 get <span class="st">&#39;/members/*&#39;</span> <span class="kw">do</span>
  <span class="st">&#39;Welcome!&#39;</span>
 <span class="kw">end</span></code></pre>
-<p>There are also handler methods that can assist with sessions (specifically, cookie-based session handling). To use Sinatra’s session handling, first enable it in your application with:</p>
+<p>同样有一些方法处理sessions(指基于cookie的session处理)。要使用Sinatra的session处理，先要开启：</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">enable <span class="st">:sessions</span></code></pre>
-<p>You can then use the session handling capabilities as follows:</p>
+<p>然后像下面这样使用：</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">get <span class="st">&#39;/items&#39;</span> <span class="kw">do</span>
   session[<span class="st">&#39;visitCounter&#39;</span>] ||= <span class="dv">0</span>;
   session[<span class="st">&#39;visitCounter&#39;</span>] += <span class="dv">1</span>;
   <span class="st">&quot;This page has been accessed </span><span class="ot">#{</span>session[<span class="st">&#39;visitCounter&#39;</span>]<span class="ot">}</span><span class="st"> times&quot;</span>
 <span class="kw">end</span></code></pre>
-<p>Note: By default enable:sessions will store all data in cookies. If this is not desired, you can not call this and instead use some Rack middleware instead. For more on this see <a href="http://www.sinatrarb.com/intro#Using%20Sessions">here</a>.</p>
-<p>This only touches the surface of what can be done using routes and handlers, but is sufficient for us to write the Sinatra-powered API service we require in the practical section of this chapter.</p>
-<h2 id="templating-and-haml"><a href="#TOC">Templating And HAML</a></h2>
-<p>Let’s now discuss templating.Out of the box, we can begin using templates in our Sinatra applications with ERB. ERB is included with Ruby and allows Ruby code to be added to any plain text document for the purpose of generating information or flow control. In the following example using an ERB template, note that views are by default located in the <code>views</code> directory of our application.</p>
+<p>提示：默认enable:sessions将会把说有数据保存在cookies中。如果你不想这样的话，可以用一些中间件来替代。可以参考<a href="http://www.sinatrarb.com/intro#Using%20Sessions">这里</a>。</p>
+<h2 id="模板和haml"><a href="#TOC">模板和HAML</a></h2>
+<p>我们可以在Sinatra应用中使用ERB模板。ERB可以允许使用Ruby代码来输出内容和控制流程。下面是一个例子，view默认指向<code>views</code>目录。</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">get <span class="st">&#39;/items&#39;</span> <span class="kw">do</span>
   erb <span class="st">:default</span>
   <span class="co"># renders views/default.erb</span>
 <span class="kw">end</span></code></pre>
-<p>A useful Sinatra convention worth noting is how layouts are handled. Layouts automatically search for a views/layout template which is rendered before any other views are loaded. With ERB, our views/layout.erb file could look as follows:</p>
+<p>在渲染其它模板前，默认都会先加载views/layout模板。views/layout.erb文件像下面这样：</p>
 <pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;html&gt;</span>
   <span class="kw">&lt;head&gt;&lt;/head&gt;</span>
   <span class="kw">&lt;body&gt;</span>
     <span class="er">&lt;</span>%= data %&gt;
   <span class="kw">&lt;/body&gt;</span>
 <span class="kw">&lt;/html&gt;</span></code></pre>
-<p>Haml is a popular alternative to ERB which offers an abstract syntax for writing application templates. It has been said to be:</p>
+<p>与ERB相比，另一个流行的模板是使用Haml来编写。 Haml有下面几个优点：</p>
 <ul>
-<li>Straight-forward to learn</li>
-<li>Very easy to read and use for visually expressing a hierarchy of DOM elements</li>
-<li>Popular with web designers as it builds on top of CSS syntax</li>
-<li>Well documented with a large community backing it</li>
-<li>Almost as fast as ERB</li>
+<li>学些起来非常直接简单</li>
+<li>对嵌套的DOM元素表达很形象，容易阅读</li>
+<li>基于CSS语法之上，在web设计中很流行</li>
+<li>有庞大的社区支持</li>
+<li>跟ERB一样快</li>
 </ul>
-<p>For the purpose of comparison, below we can see an ERB template compared to its Haml equivalent.</p>
+<p>下面我们来看下ERB与Haml的比较：</p>
 <h4 id="erb"><a href="#TOC">ERB</a></h4>
 <pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;todo&quot;</span><span class="ot"> id=</span><span class="st">&quot;content&quot;</span><span class="kw">&gt;</span>
   <span class="kw">&lt;h2</span><span class="ot"> class=</span><span class="st">&quot;entry_title&quot;</span><span class="kw">&gt;</span><span class="er">&lt;</span>%= h @todo.title %&gt;<span class="kw">&lt;/h2&gt;</span>
@@ -3357,54 +3356,53 @@ get <span class="st">&#39;/members/*&#39;</span> <span class="kw">do</span>
 <pre class="sourceCode html"><code class="sourceCode html">.todo#content
   %h2.entry_title= @todo.title
   .entry_link= link_to(&#39;link&#39;, @todo.link)</code></pre>
-<p>One of the first things we notice is that the Haml snippet looks significantly more like CSS than it does traditional markup. It’s much easier to read and we no longer need to be concerned with divs, spans, closing tags or other semantic rules that usually mean more keystrokes. The approach taken to making whitespace a part of the syntax also means it can be much easier to compare changes between multiple documents (especially if you’re doing a diff).</p>
-<p>In the list of Haml features, we briefly mentioned web designers. As developers, we regularly need to communicate and work with designers, but we always have to remember that at the end of the day, they are not programmers. They’re usually more concerned with the look and the feel of an application, but if we want them to write mark-up as a part of the templates or skins they create, Haml is a simpler option that has worked well for teams at a number of companies.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="ot">%</span>h1 This is some h1 text
-<span class="ot">%</span>h2 This is some h2 text<span class="ot">.</span>
+<p>可以看到Haml非常像CSS的标记。跟容易阅读，而且不用在关心div,span,结束标记和其它语法规则，也不用在输入那么多代码。空格是语法的一部分，所以多个文档间会更容易对比变化(比如diff的时候)。</p>
+<p>上面我们提到了设计师，作为开发者，通常需要于设计设交流。在很多公司，设计师需要为他们的设计写模板时，Haml是一个不错的选择。</p>
+<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="ot">%</span>h1 <span class="ot">这</span><span class="st">是h1</span>
+<span class="st">%h2</span><span class="ot"> 这</span>是h2
 
-<span class="st">%p Now we have a line containing a single instance variable: @content</span>
+<span class="ot">%</span>p <span class="ot">下</span><span class="st">面一行有一个变量：@content</span>
 <span class="st">%p= @content</span>
 
-<span class="st">%p Embedding Ruby code in the middle of a line can be done using ==</span><span class="ot">.</span>
-<span class="ot">%</span>p<span class="ot">==</span> <span class="dt">Here</span> is an example: <span class="co">#{@foobar}</span>
+<span class="st">%p 在一行中包含Ruby代码可以使用 ==.</span>
+<span class="st">%p== Here is an example: </span><span class="ot">#{@foobar}</span>
 
-<span class="ot">%</span>p We can also add attributes using <span class="ot">{}</span>
-<span class="ot">%</span>p<span class="ot">{</span><span class="st">:style =&gt; &quot;color:green&quot;</span><span class="ot">}</span> <span class="dt">We</span> just made this paragraph green!
+<span class="st">%p 属性可以使用 {}</span>
+<span class="st">%p{:style =&gt; &quot;color:green&quot;} We just made this paragraph green!</span>
 
-<span class="ot">%</span>p You<span class="ot">&#39;</span><span class="st">ll want to apply classes and ids to your DOM, too.</span>
+<span class="st">%p 如果想给DOM指定class或者ID</span>
 <span class="st">%p.foo This has the foo class</span>
 <span class="st">%p.bar This has the bar class</span>
 <span class="st">%p#foobar This has the foobar id</span>
 <span class="st">%p.foo#foobar Or you can combine them!</span>
 
-<span class="st">%p Nesting can be done like this</span>
+<span class="st">%p 嵌套可以这样</span>
 <span class="st">%p</span>
-<span class="st">  Or even like this</span></code></pre>
-<p>Note: Haml is whitespace sensitive and will not correctly work if it isn’t indented by an even number of spaces. This is due to whitespace being used for nesting in place of the classic HTML markup approach of closing tags.</p>
-<h1 id="mongodb-ruby-driver"><a href="#TOC">MongoDB Ruby Driver</a></h1>
+<span class="st">  或者这样</span></code></pre>
+<p>提示：Haml是空格严格的语法，如果空格不严格可能出错。它使用空格来表达HTML标签的嵌套。</p>
+<h1 id="mongodb-ruby驱动"><a href="#TOC">MongoDB Ruby驱动</a></h1>
 <h2 id="getting-started"><a href="#TOC">Getting started</a></h2>
-<p>Once the MongoDB Ruby driver is installed, we can begin to use it to connect to a Mongo database. To create a connection using localhost, we simply specify the driver as a dependency. Assuming we’re using the default port we can then connect as follows:</p>
+<p>MongoDB Ruby驱动安装好之后就可以链接Mongo数据库了。使用localhost和默认端口创建一个连接：</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">require <span class="st">&#39;mongo&#39;</span>
 
 <span class="co"># where &#39;learning-mongo&#39; is the name of our database:</span>
 db = <span class="dt">Connection</span>.new.db(<span class="st">&#39;learning-mongo&#39;</span>);</code></pre>
-<p>We probably also want to place some data into <q>learning-mongo</q>. It could be as simple as a note, so why don’t we go ahead and begin a notes collection?:</p>
-<p><code>ruby notes = db.collection('notes')</code> Something interesting worth noting is that at this point, we haven’t actually created the database nor the collection we’re referencing above.</p>
-<p>Neither of these items exist in Mongo (just yet) but as we’re working with a new database but they will once we insert some real data.</p>
-<p>A new note could be defined using key/value pairs as follows and then inserted into <q>learning-mongo</q> using <code>collection.insert()</code>:</p>
+<p>我们想要保存一些数据到’learning-mongo’。比如简单的note信息，我们notes collection开始：</p>
+<p><code>ruby notes = db.collection('notes')</code> 目前没有数据，因为我们还没有创建任何信息。</p>
+<p>note可以使用key/value对来定义，调用<code>collection.insert()</code>插入到数据’learning-mongo’:</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">our_note = { <span class="st">:text</span> =&gt; <span class="st">&#39;Remember the milk&#39;</span>, <span class="st">:remindInterval</span> =&gt; <span class="st">&#39;weekly&#39;</span>}
 note_id = notes.insert(our_note)</code></pre>
-<p>What is returned from inserting a note into the notes collection is an <code>ObjectId</code> reference for the note from Mongo. This is useful as we can re-use it to locate the same document in our database.</p>
+<p>插入到notes collection之后，返回的是一个Mongo的note对象<code>ObjectId</code>的引用。对于重新定位该对象非常有用。</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">note = notes.find( <span class="st">:id</span> =&gt; note_id ).first</code></pre>
-<p>This can also be used in conjunction with Mongo’s <code>collection.update()</code> method and <a href="http://www.mongodb.org/display/DOCS/Updating">query</a> operators (i.e <code>$set</code>) to replace fields in an existing document.</p>
-<p>We might update an entire document as follows:</p>
+<p>也可以结合<code>collection.update()</code>方法和<a href="http://www.mongodb.org/display/DOCS/Updating">query</a>操作(比如<code>$set</code>) 替换一个已存在的对象。</p>
+<p>可以像下面这样更新document对象：</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">note = notes.find( <span class="st">:id</span> =&gt; note_id ).first
 note[<span class="st">:text</span>] = <span class="st">&#39;Remember the bread&#39;</span>
 notes.update({ <span class="st">:_id</span> =&gt; note_id }, note)</code></pre>
-<p>or using <code>$set</code>, update an existing document without overwriting the entire object as like this:</p>
+<p>或使用<code>$set</code>，在不重写该对象的情况写保存实体：</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">notes.update({ <span class="st">:_id</span> =&gt; note_id }, <span class="st">&#39;$set&#39;</span> =&gt; { <span class="st">:text</span> = &gt; <span class="st">&#39;Remember the bread&#39;</span> })</code></pre>
-<p>Useful to know: Almost each MongoDB document has an _id field as its first attribute. This can normally be of any type, however a special BSON datatype is provided for object ids. It’s a 12-byte binary value that has a high probability of being unique when allocated.</p>
-<p>Note: Whilst we opted for the MongoDB Ruby Driver for this stack, you may also be interested in <strong>DataMapper</strong> - a solution which allows us to use the same API to talk to a number of different datastores. This works well for both relational and non-relational databases and more information is available on the official <a href="http://datamapper.org/why.html">project page</a>. <a href="http://sinatra-book.gittr.com/#datamapper">Sinatra: The Book</a> also contains a brief tutorial on DataMapper for anyone interested in exploring it further.</p>
+<p>几乎每个MongoDB document都有一个_id字段作为它的第一个属性。它可以是任何类型，虽然MongoDB 为id提供了一个特定的BSON类型。它是12-位二进制值，分配时有高度的唯一性。</p>
+<p>提示：Whilst we opted for the MongoDB Ruby Driver for this stack, you may also be interested in <strong>DataMapper</strong> - a solution which allows us to use the same API to talk to a number of different datastores. This works well for both relational and non-relational databases and more information is available on the official <a href="http://datamapper.org/why.html">project page</a>. <a href="http://sinatra-book.gittr.com/#datamapper">Sinatra: The Book</a> also contains a brief tutorial on DataMapper for anyone interested in exploring it further.</p>
 <h1 id="practical"><a href="#TOC">Practical</a></h1>
 <p>We’re going to use Sinatra in a similar manner to how we used Express in the last chapter. It will power a RESTful API supporting CRUD operations. Together with a MongoDB data store, this will allow us to easily persist data (todo items) whilst ensuring they are stored in a database. If you’ve read the previous chapter or have gone through any of the Todo examples covered so far, you will find this surprisingly straight-forward.</p>
 <p>Remember that the default Todo example included with Backbone.js already persists data, although it does this via a localStorage adapter. Luckily there aren’t a great deal of changes needed to switch over to using our Sinatra-based API. Let’s briefly review the code that will be powering the CRUD operations for this sections practical, as we won’t be starting off with a near-complete base for most of our real world applications.</p>
@@ -3448,7 +3446,7 @@ sudo chown `id -u` /data/db</code></pre>
 <pre><code>$ ./bin/mongod</code></pre>
 <p>Finally, in the second terminal, start the mongo shell which will connect up to localhost by default.</p>
 <pre><code>$ ./bin/mongo</code></pre>
-<h4 id="mongodb-ruby-driver-1"><a href="#TOC">MongoDB Ruby Driver</a></h4>
+<h4 id="mongodb-ruby-driver"><a href="#TOC">MongoDB Ruby Driver</a></h4>
 <p>As we’ll be using the <a href="https://github.com/mongodb/mongo-ruby-driver">MongoDB Ruby Driver</a>, we’ll also require the following gems:</p>
 <p>The gem for the driver itself:</p>
 <pre><code>$ gem install mongo</code></pre>

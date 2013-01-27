@@ -4296,34 +4296,34 @@ notes.update({ :_id => note_id }, '$set' => { :text = > 'Remember the bread' })
 几乎每个MongoDB document都有一个_id字段作为它的第一个属性。它可以是任何类型，虽然MongoDB 为id提供了一个特定的BSON类型。它是12-位二进制值，分配时有高度的唯一性。
 
 
-提示：Whilst we opted for the MongoDB Ruby Driver for this stack, you may also be interested in **DataMapper** - a solution which allows us to use the same API to talk to a number of different datastores. This works well for both relational and non-relational databases and more information is available on the official [project page](http://datamapper.org/why.html). [Sinatra: The Book](http://sinatra-book.gittr.com/#datamapper) also contains a brief tutorial on DataMapper for anyone interested in exploring it further.
+提示：我们这里使用了MongoDB Ruby Driver，或许你对**DataMapper**也感兴趣——一个可以使用相同API连接多重不同数据库的方案。不管是关系型数据库还是非关系型数据库都能适用，更多信息可参考[官方网站](http://datamapper.org/why.html)。[Sinatra: The Book](http://sinatra-book.gittr.com/#datamapper) 也包含了DataMapper相关的教程。
 
 
-#Practical
+#实践
 
-We're going to use Sinatra in a similar manner to how we used Express in the last chapter. It will power a RESTful API supporting CRUD operations. Together with a MongoDB data store, this will allow us to easily persist data (todo items) whilst ensuring they are stored in a database. If you've read the previous chapter or have gone through any of the Todo examples covered so far, you will find this surprisingly straight-forward.
+我们像上一章Express那样来使用Sinatra。提供RESTful API支持CRUD操作。同时使用MongoDB进行数据存储。如果你看过前面Todo案例，这部分将会非常简单明了。
 
-Remember that the default Todo example included with Backbone.js already persists data, although it does this via a localStorage adapter. Luckily there aren't a great deal of changes needed to switch over to using our Sinatra-based API.  Let's briefly review the code that will be powering the CRUD operations for this sections practical, as we won't be starting off with a near-complete base for most of our real world applications.
+还记得前面Todo案例已经存留了数据，景观是通过localStorage适配做的。现在我们要基于Sinatra API来做存储。我们简短的回顾下在这部分实践中实现CRUD操作的代码，我们不会从一开始基于一个接近完整的实际应用做示例。
 
 
-###<a id="preq">Installing The Prerequisites</a>
+###<a id="preq">安装依赖项</a>
 
 ####Ruby
 
-If using OSX or Linux, Ruby may be one of a number of open-source packages that come pre-installed and you can skip over to the next paragraph. In case you would like to check if check if you have Ruby installed, open up the terminal prompt and type:
+如果使用OSX或Linux，Ruby可能是一个已预安装了的开源包，你可以从跳到下一段继续。 可以打开终端检查是否已安装了：
 
 ```$ ruby -v```
 
-The output of this will either be the version of Ruby installed or an error complaining that Ruby wasn't found.
+将会输出ruby的版本，如果未安装的话将会报错。
 
-Should you need to install Ruby manually (e.g for an operating system such as Windows), you can do so by downloading the latest version from http://www.ruby-lang.org/en/downloads/. Alternatively, [RVM](http://beginrescueend.com/rvm/install/) (Ruby Version Manager) is a command-line tool that allows you to easily install and manage multiple ruby environments with ease.
+如果要手动安装的话，可以从这里下载最新版本 http://www.ruby-lang.org/en/downloads/。或者，[RVM](http://beginrescueend.com/rvm/install/) (Ruby版本管理器) 是一个命令行工具，可以轻松的安装和管理多个版本的ruby。
 
 
 ####Ruby Gems
 
-Next, we will need to install Ruby Gems. Gems are a standard way to package programs or libraries written in Ruby and with Ruby Gems it's possible to install additional dependencies for Ruby applications very easily.
+接下来，安装Ruby Gems。Gems是一种Ruby程序或者库的标准打包方式，而且使用Ruby Gems可以非常简单的安装Ruby应用的依赖项。
 
-On OSX, Linux or Windows go to [http://rubyforge.org/projects/rubygems](http://rubyforge.org/projects/rubygems) and download the latest version of Ruby Gems. Once downloaded, open up a terminal, navigate to the folder where this resides and enter:
+OSX，Linux，Windows用户都可以到[http://rubyforge.org/projects/rubygems](http://rubyforge.org/projects/rubygems) 下载最新版本的Ruby Gems。打开终端，切换到下载目录执行：
 
 ```
 $> tar xzvf rubygems.tgz
@@ -4331,11 +4331,11 @@ $> cd rubygems
 $> sudo ruby setup.rb
 ```
 
-There will likely be a version number included in your download and you should make sure to include this when tying the above. Finally, a symlink (symbolic link) to tie everything togther should be run as follows:
+下载的目录可能还包含一个版本号。Finally, a symlink (symbolic link) to tie everything togther should be run as follows:
 
 ```$ sudo ln -s /usr/bin/gem1.8.17 /usr/bin/gem```
 
-To check that Ruby Gems has been correctly installed, type the following into your terminal:
+检查Ruby Gems是否已安装成功：
 
 ```
 $ gem -v
@@ -4344,55 +4344,54 @@ $ gem -v
 
 ####Sinatra
 
-With Ruby Gems setup, we can now easily install Sinatra. For Linux or OSX type this in your terminal:
+有了Gems setup，现在就可以很轻松的安装Sinatra了。Linux和OSX用户可以在终端输入：
 
 ```$ sudo gem install sinatra```
 
-and if you're on Windows, enter the following at a command prompt:
+Windows用户：
 
 ```c:\> gem install sinatra```
 
 
 ####Haml
 
-As with other DSLs and frameworks, Sinatra supports a wide range of different templating engines. [ERB](http://www.ruby-doc.org/stdlib/libdoc/erb/rdoc/classes/ERB.html) is the one most often recommended by the Sinatra camp, however
-as a part of this chapter, we're going to explore the use of [Haml](http://haml.hamptoncatlin.com/) to define our application templates.
+作为另一个DSL和框架，Sinatra广泛的支持各种模板引擎。[ERB](http://www.ruby-doc.org/stdlib/libdoc/erb/rdoc/classes/ERB.html) 是Sinatra社区常推荐的一种，不过我们这一章将会探索下使用[Haml](http://haml.hamptoncatlin.com/)来定义模板。
 
-Haml stands for HTML Abstractional Markup Language and is a lightweight markup language abstraction that can be used to describe HTML without the need to use traditional markup language semantics (such as opening and closing tags).
+Haml是对HTML更为抽象的标记语言，而且是一种轻量的标记语言，用于描述HTML，而且无需使用传统标记语法(比如开始标签和结束标签)。
 
-Installing Haml can be done in just a line using Ruby Gems as follows:
+安装haml只需要使用Ruby Gems执行一行命令：
 
 ```$ gem install haml```
 
 
 ####MongoDB
 
-If you haven't already downloaded and installed MongoDB from an earlier chapter, please [do so](http://www.mongodb.org/downloads) now. With Ruby Gems, Mongo can be installed in just one line:
+如果你在看前面的章节时还没安装MongoDB，赶紧[下载](http://www.mongodb.org/downloads)。也可以通过Ruby Gems用一条命令来安装：
 
 ```$ gem install mongodb```
 
-We now require two further steps to get everything up and running.
+现在我们还需要2个步骤来搭建好整个运行环境。
 
-#####1.Data directories
+#####1.数据目录
 
-MongoDB stores data in the bin/data/db folder but won't actually create this directory for you. Navigate to where you've downloaded and extracted Mongo and run the following from terminal:
+MongoDB把数据保存在bin/data/db文件夹下，但是不会自动创建这个目录。切换到下载的目录解压Mongo，然后运行：
 
 ```
 sudo mkdir -p /data/db/
 sudo chown `id -u` /data/db
 ```
 
-#####2.Running and connecting to your server
+#####2.运行和连接到服务器
 
-Once this is done, open up two terminal windows.
+打开2个控制台窗口。
 
-In the first, cd to your MongoDB bin directory or type in the complete path to it. You'll need to start mongod.
+在第一个控制台，切换到MongoDB bin目录或者输入完整路径。 启动mongod。
 
 ```
 $ ./bin/mongod
 ```
 
-Finally, in the second terminal, start the mongo shell which will connect up to localhost by default.
+最后，在第二个控制台, 启动mongo shell，会默认连接到localhost服务器。
 
 ```
 $ ./bin/mongo
@@ -4400,42 +4399,42 @@ $ ./bin/mongo
 
 ####MongoDB Ruby Driver
 
-As we'll be using the [MongoDB Ruby Driver](https://github.com/mongodb/mongo-ruby-driver), we'll also require the following gems:
+我们将使用[MongoDB Ruby Driver](https://github.com/mongodb/mongo-ruby-driver), 需要下面的gems：
 
-The gem for the driver itself:
+驱动自身：
 
 ```
 $ gem install mongo
 ```
 
-and the driver's other prerequisite, bson:
+驱动的依赖，bson:
 
 ```
 $ gem install bson_ext
 ```
 
-This is basically a collection of extensions used to increase serialization speed.
+以上是增强序列化速度最基本的扩展。
 
-That's it for our prerequisites!.
-
-
-##Tutorial
-
-To get started, let's get a local copy of the practical application working on our system.
+上面这些就是我们的准备条件。
 
 
-###Application Files
-Clone [this](http://github.com/addyosmani/backbone-fundamentals) repository and navigate to `/practicals/stacks/option3`. Now run the following lines at the terminal:
+##教程
+
+先复制一份官方的代码到本地。
+
+
+###应用文件
+Clone [代码库](http://github.com/addyosmani/backbone-fundamentals) 切换到 `/practicals/stacks/option3`目录。在控制台运行：
 
 ```
 ruby app.rb
 ```
 
-Finally, navigate to <code>http://localhost:4567/todo</code> to see the application running successfully.
+浏览器中打开<code>http://localhost:4567/todo</code>看是否运行成功。
 
-**Note:** The Haml layout files for Option 3 can be found in the /views folder.
+**提示：** Option3的Haml layout文件在/views目录下。
 
-The directory structure for our practical application is as follows:
+整个应用的目录结构：
 
 ```
 --public
@@ -4449,9 +4448,9 @@ app.rb
 
 ```
 
-The `public` directory contains the scripts and stylesheets for our application and uses HTML5 Boilerplate as a base. You can find the Models, Views and Collections for this section within ```public/js/scripts.js``` (however, this can of course be expanded into sub-directories for each component if desired).
+`public`目录包含了脚本和样式，基于HTML5 Boilerplate。可以在```public/js/scripts.js```文件中找到Models, Views和Collections (当然，也可以把每个组件拆分到子目录中，如果你愿意的话)。
 
-```scripts.js``` contains the following Backbone component definitions:
+```scripts.js``` 包含了下面这些Backbone组件定义：
 
 ```
 --Models
@@ -4465,17 +4464,17 @@ The `public` directory contains the scripts and stylesheets for our application 
 ---AppView
 ```
 
-`app.rb` is the small Sinatra application that powers our backend API.
+`app.rb`是一个小的Sinatra应用，支撑了我们这个案例的后台API。
 
-Lastly, the `views` directory hosts the Haml source files for our application's index and templates, both of which are compiled to standard HTML markup at runtime.
+最后，`views`目录包含了index和模板的Haml源文件，运行时都会编译成标准的HTML标记。
 
-These can be viewed along with other note-worthy snippets of code from the application below.
+可以同下面的一些有注释的代码片段一起观看。
 
 ###Backbone
 
 ####Views
 
-In our main application view (AppView), we want to load any previously stored Todo items in our Mongo database when the view initializes. This is done below with the line ```Todos.fetch()``` in the ```initialize()``` method where we also bind to the relevant events on the `Todos` collection for when items are added or changed.
+在主要的view (AppView)初始化时，要加载在Mongo中已保存的Todo项， 这部分由```initialize()```方法中```Todos.fetch()```这一行完成， 初始化方法中同时也绑定了`Todos`的add，reset，all事件。
 
 ```javascript
 // Our overall **AppView** is the top-level piece of UI.
@@ -4517,9 +4516,9 @@ var AppView = Backbone.View.extend({
 
 ###Collections
 
-In the TodoList collection below, we've set the `url` property to point to `/api/todos` to reference the collection's location on the server. When we attempt to access this from our Sinatra-backed API, it should return a list of all the Todo items that have been previously stored in Mongo.
+在下面TodoList collection中，我们把`url`属性指向`/api/todos`，引用服务器端collection的location。当我们通过这个地址尝试访问Sinatra API时，应该返回一个保存在Mongo里的所有Todo项的列表。
 
-For the sake of thoroughness, our API will also support returning the data for a specific Todo item via `/api/todos/itemID`. We'll take a look at this again when writing the Ruby code powering our backend.
+为做到彻底，API也支持通过访问`/api/todos/itemID`返回指定的Todo项。编写Ruby代码的时候我们会再回顾下这点。
 
 ```javascript
  // Todo Collection
@@ -4561,7 +4560,7 @@ For the sake of thoroughness, our API will also support returning the data for a
 
 ###Model
 
-The model for our Todo application remains largely unchanged from the versions previously covered in this book. It is however worth noting that calling the function `model.url()` within the below would return the relative URL where a specific Todo item could be located on the server.
+Todo应用的model跟这本书前面讲到的大部分都没什么却别。不过需要注意的是在下面调用`model.url()`将返回Todo项在服务器端对应的相对URL。
 
 ```javascript
 
@@ -4586,14 +4585,14 @@ The model for our Todo application remains largely unchanged from the versions p
 
 ###Ruby/Sinatra
 
-Now that we've defined our main models, views and collections let's get the CRUD operations required by our Backbone application supported in our Sinatra API.
+现在已经定义主要的models, views和collections， 我们来看下Sinatra API的CRUD操作。
 
-We want to make sure that for any operations changing underlying data (create, update, delete) that our Mongo data store correctly reflects these.
+我们要确保任何基于数据的操作(创建, 更新, 删除)Mongo中的数据存储都能正确的反应出来。
 
 
 ###app.rb
 
-For `app.rb`, we first define the dependencies required by our application. These include Sinatra, Ruby Gems, the MongoDB Ruby driver and the JSON gem.
+首先引入依赖。包含Sinatra, Ruby Gems, MongoDB Ruby 和JSON。
 
 ```ruby
 require 'rubygems'
@@ -4602,14 +4601,13 @@ require 'mongo'
 require 'json'
 ```
 
-Next, we create a new connection to Mongo, specifying any custom configuration desired. If running a multi-threaded application, setting the 'pool_size' allows us to specify a maximum pool size and 'timeout' a maximum timeout for waiting for old connections to be released to the pool.
+然后，创建一个新的Mongo连接，指定自己的配置参数。如果运行多线程的应用，'pool_size'可以设置一个最大的pool size，'timeout'可以指定最大的等待老的连接从pool释放的超时时间。
 
 ```ruby
 DB = Mongo::Connection.new.db("mydb", :pool_size => 5, :timeout => 5)
 ```
 
-Finally we define the routes to be supported by our API. Note that in the first two blocks - one for our
-application root (`/`) and the other for our todo items route `/todo` - we're using Haml for template rendering.
+最后，定义API的routes。注意，前面2个routes，root (`/`) 和todo items route `/todo`使用Haml作为模板渲染。
 
 ```ruby
 class TodoApp < Sinatra::Base
@@ -4623,72 +4621,64 @@ class TodoApp < Sinatra::Base
 	end
 ```
 
-`haml :index` instructs Sinatra to use the `views/index.haml` for the application index, whilst ```attr_wrapper``` is simply defining the values to be used for any local variables defined inside the template.
-This similarly applies Todo items with the template `views/todo.haml'.
+`haml :index`告诉Sinatra使用`views/index.haml`作为应用的首页，```attr_wrapper```简单的定义模板内定义的局部变量的值。同样的，Todo items使用`views/todo.haml'模板。
 
-The rest of our routes make use of the `params` hash and a number of useful helper methods included with the MongoDB Ruby driver. For more details on these, please
-read the comments I've made inline below:
+其它的routes利用了`params`和一些MongoDB Ruby driver里的实用helper方法。更多细节可以阅读下面的一些说明：
 
 
 ```ruby
 get '/api/:thing' do
-  # query a collection :thing, convert the output to an array, map the _id
-  # to a string representation of the object's _id and finally output to JSON
+  # 查询一个collection :thing, 把结果转换成数组，根据object的_id作为字符串生成个map，然后转换成json。
   DB.collection(params[:thing]).find.to_a.map{|t| from_bson_id(t)}.to_json
 end
 
 get '/api/:thing/:id' do
-  # get the first document with the id :id in the collection :thing as a single document (rather
-  # than a Cursor, the standard output) using find_one(). Our bson utilities assist with
-  # ID conversion and the final output returned is also JSON
+  # 通过id :id获取collection的第一个结果，:thing作为一个单独的document (就想一个光标，标准输出)调用find_one()。bson相关工具完成ID转换，最后输出JSON
   from_bson_id(DB.collection(params[:thing]).find_one(to_bson_id(params[:id]))).to_json
 end
 
 post '/api/:thing' do
-  # parse the post body of the content being posted, convert to a string, insert into
-  # the collection #thing and return the ObjectId as a string for reference
+  # 把post过来的内容转换成字符串，插入到collection #thing 并且返回ObjectId字符串。
   oid = DB.collection(params[:thing]).insert(JSON.parse(request.body.read.to_s))
   "{\"_id\": \"#{oid.to_s}\"}"
 end
 
 delete '/api/:thing/:id' do
-  # remove the item with id :id from the collection :thing, based on the bson
-  # representation of the object id
+  # 更具id :id 移除collection :thing 中的项，, 基于bson转换object id
   DB.collection(params[:thing]).remove('_id' => to_bson_id(params[:id]))
 end
 
 put '/api/:thing/:id' do
-  # collection.update() when used with $set (as covered earlier) allows us to set single values
-  # in this case, the put request body is converted to a string, rejecting keys with the name '_id' for security purposes
+  # collection.update() ，使用$set设置单个属性值。put请求的内容转换成字符串，为安全考虑拒绝包含'_id'的名称。
   DB.collection(params[:thing]).update({'_id' => to_bson_id(params[:id])}, {'$set' => JSON.parse(request.body.read.to_s).reject{|k,v| k == '_id'}})
 end
 
-# utilities for generating/converting MongoDB ObjectIds
+# 创建/转换 MongoDB ObjectId的方法
 def to_bson_id(id) BSON::ObjectId.from_string(id) end
 def from_bson_id(obj) obj.merge({'_id' => obj['_id'].to_s}) end
 
 end
 ```
 
-That's it. The above is extremely lean for an entire API, but does allow us to read and write data to support the functionality required by our client-side application.
+上面是一套精简而完整的API了，足以满足客户端的读写需求。
 
-For more on what MongoDB and the MongoDB Ruby driver are capable of, please do feel free to read their documentation for more information.
+想了解MongoDB和MongoDB Ruby driver能做的更多事情，可以阅读它们的文档。
 
-If you're a developer wishing to take this example further, why not try to add some additional capabilities to the service:
+作为开发人员，可以尝试对这个案例做些更进一步的扩充：
 
-* Validation: improved validation of data in the API. What more could be done to ensure data sanitization?
-* Search: search or filter down Todo items based on a set of keywords or within a certain date range
-* Pagination: only return the Nth number of Todo items or items from a start and end-point
+* 验证：增强API的数据校验。还有些什么可以做的，以确保数据的安全呢？
+* 搜索：基于关键字对todo进行搜索或者过滤。
+* 分页：只返回指定页的todo内容。
 
 ###Haml/Templates
 
-Finally, we move on to the Haml files that define our application index (layout.haml) and the template for a specific Todo item (todo.haml). Both of these are largely self-explanatory, but it's useful to see the differences between the Jade approach we reviewed in the last chapter vs. using Haml for this implementation.
+最后，我们来看下Haml文件，index (layout.haml) 和单个Todo项的模板(todo.haml)。这2个文件的自我描述性都非常强，不过可以来对比下上一章中使用Jade和这里使用Haml的区别。
 
-Note: In our Haml snippets below, the forward slash character is used to indicate a comment. When this character is placed at the beginning of a line, it wraps all of the text after it into a HTML comment. e.g
+提示：下面的Haml片段中，斜杠分隔符表示注释。 当斜杠在行开头时，后面的内容将会被转换成HTML注释。比如：
 
 ```/ These are templates```
 
-compiles to:
+编译成：
 
 ```<!-- These are templates -->```
 
@@ -4770,15 +4760,14 @@ compiles to:
   <% } %>
 ```
 
-##Conclusions
+##总结
 
-In this chapter, we looked at creating a Backbone application backed by an API powered by Ruby, Sinatra, Haml, MongoDB and the MongoDB driver. I personally found developing APIs with Sinatra a relatively painless experience and one which I felt was
-on-par with the effort required for the Node/Express implementation of the same application.
+这一章，我们基于Ruby, Sinatra, Haml, MongoDB和MongoDB driver创建了Backbone应用的后端API。对于同一个应用，我个人觉得相对基于Node/Express的实现而言，使用Sinatra来开发后端API更爽。
 
-This section is by no means the most comprehensive guide on building complex apps using all of the items in this particular stack. I do however hope it was an introduction sufficient enough to help you decide on what stack to try out for your next project.
+这章并不是对于开发一个复杂应用的全面指南，我更希望它是一个入门，能帮助你在做下一个项目时决定尝试引入哪些好的东西。
 
 
-# <a name="advanced">Modular Development</a>
+# <a name="advanced">模块化开发</a>
 
 
 ##<a name="modularjs">Introduction</a>

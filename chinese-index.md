@@ -4770,36 +4770,36 @@ end
 # <a name="advanced">模块化开发</a>
 
 
-##<a name="modularjs">Introduction</a>
+##<a name="modularjs">介绍</a>
 
-When we say an application is modular, we generally mean it's composed of a set of highly decoupled, distinct pieces of functionality stored in modules. As you probably know, loose coupling facilitates easier maintainability of apps by removing dependencies where possible. When this is implemented efficiently, its quite easy to see how changes to one part of a system may affect another.
+通常我们说一个应用是模块化的时候，它应该是由高度解耦的，把各个功能分开到模块中。或许你应该已知道，这种解耦通过移除可能存在的依赖促使app更容易维护。当模块化实施的非常有效时，就很容易看出某一部分的改动对其它部分的影响。
 
-Unlike some more traditional programming languages however, the current iteration of JavaScript (ECMA-262) doesn't provide developers with the means to import such modules of code in a clean, organized manner. It's one of the concerns with specifications that haven't required great thought until more recent years where the need for more organized JavaScript applications became apparent.
+不过，不像一些更传统的编程语言，目前的JavaScript标准(ECMA-262)并不给开发者提供清晰，有组织模块导入方式。直到最近几年对组织JavaScript应用的需求逐渐明显，自然而然这就成了技术规范需要考虑的一件事。
 
-Instead, developers at present are left to fall back on variations of the module or object literal patterns. With many of these, module scripts are strung together in the DOM with namespaces being described by a single global object where it's still possible to incur naming collisions in your architecture. There's also no clean way to handle dependency management without some manual effort or third party tools.
+取而代之，现在的开发者都被迫使用变种的模块化或者对象字面模式。模块脚本通过一个单一全局对象定义的命名空间与DOM捆绑在一起，在整个架构中，命名空间也可能引发命名冲突。如果不手动努力或使用第三方工具的话，也没有清晰的方式处理依赖管理。
 
-Whilst native solutions to these problems will be arriving in ES Harmony, the good news is that writing modular JavaScript has never been easier and you can start doing it today.
+对这些问题原生的解决方案支持将会在ES Harmony规范中得以支持。不过，值得高兴的是编写JavaScript模块也可以从现在开始做起，而且从来没有如此的简单过。
 
-In this next part of the book, we're going to look at how to use AMD modules and Require.js for cleanly wrapping units of code in your application into manageable modules.
+接下来，讲义讲到如何使用AMD模块和Require.js把代码单元包装成基于管理的模块。
 
 
-##<a name="organizingmodules">Organizing modules with Require.js and AMD</a>
+##<a name="organizingmodules">用Require.js和AMD来组织模块</a>
 
-In case you haven't used it before, [Require.js](http://requirejs.org) is a popular script loader written by James Burke - a developer who has been quite instrumental in helping shape the AMD module format, which we'll discuss more shortly. Some of Require.js's capabilities include helping to load multiple script files, helping define modules with or without dependencies and loading in non-script dependencies such as text files.
+如果你还未曾使用过它，[Require.js](http://requirejs.org) 是James Burke编写的一个非常流行的脚本加载器。他是一个对促性形成AMD模块规范有很多贡献的开发者，后面我们简短的讨论下AMD。Require.js可以帮助加载多个脚本文件，定义有依赖或无依赖的模块，加载无脚本依赖的文件，比如文本。
 
-So, why use Require.js with Backbone? Although Backbone is excellent when it comes to providing a sanitary structure to your applications, there are a few key areas where some additional help could be used:
+那么，为什么同Backbone一起使用Require.js呢？尽管Backbone为应用提供清晰明了的架构方便表现的很优秀，但有些关键领域还需要一些额外的辅助才能做得了：
 
-1) Backbone doesn't endorse a particular approach to modular-development. Although this means it's quite open-ended for developers to opt for classical patterns like the module-pattern or Object Literals for structuring their apps (which both work fine), it also means developers aren't sure of what works best when other concerns come into play, such as dependency management.
+1) Backbone没有一个特定的模块化开发方式。虽然它非常开放，可以让开发者选择经典的模块模式或者对象字面量来组织app(两种方式都工作的很好)，但这也意味着开发者不确定当需要关心其它问题是哪种才是最好的，比如依赖管理。
 
-Require.js is compatible with the AMD (Asynchronous Module Definition) format, a format which was born from a desire to write something better than the 'write lots of script tags with implicit dependencies and manage them manually' approach to development. In addition to allowing you to clearly declare dependencies, AMD works well in the browser, supports string IDs for dependencies, declaring multiple modules in the same file and gives you easy-to-use tools to avoid polluting the global namespace.
+Require.js是适合AMD(Asynchronous Module Definition，异步模块定义)规范， 这种规范诞生的期望是对解决'写很多script标签，可能包含潜在的冲突，手动维护'提供一个更好的方案。另外还可以清晰的声明依赖，AMD在浏览器中运行的非常好，对依赖支持字符串ID，在同一个文件中声明依赖，并且提供避免污染全局命名空间简单易用的工具。
 
-2) Let's discuss dependency management a little more as it can actually be quite challenging to get right if you're doing it by hand. When we write modules in JavaScript, we ideally want to be able to handle the reuse of code units intelligently and sometimes this will mean pulling in other modules at run-time whilst at other times you may want to do this dynamically to avoid a large pay-load when the user first hits your application.
+2) 如果手动处理依赖的话这将是一个非常大的挑战。我们编写JavaScript模块的时候，主观上都会想智能的重用代码块，有时候也意味着当用户首次进入应用的时候要动态的控制加载项，而不是整个庞大的代码都加载到运行环境中。
 
 Think about the GMail web-client for a moment. When users initially load up the page on their first visit, Google can simply hide widgets such as the chat module until a user has indicated (by clicking 'expand') that they wish to use it. Through dynamic dependency loading, Google could load up the chat module only then, rather than forcing all users to load it when the page first initializes. This can improve performance and load times and can definitely prove useful when building larger applications.
 
 I've previously written [a detailed article](http://addyosmani.com/writing-modular-js) covering both AMD and other module formats and script loaders in case you'd like to explore this topic further. The takeaway is that although it's perfectly fine to develop applications without a script loader or clean module format in place, it can be of significant benefit to consider using these tools in your application development.
 
-###Writing AMD modules with Require.js
+###使用Require.js编写AMD模块
 
 As discussed above, the overall goal for the AMD format is to provide a solution for modular JavaScript that developers can use today. The two key concepts you need to be aware of when using it with a script-loader are a `define()` method for facilitating module definition and a `require()` method for handling dependency loading. `define()` is used to define named or unnamed modules based on the proposal using the following signature:
 

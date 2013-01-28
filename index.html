@@ -190,9 +190,9 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#总结-3">总结</a></li>
 </ul></li>
 <li><a href="#模块化开发"><a name="advanced">模块化开发</a></a><ul>
-<li><a href="#introduction"><a name="modularjs">Introduction</a></a></li>
-<li><a href="#organizing-modules-with-require.js-and-amd"><a name="organizingmodules">Organizing modules with Require.js and AMD</a></a><ul>
-<li><a href="#writing-amd-modules-with-require.js">Writing AMD modules with Require.js</a><ul>
+<li><a href="#介绍"><a name="modularjs">介绍</a></a></li>
+<li><a href="#用require.js和amd来组织模块"><a name="organizingmodules">用Require.js和AMD来组织模块</a></a><ul>
+<li><a href="#使用require.js编写amd模块">使用Require.js编写AMD模块</a><ul>
 <li><a href="#alternate-syntax">Alternate syntax</a></li>
 </ul></li>
 </ul></li>
@@ -244,7 +244,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul></li>
 <li><a href="#unit-testing"><a name="testing">Unit Testing</a></a><ul>
 <li><a href="#unit-testing-backbone-applications-with-jasmine"><a name="unittestingjasmine">Unit Testing Backbone Applications With Jasmine</a></a></li>
-<li><a href="#introduction-1">Introduction</a></li>
+<li><a href="#introduction">Introduction</a></li>
 <li><a href="#jasmine">Jasmine</a></li>
 <li><a href="#suites-specs-spies">Suites, Specs &amp; Spies</a></li>
 <li><a href="#beforeeach-and-aftereach">beforeEach and afterEach()</a></li>
@@ -261,7 +261,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#exercise">Exercise</a></li>
 <li><a href="#further-reading">Further reading</a></li>
 <li><a href="#unit-testing-backbone-applications-with-qunit-and-sinonjs"><a name="unittestingqunit">Unit Testing Backbone Applications With QUnit And SinonJS</a></a></li>
-<li><a href="#introduction-2">Introduction</a></li>
+<li><a href="#introduction-1">Introduction</a></li>
 </ul></li>
 <li><a href="#qunit">QUnit</a><ul>
 <li><a href="#getting-setup-1">Getting Setup</a><ul>
@@ -3721,25 +3721,25 @@ put <span class="st">&#39;/api/:thing/:id&#39;</span> <span class="kw">do</span>
 <p>这一章，我们基于Ruby, Sinatra, Haml, MongoDB和MongoDB driver创建了Backbone应用的后端API。对于同一个应用，我个人觉得相对基于Node/Express的实现而言，使用Sinatra来开发后端API更爽。</p>
 <p>这章并不是对于开发一个复杂应用的全面指南，我更希望它是一个入门，能帮助你在做下一个项目时决定尝试引入哪些好的东西。</p>
 <h1 id="模块化开发"><a href="#TOC"><a name="advanced">模块化开发</a></a></h1>
-<h2 id="introduction"><a href="#TOC"><a name="modularjs">Introduction</a></a></h2>
-<p>When we say an application is modular, we generally mean it’s composed of a set of highly decoupled, distinct pieces of functionality stored in modules. As you probably know, loose coupling facilitates easier maintainability of apps by removing dependencies where possible. When this is implemented efficiently, its quite easy to see how changes to one part of a system may affect another.</p>
-<p>Unlike some more traditional programming languages however, the current iteration of JavaScript (ECMA-262) doesn’t provide developers with the means to import such modules of code in a clean, organized manner. It’s one of the concerns with specifications that haven’t required great thought until more recent years where the need for more organized JavaScript applications became apparent.</p>
-<p>Instead, developers at present are left to fall back on variations of the module or object literal patterns. With many of these, module scripts are strung together in the DOM with namespaces being described by a single global object where it’s still possible to incur naming collisions in your architecture. There’s also no clean way to handle dependency management without some manual effort or third party tools.</p>
-<p>Whilst native solutions to these problems will be arriving in ES Harmony, the good news is that writing modular JavaScript has never been easier and you can start doing it today.</p>
-<p>In this next part of the book, we’re going to look at how to use AMD modules and Require.js for cleanly wrapping units of code in your application into manageable modules.</p>
-<h2 id="organizing-modules-with-require.js-and-amd"><a href="#TOC"><a name="organizingmodules">Organizing modules with Require.js and AMD</a></a></h2>
-<p>In case you haven’t used it before, <a href="http://requirejs.org">Require.js</a> is a popular script loader written by James Burke - a developer who has been quite instrumental in helping shape the AMD module format, which we’ll discuss more shortly. Some of Require.js’s capabilities include helping to load multiple script files, helping define modules with or without dependencies and loading in non-script dependencies such as text files.</p>
-<p>So, why use Require.js with Backbone? Although Backbone is excellent when it comes to providing a sanitary structure to your applications, there are a few key areas where some additional help could be used:</p>
+<h2 id="介绍"><a href="#TOC"><a name="modularjs">介绍</a></a></h2>
+<p>通常我们说一个应用是模块化的时候，它应该是由高度解耦的，把各个功能分开到模块中。或许你应该已知道，这种解耦通过移除可能存在的依赖促使app更容易维护。当模块化实施的非常有效时，就很容易看出某一部分的改动对其它部分的影响。</p>
+<p>不过，不像一些更传统的编程语言，目前的JavaScript标准(ECMA-262)并不给开发者提供清晰，有组织模块导入方式。直到最近几年对组织JavaScript应用的需求逐渐明显，自然而然这就成了技术规范需要考虑的一件事。</p>
+<p>取而代之，现在的开发者都被迫使用变种的模块化或者对象字面模式。模块脚本通过一个单一全局对象定义的命名空间与DOM捆绑在一起，在整个架构中，命名空间也可能引发命名冲突。如果不手动努力或使用第三方工具的话，也没有清晰的方式处理依赖管理。</p>
+<p>对这些问题原生的解决方案支持将会在ES Harmony规范中得以支持。不过，值得高兴的是编写JavaScript模块也可以从现在开始做起，而且从来没有如此的简单过。</p>
+<p>接下来，讲义讲到如何使用AMD模块和Require.js把代码单元包装成基于管理的模块。</p>
+<h2 id="用require.js和amd来组织模块"><a href="#TOC"><a name="organizingmodules">用Require.js和AMD来组织模块</a></a></h2>
+<p>如果你还未曾使用过它，<a href="http://requirejs.org">Require.js</a> 是James Burke编写的一个非常流行的脚本加载器。他是一个对促性形成AMD模块规范有很多贡献的开发者，后面我们简短的讨论下AMD。Require.js可以帮助加载多个脚本文件，定义有依赖或无依赖的模块，加载无脚本依赖的文件，比如文本。</p>
+<p>那么，为什么同Backbone一起使用Require.js呢？尽管Backbone为应用提供清晰明了的架构方便表现的很优秀，但有些关键领域还需要一些额外的辅助才能做得了：</p>
 <ol type="1">
-<li>Backbone doesn’t endorse a particular approach to modular-development. Although this means it’s quite open-ended for developers to opt for classical patterns like the module-pattern or Object Literals for structuring their apps (which both work fine), it also means developers aren’t sure of what works best when other concerns come into play, such as dependency management.</li>
+<li>Backbone没有一个特定的模块化开发方式。虽然它非常开放，可以让开发者选择经典的模块模式或者对象字面量来组织app(两种方式都工作的很好)，但这也意味着开发者不确定当需要关心其它问题是哪种才是最好的，比如依赖管理。</li>
 </ol>
-<p>Require.js is compatible with the AMD (Asynchronous Module Definition) format, a format which was born from a desire to write something better than the <q>write lots of script tags with implicit dependencies and manage them manually</q> approach to development. In addition to allowing you to clearly declare dependencies, AMD works well in the browser, supports string IDs for dependencies, declaring multiple modules in the same file and gives you easy-to-use tools to avoid polluting the global namespace.</p>
+<p>Require.js是适合AMD(Asynchronous Module Definition，异步模块定义)规范， 这种规范诞生的期望是对解决’写很多script标签，可能包含潜在的冲突，手动维护’提供一个更好的方案。另外还可以清晰的声明依赖，AMD在浏览器中运行的非常好，对依赖支持字符串ID，在同一个文件中声明依赖，并且提供避免污染全局命名空间简单易用的工具。</p>
 <ol start="2" type="1">
 <li>Let’s discuss dependency management a little more as it can actually be quite challenging to get right if you’re doing it by hand. When we write modules in JavaScript, we ideally want to be able to handle the reuse of code units intelligently and sometimes this will mean pulling in other modules at run-time whilst at other times you may want to do this dynamically to avoid a large pay-load when the user first hits your application.</li>
 </ol>
 <p>Think about the GMail web-client for a moment. When users initially load up the page on their first visit, Google can simply hide widgets such as the chat module until a user has indicated (by clicking <q>expand</q>) that they wish to use it. Through dynamic dependency loading, Google could load up the chat module only then, rather than forcing all users to load it when the page first initializes. This can improve performance and load times and can definitely prove useful when building larger applications.</p>
 <p>I’ve previously written <a href="http://addyosmani.com/writing-modular-js">a detailed article</a> covering both AMD and other module formats and script loaders in case you’d like to explore this topic further. The takeaway is that although it’s perfectly fine to develop applications without a script loader or clean module format in place, it can be of significant benefit to consider using these tools in your application development.</p>
-<h3 id="writing-amd-modules-with-require.js"><a href="#TOC">Writing AMD modules with Require.js</a></h3>
+<h3 id="使用require.js编写amd模块"><a href="#TOC">使用Require.js编写AMD模块</a></h3>
 <p>As discussed above, the overall goal for the AMD format is to provide a solution for modular JavaScript that developers can use today. The two key concepts you need to be aware of when using it with a script-loader are a <code>define()</code> method for facilitating module definition and a <code>require()</code> method for handling dependency loading. <code>define()</code> is used to define named or unnamed modules based on the proposal using the following signature:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define(
     module_id <span class="co">/*optional*/</span>,
@@ -5038,7 +5038,7 @@ $.<span class="fu">mobile</span>.<span class="fu">changePage</span>( url , { <sp
 <p>The takeaway here is just to remember that if you’re not (already) going through the hassle of conditional script/style loading based on screen-resolution (using matchMedia.js etc), there are simpler approaches that can be taken to cross-device component theming.</p>
 <h1 id="unit-testing"><a href="#TOC"><a name="testing">Unit Testing</a></a></h1>
 <h2 id="unit-testing-backbone-applications-with-jasmine"><a href="#TOC"><a name="unittestingjasmine">Unit Testing Backbone Applications With Jasmine</a></a></h2>
-<h2 id="introduction-1"><a href="#TOC">Introduction</a></h2>
+<h2 id="introduction"><a href="#TOC">Introduction</a></h2>
 <p>One definition of unit testing is the process of taking the smallest piece of testable code in an application, isolating it from the remainder of your codebase and determining if it behaves exactly as expected. In this section, we’ll be taking a look at how to unit test Backbone applications using a popular JavaScript testing framework called <a href="http://pivotal.github.com/jasmine/">Jasmine</a> from Pivotal Labs.</p>
 <p>For an application to be considered <q>well</q>-tested, distinct functionality should ideally have its own separate unit tests where it’s tested against the different conditions you expect it to work under. All tests must pass before functionality is considered <q>complete</q>. This allows developers to both modify a unit of code and its dependencies with a level of confidence about whether these changes have caused any breakage.</p>
 <p>As a basic example of unit testing is where a developer may wish to assert whether passing specific values through to a sum function results in the correct output being returned. For an example more relevant to this book, we may wish to assert whether a user adding a new Todo item to a list correctly adds a Model of a specific type to a Todos Collection.</p>
@@ -5643,7 +5643,7 @@ expect(<span class="ch">&#39;click&#39;</span>).<span class="fu">toHaveBeenTrigg
 <li><a href="http://japhr.blogspot.com/2011/12/phantomjs-and-backbonejs-and-requirejs.html">Backbone, PhantomJS and Jasmine</a></li>
 </ul>
 <h2 id="unit-testing-backbone-applications-with-qunit-and-sinonjs"><a href="#TOC"><a name="unittestingqunit">Unit Testing Backbone Applications With QUnit And SinonJS</a></a></h2>
-<h2 id="introduction-2"><a href="#TOC">Introduction</a></h2>
+<h2 id="introduction-1"><a href="#TOC">Introduction</a></h2>
 <p>QUnit is a powerful JavaScript test suite written by jQuery team member <a href="http://bassistance.de/">Jörn Zaefferer</a> and used by many large open-source projects (such as jQuery and Backbone.js) to test their code. It’s both capable of testing standard JavaScript code in the browser as well as code on the server-side (where environments supported include Rhino, V8 and SpiderMonkey). This makes it a robust solution for a large number of use-cases.</p>
 <p>Quite a few Backbone.js contributors feel that QUnit is a better introductory framework for testing if you don’t wish to start off with Jasmine and BDD right away. As we’ll see later on in this chapter, QUnit can also be combined with third-party solutions such as SinonJS to produce an even more powerful testing solution supporting spies and mocks, which some say is preferable over Jasmine.</p>
 <p>My personal recommendation is that it’s worth comparing both frameworks and opting for the solution that you feel the most comfortable with.</p>

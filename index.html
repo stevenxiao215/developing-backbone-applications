@@ -3735,10 +3735,10 @@ put <span class="st">&#39;/api/:thing/:id&#39;</span> <span class="kw">do</span>
 </ol>
 <p>Require.js是适合AMD(Asynchronous Module Definition，异步模块定义)规范， 这种规范诞生的期望是对解决’写很多script标签，可能包含潜在的冲突，手动维护’提供一个更好的方案。另外还可以清晰的声明依赖，AMD在浏览器中运行的非常好，对依赖支持字符串ID，在同一个文件中声明依赖，并且提供避免污染全局命名空间简单易用的工具。</p>
 <ol start="2" type="1">
-<li>Let’s discuss dependency management a little more as it can actually be quite challenging to get right if you’re doing it by hand. When we write modules in JavaScript, we ideally want to be able to handle the reuse of code units intelligently and sometimes this will mean pulling in other modules at run-time whilst at other times you may want to do this dynamically to avoid a large pay-load when the user first hits your application.</li>
+<li>如果手动处理依赖的话这将是一个非常大的挑战。我们编写JavaScript模块的时候，主观上都会想智能的重用代码块，有时候也意味着当用户首次进入应用的时候要动态的控制加载项，而不是整个庞大的代码都加载到运行环境中。</li>
 </ol>
-<p>Think about the GMail web-client for a moment. When users initially load up the page on their first visit, Google can simply hide widgets such as the chat module until a user has indicated (by clicking <q>expand</q>) that they wish to use it. Through dynamic dependency loading, Google could load up the chat module only then, rather than forcing all users to load it when the page first initializes. This can improve performance and load times and can definitely prove useful when building larger applications.</p>
-<p>I’ve previously written <a href="http://addyosmani.com/writing-modular-js">a detailed article</a> covering both AMD and other module formats and script loaders in case you’d like to explore this topic further. The takeaway is that although it’s perfectly fine to develop applications without a script loader or clean module format in place, it can be of significant benefit to consider using these tools in your application development.</p>
+<p>可以参照下GMail的web端。当用户刚开始载入页面时，Google影藏了一些widgets，比如chat模块，当用户点击’expand’的时候才展示。通过动态依赖载入，Google可以在用户需要使用时载入chat模块，而不是在页面初始化时强制全部载入。当构建大型应用时可以有助于提升性能和加载速度。</p>
+<p>我之前写过关于AMD和 I’ve previously written <a href="http://addyosmani.com/writing-modular-js">a detailed article</a> covering both AMD and other module formats and script loaders in case you’d like to explore this topic further. The takeaway is that although it’s perfectly fine to develop applications without a script loader or clean module format in place, it can be of significant benefit to consider using these tools in your application development.</p>
 <h3 id="使用require.js编写amd模块"><a href="#TOC">使用Require.js编写AMD模块</a></h3>
 <p>As discussed above, the overall goal for the AMD format is to provide a solution for modular JavaScript that developers can use today. The two key concepts you need to be aware of when using it with a script-loader are a <code>define()</code> method for facilitating module definition and a <code>require()</code> method for handling dependency loading. <code>define()</code> is used to define named or unnamed modules based on the proposal using the following signature:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define(
@@ -6510,5 +6510,9 @@ test( <span class="ch">&#39;Should bind Collection events to View creation.&#39;
 <p>I would like to thank the Backbone.js, Stack Overflow, DailyJS (Alex Young) and JavaScript communities for their help, references and contributions to this book. This project would not be possible without you so thank you! :)</p>
 <hr>
 <p>Where relevant, copyright Addy Osmani, 2012.</p>
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F7b04940b56d101fffc031b2563f59641' type='text/javascript'%3E%3C/script%3E"));
+</script>
 </body>
 </html>

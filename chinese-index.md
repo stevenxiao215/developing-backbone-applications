@@ -4795,8 +4795,10 @@ Require.js是适合AMD(Asynchronous Module Definition，异步模块定义)规�
 
 2) 如果手动处理依赖的话这将是一个非常大的挑战。我们编写JavaScript模块的时候，主观上都会想智能的重用代码块，有时候也意味着当用户首次进入应用的时候要动态的控制加载项，而不是整个庞大的代码都加载到运行环境中。
 
-Think about the GMail web-client for a moment. When users initially load up the page on their first visit, Google can simply hide widgets such as the chat module until a user has indicated (by clicking 'expand') that they wish to use it. Through dynamic dependency loading, Google could load up the chat module only then, rather than forcing all users to load it when the page first initializes. This can improve performance and load times and can definitely prove useful when building larger applications.
+可以参照下GMail的web端。当用户刚开始载入页面时，Google影藏了一些widgets，比如chat模块，当用户点击'expand'的时候才展示。通过动态依赖载入，Google可以在用户需要使用时载入chat模块，而不是在页面初始化时强制全部载入。当构建大型应用时可以有助于提升性能和加载速度。
 
+
+我之前写过关于AMD和
 I've previously written [a detailed article](http://addyosmani.com/writing-modular-js) covering both AMD and other module formats and script loaders in case you'd like to explore this topic further. The takeaway is that although it's perfectly fine to develop applications without a script loader or clean module format in place, it can be of significant benefit to consider using these tools in your application development.
 
 ###使用Require.js编写AMD模块

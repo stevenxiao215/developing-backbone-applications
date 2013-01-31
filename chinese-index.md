@@ -4814,14 +4814,14 @@ define(
 
 `module_id`是可选参数， 通常只在无AMD连接工具情况下才需要这个参数(可能在其它一些边缘情况下也有用)。没有这个参数时，称之为'匿名'模块。匿名模块的身份标识原则是DRY，避免使用重复的文件名和代码。
 
-Back to the define signature, the dependencies argument represents an array of dependencies which are required by the module you are defining and the third argument ('definition function') is a function that's executed to instantiate your module. A barebone module (compatible with Require.js) could be defined using `define()` as follows:
+依赖项这个参数是一个数组，声明要定义的这个模块所依赖的模块列表。第三个参数，定义函数('definition function')，用于执行模块的实例化。一个标准的模块(能与Require.js兼容)可以像下面这样定义：
 
 ```javascript
-// A module ID has been omitted here to make the module anonymous
+// 这里省略了module ID，是一个匿名模块。
 
 define(['foo', 'bar'],
-    // module definition function
-    // dependencies (foo and bar) are mapped to function parameters
+    // 模块定义函数
+    // 依赖项(foo and bar)映射到了函数的参数中
     function ( foo, bar ) {
         // return a value that defines the module export
         // (i.e the functionality we want to expose for consumption)

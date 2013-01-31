@@ -4798,22 +4798,21 @@ Require.js是适合AMD(Asynchronous Module Definition，异步模块定义)规�
 可以参照下GMail的web端。当用户刚开始载入页面时，Google影藏了一些widgets，比如chat模块，当用户点击'expand'的时候才展示。通过动态依赖载入，Google可以在用户需要使用时载入chat模块，而不是在页面初始化时强制全部载入。当构建大型应用时可以有助于提升性能和加载速度。
 
 
-我之前写过关于AMD和
-I've previously written [a detailed article](http://addyosmani.com/writing-modular-js) covering both AMD and other module formats and script loaders in case you'd like to explore this topic further. The takeaway is that although it's perfectly fine to develop applications without a script loader or clean module format in place, it can be of significant benefit to consider using these tools in your application development.
+我之前写过关于AMD和其它模块规范以及脚本加载的[文章](http://addyosmani.com/writing-modular-js)有兴趣可以阅读下。虽然不适用脚本加载器和模块规范也可以完成应用的开发，但是考虑使用这些东西做开发具有重大意义。
 
 ###使用Require.js编写AMD模块
 
-As discussed above, the overall goal for the AMD format is to provide a solution for modular JavaScript that developers can use today. The two key concepts you need to be aware of when using it with a script-loader are a `define()` method for facilitating module definition and a `require()` method for handling dependency loading. `define()` is used to define named or unnamed modules based on the proposal using the following signature:
+正如前面提到的，AMD的整个核心目的就是提供一种模块化JavaScript的开发规范。当你使用脚本加载器的时候，需要理解2个关键概念。一个就是`define()`方法用于模块定义，另一个就是`require()`方法用户处理依赖加载。`define()`用于定义命名或者匿名的模块，像下面这种格式：
 
 ```javascript
 define(
-    module_id /*optional*/,
-    [dependencies] /*optional*/,
-    definition function /*function for instantiating the module or object*/
+    模块id(module_id) /*可选*/,
+    [依赖项(dependencies)] /*可选*/,
+    模块的定义函数(definition function) /*实现模块或者对象定义的函数*/
 );
 ```
 
-As you can tell by the inline comments, the `module_id` is an optional argument which is typically only required when non-AMD concatenation tools are being used (there may be some other edge cases where it's useful too). When this argument is left out, we call the module 'anonymous'. When working with anonymous modules, the idea of a module's identity is DRY, making it trivial to avoid duplication of filenames and code.
+`module_id`是可选参数， 通常只在无AMD连接工具情况下才需要这个参数(可能在其它一些边缘情况下也有用)。没有这个参数时，称之为'匿名'模块。匿名模块的身份标识原则是DRY，避免使用重复的文件名和代码。
 
 Back to the define signature, the dependencies argument represents an array of dependencies which are required by the module you are defining and the third argument ('definition function') is a function that's executed to instantiate your module. A barebone module (compatible with Require.js) could be defined using `define()` as follows:
 

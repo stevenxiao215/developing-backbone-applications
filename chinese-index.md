@@ -4823,8 +4823,8 @@ define(['foo', 'bar'],
     // 模块定义函数
     // 依赖项(foo and bar)映射到了函数的参数中
     function ( foo, bar ) {
-        // return a value that defines the module export
-        // (i.e the functionality we want to expose for consumption)
+        // 返回定义模块的导出接口(export)
+        // (比如想提供给调用者的功能函数)
 
         // create your module here
         var myModule = {
@@ -4837,23 +4837,22 @@ define(['foo', 'bar'],
 });
 ```
 
-####Alternate syntax
-There is also a [sugared version](http://requirejs.org/docs/whyamd.html#sugar) of `define()` available that allows you to declare your dependencies as local variables using `require()`. This will feel familiar to anyone who's used node, and can be easier to add or remove dependencies.
-Here is the previous snippet using the alternate syntax:
+####替代(Alternate)语法
+也有一个更加[甜蜜版本](http://requirejs.org/docs/whyamd.html#sugar)的`define()`，可以通过局部变量`require()`来申明依赖。对于使用过node的用户来说，这显得非常亲切，而且更加容易添加和移除依赖。前面的代码片段可以使用下面这种语法来替代：
 
 ```javascript
-// A module ID has been omitted here to make the module anonymous
+// 这里省略了module ID，是一个匿名模块。
 
 define(function(require){
-        // module definition function
-    // dependencies (foo and bar) are defined as local vars
+        // 模块定义函数
+		
+    // 依赖项(foo and bar)被定义成了本地变量
     var foo = require('foo'),
         bar = require('bar');
 
-        // return a value that defines the module export
-        // (i.e the functionality we want to expose for consumption)
+        // 返回定义模块的导出接口(export)        
 
-        // create your module here
+        // 创建模块
         var myModule = {
             doStuff:function(){
                 console.log('Yay! Stuff');
@@ -4864,13 +4863,12 @@ define(function(require){
 });
 ```
 
-The `require()` method is typically used to load code in a top-level JavaScript file or within a module should you wish to dynamically fetch dependencies. An example of its usage is:
+`require()` 方法可以在顶级JavaScript文件域也可以在模块内部域动态加载依赖。下面是一个例子：
 
 ```javascript
-// Consider 'foo' and 'bar' are two external modules
-// In this example, the 'exports' from the two modules loaded are passed as
-// function arguments to the callback (foo and bar)
-// so that they can similarly be accessed
+// 假设'foo'和'bar'是2个外部模块
+// 这2个模块的'exports'分别传给了回调函数的(foo and bar)参数
+// 这样就可以被访问了
 
 require(['foo', 'bar'], function ( foo, bar ) {
         // rest of your code here
@@ -4879,7 +4877,7 @@ require(['foo', 'bar'], function ( foo, bar ) {
 ```
 
 
-**Wrapping modules, views and other components with AMD**
+**把modules, views和其它组件包装成AMD**
 
 Now that we've taken a look at how to define AMD modules, let's review how to go about wrapping components like views and collections so that they can also be easily loaded as dependencies for any parts of your application that require them. At it's simplest, a Backbone model may just require Backbone and Underscore.js. These are considered its dependencies and so, to write an AMD model module, we would simply do this:
 

@@ -4879,18 +4879,18 @@ require(['foo', 'bar'], function ( foo, bar ) {
 
 **把modules, views和其它组件包装成AMD**
 
-Now that we've taken a look at how to define AMD modules, let's review how to go about wrapping components like views and collections so that they can also be easily loaded as dependencies for any parts of your application that require them. At it's simplest, a Backbone model may just require Backbone and Underscore.js. These are considered its dependencies and so, to write an AMD model module, we would simply do this:
+现在来看下如何定义AMD模块，我们看下如何包装views,collections这些组件，这样就可以在任何需要的地方作为依赖项加载了。正因为简单，Backbone model只需要require Backbone和Underscore.js，所以编写一个AMD model模块就像下面这样简单：
 
 ```javascript
 define(['underscore', 'backbone'], function(_, Backbone) {
   var myModel = Backbone.Model.extend({
 
-    // Default attributes
+    // 默认属性
     defaults: {
       content: "hello world",
     },
 
-    // A dummy initialization method
+    // 一个空的初始化方法
     initialize: function() {
     },
 
@@ -4904,7 +4904,7 @@ define(['underscore', 'backbone'], function(_, Backbone) {
 });
 ```
 
-Note how we alias Underscore.js's instance to `_` and Backbone to just `Backbone`, making it very trivial to convert non-AMD code over to using this module format. For a view which might require other dependencies such as jQuery, this can similarly be done as follows:
+注意，Underscore.js的实例映射到了`_`，Backbone映射到`Backbone`, 非常轻松的把非-AMD代码转换成了模块方式。 view则需要引入其它的依赖，比如jQuery，下面是示例：
 
 ```javascript
 define([
@@ -4918,19 +4918,17 @@ define([
   var AppView = Backbone.View.extend({
   ...
 ```
+jquery被映射到别名(`$`)，再一次证明把应用的任何一部分封装成AMD模块都是非常容易的。
 
-Aliasing to the dollar-sign (`$`), once again makes it very easy to encapsulate any part of an application you wish using AMD.
 
+##<a name="externaltemplates">使用Require.js保持外部模板和文本插件</a>
+把[Underscore/Mustache/Handlebars]模板转移到外部文件事实上非常冒进。在这个应用中，使用Require.js，我将会讨论如何使用这个特定的脚本加载器实现外部模板。
 
-##<a name="externaltemplates">Keeping Your Templates External Using Require.js And The Text Plugin</a>
+Require.js有一个特别的插件text.js，用于加载文本文件。按下面步骤使用这个文本插件：
 
-Moving your [Underscore/Mustache/Handlebars] templates to external files is actually quite straight-forward. As this application makes use of Require.js, I'll discuss how to implement external templates using this specific script loader.
+1. 从这里下载http://requirejs.org/docs/download.html#text，放在应用的主要js目录或者子目录下。
 
-Require.js has a special plugin called text.js which is used to load in text file dependencies. To use the text plugin, simply follow these simple steps:
-
-1. Download the plugin from http://requirejs.org/docs/download.html#text and place it in either the same directory as your application's main JS file or a suitable sub-directory.
-
-2. Next, include the text.js plugin in your initial Require.js configuration options. In the code snippet below, we assume that Require.js is being included in our page prior to this code snippet being executed. Any of the other scripts being loaded are just there for the sake of example.
+2. 然后，在初始化Require.js配置中引入text.js插件。In the code snippet below, we assume that Require.js is being included in our page prior to this code snippet being executed. Any of the other scripts being loaded are just there for the sake of example.
 
 ```javascript
 require.config( {

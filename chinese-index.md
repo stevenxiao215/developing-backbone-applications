@@ -4928,7 +4928,7 @@ Require.js有一个特别的插件text.js，用于加载文本文件。按下面
 
 1. 从这里下载http://requirejs.org/docs/download.html#text，放在应用的主要js目录或者子目录下。
 
-2. 然后，在初始化Require.js配置中引入text.js插件。In the code snippet below, we assume that Require.js is being included in our page prior to this code snippet being executed. Any of the other scripts being loaded are just there for the sake of example.
+2. 然后，在初始化Require.js配置中引入text.js插件。下面这段代码，假定在执行前Require.js已经被加载。其它部分的脚本加载进来只为了做示例。
 
 ```javascript
 require.config( {
@@ -4946,20 +4946,17 @@ require.config( {
 } );
 ```
 
-3. When the `text!` prefix is used for a dependency, Require.js will automatically load the text plugin and treat the dependency as a text resource. A typical example of this in action may look like..
+3. 当使用`text!`前缀在表示依赖项时，Require.js会自动加载text插件，并且把这个依赖项当成文本资源。下面是一个例子。
 
 ```javascript
 require(['js/app', 'text!templates/mainView.html'],
     function(app, mainView){
-        // the contents of the mainView file will be
-        // loaded into mainView for usage.
+        // mainView文件的内容将被载入到mainView被使用。
     }
 );
 ```
 
-4. Finally we can use the text resource that's been loaded for templating purposes. You're probably used to storing your HTML templates inline using a script with a specific identifier.
-
-With Underscore.js's micro-templating (and jQuery) this would typically be:
+4. 最后我们可以把文本资源载入当成模板使用。你可能使用过Underscore.js的micro-templating (jQuery也一样)，通过特定的页内script标签来保存HTML模板，像下面这样
 
 HTML:
 
@@ -4976,7 +4973,7 @@ JS:
 var compiled_template = _.template( $('#mainViewTemplate').html() );
 ```
 
-With Require.js and the text plugin however, it's as simple as saving your template into an external text file (say, `mainView.html`) and doing the following:
+不过，通过Require.js和text插件，把模板保存到外部文件就非常简单了(比如，`mainView.html`)：
 
 ```javascript
 require(['js/app', 'text!templates/mainView.html'],
@@ -4987,7 +4984,7 @@ require(['js/app', 'text!templates/mainView.html'],
 );
 ```
 
-That's it! Now you can apply your template to a view in Backbone with something like:
+然后就可以在Backbone中把模板应用到view了中了：
 
 ```javascript
 collection.someview.$el.html( compiled_template( { results: collection.models } ) );

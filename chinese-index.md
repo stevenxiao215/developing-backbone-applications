@@ -4990,19 +4990,18 @@ require(['js/app', 'text!templates/mainView.html'],
 collection.someview.$el.html( compiled_template( { results: collection.models } ) );
 ```
 
+所有模板解决方案都有自己的方法处理模板编译，但是如果你明白上面这些的话，用其它方案替代Underscore的 micro-templating就会相当琐碎。
 
-All templating solutions will have their own custom methods for handling template compilation, but if you understand the above, substituting Underscore's micro-templating for any other solution should be fairly trivial.
-
-**Note:** You may also be interested in looking at [Require.js tpl](https://github.com/ZeeAgency/requirejs-tpl). It's an AMD-compatible version of the Underscore templating system that also includes support for optimization (pre-compiled templates) which can lead to better performance and no evals. I have yet to use it myself, but it comes as a recommended resource.
+**提示:** 你可能对[Require.js tpl](https://github.com/ZeeAgency/requirejs-tpl)也感兴趣。它是一个兼容AMD版本的Underscore模板系统，同样也支持最优化(预编译模板)，会有更好的性能而且没有eval。我已经使用过这个模板了，作为一个推荐资源。
 
 
-##<a name="optimizingrequirejs">Optimizing Backbone apps for production with the Require.js Optimizer</a>
+##<a name="optimizingrequirejs">使用Require.js优化器优化Backbone应用</a>
 
-As experienced developers may know, an essential final step when writing both small and large JavaScript web applications is the build process.  The majority of non-trivial apps are likely to consist of more than one or two scripts and so optimizing, minimizing and concatenating your scripts prior to pushing them to production will require your users to download a reduced number (if not just one) script file.
+有经验的开发者应该知道，编写小巧而又大型的JavaScript web应用时最后一个步骤是构建过程。大多数不平凡的应用基本上都由多个脚本文件组成，并且在推送生产环境前优化、压缩和合并脚本文件，以减少用户请求和下载脚本文件。
 
-Note: If you haven't looked at build processes before and this is your first time hearing about them, you might find [my post and screencast on this topic](http://addyosmani.com/blog/client-side-build-process/) useful.
+提示: 如果你从未了解过构建过程，可以阅读我一骗关于此话题的[文章](http://addyosmani.com/blog/client-side-build-process/)，或许对你有所帮助。
 
-With some other structural JavaScript frameworks, my recommendation would normally be to implicitly use YUI Compressor or Google's closure compiler tools, but we have a slightly more elegant method available, when it comes to Backbone if you're using Require.js. Require.js has a command line optimization tool called r.js which has a number of capabilities, including:
+与其它架构的JavaScript框架相比，我更偏向于推荐使用YUI Compressor或者Google的closure编译工具，不过我们有更优雅的选择，当在Backbone应用中使用Require.js时。 Require.js有一个命令行优化工具r.js， 它包含下面这些功能：
 
 * Concatenating specific scripts and minifying them using external tools such as UglifyJS (which is used by default) or Google's Closure Compiler for optimal browser delivery, whilst preserving the ability to dynamically load modules
 * Optimizing CSS and stylesheets by inlining CSS files imported using @import, stripping out comments etc.

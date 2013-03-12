@@ -5003,11 +5003,11 @@ collection.someview.$el.html( compiled_template( { results: collection.models } 
 
 与其它架构的JavaScript框架相比，我更偏向于推荐使用YUI Compressor或者Google的closure编译工具，不过我们有更优雅的选择，当在Backbone应用中使用Require.js时。 Require.js有一个命令行优化工具r.js， 它包含下面这些功能：
 
-* Concatenating specific scripts and minifying them using external tools such as UglifyJS (which is used by default) or Google's Closure Compiler for optimal browser delivery, whilst preserving the ability to dynamically load modules
-* Optimizing CSS and stylesheets by inlining CSS files imported using @import, stripping out comments etc.
-* The ability to run AMD projects in both Node and Rhino (more on this later)
+* 合并特定的脚本，通过外部工具进行压缩，比如UglifyJS(默认)或者Google Closure编译器以达到最优化的到浏览器 端的交付，同时保留动态加载模块的能力。
+* 通过@import内嵌css文件优化css和样式，去除注释等。
+* 可以在Node和Rhino(后面会讲到)的AMD项目中运行。
 
-You'll notice that I mentioned the word 'specific' in the first bullet point. The Require.js optimizer only concatenates module scripts that have been specified in arrays of string literals passed to top-level (i.e non-local) require and define calls. As clarified by the [optimizer docs](http://requirejs.org/docs/optimization.html) this means that Backbone modules defined like this:
+你可能注意到第一条中提到'特定'一词。Require.js优化器只会合并在require和define调用时传入的顶级域(非局部的)字符串数组指定的模块。 根据[优化器的文档](http://requirejs.org/docs/optimization.html)意味着Backbone模块像下面这样定义：
 
 ```javascript
 define(['jquery','backbone','underscore', 'collections/sample','views/test'],
@@ -5016,17 +5016,17 @@ define(['jquery','backbone','underscore', 'collections/sample','views/test'],
     });
 ```
 
-will combine fine, however inline dependencies such as:
+为了更好的合并，下面这种内联的依赖：
 
 ```javascript
 var models = someCondition ? ['models/ab','models/ac'] : ['models/ba','models/bc'];
 ```
 
-will be ignored. This is by design as it ensures that dynamic dependency/module loading can still take place even after optimization.
+将会被忽略。这是被设计成这样的，因为要确保动态的依赖/模块在优化只有也能正常工作。
 
-Although the Require.js optimizer works fine in both Node and Java environments, it's strongly recommended to run it under Node as it executes significantly faster there. In my experience, it's a piece of cake to get setup with either environment, so go for whichever you feel most comfortable with.
+虽然Require.js优化器在Node和Java环境下都运行的很好，不过还是强烈推荐在Node下执行，因为会显著快很多。以我的经验，这不过是环境配置的一小部分，所以选择你觉得舒适的就好了。
 
-To get started with r.js, grab it from the [Require.js download page](http://requirejs.org/docs/download.html#rjs) or [through NPM](http://requirejs.org/docs/optimization.html#download). Now, the Require.js optimizer works absolutely fine for single script and CSS files, but for most cases you'll want to actually optimize an entire Backbone project. You *could* do this completely from the command-line, but a cleaner option is using build profiles.
+可以从[Require.js下载页面](http://requirejs.org/docs/download.html#rjs)或者通过[NPM](http://requirejs.org/docs/optimization.html#download)来获取r.js。现在Require.js优化器对单个脚本和css文件也工作的非常好，不过大部分实际情况都用于优化一整个Backbone项目。你*可以*通过命令行来处理，不过更简洁的方式是使用build配置文件。
 
 Below is an example of a build file taken from the modular jQuery Mobile app referenced later in this book. A **build profile** (commonly named `app.build.js`) informs Require.js to copy all of the content of `appDir` to a directory defined by `dir` (in this case `../release`). This will apply all of the necessary optimizations inside the release folder. The `baseUrl` is used to resolve the paths for your modules. It should ideally be relative to `appDir`.
 

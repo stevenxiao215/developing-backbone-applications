@@ -5028,9 +5028,9 @@ var models = someCondition ? ['models/ab','models/ac'] : ['models/ba','models/bc
 
 可以从[Require.js下载页面](http://requirejs.org/docs/download.html#rjs)或者通过[NPM](http://requirejs.org/docs/optimization.html#download)来获取r.js。现在Require.js优化器对单个脚本和css文件也工作的非常好，不过大部分实际情况都用于优化一整个Backbone项目。你*可以*通过命令行来处理，不过更简洁的方式是使用build配置文件。
 
-Below is an example of a build file taken from the modular jQuery Mobile app referenced later in this book. A **build profile** (commonly named `app.build.js`) informs Require.js to copy all of the content of `appDir` to a directory defined by `dir` (in this case `../release`). This will apply all of the necessary optimizations inside the release folder. The `baseUrl` is used to resolve the paths for your modules. It should ideally be relative to `appDir`.
+下面是一个从本书后面会讲到的模块化jQuery Mobile应用中引用过来的build文件的例子。一段**build信息** (通常是`app.build.js`) 告诉Require.js复制`appDir`目录下的所有内容到`dir`定义的目录下(这个例子中是 `../release`)。 并且所有必要的优化都会应用到发布目录。`baseUrl`用于标识模块的路径。必须是相对于`appDir`的位置。
 
-Near the bottom of this sample file, you'll see an array called `modules`. This is where you specify the module names you wish to have optimized. In this case we're optimizing the main application called 'app', which maps to `appDir/app.js`. If we had set the `baseUrl` to 'scripts', it would be mapped to `appDir/scripts/app.js`.
+下面这个文件中还会看到一个数组`modules`。用于指定希望配优化的模块。这个例子中假定我们优化的主应用叫'app'， 对应到`appDir/app.js`。如果帮我们把`baseUrl`设为'scripts'，就会对应到`appDir/scripts/app.js`。
 
 ```javascript
 ({
@@ -5051,39 +5051,39 @@ Near the bottom of this sample file, you'll see an array called `modules`. This 
         {
             name: "app",
             exclude: [
-                // If you prefer not to include certain libs exclude them here
+                //如果你更喜欢不引入特定的库，可以在这里排除
             ]
         }
     ]
 })
 ```
 
-The way the build system in r.js works is that it traverses app.js (whatever modules you've passed) and resolved dependencies, concatenating them into the final `release`(dir) folder. CSS is treated the same way.
+r.js构建系统的工作原理就是遍历app.js(不管你传入了什么模块)并且解决依赖管理，把它们合并到最后`release`目录下。CSS也同样处理。
 
-The build profile is usually placed inside the 'scripts' or 'js' directory of your project. As per the docs, this file can however exist anywhere you wish, but you'll need to edit the contents of your build profile accordingly.
+build一般放在项目下的'scripts'或'js'目录下。根据我们前面的描述，这个文件可以放在任何你想要的位置，但是也要相应的修改build信息里的内容。
 
-Finally, to run the build, execute the following command once inside your `appDir` or `appDir/scripts` directory:
+最后，运行build，在`appDir`或者`appDir/scripts`目录下执行下面命令：
 
 ```javascript
 node ../../r.js -o app.build.js
 ```
 
-That's it. As long as you have UglifyJS/Closure tools setup correctly, r.js should be able to easily optimize your entire Backbone project in just a few key-strokes. If you would like to learn more about build profiles, James Burke has a [heavily commented sample file](https://github.com/jrburke/r.js/blob/master/build/example.build.js) with all the possible options available.
+优化工作就完成了，只要UglifyJS/Closure工具安装正确，r.js就可以通过几条简单的语句优化整个Backbone项目。如果想对build配置信息了解更多，James Burke写的包含大量注释的[示例文件](https://github.com/jrburke/r.js/blob/master/build/example.build.js)，包含所有可用的配置选项。
 
 
-## <a name="optimizebuild">Optimize and Build a Backbone.js JavaScript application with Require.JS using Packages</a>
+## <a name="optimizebuild">使用Require.JS打包来优化和构建Backbone.js JavaScript应用</a>
 
-*Contributed by [Bill Heaton](https://github.com/pixelhandler)*
+*由[Bill Heaton](https://github.com/pixelhandler)贡献*
 
-When a JavaScript application is too complex or large to build in a single file, grouping the application’s components into packages allows for script dependencies to download in parallel, and facilitates only loading **packaged** and other modular code as the site experience requires the specific set of dependencies.
+当一个JavaScript应用build在一个单独文件中过于复杂和庞大时，把应用的组件分组成包，允许依赖脚本异步下载，并且便于只加载**包**，而且允许网站其它模块化代码引入特定依赖项。
 
-Require.JS, the (JavaScript) module loading library, has an [optimizer](http://requirejs.org/docs/optimization.html "Require.JS optimizer") to build a JavaScript-based application and provides various options. A build profile is the recipe for your build, much like a build.xml file is used to build a project with ANT. The benefit of building with **r.js** not only results in speedy script loading with minified code, but also provides a way to package components of your application.
+Require.JS, 作为模块加载库，有一个[优化器](http://requirejs.org/docs/optimization.html "Require.JS optimizer") ，用于构建基于JavaScript的应用并且提供各种选项。 build信息是用于投建的食谱，就像build.xml文件用于使用ANT构建项目。使用**r.js**构建的好处不仅仅是最小化代码加快下载速度，同样提供一种打包应用组件的方式。
 
-* [Optimizing one JavaScript file](http://requirejs.org/docs/optimization.html#onejs "Optimizing one JavaScript file")
-* [Optimizing a whole project](http://requirejs.org/docs/optimization.html#wholeproject "Optimizing a whole project")
-* [Optimizing a project in layers or packages](http://requirejs.org/docs/faq-optimization.html#priority "Optimizing a project in layers or packages")
+* [优化单个JavaScript文件](http://requirejs.org/docs/optimization.html#onejs "Optimizing one JavaScript file")
+* [优化整个项目](http://requirejs.org/docs/optimization.html#wholeproject "Optimizing a whole project")
+* [分层或者包优化一个项目](http://requirejs.org/docs/faq-optimization.html#priority "Optimizing a project in layers or packages")
 
-In a complex application, organizing code into *packages* is an attractive build strategy. The build profile in this article is based on an test application currently under development (files list below). The application framework is built with open source libraries. The main objective in this build profile is to optimize an application developed with [Backbone.js](http://documentcloud.github.com/backbone/ "Backbone.js") using modular code, following the [Asynchronous Module Definition (AMD)](https://github.com/amdjs/amdjs-api/wiki/AMD "Asynchronous Module Definition (AMD) wiki page") format. AMD and Require.JS provide the structure for writing modular code with dependencies. Backbone.js provides the code organization for developing models, views and collections and also interactions with a RESTful API.
+在一个复杂的应用中，用包来组这代码是一个非常吸引人的构建策略。The build profile in this article is based on an test application currently under development (files list below). The application framework is built with open source libraries. The main objective in this build profile is to optimize an application developed with [Backbone.js](http://documentcloud.github.com/backbone/ "Backbone.js") using modular code, following the [Asynchronous Module Definition (AMD)](https://github.com/amdjs/amdjs-api/wiki/AMD "Asynchronous Module Definition (AMD) wiki page") format. AMD and Require.JS provide the structure for writing modular code with dependencies. Backbone.js provides the code organization for developing models, views and collections and also interactions with a RESTful API.
 
 Below is an outline of the applications file organization, followed by the build profile to build modular (or packaged) layers a JavaScript driven application.
 

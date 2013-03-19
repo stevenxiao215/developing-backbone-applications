@@ -5622,7 +5622,7 @@ define([
     ...
 ```
 
-In addition to allowing users to add new Todo items from views (which we then insert as models in a collection), we ideally also want to be able to display how many items have been completed and how many are remaining. We've already defined filters that can provide us this information in the above collection, so let's use them in our main application view.
+另外为了让用户在view中添加新的Todo项(作为models插入到collection中)，同时也期望显示有多少条项已完成和待完成。上面那个collection中已经定义了这样的filter，所以可以在主view中使用它们。
 
 **views/app.js**
 
@@ -5659,10 +5659,9 @@ define([
     },
     ...
 ```
+上面我们使用到了这个项目中的第二个模板，`templates/stats.html`映射到`statsTemplate`，用于渲染所有`完成`和`待完成` 状态。原理就是给模板传入Todos collection的lenth(`Todos.length` - 已创建的todo项数量) ，已完成的项的数量(`Todos.done().length`)和待完成项的数量(`Todos.remaining().length`)。
 
-Above, we map the second template for this project, `templates/stats.html` to `statsTemplate` which is used for rendering the overall `done` and `remaining` states. This works by simply passing our template the length of our overall Todos collection (`Todos.length` - the number of Todo items created so far) and similarly the length (counts) for items that have been completed (`Todos.done().length`) or are remaining (`Todos.remaining().length`).
-
-The contents of our `statsTemplate` can be seen below. It's nothing too complicated, but does use ternary conditions to evaluate whether we should state there's "1 item" or "2 item<i>s</i>" in a particular state.
+`statsTemplate`模板的内容在下面。没什么复杂，不过这里用了三元表达式来输出是"item"还是"items"。
 
 ```
 <% if (total) { %>
@@ -5681,18 +5680,17 @@ The contents of our `statsTemplate` can be seen below. It's nothing too complica
       <% } %>
 ```
 
+Todo app剩下的代码主要是处理用户和应用的事件，不过目前已基本包含了这部分实践的核心概念。
+
+想分析整个应用如何联合起来可以浏览[代码库](https://github.com/addyosmani/backbone-fundamentals/tree/master/practicals/modular-todo-app) 。希望对你有用。
+
+**提示:** 虽然这第一部分实践内容没有使用到build配置文件和Require.js优化器，我们将在构建移动Backbone应用的章节使用到。
 
 
-The rest of the source for the Todo app mainly consists of code for handling user and application events, but that rounds up most of the core concepts for this practical.
+##<a name="decouplingbackbone">中介者(Mediator)模式和门面(Facade)模式解耦Backbone</a>
 
-To see how everything ties together, feel free to grab the source by cloning this repo or browse it [online](https://github.com/addyosmani/backbone-fundamentals/tree/master/practicals/modular-todo-app) to learn more. I hope you find it helpful!.
-
-**Note:** While this first practical doesn't use a build profile as outlined in the chapter on using the Require.js optimizer, we will be using one in the section on building mobile Backbone applications.
-
-
-##<a name="decouplingbackbone">Decoupling Backbone with the Mediator and Facade patterns</a>
-
-In this section we'll discuss applying some of the concepts I cover in my article on [Large-scale JavaScript Application development](http://addyosmani.com/largescalejavascript) to Backbone.
+这一节将会讨论我在[大型JavaScript应用开发](http://addyosmani.com/largescalejavascript)这篇文章中讲到的一些概念。
+In this section we'll discuss applying some of the concepts I cover in my article on to Backbone.
 
 *After, you may be interested in taking a look At [Aura](http://github.com/addyosmani/aura) - my popular widget-based Backbone.js extension framework based on many of the concepts we will be covering in this section.*
 

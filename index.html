@@ -193,16 +193,16 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#介绍"><a name="modularjs">介绍</a></a></li>
 <li><a href="#用require.js和amd来组织模块"><a name="organizingmodules">用Require.js和AMD来组织模块</a></a><ul>
 <li><a href="#使用require.js编写amd模块">使用Require.js编写AMD模块</a><ul>
-<li><a href="#alternate-syntax">Alternate syntax</a></li>
+<li><a href="#替代alternate语法">替代(Alternate)语法</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#keeping-your-templates-external-using-require.js-and-the-text-plugin"><a name="externaltemplates">Keeping Your Templates External Using Require.js And The Text Plugin</a></a></li>
-<li><a href="#optimizing-backbone-apps-for-production-with-the-require.js-optimizer"><a name="optimizingrequirejs">Optimizing Backbone apps for production with the Require.js Optimizer</a></a></li>
-<li><a href="#optimize-and-build-a-backbone.js-javascript-application-with-require.js-using-packages"><a name="optimizebuild">Optimize and Build a Backbone.js JavaScript application with Require.JS using Packages</a></a><ul>
-<li><a href="#file-organization">File organization</a></li>
-<li><a href="#build-profile-to-optimize-modular-dependencies-with-code-organized-in-packages">Build profile to optimize modular dependencies with code organized in packages</a></li>
-<li><a href="#a-quick-note-on-code-standards">A quick note on code standards</a></li>
-<li><a href="#common-pitfall-when-organizing-code-in-modules">Common Pitfall when organizing code in modules</a></li>
+<li><a href="#使用require.js保持外部模板和文本插件"><a name="externaltemplates">使用Require.js保持外部模板和文本插件</a></a></li>
+<li><a href="#使用require.js优化器优化backbone应用"><a name="optimizingrequirejs">使用Require.js优化器优化Backbone应用</a></a></li>
+<li><a href="#使用require.js打包来优化和构建backbone.js-javascript应用"><a name="optimizebuild">使用Require.JS打包来优化和构建Backbone.js JavaScript应用</a></a><ul>
+<li><a href="#文件结构">文件结构</a></li>
+<li><a href="#构建以包来组织代码优化模块依赖的配置文件">构建以包来组织代码优化模块依赖的配置文件</a></li>
+<li><a href="#代码规范的简短说明">代码规范的简短说明</a></li>
+<li><a href="#组织模块代码时的常见陷阱">组织模块代码时的常见陷阱</a></li>
 <li><a href="#executing-the-build-with-r.js">Executing the Build with r.js</a></li>
 </ul></li>
 <li><a href="#practical-building-a-modular-backbone-app-with-amd-require.js"><a name="practicalrequirejs">Practical: Building a modular Backbone app with AMD &amp; Require.js</a></a><ul>
@@ -3738,24 +3738,24 @@ put <span class="st">&#39;/api/:thing/:id&#39;</span> <span class="kw">do</span>
 <li>如果手动处理依赖的话这将是一个非常大的挑战。我们编写JavaScript模块的时候，主观上都会想智能的重用代码块，有时候也意味着当用户首次进入应用的时候要动态的控制加载项，而不是整个庞大的代码都加载到运行环境中。</li>
 </ol>
 <p>可以参照下GMail的web端。当用户刚开始载入页面时，Google影藏了一些widgets，比如chat模块，当用户点击’expand’的时候才展示。通过动态依赖载入，Google可以在用户需要使用时载入chat模块，而不是在页面初始化时强制全部载入。当构建大型应用时可以有助于提升性能和加载速度。</p>
-<p>我之前写过关于AMD和 I’ve previously written <a href="http://addyosmani.com/writing-modular-js">a detailed article</a> covering both AMD and other module formats and script loaders in case you’d like to explore this topic further. The takeaway is that although it’s perfectly fine to develop applications without a script loader or clean module format in place, it can be of significant benefit to consider using these tools in your application development.</p>
+<p>我之前写过关于AMD和其它模块规范以及脚本加载的<a href="http://addyosmani.com/writing-modular-js">文章</a>有兴趣可以阅读下。虽然不适用脚本加载器和模块规范也可以完成应用的开发，但是考虑使用这些东西做开发具有重大意义。</p>
 <h3 id="使用require.js编写amd模块"><a href="#TOC">使用Require.js编写AMD模块</a></h3>
-<p>As discussed above, the overall goal for the AMD format is to provide a solution for modular JavaScript that developers can use today. The two key concepts you need to be aware of when using it with a script-loader are a <code>define()</code> method for facilitating module definition and a <code>require()</code> method for handling dependency loading. <code>define()</code> is used to define named or unnamed modules based on the proposal using the following signature:</p>
+<p>正如前面提到的，AMD的整个核心目的就是提供一种模块化JavaScript的开发规范。当你使用脚本加载器的时候，需要理解2个关键概念。一个就是<code>define()</code>方法用于模块定义，另一个就是<code>require()</code>方法用户处理依赖加载。<code>define()</code>用于定义命名或者匿名的模块，像下面这种格式：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define(
-    module_id <span class="co">/*optional*/</span>,
-    [dependencies] <span class="co">/*optional*/</span>,
-    definition <span class="kw">function</span> <span class="co">/*function for instantiating the module or object*/</span>
+    模块id(module_id) <span class="co">/*可选*/</span>,
+    [依赖项(dependencies)] <span class="co">/*可选*/</span>,
+    模块的定义函数(definition <span class="kw">function</span>) <span class="co">/*实现模块或者对象定义的函数*/</span>
 );</code></pre>
-<p>As you can tell by the inline comments, the <code>module_id</code> is an optional argument which is typically only required when non-AMD concatenation tools are being used (there may be some other edge cases where it’s useful too). When this argument is left out, we call the module <q>anonymous</q>. When working with anonymous modules, the idea of a module’s identity is DRY, making it trivial to avoid duplication of filenames and code.</p>
-<p>Back to the define signature, the dependencies argument represents an array of dependencies which are required by the module you are defining and the third argument (<q>definition function</q>) is a function that’s executed to instantiate your module. A barebone module (compatible with Require.js) could be defined using <code>define()</code> as follows:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// A module ID has been omitted here to make the module anonymous</span>
+<p><code>module_id</code>是可选参数， 通常只在无AMD连接工具情况下才需要这个参数(可能在其它一些边缘情况下也有用)。没有这个参数时，称之为’匿名’模块。匿名模块的身份标识原则是DRY，避免使用重复的文件名和代码。</p>
+<p>依赖项这个参数是一个数组，声明要定义的这个模块所依赖的模块列表。第三个参数，定义函数(<q>definition function</q>)，用于执行模块的实例化。一个标准的模块(能与Require.js兼容)可以像下面这样定义：</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// 这里省略了module ID，是一个匿名模块。</span>
 
 define([<span class="ch">&#39;foo&#39;</span>, <span class="ch">&#39;bar&#39;</span>],
-    <span class="co">// module definition function</span>
-    <span class="co">// dependencies (foo and bar) are mapped to function parameters</span>
+    <span class="co">// 模块定义函数</span>
+    <span class="co">// 依赖项(foo and bar)映射到了函数的参数中</span>
     <span class="kw">function</span> ( foo, bar ) {
-        <span class="co">// return a value that defines the module export</span>
-        <span class="co">// (i.e the functionality we want to expose for consumption)</span>
+        <span class="co">// 返回定义模块的导出接口(export)</span>
+        <span class="co">// (比如想提供给调用者的功能函数)</span>
 
         <span class="co">// create your module here</span>
         <span class="kw">var</span> myModule = {
@@ -3766,20 +3766,20 @@ define([<span class="ch">&#39;foo&#39;</span>, <span class="ch">&#39;bar&#39;</s
 
         <span class="kw">return</span> myModule;
 });</code></pre>
-<h4 id="alternate-syntax"><a href="#TOC">Alternate syntax</a></h4>
-<p>There is also a <a href="http://requirejs.org/docs/whyamd.html#sugar">sugared version</a> of <code>define()</code> available that allows you to declare your dependencies as local variables using <code>require()</code>. This will feel familiar to anyone who’s used node, and can be easier to add or remove dependencies. Here is the previous snippet using the alternate syntax:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// A module ID has been omitted here to make the module anonymous</span>
+<h4 id="替代alternate语法"><a href="#TOC">替代(Alternate)语法</a></h4>
+<p>也有一个更加<a href="http://requirejs.org/docs/whyamd.html#sugar">甜蜜版本</a>的<code>define()</code>，可以通过局部变量<code>require()</code>来申明依赖。对于使用过node的用户来说，这显得非常亲切，而且更加容易添加和移除依赖。前面的代码片段可以使用下面这种语法来替代：</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// 这里省略了module ID，是一个匿名模块。</span>
 
 define(<span class="kw">function</span>(require){
-        <span class="co">// module definition function</span>
-    <span class="co">// dependencies (foo and bar) are defined as local vars</span>
+        <span class="co">// 模块定义函数</span>
+        
+    <span class="co">// 依赖项(foo and bar)被定义成了本地变量</span>
     <span class="kw">var</span> foo = require(<span class="ch">&#39;foo&#39;</span>),
         bar = require(<span class="ch">&#39;bar&#39;</span>);
 
-        <span class="co">// return a value that defines the module export</span>
-        <span class="co">// (i.e the functionality we want to expose for consumption)</span>
+        <span class="co">// 返回定义模块的导出接口(export)        </span>
 
-        <span class="co">// create your module here</span>
+        <span class="co">// 创建模块</span>
         <span class="kw">var</span> myModule = {
             <span class="dt">doStuff</span>:<span class="kw">function</span>(){
                 <span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">&#39;Yay! Stuff&#39;</span>);
@@ -3788,27 +3788,26 @@ define(<span class="kw">function</span>(require){
 
         <span class="kw">return</span> myModule;
 });</code></pre>
-<p>The <code>require()</code> method is typically used to load code in a top-level JavaScript file or within a module should you wish to dynamically fetch dependencies. An example of its usage is:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// Consider &#39;foo&#39; and &#39;bar&#39; are two external modules</span>
-<span class="co">// In this example, the &#39;exports&#39; from the two modules loaded are passed as</span>
-<span class="co">// function arguments to the callback (foo and bar)</span>
-<span class="co">// so that they can similarly be accessed</span>
+<p><code>require()</code> 方法可以在顶级JavaScript文件域也可以在模块内部域动态加载依赖。下面是一个例子：</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// 假设&#39;foo&#39;和&#39;bar&#39;是2个外部模块</span>
+<span class="co">// 这2个模块的&#39;exports&#39;分别传给了回调函数的(foo and bar)参数</span>
+<span class="co">// 这样就可以被访问了</span>
 
 require([<span class="ch">&#39;foo&#39;</span>, <span class="ch">&#39;bar&#39;</span>], <span class="kw">function</span> ( foo, bar ) {
         <span class="co">// rest of your code here</span>
         <span class="kw">foo</span>.<span class="fu">doSomething</span>();
 });</code></pre>
-<p><strong>Wrapping modules, views and other components with AMD</strong></p>
-<p>Now that we’ve taken a look at how to define AMD modules, let’s review how to go about wrapping components like views and collections so that they can also be easily loaded as dependencies for any parts of your application that require them. At it’s simplest, a Backbone model may just require Backbone and Underscore.js. These are considered its dependencies and so, to write an AMD model module, we would simply do this:</p>
+<p><strong>把modules, views和其它组件包装成AMD</strong></p>
+<p>现在来看下如何定义AMD模块，我们看下如何包装views,collections这些组件，这样就可以在任何需要的地方作为依赖项加载了。正因为简单，Backbone model只需要require Backbone和Underscore.js，所以编写一个AMD model模块就像下面这样简单：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([<span class="ch">&#39;underscore&#39;</span>, <span class="ch">&#39;backbone&#39;</span>], <span class="kw">function</span>(_, Backbone) {
   <span class="kw">var</span> myModel = <span class="kw">Backbone.Model</span>.<span class="fu">extend</span>({
 
-    <span class="co">// Default attributes</span>
+    <span class="co">// 默认属性</span>
     <span class="dt">defaults</span>: {
       <span class="dt">content</span>: <span class="st">&quot;hello world&quot;</span>,
     },
 
-    <span class="co">// A dummy initialization method</span>
+    <span class="co">// 一个空的初始化方法</span>
     <span class="dt">initialize</span>: <span class="kw">function</span>() {
     },
 
@@ -3820,24 +3819,15 @@ require([<span class="ch">&#39;foo&#39;</span>, <span class="ch">&#39;bar&#39;</
   });
   <span class="kw">return</span> myModel;
 });</code></pre>
-<p>Note how we alias Underscore.js’s instance to <code>_</code> and Backbone to just <code>Backbone</code>, making it very trivial to convert non-AMD code over to using this module format. For a view which might require other dependencies such as jQuery, this can similarly be done as follows:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript">define([
-  <span class="ch">&#39;jquery&#39;</span>,
-  <span class="ch">&#39;underscore&#39;</span>,
-  <span class="ch">&#39;backbone&#39;</span>,
-  <span class="ch">&#39;collections/mycollection&#39;</span>,
-  <span class="ch">&#39;views/myview&#39;</span>
-  ], <span class="kw">function</span>($, _, Backbone, myCollection, myView){
-
-  <span class="kw">var</span> AppView = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({
-  ...</code></pre>
-<p>Aliasing to the dollar-sign (<code>$</code>), once again makes it very easy to encapsulate any part of an application you wish using AMD.</p>
-<h2 id="keeping-your-templates-external-using-require.js-and-the-text-plugin"><a href="#TOC"><a name="externaltemplates">Keeping Your Templates External Using Require.js And The Text Plugin</a></a></h2>
-<p>Moving your [Underscore/Mustache/Handlebars] templates to external files is actually quite straight-forward. As this application makes use of Require.js, I’ll discuss how to implement external templates using this specific script loader.</p>
-<p>Require.js has a special plugin called text.js which is used to load in text file dependencies. To use the text plugin, simply follow these simple steps:</p>
+<p>注意，Underscore.js的实例映射到了<code>_</code>，Backbone映射到<code>Backbone</code>, 非常轻松的把非-AMD代码转换成了模块方式。 view则需要引入其它的依赖，比如jQuery，下面是示例：</p>
+<p>```javascript define([ <q>jquery</q>, <q>underscore</q>, <q>backbone</q>, <q>collections/mycollection</q>, <q>views/myview</q> ], function($, _, Backbone, myCollection, myView){</p>
+<p>var AppView = Backbone.View.extend({ … ``<code>jquery被映射到别名(</code>$`)，再一次证明把应用的任何一部分封装成AMD模块都是非常容易的。</p>
+<h2 id="使用require.js保持外部模板和文本插件"><a href="#TOC"><a name="externaltemplates">使用Require.js保持外部模板和文本插件</a></a></h2>
+<p>把[Underscore/Mustache/Handlebars]模板转移到外部文件事实上非常冒进。在这个应用中，使用Require.js，我将会讨论如何使用这个特定的脚本加载器实现外部模板。</p>
+<p>Require.js有一个特别的插件text.js，用于加载文本文件。按下面步骤使用这个文本插件：</p>
 <ol type="1">
-<li><p>Download the plugin from http://requirejs.org/docs/download.html#text and place it in either the same directory as your application’s main JS file or a suitable sub-directory.</p></li>
-<li><p>Next, include the text.js plugin in your initial Require.js configuration options. In the code snippet below, we assume that Require.js is being included in our page prior to this code snippet being executed. Any of the other scripts being loaded are just there for the sake of example.</p></li>
+<li><p>从这里下载http://requirejs.org/docs/download.html#text，放在应用的主要js目录或者子目录下。</p></li>
+<li><p>然后，在初始化Require.js配置中引入text.js插件。下面这段代码，假定在执行前Require.js已经被加载。其它部分的脚本加载进来只为了做示例。</p></li>
 </ol>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">require</span>.<span class="fu">config</span>( {
     <span class="dt">paths</span>: {
@@ -3853,18 +3843,16 @@ require([<span class="ch">&#39;foo&#39;</span>, <span class="ch">&#39;bar&#39;</
     <span class="dt">baseUrl</span>: <span class="ch">&#39;app&#39;</span>
 } );</code></pre>
 <ol start="3" type="1">
-<li>When the <code>text!</code> prefix is used for a dependency, Require.js will automatically load the text plugin and treat the dependency as a text resource. A typical example of this in action may look like..</li>
+<li>当使用<code>text!</code>前缀在表示依赖项时，Require.js会自动加载text插件，并且把这个依赖项当成文本资源。下面是一个例子。</li>
 </ol>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">require([<span class="ch">&#39;js/app&#39;</span>, <span class="ch">&#39;text!templates/mainView.html&#39;</span>],
     <span class="kw">function</span>(app, mainView){
-        <span class="co">// the contents of the mainView file will be</span>
-        <span class="co">// loaded into mainView for usage.</span>
+        <span class="co">// mainView文件的内容将被载入到mainView被使用。</span>
     }
 );</code></pre>
 <ol start="4" type="1">
-<li>Finally we can use the text resource that’s been loaded for templating purposes. You’re probably used to storing your HTML templates inline using a script with a specific identifier.</li>
+<li>最后我们可以把文本资源载入当成模板使用。你可能使用过Underscore.js的micro-templating (jQuery也一样)，通过特定的页内script标签来保存HTML模板，像下面这样</li>
 </ol>
-<p>With Underscore.js’s micro-templating (and jQuery) this would typically be:</p>
 <p>HTML:</p>
 <pre><code>&lt;script type=&quot;text/template&quot; id=&quot;mainViewTemplate&quot;&gt;
     &lt;% _.each( person, function( person_item ){ %&gt;
@@ -3873,38 +3861,38 @@ require([<span class="ch">&#39;foo&#39;</span>, <span class="ch">&#39;bar&#39;</
 &lt;/script&gt;</code></pre>
 <p>JS:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> compiled_template = <span class="kw">_</span>.<span class="fu">template</span>( $(<span class="ch">&#39;#mainViewTemplate&#39;</span>).<span class="fu">html</span>() );</code></pre>
-<p>With Require.js and the text plugin however, it’s as simple as saving your template into an external text file (say, <code>mainView.html</code>) and doing the following:</p>
+<p>不过，通过Require.js和text插件，把模板保存到外部文件就非常简单了(比如，<code>mainView.html</code>)：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">require([<span class="ch">&#39;js/app&#39;</span>, <span class="ch">&#39;text!templates/mainView.html&#39;</span>],
     <span class="kw">function</span>(app, mainView){
 
         <span class="kw">var</span> compiled_template = <span class="kw">_</span>.<span class="fu">template</span>( mainView );
     }
 );</code></pre>
-<p>That’s it! Now you can apply your template to a view in Backbone with something like:</p>
+<p>然后就可以在Backbone中把模板应用到view了中了：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">collection.someview</span>.$<span class="fu">el</span>.<span class="fu">html</span>( compiled_template( { <span class="dt">results</span>: <span class="kw">collection</span>.<span class="fu">models</span> } ) );</code></pre>
-<p>All templating solutions will have their own custom methods for handling template compilation, but if you understand the above, substituting Underscore’s micro-templating for any other solution should be fairly trivial.</p>
-<p><strong>Note:</strong> You may also be interested in looking at <a href="https://github.com/ZeeAgency/requirejs-tpl">Require.js tpl</a>. It’s an AMD-compatible version of the Underscore templating system that also includes support for optimization (pre-compiled templates) which can lead to better performance and no evals. I have yet to use it myself, but it comes as a recommended resource.</p>
-<h2 id="optimizing-backbone-apps-for-production-with-the-require.js-optimizer"><a href="#TOC"><a name="optimizingrequirejs">Optimizing Backbone apps for production with the Require.js Optimizer</a></a></h2>
-<p>As experienced developers may know, an essential final step when writing both small and large JavaScript web applications is the build process. The majority of non-trivial apps are likely to consist of more than one or two scripts and so optimizing, minimizing and concatenating your scripts prior to pushing them to production will require your users to download a reduced number (if not just one) script file.</p>
-<p>Note: If you haven’t looked at build processes before and this is your first time hearing about them, you might find <a href="http://addyosmani.com/blog/client-side-build-process/">my post and screencast on this topic</a> useful.</p>
-<p>With some other structural JavaScript frameworks, my recommendation would normally be to implicitly use YUI Compressor or Google’s closure compiler tools, but we have a slightly more elegant method available, when it comes to Backbone if you’re using Require.js. Require.js has a command line optimization tool called r.js which has a number of capabilities, including:</p>
+<p>所有模板解决方案都有自己的方法处理模板编译，但是如果你明白上面这些的话，用其它方案替代Underscore的 micro-templating就会相当琐碎。</p>
+<p><strong>提示:</strong> 你可能对<a href="https://github.com/ZeeAgency/requirejs-tpl">Require.js tpl</a>也感兴趣。它是一个兼容AMD版本的Underscore模板系统，同样也支持最优化(预编译模板)，会有更好的性能而且没有eval。我已经使用过这个模板了，作为一个推荐资源。</p>
+<h2 id="使用require.js优化器优化backbone应用"><a href="#TOC"><a name="optimizingrequirejs">使用Require.js优化器优化Backbone应用</a></a></h2>
+<p>有经验的开发者应该知道，编写小巧而又大型的JavaScript web应用时最后一个步骤是构建过程。大多数不平凡的应用基本上都由多个脚本文件组成，并且在推送生产环境前优化、压缩和合并脚本文件，以减少用户请求和下载脚本文件。</p>
+<p>提示: 如果你从未了解过构建过程，可以阅读我一骗关于此话题的<a href="http://addyosmani.com/blog/client-side-build-process/">文章</a>，或许对你有所帮助。</p>
+<p>与其它架构的JavaScript框架相比，我更偏向于推荐使用YUI Compressor或者Google的closure编译工具，不过我们有更优雅的选择，当在Backbone应用中使用Require.js时。 Require.js有一个命令行优化工具r.js， 它包含下面这些功能：</p>
 <ul>
-<li>Concatenating specific scripts and minifying them using external tools such as UglifyJS (which is used by default) or Google’s Closure Compiler for optimal browser delivery, whilst preserving the ability to dynamically load modules</li>
-<li>Optimizing CSS and stylesheets by inlining CSS files imported using @import, stripping out comments etc.</li>
-<li>The ability to run AMD projects in both Node and Rhino (more on this later)</li>
+<li>合并特定的脚本，通过外部工具进行压缩，比如UglifyJS(默认)或者Google Closure编译器以达到最优化的到浏览器 端的交付，同时保留动态加载模块的能力。</li>
+<li>通过@import内嵌css文件优化css和样式，去除注释等。</li>
+<li>可以在Node和Rhino(后面会讲到)的AMD项目中运行。</li>
 </ul>
-<p>You’ll notice that I mentioned the word <q>specific</q> in the first bullet point. The Require.js optimizer only concatenates module scripts that have been specified in arrays of string literals passed to top-level (i.e non-local) require and define calls. As clarified by the <a href="http://requirejs.org/docs/optimization.html">optimizer docs</a> this means that Backbone modules defined like this:</p>
+<p>你可能注意到第一条中提到’特定’一词。Require.js优化器只会合并在require和define调用时传入的顶级域(非局部的)字符串数组指定的模块。 根据<a href="http://requirejs.org/docs/optimization.html">优化器的文档</a>意味着Backbone模块像下面这样定义：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([<span class="ch">&#39;jquery&#39;</span>,<span class="ch">&#39;backbone&#39;</span>,<span class="ch">&#39;underscore&#39;</span>, <span class="ch">&#39;collections/sample&#39;</span>,<span class="ch">&#39;views/test&#39;</span>],
     <span class="kw">function</span>($,Backbone, _, Sample, Test){
         <span class="co">//...</span>
     });</code></pre>
-<p>will combine fine, however inline dependencies such as:</p>
+<p>为了更好的合并，下面这种内联的依赖：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> models = someCondition ? [<span class="ch">&#39;models/ab&#39;</span>,<span class="ch">&#39;models/ac&#39;</span>] : [<span class="ch">&#39;models/ba&#39;</span>,<span class="ch">&#39;models/bc&#39;</span>];</code></pre>
-<p>will be ignored. This is by design as it ensures that dynamic dependency/module loading can still take place even after optimization.</p>
-<p>Although the Require.js optimizer works fine in both Node and Java environments, it’s strongly recommended to run it under Node as it executes significantly faster there. In my experience, it’s a piece of cake to get setup with either environment, so go for whichever you feel most comfortable with.</p>
-<p>To get started with r.js, grab it from the <a href="http://requirejs.org/docs/download.html#rjs">Require.js download page</a> or <a href="http://requirejs.org/docs/optimization.html#download">through NPM</a>. Now, the Require.js optimizer works absolutely fine for single script and CSS files, but for most cases you’ll want to actually optimize an entire Backbone project. You <em>could</em> do this completely from the command-line, but a cleaner option is using build profiles.</p>
-<p>Below is an example of a build file taken from the modular jQuery Mobile app referenced later in this book. A <strong>build profile</strong> (commonly named <code>app.build.js</code>) informs Require.js to copy all of the content of <code>appDir</code> to a directory defined by <code>dir</code> (in this case <code>../release</code>). This will apply all of the necessary optimizations inside the release folder. The <code>baseUrl</code> is used to resolve the paths for your modules. It should ideally be relative to <code>appDir</code>.</p>
-<p>Near the bottom of this sample file, you’ll see an array called <code>modules</code>. This is where you specify the module names you wish to have optimized. In this case we’re optimizing the main application called <q>app</q>, which maps to <code>appDir/app.js</code>. If we had set the <code>baseUrl</code> to <q>scripts</q>, it would be mapped to <code>appDir/scripts/app.js</code>.</p>
+<p>将会被忽略。这是被设计成这样的，因为要确保动态的依赖/模块在优化只有也能正常工作。</p>
+<p>虽然Require.js优化器在Node和Java环境下都运行的很好，不过还是强烈推荐在Node下执行，因为会显著快很多。以我的经验，这不过是环境配置的一小部分，所以选择你觉得舒适的就好了。</p>
+<p>可以从<a href="http://requirejs.org/docs/download.html#rjs">Require.js下载页面</a>或者通过<a href="http://requirejs.org/docs/optimization.html#download">NPM</a>来获取r.js。现在Require.js优化器对单个脚本和css文件也工作的非常好，不过大部分实际情况都用于优化一整个Backbone项目。你<em>可以</em>通过命令行来处理，不过更简洁的方式是使用build配置文件。</p>
+<p>下面是一个从本书后面会讲到的模块化jQuery Mobile应用中引用过来的build文件的例子。一段<strong>build文件</strong> (通常是<code>app.build.js</code>) 告诉Require.js复制<code>appDir</code>目录下的所有内容到<code>dir</code>定义的目录下(这个例子中是 <code>../release</code>)。 并且所有必要的优化都会应用到发布目录。<code>baseUrl</code>用于标识模块的路径。必须是相对于<code>appDir</code>的位置。</p>
+<p>下面这个文件中还会看到一个数组<code>modules</code>。用于指定希望配优化的模块。这个例子中假定我们优化的主应用叫’app’， 对应到<code>appDir/app.js</code>。如果帮我们把<code>baseUrl</code>设为’scripts’，就会对应到<code>appDir/scripts/app.js</code>。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">({
     <span class="dt">appDir</span>: <span class="st">&quot;./&quot;</span>,
     <span class="dt">baseUrl</span>: <span class="st">&quot;./&quot;</span>,
@@ -3923,29 +3911,29 @@ require([<span class="ch">&#39;foo&#39;</span>, <span class="ch">&#39;bar&#39;</
         {
             <span class="dt">name</span>: <span class="st">&quot;app&quot;</span>,
             <span class="dt">exclude</span>: [
-                <span class="co">// If you prefer not to include certain libs exclude them here</span>
+                <span class="co">//如果你更喜欢不引入特定的库，可以在这里排除</span>
             ]
         }
     ]
 })</code></pre>
-<p>The way the build system in r.js works is that it traverses app.js (whatever modules you’ve passed) and resolved dependencies, concatenating them into the final <code>release</code>(dir) folder. CSS is treated the same way.</p>
-<p>The build profile is usually placed inside the <q>scripts</q> or <q>js</q> directory of your project. As per the docs, this file can however exist anywhere you wish, but you’ll need to edit the contents of your build profile accordingly.</p>
-<p>Finally, to run the build, execute the following command once inside your <code>appDir</code> or <code>appDir/scripts</code> directory:</p>
+<p>r.js构建系统的工作原理就是遍历app.js(不管你传入了什么模块)并且解决依赖管理，把它们合并到最后<code>release</code>目录下。CSS也同样处理。</p>
+<p>build一般放在项目下的’scripts’或’js’目录下。根据我们前面的描述，这个文件可以放在任何你想要的位置，但是也要相应的修改build文件里的内容。</p>
+<p>最后，运行build，在<code>appDir</code>或者<code>appDir/scripts</code>目录下执行下面命令：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">node ../../<span class="kw">r</span>.<span class="fu">js</span> -o <span class="kw">app.build</span>.<span class="fu">js</span></code></pre>
-<p>That’s it. As long as you have UglifyJS/Closure tools setup correctly, r.js should be able to easily optimize your entire Backbone project in just a few key-strokes. If you would like to learn more about build profiles, James Burke has a <a href="https://github.com/jrburke/r.js/blob/master/build/example.build.js">heavily commented sample file</a> with all the possible options available.</p>
-<h2 id="optimize-and-build-a-backbone.js-javascript-application-with-require.js-using-packages"><a href="#TOC"><a name="optimizebuild">Optimize and Build a Backbone.js JavaScript application with Require.JS using Packages</a></a></h2>
-<p><em>Contributed by <a href="https://github.com/pixelhandler">Bill Heaton</a></em></p>
-<p>When a JavaScript application is too complex or large to build in a single file, grouping the application’s components into packages allows for script dependencies to download in parallel, and facilitates only loading <strong>packaged</strong> and other modular code as the site experience requires the specific set of dependencies.</p>
-<p>Require.JS, the (JavaScript) module loading library, has an <a href="http://requirejs.org/docs/optimization.html" title="Require.JS optimizer">optimizer</a> to build a JavaScript-based application and provides various options. A build profile is the recipe for your build, much like a build.xml file is used to build a project with ANT. The benefit of building with <strong>r.js</strong> not only results in speedy script loading with minified code, but also provides a way to package components of your application.</p>
+<p>优化工作就完成了，只要UglifyJS/Closure工具安装正确，r.js就可以通过几条简单的语句优化整个Backbone项目。如果想对build配置信息了解更多，James Burke写的包含大量注释的<a href="https://github.com/jrburke/r.js/blob/master/build/example.build.js">示例文件</a>，包含所有可用的配置选项。</p>
+<h2 id="使用require.js打包来优化和构建backbone.js-javascript应用"><a href="#TOC"><a name="optimizebuild">使用Require.JS打包来优化和构建Backbone.js JavaScript应用</a></a></h2>
+<p><em>由<a href="https://github.com/pixelhandler">Bill Heaton</a>贡献</em></p>
+<p>当一个JavaScript应用build在一个单独文件中过于复杂和庞大时，把应用的组件分组成包，允许依赖脚本异步下载，并且便于只加载<strong>包</strong>，而且允许网站其它模块化代码引入特定依赖项。</p>
+<p>Require.JS, 作为模块加载库，有一个<a href="http://requirejs.org/docs/optimization.html" title="Require.JS optimizer">优化器</a> ，用于构建基于JavaScript的应用并且提供各种选项。 build文件是用于投建的食谱，就像build.xml文件用于使用ANT构建项目。使用<strong>r.js</strong>构建的好处不仅仅是最小化代码加快下载速度，同样提供一种打包应用组件的方式。</p>
 <ul>
-<li><a href="http://requirejs.org/docs/optimization.html#onejs" title="Optimizing one JavaScript file">Optimizing one JavaScript file</a></li>
-<li><a href="http://requirejs.org/docs/optimization.html#wholeproject" title="Optimizing a whole project">Optimizing a whole project</a></li>
-<li><a href="http://requirejs.org/docs/faq-optimization.html#priority" title="Optimizing a project in layers or packages">Optimizing a project in layers or packages</a></li>
+<li><a href="http://requirejs.org/docs/optimization.html#onejs" title="Optimizing one JavaScript file">优化单个JavaScript文件</a></li>
+<li><a href="http://requirejs.org/docs/optimization.html#wholeproject" title="Optimizing a whole project">优化整个项目</a></li>
+<li><a href="http://requirejs.org/docs/faq-optimization.html#priority" title="Optimizing a project in layers or packages">分层或者包优化一个项目</a></li>
 </ul>
-<p>In a complex application, organizing code into <em>packages</em> is an attractive build strategy. The build profile in this article is based on an test application currently under development (files list below). The application framework is built with open source libraries. The main objective in this build profile is to optimize an application developed with <a href="http://documentcloud.github.com/backbone/" title="Backbone.js">Backbone.js</a> using modular code, following the <a href="https://github.com/amdjs/amdjs-api/wiki/AMD" title="Asynchronous Module Definition (AMD) wiki page">Asynchronous Module Definition (AMD)</a> format. AMD and Require.JS provide the structure for writing modular code with dependencies. Backbone.js provides the code organization for developing models, views and collections and also interactions with a RESTful API.</p>
-<p>Below is an outline of the applications file organization, followed by the build profile to build modular (or packaged) layers a JavaScript driven application.</p>
-<h4 id="file-organization"><a href="#TOC">File organization</a></h4>
-<p>Assume the following directories and file organization, with app.build.js as the build profile (a sibling to both source and release directories). Note that the files in the list below named <em>section</em> can be any component of the application, e.g. <em>header</em>, <em>login</em>)</p>
+<p>在一个复杂的应用中，用包来组这代码是一个非常吸引人的构建策略。这篇文章中讲述的build文件是基于一个正在开发中测试项目(下面列举了该项目的文件)。这个应用使用了开源库。 build文件的主要目的是使用模块化代码优化基于<a href="http://documentcloud.github.com/backbone/" title="Backbone.js">Backbone.js</a>开发的应用，使得它可以遵循<a href="https://github.com/amdjs/amdjs-api/wiki/AMD" title="Asynchronous Module Definition (AMD) wiki page">Asynchronous Module Definition (AMD)</a> 格式。AMD和Require.JS提供了使用依赖编写模块化代码的架构。Backbone.js提供了开发models，views和collections，以及RESTful API交互的代码组织支持。</p>
+<p>下面是这个应用的文件结构概览，接着后面的是build文件文件，用于构建模块化(或者分包)层次的JavaScript驱动的应用。</p>
+<h4 id="文件结构"><a href="#TOC">文件结构</a></h4>
+<p>假定下面的目录和文件结构，app.build.js是build文件文件 (源代码目录和发布目录同级)。注意下面列表中以<em>section</em>命名的文件，可以是应用的任何一个组建(比如<em>header</em>, <em>login</em>)。</p>
 <pre class="text"><code>.-- app.build.js
 |-- app-release
 `-- app-src
@@ -4018,10 +4006,10 @@ require([<span class="ch">&#39;foo&#39;</span>, <span class="ch">&#39;bar&#39;</
     |-- utils.js
     |-- vendor.js
     `-- views.js</code></pre>
-<h4 id="build-profile-to-optimize-modular-dependencies-with-code-organized-in-packages"><a href="#TOC">Build profile to optimize modular dependencies with code organized in packages</a></h4>
-<p>The build profile can be organized to <a href="http://requirejs.org/docs/faq-optimization.html#priority" title="optimize modular dependencies in packages">divide parallel downloads for various sections of the application</a>.</p>
-<p>This strategy demonstrated builds common or site-wide groups of (core) <em>models</em>, <em>views</em>, collections which are extended from a base.js constructor which extends the appropriate backbone method, e.g. Backbone.Model. The <em>packages</em> directory organizes code by section / responsibility, e.g. cart, checkout, etc. Notice that within the example <em>header</em> package the directory structure is similar to the app root directory file structure. A <em>package</em> (of modularized code) has dependencies from the common libraries in your application and also has specific code for the packages execution alone; other packages should not require another packages dependencies. A <em>utils</em> directory has shims, helpers, and common library code to support the application. A <em>syncs</em> directory to define persistence with your RESTful api and/or localStorage. The <em>vendor</em> libraries folder will not be built, there is no need to do so, you may decide to use a CDN (then set these paths to : <em><a href="http://requirejs.org/docs/optimization.html#empty" title="empty:">empty:</a></em>). And finally a <em>test</em> directory for <a href="http://pivotal.github.com/jasmine/" title="Jasmine is a behavior-driven development framework for testing your JavaScript code">Jasmine</a> unit test specs, which may be ignored in the build as well if you choose.</p>
-<p>Also notice the there are .js files named the same as the directories, these are the files listed in the paths. these are strategic to group sets of files to build, examples follow the build profile below.</p>
+<h4 id="构建以包来组织代码优化模块依赖的配置文件"><a href="#TOC">构建以包来组织代码优化模块依赖的配置文件</a></h4>
+<p>build文件可以<a href="http://requirejs.org/docs/faq-optimization.html#priority" title="optimize modular dependencies in packages">与应用的各个部分并行下载</a></p>
+<p>这种策略展示了构建常见或者站点范围内分组继承自base.js constructor的<em>models</em>, <em>views</em>, collections，base扩展了应有的backbone方法，比如Backbone.Model。<em>packages</em>目录通过分段/职责来组织代码，比如cart, checkout, 等等。注意，在这个例子中<em>header</em>包目录有点类似与app根目录的文件结构。一个<em>包(package)</em> (被模块化的代码)有对应用通用库的依赖项，也有包单独执行的特定代码； 其它的包不能引入另外的包的依赖项。<em>utils</em>目录有shims, helpers, 和通用库代码。<em>syncs</em> 目录定义了RESTful api交互或者本地存储的实现。<em>vendor</em> 库目录将不会构架，因为没有必要这么做，你可能会使用CDN(然后路径设为: <em><a href="http://requirejs.org/docs/optimization.html#empty" title="empty:">empty:</a></em>)。最后<em>test</em>目录用于<a href="http://pivotal.github.com/jasmine/" title="Jasmine is a behavior-driven development framework for testing your JavaScript code">Jasmine</a> 单元测试，你可以选择让build工具忽略它。</p>
+<p>同样注意与目录名称相同的.js文件，它们在paths中列出。这就是把一组文件分组构建的策略，下面是示例文件：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">({
     <span class="dt">appDir</span>: <span class="ch">&#39;./app-src&#39;</span>,
     <span class="dt">baseUrl</span>: <span class="ch">&#39;./&#39;</span>,
@@ -4081,20 +4069,20 @@ require([<span class="ch">&#39;foo&#39;</span>, <span class="ch">&#39;bar&#39;</
         <span class="co">// ... and so much more ...</span>
     ]
 })</code></pre>
-<p>The above build profile is designed for balancing scalability and performance.</p>
-<p><strong>Examples of the grouped sets of code dependencies</strong></p>
-<p>The contents of the vendor.js which is not built into a package may use some <em>no conflict</em> calls as well.</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// List of vendor libraries, e.g. jQuery, Underscore, Backbone, etc.</span>
-<span class="co">// this module is used with the r.js optimizer tool during build</span>
+<p>上面这个build文件的设计平衡了扩展性和性能。</p>
+<p><strong>分组代码依赖示例</strong></p>
+<p>vendor.js没有构建到一个包里面，可能会使用一些<em>no conflict</em>调用。</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// vendor库列表, 比如jQuery, Underscore, Backbone, 等等。</span>
+<span class="co">// 此模块构建时使r.js进行优化</span>
 <span class="co">// @see &lt;http://requirejs.org/docs/faq-optimization.html&gt;</span>
 define([ <span class="st">&quot;jquery&quot;</span>, <span class="st">&quot;underscore&quot;</span>, <span class="st">&quot;backbone&quot;</span>, <span class="st">&quot;modernizr&quot;</span>, <span class="st">&quot;mustache&quot;</span> ],
 <span class="kw">function</span> ($,        _,            Backbone,   Modernizr,   Mustache) {
-    <span class="co">// call no conflicts so if needed you can use multiple versions of $</span>
+    <span class="co">// 调用no conflicts可以使用多版本的$</span>
     $.<span class="fu">noConflict</span>();
     <span class="kw">_</span>.<span class="fu">noConflict</span>();
     <span class="kw">Backbone</span>.<span class="fu">noConflict</span>();
 });</code></pre>
-<p>For your application common library code.</p>
+<p>应用的通用库代码。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// List of utility libraries,</span>
 define([ <span class="st">&quot;utils/ajax&quot;</span>, <span class="st">&quot;utils/baselib&quot;</span>, <span class="st">&quot;utils/localstorage&quot;</span>, <span class="st">&quot;utils/debug&quot;</span>, <span class="st">&quot;utils/shims&quot;</span> ],
 <span class="kw">function</span> (ajax,         baselib,         localstorage,         debug) {
@@ -4106,12 +4094,11 @@ define([ <span class="st">&quot;utils/ajax&quot;</span>, <span class="st">&quot;
     };
     <span class="co">// the shim only extend JavaScript when needed, e.g. Object.create</span>
 });</code></pre>
-<p>An example where you intend to use require the common models in another package file.</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// List of models</span>
-<span class="co">// models in this directory are intended for site-wide usage</span>
-<span class="co">// grouping site-wide models in this module (object)</span>
-<span class="co">// optimizes the performance and keeps dependencies organized</span>
-<span class="co">// when the (build) optimizer is run.</span>
+<p>在另一个包文件中引入通用models的例子。</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// models列表</span>
+<span class="co">// 这个目录下的models被广泛使用</span>
+<span class="co">// 在这个模块(object)中分组这些models</span>
+<span class="co">// 当build时优化性能和保持依赖关系。</span>
 define([ <span class="st">&quot;models/branding&quot;</span>, <span class="st">&quot;models/section&quot;</span> ],
 <span class="kw">function</span> (Branding,          Section) {
     <span class="kw">return</span> {
@@ -4119,10 +4106,10 @@ define([ <span class="st">&quot;models/branding&quot;</span>, <span class="st">&
         <span class="st">&quot;Section&quot;</span>  : Section
     };
 });</code></pre>
-<h4 id="a-quick-note-on-code-standards"><a href="#TOC">A quick note on code standards</a></h4>
-<p>Notice that in the above examples the parameters may begin with lower or upper case characters. The variable names uses in the parameters that begin with <em>Uppercase</em> are <em>Constructors</em> and the <em>lowercase</em> variable names are not, they may be instances created by a constructor, or perhaps an object or function that is not meant to used with <em>new</em>.</p>
-<p>The convention recommended is to use Upper CamelCase for constructors and lower camelCase for others.</p>
-<h4 id="common-pitfall-when-organizing-code-in-modules"><a href="#TOC">Common Pitfall when organizing code in modules</a></h4>
+<h4 id="代码规范的简短说明"><a href="#TOC">代码规范的简短说明</a></h4>
+<p>注意上面的例子中参数可能是大写或者小写字母开头。参数变量中<em>大写</em>开头的是<em>构造器(Constructors)</em>，<em>小写</em>开头的变量则可能是构造器创建的一个实例，或者一个不能<em>new</em>的object或function。</p>
+<p>推荐约定是构造器使用首字母大写的驼峰式命名(CamelCase)，其它用首字母小写的驼峰式命名(camelCase)。</p>
+<h4 id="组织模块代码时的常见陷阱"><a href="#TOC">组织模块代码时的常见陷阱</a></h4>
 <p>Be careful not define circular dependencies. For example, in a common <em>models</em> package (models.js) dependencies are listed for the files in your models directory</p>
 <pre><code>define([ &quot;models/branding&quot;, &quot;models/section&quot; ], function (branding, section)
 // ...

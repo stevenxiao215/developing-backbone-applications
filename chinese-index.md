@@ -5238,24 +5238,24 @@ build文件可以[与应用的各个部分并行下载](http://requirejs.org/doc
 
 上面这个build文件的设计平衡了扩展性和性能。
 
-**Examples of the grouped sets of code dependencies**
+**分组代码依赖示例**
 
-The contents of the vendor.js which is not built into a package may use some *no conflict* calls as well.
+vendor.js没有构建到一个包里面，可能会使用一些*no conflict*调用。
 
 ```javascript
-// List of vendor libraries, e.g. jQuery, Underscore, Backbone, etc.
-// this module is used with the r.js optimizer tool during build
+// vendor库列表, 比如jQuery, Underscore, Backbone, 等等。
+// 此模块构建时使r.js进行优化
 // @see <http://requirejs.org/docs/faq-optimization.html>
 define([ "jquery", "underscore", "backbone", "modernizr", "mustache" ],
 function ($,        _,            Backbone,   Modernizr,   Mustache) {
-    // call no conflicts so if needed you can use multiple versions of $
+    // 调用no conflicts可以使用多版本的$
     $.noConflict();
     _.noConflict();
     Backbone.noConflict();
 });
 ```
 
-For your application common library code.
+应用的通用库代码。
 
 ```javascript
 // List of utility libraries,
@@ -5271,14 +5271,13 @@ function (ajax,         baselib,         localstorage,         debug) {
 });
 ```
 
-An example where you intend to use require the common models in another package file.
+在另一个包文件中引入通用models的例子。
 
 ```javascript
-// List of models
-// models in this directory are intended for site-wide usage
-// grouping site-wide models in this module (object)
-// optimizes the performance and keeps dependencies organized
-// when the (build) optimizer is run.
+// models列表
+// 这个目录下的models被广泛使用
+// 在这个模块(object)中分组这些models
+// 当build时优化性能和保持依赖关系。
 define([ "models/branding", "models/section" ],
 function (Branding,          Section) {
     return {
@@ -5288,13 +5287,13 @@ function (Branding,          Section) {
 });
 ```
 
-#### A quick note on code standards
+#### 代码规范的简短说明
 
-Notice that in the above examples the parameters may begin with lower or upper case characters. The variable names uses in the parameters that begin with *Uppercase* are *Constructors* and the *lowercase* variable names are not, they may be instances created by a constructor, or perhaps an object or function that is not meant to used with *new*.
+注意上面的例子中参数可能是大写或者小写字母开头。参数变量中*大写*开头的是*构造器(Constructors)*，*小写*开头的变量则可能是构造器创建的一个实例，或者一个不能*new*的object或function。
 
-The convention recommended is to use Upper CamelCase for constructors and lower camelCase for others.
+推荐约定是构造器使用首字母大写的驼峰式命名(CamelCase)，其它用首字母小写的驼峰式命名(camelCase)。
 
-#### Common Pitfall when organizing code in modules
+#### 组织模块代码时的常见陷阱
 
 Be careful not define circular dependencies. For example, in a common *models* package (models.js) dependencies are listed for the files in your models directory
 

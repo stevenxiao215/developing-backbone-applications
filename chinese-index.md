@@ -5690,34 +5690,34 @@ Todo app剩下的代码主要是处理用户和应用的事件，不过目前已
 ##<a name="decouplingbackbone">中介者(Mediator)模式和门面(Facade)模式解耦Backbone</a>
 
 这一节将会讨论我在[大型JavaScript应用开发](http://addyosmani.com/largescalejavascript)这篇文章中讲到的一些概念。
-In this section we'll discuss applying some of the concepts I cover in my article on to Backbone.
 
-*After, you may be interested in taking a look At [Aura](http://github.com/addyosmani/aura) - my popular widget-based Backbone.js extension framework based on many of the concepts we will be covering in this section.*
+*之后，你可能会对[Aura](http://github.com/addyosmani/aura)感兴趣—— - 我的一个比较流行的基于widget的  Backbone.js扩展框架，它是基于这章节我们会讲到的一些概念而建立的。*
 
-### Summary
+### 概要
 
-At a high-level, one architecture that works for such applications is something which is:
+站在一个高角度来看，一个应用的架构应该是这样：
 
-* **Highly decoupled**: encouraging modules to only publish and subscribe to events of interest rather than directly communicating with each other. This helps us to build applications who's units of code aren't highly tied (coupled) together and can thus be reused more easily.
-* **Supports module-level security**: whereby modules are only able to execute behavior they've been permitted to. Application security is an area which is often overlooked in JavaScript applications, but can be quite easily implemented in a flexible manner.
-* **Supports failover**: allowing an application continuing to function even if particular modules fail. The typical example I give of this is the GMail chat widget. Imagine being able to build applications in a way that if one widget on the page fails (e.g chat), the rest of your application (mail) can continue to function without being affected.
+* **高度解耦**: 鼓励模块仅公开和订阅感兴趣的事件而不是直接互相通讯。这有利于构建出来的应用每个单元的代码都不会高度的粘连在一起(解耦)，并且更容易重用。
+* **支持模块级的安全性**: 凭借什么模块只能执行它们被允许的行为。在Javascript应用中应用安全是一块经常被忽略的区域，但是可以非常容易通过灵活的方式实现。
+* **支持故障转移**: 当某些部分模块失效时应用还可以平坦地运行。典型的例子就是GMail聊天部件。想象一下可以有一种方式构建应用，当页面中某个部件失败时(比如chat)，应用(mail)的剩余部分还可以继续运行不受影响。
 
-This is an architecture which has been implemented by a number of different companies in the past, including Yahoo! (for their modularized homepage - which Nicholas Zakas has [spoken](http://www.youtube.com/watch?v=vXjVFPosQHw) about) and AOL for some of our upcoming projects.
-
-The three design patterns that make this architecture possible are the:
-
-* **Module pattern**: used for encapsulating unique blocks of code, where functions and variables can be kept either public or private. ('private' in the simulation of privacy sense, as of course don't have true privacy in JavaScript)
-* **Mediator pattern**: used when the communication between modules may be complex, but is still well defined. If it appears a system may have too many relationships between modules in your code, it may be time to have a central point of control, which is where the pattern fits in.
-* **Facade pattern**: used for providing a convenient higher-level interface to a larger body of code, hiding its true underlying complexity
-
-Their specific roles in this architecture can be found below.
-
-* **Modules**: There are almost two concepts of what defines a module. As AMD is being used as a module wrapper, technically each model, view and collection can be considered a module. We then have the concept of modules being distinct blocks of code outside of just MVC/MV*. For the latter, these types of 'modules' are primarily concerned with broadcasting and subscribing to events of interest rather than directly communicating with each other.They are made possible through the Mediator pattern.
-* **Mediator**: The mediator has a varying role depending on just how you wish to implement it. In my article, I mention using it as a module manager with the ability to start and stop modules at will, however when it comes to Backbone, I feel that simplifying it down to the role of a central 'controller' that provides pub/sub capabilities should suffice. One can of course go all out in terms of building a module system that supports module starting, stopping, pausing etc, however the scope of this is outside of this chapter.
-* **Facade**: This acts as a secure middle-layer that both abstracts an application core (Mediator) and relays messages from the modules back to the Mediator so they don't touch it directly. The Facade also performs the duty of application security guard; it checks event notifications from modules against a configuration (permissions.js, which we will look at later) to ensure requests from modules are only processed if they are permitted to execute the behavior passed.
+这中架构在过去已经被很多公司所应用，包括Yahoo! (他们模块化的首页——Nicholas Zakas有相关的[谈论](http://www.youtube.com/watch?v=vXjVFPosQHw)) 和AOL应用到一些我们即将推出的项目。
 
 
-### Practical
+需要三种设计模式可以实现这种架构：
+
+* **模块模式**: 用于封装第一无二的代码块，function和变量可以为公开或者私有。('私有'只是模仿概念，当然在JavaScript中没有真正的私有)
+* **中介者模式**: 用于当模块之间的通讯变得复杂时，但是也需要好的定义。如果出现一个系统，代码中模块之间有很多关系，此时就可能需要一个中央控制点，这个就非常适合使用这个模式。
+* **门面模式**: 用于给一块庞大的代码提供方便的高层次的接口，影藏其内部的复杂性。
+
+它们在这种架构中对应的角色是：
+
+* **模块**: There are almost two concepts of what defines a module. As AMD is being used as a module wrapper, technically each model, view and collection can be considered a module. We then have the concept of modules being distinct blocks of code outside of just MVC/MV*. For the latter, these types of 'modules' are primarily concerned with broadcasting and subscribing to events of interest rather than directly communicating with each other.They are made possible through the Mediator pattern.
+* **中介者**: The mediator has a varying role depending on just how you wish to implement it. In my article, I mention using it as a module manager with the ability to start and stop modules at will, however when it comes to Backbone, I feel that simplifying it down to the role of a central 'controller' that provides pub/sub capabilities should suffice. One can of course go all out in terms of building a module system that supports module starting, stopping, pausing etc, however the scope of this is outside of this chapter.
+* **门面**: This acts as a secure middle-layer that both abstracts an application core (Mediator) and relays messages from the modules back to the Mediator so they don't touch it directly. The Facade also performs the duty of application security guard; it checks event notifications from modules against a configuration (permissions.js, which we will look at later) to ensure requests from modules are only processed if they are permitted to execute the behavior passed.
+
+
+### 实践
 
 For the practical section of this chapter, we'll be extending the well-known Backbone Todo application using the three patterns mentioned above.
 

@@ -206,13 +206,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#使用r.js执行构建">使用r.js执行构建</a></li>
 </ul></li>
 <li><a href="#实践使用amd和require.js构建模块化的backbone-app"><a name="practicalrequirejs">实践：使用AMD和Require.js构建模块化的Backbone app</a></a><ul>
-<li><a href="#overview">Overview</a></li>
-<li><a href="#markup">Markup</a></li>
-<li><a href="#configuration-options">Configuration options</a></li>
-<li><a href="#modularizing-our-models-views-and-collections">Modularizing our models, views and collections</a></li>
+<li><a href="#概览">概览</a></li>
+<li><a href="#页面标签">页面标签</a></li>
+<li><a href="#配置选项">配置选项</a></li>
+<li><a href="#模块化models-views和collections">模块化models, views和collections</a></li>
 </ul></li>
-<li><a href="#decoupling-backbone-with-the-mediator-and-facade-patterns"><a name="decouplingbackbone">Decoupling Backbone with the Mediator and Facade patterns</a></a><ul>
-<li><a href="#summary">Summary</a></li>
+<li><a href="#中介者mediator模式和门面facade模式解耦backbone"><a name="decouplingbackbone">中介者(Mediator)模式和门面(Facade)模式解耦Backbone</a></a><ul>
+<li><a href="#概要">概要</a></li>
 <li><a href="#practical">Practical</a></li>
 </ul></li>
 <li><a href="#paginating-backbone.js-requests-collections"><a name="pagination">Paginating Backbone.js Requests &amp; Collections</a></a></li>
@@ -4127,17 +4127,17 @@ var section = models.section;</code></pre>
 <p>就可以执行build了：</p>
 <pre><code>&gt; r.js -o app.build.js</code></pre>
 <h2 id="实践使用amd和require.js构建模块化的backbone-app"><a href="#TOC"><a name="practicalrequirejs">实践：使用AMD和Require.js构建模块化的Backbone app</a></a></h2>
-<p>In this chapter, we’ll look at our first practical Backbone &amp; Require.js project - how to build a modular Todo application. The application will allow us to add new todos, edit new todos and clear todo items that have been marked as completed. For a more advanced practical, see the section on mobile Backbone development.</p>
-<p>The complete code for the application can can be found in the <code>practicals/modular-todo-app</code> folder of this repo (thanks to Thomas Davis and Jérôme Gravel-Niquet). Alternatively grab a copy of my side-project <a href="https://github.com/addyosmani/todomvc">TodoMVC</a> which contains the sources to both AMD and non-AMD versions.</p>
-<p><strong>Note:</strong> Thomas may be covering a practical on this exercise in more detail on <a href="http://backbonetutorials.com">backbonetutorials.com</a> at some point soon, but for this section I’ll be covering what I consider the core concepts.</p>
-<h3 id="overview"><a href="#TOC">Overview</a></h3>
-<p>Writing a <q>modular</q> Backbone application can be a straight-forward process. There are however, some key conceptual differences to be aware of if opting to use AMD as your module format of choice:</p>
+<p>在这一章中，将实践一下我们第一个Backbone和Require.js项目——如何构建一个模块化的Todo应用。这个应用可以添加todos,编辑todo项和清除已标记完成的todo项。更高级的实践，可以参考移动Backbone开发的部分。</p>
+<p>完整代码在仓库的<code>practicals/modular-todo-app</code>目录下(感谢Thomas Davis和Jérôme Gravel-Niquet)。另外我的一个业余项目<a href="https://github.com/addyosmani/todomvc">TodoMVC</a>包含了AMD和非AMD版本的源代码。</p>
+<p><strong>提示:</strong> Thomas可能在某些方面讲述了更详细的实践经验<a href="http://backbonetutorials.com">backbonetutorials.com</a>，但是这一章节我会讲到我认为是和核心的概念。</p>
+<h3 id="概览"><a href="#TOC">概览</a></h3>
+<p>编写’模块化’Backbone应用时一个简单的过程。但是，如果选择AMD作为模块格式的话需要注意一些关键概念上的差异：</p>
 <ul>
-<li>As AMD isn’t a standard native to JavaScript or the browser, it’s necessary to use a script loader (such as Require.js or curl.js) in order to support defining components and modules using this module format. As we’ve already reviewed, there are a number of advantages to using the AMD as well as Require.js to assist here.</li>
-<li>Models, views, controllers and routers need to be encapsulated <em>using</em> the AMD-format. This allows each component of our Backbone application to cleanly manage dependencies (e.g collections required by a view) in the same way that AMD allows non-Backbone modules to.</li>
-<li>Non-Backbone components/modules (such as utilities or application helpers) can also be encapsulated using AMD. I encourage you to try developing these modules in such a way that they can both be used and tested independent of your Backbone code as this will increase their ability to be re-used elsewhere.</li>
+<li>因为AMD不是JavaScript或者浏览器的原生标准，它需要使用脚本加载器(比如Require.js或者curl.js)来支持这种格式的组件和模块的定义。正如我们所看到的，使用AMD和Require.js的同时协助会有那么多的好处。</li>
+<li>Models, views, controllers和routers需要被包装成AMD格式。这样可以在Backbone应用中每个组件都清晰的管理依赖关系 (比如collections被一个view引入)，跟AMD的非Backbone模块一样。</li>
+<li>非Backbone组件/模块(比如utilities或者helpers)同样也可以包装成AMD方式。鼓励尝试开发这些模块时可以被独立使用和测试，不依赖于Backbone代码， 这样可以增加它们的复用性。</li>
 </ul>
-<p>Now that we’ve reviewed the basics, let’s take a look at developing our application. For reference, the structure of our app is as follows:</p>
+<p>我们回顾了下基本概念，现在我们开始开发这个应用。下面是这个app的结构，作为参考：</p>
 <pre><code>index.html
 ...js/
     main.js
@@ -4159,8 +4159,8 @@ var section = models.section;</code></pre>
                 require.js
                 text.js
 ...css/</code></pre>
-<h3 id="markup"><a href="#TOC">Markup</a></h3>
-<p>The markup for the application is relatively simple and consists of three primary parts: an input section for entering new todo items (<code>create-todo</code>), a list section to display existing items (which can also be edited in-place) (<code>todo-list</code>) and finally a section summarizing how many items are left to be completed (<code>todo-stats</code>).</p>
+<h3 id="页面标签"><a href="#TOC">页面标签</a></h3>
+<p>这个应用的页面标签非常的简单，分为三个主要部分：一个input输入部分用于创建新的todo(<code>create-todo</code>)，一个列表部分展示所有存在的项(也可以就地编辑) (<code>todo-list</code>)和一个概括信息部分显示有多少条项待完成(<code>todo-stats</code>)。</p>
 <pre><code>&lt;div id=&quot;todoapp&quot;&gt;
 
       &lt;div class=&quot;content&quot;&gt;
@@ -4179,11 +4179,11 @@ var section = models.section;</code></pre>
       &lt;/div&gt;
 
 &lt;/div&gt;</code></pre>
-<p>The rest of the tutorial will now focus on the JavaScript side of the practical.</p>
-<h3 id="configuration-options"><a href="#TOC">Configuration options</a></h3>
-<p>If you’ve read the earlier chapter on AMD, you may have noticed that explicitly needing to define each dependency a Backbone module (view, collection or other module) may require with it can get a little tedious. This can however be improved.</p>
-<p>In order to simplify referencing common paths the modules in our application may use, we use a Require.js <a href="http://requirejs.org/docs/api.html#config">configuration object</a>, which is typically defined as a top-level script file. Configuration objects have a number of useful capabilities, the most useful being mode name-mapping. Name-maps are basically a key:value pair, where the key defines the alias you wish to use for a path and the value represents the true location of the path.</p>
-<p>In the code-sample below, you can see some typical examples of common name-maps which include: <code>backbone</code>, <code>underscore</code>, <code>jquery</code> and depending on your choice, the RequireJS <code>text</code> plugin, which assists with loading text assets like templates.</p>
+<p>教程的后面部分将重点聚焦在JavaScript实践上。</p>
+<h3 id="配置选项"><a href="#TOC">配置选项</a></h3>
+<p>如果你已经看过前面关于AMD的章节，就会注意到需要明确定义Backbone模块(view, collection或其它模块)的每个依赖项有点冗长。不过这点可以优化。</p>
+<p>为了简化应用中可能会引用到的通用路径，我们可以使用Require.js <a href="http://requirejs.org/docs/api.html#config">配置对象</a>，它通常定义在一个顶级脚本文件中。配置对象有很多有用的功能，最实用是名称映射。命名map是一个基本的key:value值对，key是要用到的路径的别名，value则是真是的路径。</p>
+<p>下面这段代码中，你会看到一些典型的常用命名映射表的例子：<code>backbone</code>，<code>underscore</code>，<code>jquery</code>，RequireJS <code>text</code>插件。</p>
 <p><strong>main.js</strong></p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">require</span>.<span class="fu">config</span>({
   <span class="dt">baseUrl</span>:<span class="ch">&#39;../&#39;</span>,
@@ -4198,11 +4198,11 @@ var section = models.section;</code></pre>
 require([<span class="ch">&#39;views/app&#39;</span>], <span class="kw">function</span>(AppView){
   <span class="kw">var</span> app_view = <span class="kw">new</span> AppView;
 });</code></pre>
-<p>The <code>require()</code> at the end of our main.js file is simply there so we can load and instantiate the primary view for our application (<code>views/app.js</code>). You’ll commonly see both this and the configuration object included in most top-level script files for a project.</p>
-<p>In addition to offering name-mapping, the configuration object can be used to define additional properties such as <code>waitSeconds</code> - the number of seconds to wait before script loading times out and <code>locale</code>, should you wish to load up i18n bundles for custom languages. The <code>baseUrl</code> is simply the path to use for module lookups.</p>
-<p>For more information on configuration objects, please feel free to check out the excellent guide to them in the <a href="http://requirejs.org/docs/api.html#config">RequireJS docs</a>.</p>
-<h3 id="modularizing-our-models-views-and-collections"><a href="#TOC">Modularizing our models, views and collections</a></h3>
-<p>Before we dive into AMD-wrapped versions of our Backbone components, let’s review a sample of a non-AMD view. The following view listens for changes to its model (a Todo item) and re-renders if a user edits the value of the item.</p>
+<p>main.js文件末尾的<code>require()</code>完成载入和实例化应用的主view(<code>views/app.js</code>)。通常会看到它和配置对象包含在一个项目的顶级脚本文件中。</p>
+<p>除了提供命名映射之外，配置对象还可以用于定义其它属性，比如<code>waitSeconds</code>——脚本加载的超时时间，<code>时区(locale)</code>, 如果你想加载i18n自定义语言包的话。<code>baseUrl</code>用于检索模块的路径。</p>
+<p>更多关于配置对象的信息可以大胆免费的阅读<a href="http://requirejs.org/docs/api.html#config">RequireJS docs</a>。</p>
+<h3 id="模块化models-views和collections"><a href="#TOC">模块化models, views和collections</a></h3>
+<p>在深入探索把Backbone组件包装成AMD之前，我们先来回顾下一个简单的无AMD的view。下面这个view监听里它的mode(一个Todo元素)的变化并且当用户编辑这个项时重新渲染。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> TodoView = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({
 
     <span class="co">//... is a list tag.</span>
@@ -4227,7 +4227,7 @@ require([<span class="ch">&#39;views/app&#39;</span>], <span class="kw">function
       <span class="kw">this</span>.<span class="fu">model</span>.<span class="fu">view</span> = <span class="kw">this</span>;
     },
     ...</code></pre>
-<p>Note how for templating the common practice of referencing a script by an ID (or other selector) and obtaining its value is used. This of course requires that the template being accessed is implicitly defined in our markup. The following is the <q>embedded</q> version of our template being referenced above:</p>
+<p>在脚本中通常通过一个ID(或者其它选择器)获取模板的引用并获取它的内容。显然模板含蓄的定义在页面标签中。下面是前面引用的’内嵌’版本的模板：</p>
 <pre><code>&lt;script type=&quot;text/template&quot; id=&quot;item-template&quot;&gt;
       &lt;div class=&quot;todo &lt;%= done ? &#39;done&#39; : &#39;&#39; %&gt;&quot;&gt;
         &lt;div class=&quot;display&quot;&gt;
@@ -4240,8 +4240,8 @@ require([<span class="ch">&#39;views/app&#39;</span>], <span class="kw">function
         &lt;/div&gt;
       &lt;/div&gt;
 &lt;/script&gt;</code></pre>
-<p>Whilst there is nothing wrong with the template itself, once we begin to develop larger applications requiring multiple templates, including them all in our markup on page-load can quickly become both unmanageable and come with performance costs. We’ll look at solving this problem in a minute.</p>
-<p>Let’s now take a look at the AMD-version of our view. As discussed earlier, the <q>module</q> is wrapped using AMD’s <code>define()</code> which allows us to specify the dependencies our view requires. Using the mapped paths to <q>jquery</q> etc. simplifies referencing common dependencies and instances of dependencies are themselves mapped to local variables that we can access (e.g <q>jquery</q> is mapped to <code>$</code>).</p>
+<p>这里模板本身没有问题，一旦我们要开发大应用需要很多模板时，把他们都包含在页面内载入就会变得无法管理和损失性能。需要立马解决掉这个问题。</p>
+<p>现在我们来看下AMD版本的view。正如前面讨论的，<q>module’使用AMD的<code>define()</code>来包裹， 可以指定view引入的依赖项。使用映射路径’jquery’等。简化通用依赖的引用并且依赖项的实例被映射到本地变量(比如’jquery</q><code>$</code>)。</p>
 <p><strong>views/todos.js</strong></p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([
   <span class="ch">&#39;jquery&#39;</span>,
@@ -4289,8 +4289,8 @@ require([<span class="ch">&#39;views/app&#39;</span>], <span class="kw">function
       <span class="kw">this</span>.<span class="fu">input</span>.<span class="fu">val</span>(content);
     },
     ...</code></pre>
-<p>From a maintenance perspective, there’s nothing logically different in this version of our view, except for how we approach templating.</p>
-<p>Using the Require.js text plugin (the dependency marked <code>text</code>), we can actually store all of the contents for the template we looked at earlier in an external file (todos.html).</p>
+<p>从维护的角度来看，这版本的view没有什么逻辑上的不同，除了获取模板的方式之外。</p>
+<p>使用Require.js text插件(依赖项为<code>text</code>)，可以把之前看到的模板保存在外部文件中(todos.html)。</p>
 <p><strong>templates/todos.html</strong></p>
 <pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;todo </span><span class="er">&lt;</span><span class="st">%= done ? &#39;done&#39; : &#39;&#39; %&gt;&quot;</span><span class="kw">&gt;</span>
     <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;display&quot;</span><span class="kw">&gt;</span>
@@ -4302,8 +4302,8 @@ require([<span class="ch">&#39;views/app&#39;</span>], <span class="kw">function
       <span class="kw">&lt;input</span><span class="ot"> class=</span><span class="st">&quot;todo-input&quot;</span><span class="ot"> type=</span><span class="st">&quot;text&quot;</span><span class="ot"> value=</span><span class="st">&quot;&quot;</span> <span class="kw">/&gt;</span>
     <span class="kw">&lt;/div&gt;</span>
 <span class="kw">&lt;/div&gt;</span></code></pre>
-<p>There’s no longer a need to be concerned with IDs for the template as we can map its contents to a local variable (in this case <code>todosTemplate</code>). We then simply pass this to the Underscore.js templating function <code>_.template()</code> the same way we normally would have the value of our template script.</p>
-<p>Next, let’s look at how to define models as dependencies which can be pulled into collections. Here’s an AMD-compatible model module, which has two default values: a <code>content</code> attribute for the content of a Todo item and a boolean <code>done</code> state, allowing us to trigger whether the item has been completed or not.</p>
+<p>这里就没有必要通过IDs来或去模板内容了，模板映射到了一个本地变量上(上面代码中的<code>todosTemplate</code>)。然后传给Underscore.js模板渲染方法<code>_.template()</code>，跟从script模板标签获取之后的处理方式一样。</p>
+<p>接下来，我们看下如何定义models作为依赖项可以被拉进collections。这里有一个AMD兼容的model模块，有2个默认值：一个<code>content</code>属性是Todo item的内容和一个布尔值<code>done</code>，标识这个项是否已完成。</p>
 <p><strong>models/todo.js</strong></p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([<span class="ch">&#39;underscore&#39;</span>, <span class="ch">&#39;backbone&#39;</span>], <span class="kw">function</span>(_, Backbone) {
   <span class="kw">var</span> TodoModel = <span class="kw">Backbone.Model</span>.<span class="fu">extend</span>({
@@ -4332,7 +4332,7 @@ require([<span class="ch">&#39;views/app&#39;</span>], <span class="kw">function
   });
   <span class="kw">return</span> TodoModel;
 });</code></pre>
-<p>As per other types of dependencies, we can easily map our model module to a local variable (in this case <code>Todo</code>) so it can be referenced as the model to use for our <code>TodosCollection</code>. This collection also supports a simple <code>done()</code> filter for narrowing down Todo items that have been completed and a <code>remaining()</code> filter for those that are still outstanding.</p>
+<p>根据其它类型的依赖，我们可以容易的把model模块映射到本地变量(这个例子中是<code>Todo</code>)，这样就可以被作为<code>TodosCollection</code>的model使用。这个collection同样支持简单的<code>done()</code>过滤，筛选出已完成的Todo项，和一个<code>remaining()</code>过滤，筛选出仍在进行的项。</p>
 <p><strong>collections/todos.js</strong></p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([
   <span class="ch">&#39;underscore&#39;</span>,
@@ -4359,41 +4359,32 @@ require([<span class="ch">&#39;views/app&#39;</span>], <span class="kw">function
       <span class="kw">return</span> <span class="kw">this</span>.<span class="fu">without</span>.<span class="fu">apply</span>(<span class="kw">this</span>, <span class="kw">this</span>.<span class="fu">done</span>());
     },
     ...</code></pre>
-<p>In addition to allowing users to add new Todo items from views (which we then insert as models in a collection), we ideally also want to be able to display how many items have been completed and how many are remaining. We’ve already defined filters that can provide us this information in the above collection, so let’s use them in our main application view.</p>
+<p>另外为了让用户在view中添加新的Todo项(作为models插入到collection中)，同时也期望显示有多少条项已完成和待完成。上面那个collection中已经定义了这样的filter，所以可以在主view中使用它们。</p>
 <p><strong>views/app.js</strong></p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript">define([
-  <span class="ch">&#39;jquery&#39;</span>,
-  <span class="ch">&#39;underscore&#39;</span>,
-  <span class="ch">&#39;backbone&#39;</span>,
-  <span class="ch">&#39;collections/todos&#39;</span>,
-  <span class="ch">&#39;views/todos&#39;</span>,
-  <span class="ch">&#39;text!templates/stats.html&#39;</span>
-  ], <span class="kw">function</span>($, _, Backbone, Todos, TodoView, statsTemplate){
+<p>```javascript define([ <q>jquery</q>, <q>underscore</q>, <q>backbone</q>, <q>collections/todos</q>, <q>views/todos</q>, <q>text!templates/stats.html</q> ], function($, _, Backbone, Todos, TodoView, statsTemplate){</p>
+<p>var AppView = Backbone.View.extend({</p>
+<pre><code>// Instead of generating a new element, bind to the existing skeleton of
+// the App already present in the HTML.
+el: $(&quot;#todoapp&quot;),
 
-  <span class="kw">var</span> AppView = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({
+// Our template for the line of statistics at the bottom of the app.
+statsTemplate: _.template(statsTemplate),
 
-    <span class="co">// Instead of generating a new element, bind to the existing skeleton of</span>
-    <span class="co">// the App already present in the HTML.</span>
-    <span class="dt">el</span>: $(<span class="st">&quot;#todoapp&quot;</span>),
+// ...events, initialize() etc. can be seen in the complete file
 
-    <span class="co">// Our template for the line of statistics at the bottom of the app.</span>
-    <span class="dt">statsTemplate</span>: <span class="kw">_</span>.<span class="fu">template</span>(statsTemplate),
-
-    <span class="co">// ...events, initialize() etc. can be seen in the complete file</span>
-
-    <span class="co">// Re-rendering the App just means refreshing the statistics -- the rest</span>
-    <span class="co">// of the app doesn&#39;t change.</span>
-    <span class="dt">render</span>: <span class="kw">function</span>() {
-      <span class="kw">var</span> done = <span class="kw">Todos</span>.<span class="fu">done</span>().<span class="fu">length</span>;
-      <span class="kw">this</span>.$(<span class="ch">&#39;#todo-stats&#39;</span>).<span class="fu">html</span>(<span class="kw">this</span>.<span class="fu">statsTemplate</span>({
-        <span class="dt">total</span>:      <span class="kw">Todos</span>.<span class="fu">length</span>,
-        <span class="dt">done</span>:       <span class="kw">Todos</span>.<span class="fu">done</span>().<span class="fu">length</span>,
-        <span class="dt">remaining</span>:  <span class="kw">Todos</span>.<span class="fu">remaining</span>().<span class="fu">length</span>
-      }));
-    },
-    ...</code></pre>
-<p>Above, we map the second template for this project, <code>templates/stats.html</code> to <code>statsTemplate</code> which is used for rendering the overall <code>done</code> and <code>remaining</code> states. This works by simply passing our template the length of our overall Todos collection (<code>Todos.length</code> - the number of Todo items created so far) and similarly the length (counts) for items that have been completed (<code>Todos.done().length</code>) or are remaining (<code>Todos.remaining().length</code>).</p>
-<p>The contents of our <code>statsTemplate</code> can be seen below. It’s nothing too complicated, but does use ternary conditions to evaluate whether we should state there’s <q>1 item</q> or <q>2 item<i>s</i></q> in a particular state.</p>
+// Re-rendering the App just means refreshing the statistics -- the rest
+// of the app doesn&#39;t change.
+render: function() {
+  var done = Todos.done().length;
+  this.$(&#39;#todo-stats&#39;).html(this.statsTemplate({
+    total:      Todos.length,
+    done:       Todos.done().length,
+    remaining:  Todos.remaining().length
+  }));
+},
+...</code></pre>
+<p>``<code>上面我们使用到了这个项目中的第二个模板，</code>templates/stats.html<code>映射到</code>statsTemplate<code>，用于渲染所有</code>完成<code>和</code>待完成<code>状态。原理就是给模板传入Todos collection的lenth(</code>Todos.length<code>- 已创建的todo项数量) ，已完成的项的数量(</code>Todos.done().length<code>)和待完成项的数量(</code>Todos.remaining().length`)。</p>
+<p><code>statsTemplate</code>模板的内容在下面。没什么复杂，不过这里用了三元表达式来输出是<q>item</q>还是<q>items</q>。</p>
 <pre><code>&lt;% if (total) { %&gt;
         &lt;span class=&quot;todo-count&quot;&gt;
           &lt;span class=&quot;number&quot;&gt;&lt;%= remaining %&gt;&lt;/span&gt;
@@ -4408,13 +4399,13 @@ require([<span class="ch">&#39;views/app&#39;</span>], <span class="kw">function
           &lt;/a&gt;
         &lt;/span&gt;
       &lt;% } %&gt;</code></pre>
-<p>The rest of the source for the Todo app mainly consists of code for handling user and application events, but that rounds up most of the core concepts for this practical.</p>
-<p>To see how everything ties together, feel free to grab the source by cloning this repo or browse it <a href="https://github.com/addyosmani/backbone-fundamentals/tree/master/practicals/modular-todo-app">online</a> to learn more. I hope you find it helpful!.</p>
-<p><strong>Note:</strong> While this first practical doesn’t use a build profile as outlined in the chapter on using the Require.js optimizer, we will be using one in the section on building mobile Backbone applications.</p>
-<h2 id="decoupling-backbone-with-the-mediator-and-facade-patterns"><a href="#TOC"><a name="decouplingbackbone">Decoupling Backbone with the Mediator and Facade patterns</a></a></h2>
-<p>In this section we’ll discuss applying some of the concepts I cover in my article on <a href="http://addyosmani.com/largescalejavascript">Large-scale JavaScript Application development</a> to Backbone.</p>
-<p><em>After, you may be interested in taking a look At <a href="http://github.com/addyosmani/aura">Aura</a> - my popular widget-based Backbone.js extension framework based on many of the concepts we will be covering in this section.</em></p>
-<h3 id="summary"><a href="#TOC">Summary</a></h3>
+<p>Todo app剩下的代码主要是处理用户和应用的事件，不过目前已基本包含了这部分实践的核心概念。</p>
+<p>想分析整个应用如何联合起来可以浏览<a href="https://github.com/addyosmani/backbone-fundamentals/tree/master/practicals/modular-todo-app">代码库</a> 。希望对你有用。</p>
+<p><strong>提示:</strong> 虽然这第一部分实践内容没有使用到build配置文件和Require.js优化器，我们将在构建移动Backbone应用的章节使用到。</p>
+<h2 id="中介者mediator模式和门面facade模式解耦backbone"><a href="#TOC"><a name="decouplingbackbone">中介者(Mediator)模式和门面(Facade)模式解耦Backbone</a></a></h2>
+<p>这一节将会讨论我在<a href="http://addyosmani.com/largescalejavascript">大型JavaScript应用开发</a>这篇文章中讲到的一些概念。</p>
+<p><em>之后，你可能会对<a href="http://github.com/addyosmani/aura">Aura</a>感兴趣—— - 我的一个比较流行的基于widget的 Backbone.js扩展框架，它是基于这章节我们会讲到的一些概念而建立的。</em></p>
+<h3 id="概要"><a href="#TOC">概要</a></h3>
 <p>At a high-level, one architecture that works for such applications is something which is:</p>
 <ul>
 <li><strong>Highly decoupled</strong>: encouraging modules to only publish and subscribe to events of interest rather than directly communicating with each other. This helps us to build applications who’s units of code aren’t highly tied (coupled) together and can thus be reused more easily.</li>

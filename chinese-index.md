@@ -5434,7 +5434,7 @@ main.js文件末尾的`require()`完成载入和实例化应用的主view(`views
 
 ###模块化models, views和collections
 
-Before we dive into AMD-wrapped versions of our Backbone components, let's review a sample of a non-AMD view. The following view listens for changes to its model (a Todo item) and re-renders if a user edits the value of the item.
+在深入探索把Backbone组件包装成AMD之前，我们先来回顾下一个简单的无AMD的view。下面这个view监听里它的mode(一个Todo元素)的变化并且当用户编辑这个项时重新渲染。
 
 ```javascript
 var TodoView = Backbone.View.extend({
@@ -5463,7 +5463,7 @@ var TodoView = Backbone.View.extend({
     ...
 ```
 
-Note how for templating the common practice of referencing a script by an ID (or other selector) and obtaining its value is used. This of course requires that the template being accessed is implicitly defined in our markup. The following is the 'embedded' version of our template being referenced above:
+在脚本中通常通过一个ID(或者其它选择器)获取模板的引用并获取它的内容。显然模板含蓄的定义在页面标签中。下面是前面引用的'内嵌'版本的模板：
 
 ```
 <script type="text/template" id="item-template">
@@ -5480,9 +5480,9 @@ Note how for templating the common practice of referencing a script by an ID (or
 </script>
 ```
 
-Whilst there is nothing wrong with the template itself, once we begin to develop larger applications requiring multiple templates, including them all in our markup on page-load can quickly become both unmanageable and come with performance costs. We'll look at solving this problem in a minute.
+这里模板本身没有问题，一旦我们要开发大应用需要很多模板时，把他们都包含在页面内载入就会变得无法管理和损失性能。需要立马解决掉这个问题。
 
-Let's now take a look at the AMD-version of our view. As discussed earlier, the 'module' is wrapped using AMD's `define()` which allows us to specify the dependencies our view requires. Using the mapped paths to 'jquery' etc. simplifies referencing common dependencies and instances of dependencies are themselves mapped to local variables that we can access (e.g 'jquery' is mapped to `$`).
+现在我们来看下AMD版本的view。正如前面讨论的，'module'使用AMD的`define()`来包裹， 可以指定view引入的依赖项。使用映射路径'jquery'等。简化通用依赖的引用并且依赖项的实例被映射到本地变量(比如'jquery'`$`)。
 
 **views/todos.js**
 
@@ -5535,9 +5535,9 @@ define([
     ...
 ```
 
- From a maintenance perspective, there's nothing logically different in this version of our view, except for how we approach templating.
+从维护的角度来看，这版本的view没有什么逻辑上的不同，除了获取模板的方式之外。
 
-Using the Require.js text plugin (the dependency marked `text`), we can actually store all of the contents for the template we looked at earlier in an external file (todos.html).
+使用Require.js text插件(依赖项为`text`)，可以把之前看到的模板保存在外部文件中(todos.html)。
 
 **templates/todos.html**
 
@@ -5554,9 +5554,9 @@ Using the Require.js text plugin (the dependency marked `text`), we can actually
 </div>
 ```
 
-There's no longer a need to be concerned with IDs for the template as we can map its contents to a local variable (in this case `todosTemplate`). We then simply pass this to the Underscore.js templating function `_.template()` the same way we normally would have the value of our template script.
+这里就没有必要通过IDs来或去模板内容了，模板映射到了一个本地变量上(上面代码中的`todosTemplate`)。然后传给Underscore.js模板渲染方法`_.template()`，跟从script模板标签获取之后的处理方式一样。
 
-Next, let's look at how to define models as dependencies which can be pulled into collections. Here's an AMD-compatible model module, which has two default values: a `content` attribute for the content of a Todo item and a boolean `done` state, allowing us to trigger whether the item has been completed or not.
+接下来，我们看下如何定义models作为依赖项可以被拉进collections。这里有一个AMD兼容的model模块，有2个默认值：一个`content`属性是Todo item的内容和一个布尔值`done`，标识这个项是否已完成。
 
 **models/todo.js**
 
@@ -5590,7 +5590,7 @@ define(['underscore', 'backbone'], function(_, Backbone) {
 });
 ```
 
-As per other types of dependencies, we can easily map our model module to a local variable (in this case `Todo`) so it can be referenced as the model to use for our `TodosCollection`. This collection also supports a simple `done()` filter for narrowing down Todo items that have been completed and a `remaining()` filter for those that are still outstanding.
+根据其它类型的依赖，我们可以容易的把model模块映射到本地变量(这个例子中是`Todo`)，这样就可以被作为`TodosCollection`的model使用。这个collection同样支持简单的`done()`过滤，筛选出已完成的Todo项，和一个`remaining()`过滤，筛选出仍在进行的项。
 
 **collections/todos.js**
 

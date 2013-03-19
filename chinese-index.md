@@ -5295,60 +5295,58 @@ function (Branding,          Section) {
 
 #### 组织模块代码时的常见陷阱
 
-Be careful not define circular dependencies. For example, in a common *models* package (models.js) dependencies are listed for the files in your models directory
-
+小心不要定义循环依赖。举个例子，一个公共*models*包(models.js)依赖项中列举了models目录下的文件
     define([ "models/branding", "models/section" ], function (branding, section)
     // ...
     return { "branding" : branding, "section", section }
 
-Then when another packages requires a common model you can access the models objects returned from your common models.js file like so...
-
+然后另外的包引入了一个公用的model，可以像下面这样访问models.js返回的modes对象。
     define([ "models", "utils" ], function (models, utils) {
     var branding = models.branding, debug = utils.debug;
 
-Perhaps after using the model a few times you get into the habit of requiring "model". Later you need add another common model with extends a model you already defined. So the pitfall begins, you add a new model inside your models directory and add a reference this same model in the model.js:
+可能使用这种方式引入"model"一段时间之后就形成了习惯。然后你需要添加一个公用model,这个model继承自一个已定义的model。 然后陷阱就出现了，你会添加一个新的model到models目录下并且在model.js里添加引用：
 
     define([ "models/branding", "models/section", "models/section-b" ], function (branding, section)
     // ...
     return { "branding" : branding, "section", section, "section-b" : section-b }
 
-However in your *models/section-b.js* file you define a dependency using the model.js which returns the models in an object like so...
+然而，*models/section-b.js*文件里你定义了一个对model.js的依赖...
 
     define([ "models" ], function (models, utils) {
     var section = models.section;
 
-Above is the mistake in models.js a dependency was added for models/section-b and in section-b a dependency is defined for model. The new models/section-b.js requires *model* and model.js requires *models/section-b.js* - a circular dependency. This should result in a load timeout error from require.js, but not tell you about the circular dependency.
+上面这个错误就是在models.js的依赖项中添加了models/section-b，而section-b的定义中又有对model.js的依赖。这样就形成了循环依赖。会导致require.js加载超时的错误，但不会告诉你有循环依赖。
 
-For other common mistakes see the [COMMON ERRORS](http://requirejs.org/docs/errors.html "RequireJS common errors page") page on the Require.js site.
+其它常见错误可以参考Require.js站点的[COMMON ERRORS](http://requirejs.org/docs/errors.html "RequireJS common errors page")页面。
 
-#### Executing the Build with r.js
+#### 使用r.js执行构建
 
-If you intalled r.js with Node's npm (package manager) like so...
+如果已经通过Node的npm安装过r.js...
 
     > npm install requirejs
 
-...you can execute the build on the command line:
+就可以执行build了：
 
     > r.js -o app.build.js
 
 
-##<a name="practicalrequirejs">Practical: Building a modular Backbone app with AMD & Require.js</a>
+##<a name="practicalrequirejs">实践：使用AMD和Require.js构建模块化的Backbone app</a>
 
-In this chapter, we'll look at our first practical Backbone & Require.js project - how to build a modular Todo application. The application will allow us to add new todos, edit new todos and clear todo items that have been marked as completed. For a more advanced practical, see the section on mobile Backbone development.
+在这一章中，将实践一下我们第一个Backbone和Require.js项目——如何构建一个模块化的Todo应用。这个应用可以添加todos,编辑todo项和清除已标记完成的todo项。更高级的实践，可以参考移动Backbone开发的部分。
 
-The complete code for the application can can be found in the `practicals/modular-todo-app` folder of this repo (thanks to Thomas Davis and J&eacute;r&ocirc;me Gravel-Niquet). Alternatively grab a copy of my side-project [TodoMVC](https://github.com/addyosmani/todomvc) which contains the sources to both AMD and non-AMD versions.
+完整代码在仓库的`practicals/modular-todo-app`目录下(感谢Thomas Davis和J&eacute;r&ocirc;me Gravel-Niquet)。另外我的一个业余项目[TodoMVC](https://github.com/addyosmani/todomvc)包含了AMD和非AMD版本的源代码。
 
-**Note:** Thomas may be covering a practical on this exercise in more detail on [backbonetutorials.com](http://backbonetutorials.com) at some point soon, but for this section I'll be covering what I consider the core concepts.
+**提示:** Thomas可能在某些方面讲述了更详细的实践经验[backbonetutorials.com](http://backbonetutorials.com)，但是这一章节我会讲到我认为是和核心的概念。
 
-###Overview
+###概览
 
-Writing a 'modular' Backbone application can be a straight-forward process. There are however, some key conceptual differences to be aware of if opting to use AMD as your module format of choice:
+编写'模块化'Backbone应用时一个简单的过程。但是，如果选择AMD作为模块格式的话需要注意一些关键概念上的差异：
 
-* As AMD isn't a standard native to JavaScript or the browser, it's necessary to use a script loader (such as Require.js or curl.js) in order to support defining components and modules using this module format. As we've already reviewed, there are a number of advantages to using the AMD as well as Require.js to assist here.
-* Models, views, controllers and routers need to be encapsulated *using* the AMD-format. This allows each component of our Backbone application to cleanly manage dependencies (e.g collections required by a view) in the same way that AMD allows non-Backbone modules to.
-* Non-Backbone components/modules (such as utilities or application helpers) can also be encapsulated using AMD. I encourage you to try developing these modules in such a way that they can both be used and tested independent of your Backbone code as this will increase their ability to be re-used elsewhere.
+* 因为AMD不是JavaScript或者浏览器的原生标准，它需要使用脚本加载器(比如Require.js或者curl.js)来支持这种格式的组件和模块的定义。正如我们所看到的，使用AMD和Require.js的同时协助会有那么多的好处。
+* Models, views, controllers和routers需要被包装成AMD格式。这样可以在Backbone应用中每个组件都清晰的管理依赖关系 (比如collections被一个view引入)，跟AMD的非Backbone模块一样。
+* 非Backbone组件/模块(比如utilities或者helpers)同样也可以包装成AMD方式。鼓励尝试开发这些模块时可以被独立使用和测试，不依赖于Backbone代码， 这样可以增加它们的复用性。
 
-Now that we've reviewed the basics, let's take a look at developing our application. For reference, the structure of our app is as follows:
+我们回顾了下基本概念，现在我们开始开发这个应用。下面是这个app的结构，作为参考：
 
 ```
 index.html
@@ -5374,9 +5372,9 @@ index.html
 ...css/
 ```
 
-###Markup
+###页面标签
 
-The markup for the application is relatively simple and consists of three primary parts: an input section for entering new todo items (`create-todo`), a list section to display existing items (which can also be edited in-place) (`todo-list`) and finally a section summarizing how many items are left to be completed (`todo-stats`).
+这个应用的页面标签非常的简单，分为三个主要部分：一个input输入部分用于创建新的todo(`create-todo`)，一个列表部分展示所有存在的项(也可以就地编辑) (`todo-list`)和一个概括信息部分显示有多少条项待完成(`todo-stats`)。
 
 ```
 <div id="todoapp">
@@ -5399,15 +5397,15 @@ The markup for the application is relatively simple and consists of three primar
 </div>
 ```
 
-The rest of the tutorial will now focus on the JavaScript side of the practical.
+教程的后面部分将重点聚焦在JavaScript实践上。
 
-###Configuration options
+###配置选项
 
-If you've read the earlier chapter on AMD, you may have noticed that explicitly needing to define each dependency a Backbone module (view, collection or other module) may require with it can get a little tedious. This can however be improved.
+如果你已经看过前面关于AMD的章节，就会注意到需要明确定义Backbone模块(view, collection或其它模块)的每个依赖项有点冗长。不过这点可以优化。
 
-In order to simplify referencing common paths the modules in our application may use, we use a Require.js [configuration object](http://requirejs.org/docs/api.html#config), which is typically defined as a top-level script file. Configuration objects have a number of useful capabilities, the most useful being mode name-mapping. Name-maps are basically a key:value pair, where the key defines the alias you wish to use for a path and the value represents the true location of the path.
+为了简化应用中可能会引用到的通用路径，我们可以使用Require.js [配置对象](http://requirejs.org/docs/api.html#config)，它通常定义在一个顶级脚本文件中。配置对象有很多有用的功能，最实用是名称映射。命名map是一个基本的key:value值对，key是要用到的路径的别名，value则是真是的路径。
 
-In the code-sample below, you can see some typical examples of common name-maps which include: `backbone`, `underscore`, `jquery` and depending on your choice, the RequireJS `text` plugin, which assists with loading text assets like templates.
+下面这段代码中，你会看到一些典型的常用命名映射表的例子：`backbone`，`underscore`，`jquery`，RequireJS `text`插件。
 
 **main.js**
 
@@ -5427,14 +5425,14 @@ require(['views/app'], function(AppView){
 });
 ```
 
-The `require()` at the end of our main.js file is simply there so we can load and instantiate the primary view for our application (`views/app.js`). You'll commonly see both this and the configuration object included in most top-level script files for a project.
+main.js文件末尾的`require()`完成载入和实例化应用的主view(`views/app.js`)。通常会看到它和配置对象包含在一个项目的顶级脚本文件中。
 
-In addition to offering name-mapping, the configuration object can be used to define additional properties such as `waitSeconds` - the number of seconds to wait before script loading times out and `locale`, should you wish to load up i18n bundles for custom languages. The `baseUrl` is simply the path to use for module lookups.
+除了提供命名映射之外，配置对象还可以用于定义其它属性，比如`waitSeconds`——脚本加载的超时时间，`时区(locale)`, 如果你想加载i18n自定义语言包的话。`baseUrl`用于检索模块的路径。
 
-For more information on configuration objects, please feel free to check out the excellent guide to them in the [RequireJS docs](http://requirejs.org/docs/api.html#config).
+更多关于配置对象的信息可以大胆免费的阅读[RequireJS docs](http://requirejs.org/docs/api.html#config)。
 
 
-###Modularizing our models, views and collections
+###模块化models, views和collections
 
 Before we dive into AMD-wrapped versions of our Backbone components, let's review a sample of a non-AMD view. The following view listens for changes to its model (a Todo item) and re-renders if a user edits the value of the item.
 

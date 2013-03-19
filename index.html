@@ -203,9 +203,9 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#构建以包来组织代码优化模块依赖的配置文件">构建以包来组织代码优化模块依赖的配置文件</a></li>
 <li><a href="#代码规范的简短说明">代码规范的简短说明</a></li>
 <li><a href="#组织模块代码时的常见陷阱">组织模块代码时的常见陷阱</a></li>
-<li><a href="#executing-the-build-with-r.js">Executing the Build with r.js</a></li>
+<li><a href="#使用r.js执行构建">使用r.js执行构建</a></li>
 </ul></li>
-<li><a href="#practical-building-a-modular-backbone-app-with-amd-require.js"><a name="practicalrequirejs">Practical: Building a modular Backbone app with AMD &amp; Require.js</a></a><ul>
+<li><a href="#实践使用amd和require.js构建模块化的backbone-app"><a name="practicalrequirejs">实践：使用AMD和Require.js构建模块化的Backbone app</a></a><ul>
 <li><a href="#overview">Overview</a></li>
 <li><a href="#markup">Markup</a></li>
 <li><a href="#configuration-options">Configuration options</a></li>
@@ -4110,28 +4110,23 @@ define([ <span class="st">&quot;models/branding&quot;</span>, <span class="st">&
 <p>注意上面的例子中参数可能是大写或者小写字母开头。参数变量中<em>大写</em>开头的是<em>构造器(Constructors)</em>，<em>小写</em>开头的变量则可能是构造器创建的一个实例，或者一个不能<em>new</em>的object或function。</p>
 <p>推荐约定是构造器使用首字母大写的驼峰式命名(CamelCase)，其它用首字母小写的驼峰式命名(camelCase)。</p>
 <h4 id="组织模块代码时的常见陷阱"><a href="#TOC">组织模块代码时的常见陷阱</a></h4>
-<p>Be careful not define circular dependencies. For example, in a common <em>models</em> package (models.js) dependencies are listed for the files in your models directory</p>
-<pre><code>define([ &quot;models/branding&quot;, &quot;models/section&quot; ], function (branding, section)
-// ...
-return { &quot;branding&quot; : branding, &quot;section&quot;, section }</code></pre>
-<p>Then when another packages requires a common model you can access the models objects returned from your common models.js file like so…</p>
-<pre><code>define([ &quot;models&quot;, &quot;utils&quot; ], function (models, utils) {
-var branding = models.branding, debug = utils.debug;</code></pre>
-<p>Perhaps after using the model a few times you get into the habit of requiring <q>model</q>. Later you need add another common model with extends a model you already defined. So the pitfall begins, you add a new model inside your models directory and add a reference this same model in the model.js:</p>
+<p>小心不要定义循环依赖。举个例子，一个公共<em>models</em>包(models.js)依赖项中列举了models目录下的文件 define([ <q>models/branding</q>, <q>models/section</q> ], function (branding, section) // … return { <q>branding</q> : branding, <q>section</q>, section }</p>
+<p>然后另外的包引入了一个公用的model，可以像下面这样访问models.js返回的modes对象。 define([ <q>models</q>, <q>utils</q> ], function (models, utils) { var branding = models.branding, debug = utils.debug;</p>
+<p>可能使用这种方式引入<q>model</q>一段时间之后就形成了习惯。然后你需要添加一个公用model,这个model继承自一个已定义的model。 然后陷阱就出现了，你会添加一个新的model到models目录下并且在model.js里添加引用：</p>
 <pre><code>define([ &quot;models/branding&quot;, &quot;models/section&quot;, &quot;models/section-b&quot; ], function (branding, section)
 // ...
 return { &quot;branding&quot; : branding, &quot;section&quot;, section, &quot;section-b&quot; : section-b }</code></pre>
-<p>However in your <em>models/section-b.js</em> file you define a dependency using the model.js which returns the models in an object like so…</p>
+<p>然而，<em>models/section-b.js</em>文件里你定义了一个对model.js的依赖…</p>
 <pre><code>define([ &quot;models&quot; ], function (models, utils) {
 var section = models.section;</code></pre>
-<p>Above is the mistake in models.js a dependency was added for models/section-b and in section-b a dependency is defined for model. The new models/section-b.js requires <em>model</em> and model.js requires <em>models/section-b.js</em> - a circular dependency. This should result in a load timeout error from require.js, but not tell you about the circular dependency.</p>
-<p>For other common mistakes see the <a href="http://requirejs.org/docs/errors.html" title="RequireJS common errors page">COMMON ERRORS</a> page on the Require.js site.</p>
-<h4 id="executing-the-build-with-r.js"><a href="#TOC">Executing the Build with r.js</a></h4>
-<p>If you intalled r.js with Node’s npm (package manager) like so…</p>
+<p>上面这个错误就是在models.js的依赖项中添加了models/section-b，而section-b的定义中又有对model.js的依赖。这样就形成了循环依赖。会导致require.js加载超时的错误，但不会告诉你有循环依赖。</p>
+<p>其它常见错误可以参考Require.js站点的<a href="http://requirejs.org/docs/errors.html" title="RequireJS common errors page">COMMON ERRORS</a>页面。</p>
+<h4 id="使用r.js执行构建"><a href="#TOC">使用r.js执行构建</a></h4>
+<p>如果已经通过Node的npm安装过r.js…</p>
 <pre><code>&gt; npm install requirejs</code></pre>
-<p>…you can execute the build on the command line:</p>
+<p>就可以执行build了：</p>
 <pre><code>&gt; r.js -o app.build.js</code></pre>
-<h2 id="practical-building-a-modular-backbone-app-with-amd-require.js"><a href="#TOC"><a name="practicalrequirejs">Practical: Building a modular Backbone app with AMD &amp; Require.js</a></a></h2>
+<h2 id="实践使用amd和require.js构建模块化的backbone-app"><a href="#TOC"><a name="practicalrequirejs">实践：使用AMD和Require.js构建模块化的Backbone app</a></a></h2>
 <p>In this chapter, we’ll look at our first practical Backbone &amp; Require.js project - how to build a modular Todo application. The application will allow us to add new todos, edit new todos and clear todo items that have been marked as completed. For a more advanced practical, see the section on mobile Backbone development.</p>
 <p>The complete code for the application can can be found in the <code>practicals/modular-todo-app</code> folder of this repo (thanks to Thomas Davis and Jérôme Gravel-Niquet). Alternatively grab a copy of my side-project <a href="https://github.com/addyosmani/todomvc">TodoMVC</a> which contains the sources to both AMD and non-AMD versions.</p>
 <p><strong>Note:</strong> Thomas may be covering a practical on this exercise in more detail on <a href="http://backbonetutorials.com">backbonetutorials.com</a> at some point soon, but for this section I’ll be covering what I consider the core concepts.</p>

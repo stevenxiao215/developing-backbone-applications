@@ -5712,25 +5712,25 @@ Todo app剩下的代码主要是处理用户和应用的事件，不过目前已
 
 它们在这种架构中对应的角色是：
 
-* **模块**: There are almost two concepts of what defines a module. As AMD is being used as a module wrapper, technically each model, view and collection can be considered a module. We then have the concept of modules being distinct blocks of code outside of just MVC/MV*. For the latter, these types of 'modules' are primarily concerned with broadcasting and subscribing to events of interest rather than directly communicating with each other.They are made possible through the Mediator pattern.
-* **中介者**: The mediator has a varying role depending on just how you wish to implement it. In my article, I mention using it as a module manager with the ability to start and stop modules at will, however when it comes to Backbone, I feel that simplifying it down to the role of a central 'controller' that provides pub/sub capabilities should suffice. One can of course go all out in terms of building a module system that supports module starting, stopping, pausing etc, however the scope of this is outside of this chapter.
-* **门面**: This acts as a secure middle-layer that both abstracts an application core (Mediator) and relays messages from the modules back to the Mediator so they don't touch it directly. The Facade also performs the duty of application security guard; it checks event notifications from modules against a configuration (permissions.js, which we will look at later) to ensure requests from modules are only processed if they are permitted to execute the behavior passed.
+* **模块**: 模块定义基本上有2个概念。由AMD作为模块包装器，从技术角度来讲，每个model，view和collection都可以认为是一个模块。然而我们模块的概念是不仅限于MVC/MV*的代码块。后面，这种'模块'主要与广播和订阅感兴趣的事件而不是相互之间直接通讯相关。它们可能通过中介者模式实现。
+* **中介者**: 中介者会有不同的角色，这要看你怎么期望如何去实现它。在我写的文章上中，我提到用它作为模块管理，它具有开启和停止模块的能力，不过使用Backbone之后，我认为它可以简化降级为中央'控制器(controller)'的角色，提供发布/订阅(pub/sub) 的能力就够了。当然我们可以全力以赴构建一个模块系统支持模块的启动，停止，暂停等等，不过这已超出这章的范围。
+* **门面**: 这个扮演的是安全的中间层，提取应用的核心(中介者，Mediator)并且把从模块过来的消息回传给中介者，这样他们就不用直接接触了。门面同样执行应用的安全保障；它要根据配置(permissions.js, 后面我们会提到)检查模块的事件通知，确保来自模块的请求传入的行为是允许执行的。
 
 
 ### 实践
 
-For the practical section of this chapter, we'll be extending the well-known Backbone Todo application using the three patterns mentioned above.
+作为这章的实践部分，我们将使用前面提到的这3中模式扩展Backbone Todo应用。
 
-The application is broken down into AMD modules that cover everything from Backbone models through to application-level modules. The views publish events of interest to the rest of the application and modules can then subscribe to these event notifications.
+这个应用被分解成了AMD模块，把Backbone模块都转换成应用级的模块。view给其它部分发布感兴趣的事件，模块可以订阅这些事件通知。
 
-All subscriptions from modules go through a facade (or sandbox). What this does is check against the subscriber name and the 'channel/notification' it's attempting to subscribe to. If a channel *doesn't* have permissions to be subscribed to (something established through permissions.js), the subscription isn't permitted.
+模块的所有订阅都通过一个门面(或者沙箱)。检查订阅者的名称和它尝试订阅的'通道/通知(channel/notification)'。如果一个通道没有被许可订阅(通过permissions.js确定), 那么这个订阅就被禁止。
 
 
-**Mediator**
+**中介者**
 
-Found in `aura/mediator.js`
+代码在`aura/mediator.js`
 
-Below is a very simple AMD-wrapped implementation of the mediator pattern, based on prior work by Ryan Florence. It accepts as its input an object, to which it attaches `publish()` and `subscribe()` methods. In a larger application, the mediator can contain additional utilities, such as handlers for initializing, starting and stopping modules, but for demonstration purposes, these two methods should work fine for our needs.
+下面是一个非常简单的额AMD包装的中介者模式实现，基于Ryan Florence之前的工作。他接受传入一个object，给它附加`publish()`和`subscribe()`方法。在一个大的应用中，中介者可能包含其它工具库，比如初始化处理器，启动和停止模块。为作示例，下面2个方法可以作为很好的说明。
 
 ```javascript
 define([], function(obj){
@@ -5757,11 +5757,11 @@ define([], function(obj){
 ```
 
 
-**Facade**
+**门面**
 
-Found in `aura/facade.js`
+代码在`aura/facade.js`
 
-Next, we have an implementation of the facade pattern. Now the classical facade pattern applied to JavaScript would probably look a little like this:
+下面看下门面模式的实现。传统门面模式在JavaScript可能会向下面这样：
 
 ```javascript
 
@@ -5796,11 +5796,11 @@ module.facade({run: true, val:10});
 //outputs current value: 10, running
 ```
 
-It's effectively a variation of the module pattern, where instead of simply returning an interface of supported methods, your API can completely hide the true implementation powering it, returning something simpler. This allows the logic being performed in the background to be as complex as necessary, whilst all the end-user experiences is a simplified API they pass options to (note how in our case, a single method abstraction is exposed). This is a beautiful way of providing APIs that can be easily consumed.
+它实际上市模块模式的一种变体，API可以完全影藏其真实实现，返回更简洁，而不是简单的返回一个支持方法的接口。把尽可能复杂的逻辑影藏在背后，给用户端的是体验始终是简单的API，他们只需要传入选项即可(注意我们的例子中是如何只返回一个抽象出来的方法)。这是一种提供简单接口调用的很好的方式。
 
-That said, to keep things simple, our implementation of an AMD-compatible facade will act a little more like a proxy. Modules will communicate directly through the facade to access the mediator's `publish()` and `subscribe()` methods, however, they won't as such touch the mediator directly.This enables the facade to provide application-level validation of any subscriptions and publications made.
+也就是说，为了保持简单，我们AMD兼容的门面实现将有点像一个代理。模块将直接通过门面来访问中介者的`publish()`和`subscribe()`方法，不管怎么样，他们不会这么直接与中介者接触。这样门面可以提供应用级的对订阅和通知的校验。
 
-It also allows us to implement a simple, but flexible, permissions checker (as seen below) which will validate subscriptions made against a permissions configuration to see whether it's permitted or not.
+我们也可以实现一个简单，但是灵活的权限检查器(如下所示)，对应权限配置验证订阅是否被允许。
 
 
 ```javascript
@@ -5827,9 +5827,9 @@ define([ "../aura/mediator" , "../aura/permissions" ], function (mediator, permi
 });
 ```
 
-**Permissions**
+**权限**
 
-Found in `aura/permissions.js`
+代码在`aura/permissions.js`
 
 In our simple permissions configuration, we support checking against subscription requests to establish whether they are allowed to clear. This enforces a flexible security layer for the application.
 

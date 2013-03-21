@@ -5831,11 +5831,11 @@ define([ "../aura/mediator" , "../aura/permissions" ], function (mediator, permi
 
 代码在`aura/permissions.js`
 
-In our simple permissions configuration, we support checking against subscription requests to establish whether they are allowed to clear. This enforces a flexible security layer for the application.
+在我们的权限配置中，支持检查订阅请求，确定他们是否允许清除。给应用强制加了一个灵活的安全层。
 
-To visually see how this works, consider changing say, permissions -> renderDone -> todoCounter to be false. This will completely disable the application from from rendering or displaying the counts component for Todo items left (because they aren't allowed to subscribe to that event notification). The rest of the Todo app can still however be used without issue.
+为了形象的了解其工作原理，考虑改变下说法，许可->渲染完成->todo计数器为false。这将完全禁止应用渲染或者显示对左边todo项计数的组件(因为他们不允许订阅那个事件通知)。其它部分可以正常运行。
 
-It's a very dumbed down example of the potential for application security, but imagine how powerful this might be in a large app with a significant number of visual widgets.
+下面是一个简化的示例，但可以想象一下在一个庞大的app中其强大的能力。
 
 ```javascript
 define([], function () {
@@ -5895,19 +5895,19 @@ define([], function () {
 
 
 
-**Subscribers**
+**订阅者**
 
-Found in `subscribers.js`
+代码在`subscribers.js`
 
-Subscriber 'modules' communicate through the facade back to the mediator and perform actions when a notification event of a particular name is published.
+订阅者'模块'通过门面与中介者通讯，并且当指定的事件发布通知时执行相应的操作。
 
-For example, when a user enters in a new piece of text for a Todo item and hits 'enter' the application publishes a notification saying two things: a) a new Todo item is available and b) the text content of the new item is X. It's then left up to the rest of the application to do with this information whatever it wishes.
+比如，当一个用户输入一项todo内容并'回车'时，应用发布一个消息通知告诉2件事：a) 有一项新的todo项可用了，b) 新的项目文本内容是X。然后就是让其它部分做任何想做的事情了。
 
-In order to update your Backbone application to primarily use pub/sub, a lot of the work you may end up doing will be moving logic coupled inside of specific views to modules outside of it which are reactionary.
+要把Backbone应用升级为以使用发布/订阅(pub/sub)为主，你最终可能会做一些工作，把与特定view相关的逻辑转移到外围的模块。
 
-Take the `todoSaver` for example - its responsibility is saving new Todo items to models once the a `notificationName` called 'newContentAvailable' has fired. If you take a look at the permissions structure in the last code sample, you'll notice that 'newContentAvailable' is present there. If I wanted to prevent subscribers from being able to subscribe to this notification, I simply set it to a boolean value of `false`.
+以`todoSaver`为例—— 它的职责是一旦'notificationName'调用'newContentAvailable'被处罚则保存新的todo到model。'newContentAvailable'在上一个例子权限结构中可以找到。如果我想阻止订阅者订阅这个消息通知，只要把它设为flase就可以了。
 
-Again, this is a massive oversimplification of how advanced your permissions structures could get, but it's certainly one way of controlling what parts of your application can or can't be accessed by specific modules at any time.
+此外，这是一个极其简化的获取权限结构的方式，但是无论在什么时候都能有效的控制应用的某些部分是否可以被指定的模块访问。
 
 ```javascript
 define(["jquery", "underscore", "aura/facade"],
@@ -6010,10 +6010,10 @@ function ($, _, facade) {
 });
 ```
 
-That's it for this section. If you've been intrigued by some of the concepts covered, I encourage you to consider taking a look at my [slides](http://addyosmani.com/blog/large-scale-javascript-application-architecture/) on Large-scale JS from the jQuery Summit or my longer post on the topic [here](http://addyosmani.com/largescalejavascript) for more information.
+以上就是这个小节，如果你对上面的一些概念感兴趣可以看下我在Jquery首脑会议上有关大规模js应用的[幻灯片](http://addyosmani.com/blog/large-scale-javascript-application-architecture/)， 或者更早的[文章](http://addyosmani.com/largescalejavascript)。
 
 
-##<a name="pagination">Paginating Backbone.js Requests & Collections</a>
+##<a name="pagination">分页Backbone.js请求和Collections</a>
 
 Pagination is a ubiquitous problem we often find ourselves needing to solve on the web. Perhaps most predominantly when working with back-end APIs and JavaScript-heavy clients which consume them.
 

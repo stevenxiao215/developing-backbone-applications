@@ -213,28 +213,28 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul></li>
 <li><a href="#中介者mediator模式和门面facade模式解耦backbone"><a name="decouplingbackbone">中介者(Mediator)模式和门面(Facade)模式解耦Backbone</a></a><ul>
 <li><a href="#概要">概要</a></li>
-<li><a href="#practical">Practical</a></li>
+<li><a href="#实践-2">实践</a></li>
 </ul></li>
-<li><a href="#paginating-backbone.js-requests-collections"><a name="pagination">Paginating Backbone.js Requests &amp; Collections</a></a></li>
-<li><a href="#paginators-pieces">Paginator’s pieces</a></li>
-<li><a href="#live-examples">Live Examples</a></li>
+<li><a href="#分页backbone.js请求和collections"><a name="pagination">分页Backbone.js请求和Collections</a></a></li>
+<li><a href="#分页器组成">分页器组成</a></li>
+<li><a href="#在线例子">在线例子</a></li>
 <li><a href="#paginator.requestpager">Paginator.requestPager</a><ul>
-<li><a href="#create-a-new-paginated-collection">1. Create a new Paginated collection</a></li>
-<li><a href="#configure-how-the-library-will-show-the-results">4. Configure how the library will show the results</a></li>
-<li><a href="#configure-the-parameters-we-want-to-send-to-the-server">5. Configure the parameters we want to send to the server</a></li>
-<li><a href="#finally-configure-collection.parse-and-were-done">6. Finally, configure Collection.parse() and we’re done</a></li>
-<li><a href="#convenience-methods">Convenience methods:</a></li>
+<li><a href="#创建一个新的分页collection">1. 创建一个新的分页collection</a></li>
+<li><a href="#配置库如何显示结果">4. 配置库如何显示结果</a></li>
+<li><a href="#配置服务器请求的参数">5. 配置服务器请求的参数</a></li>
+<li><a href="#最后配置collection.parse">6. 最后，配置Collection.parse()</a></li>
+<li><a href="#便利方法">便利方法：</a></li>
 </ul></li>
 <li><a href="#paginator.clientpager">Paginator.clientPager</a><ul>
-<li><a href="#create-a-new-paginated-collection-with-a-model-and-url">1. Create a new paginated collection with a model and URL</a></li>
-<li><a href="#configure-the-base-url-and-the-type-of-the-request">2. Configure the base URL and the type of the request</a></li>
-<li><a href="#configure-how-the-library-will-show-the-results-1">3. Configure how the library will show the results</a></li>
-<li><a href="#configure-the-parameters-we-want-to-send-to-the-server-1">4. Configure the parameters we want to send to the server</a></li>
-<li><a href="#finally-configure-collection.parse-and-were-done-1">5. Finally, configure Collection.parse() and we’re done</a></li>
-<li><a href="#convenience-methods-1">Convenience methods:</a></li>
-<li><a href="#implementation-notes">Implementation notes:</a></li>
+<li><a href="#根据model和url创建一个分页collection">1. 根据model和URL创建一个分页collection</a></li>
+<li><a href="#配置base-url和请求的类型">2. 配置base URL和请求的类型</a></li>
+<li><a href="#配置如何显示结果">3. 配置如何显示结果</a></li>
+<li><a href="#配置传递给服务器的参数">4. 配置传递给服务器的参数</a></li>
+<li><a href="#最后配置collection.parse-1">5. 最后配置Collection.parse()</a></li>
+<li><a href="#便捷方法">便捷方法：</a></li>
+<li><a href="#实现提示">实现提示：</a></li>
 </ul></li>
-<li><a href="#plugins">Plugins</a></li>
+<li><a href="#插件">插件</a></li>
 <li><a href="#backbone-jquery-mobile">Backbone &amp; jQuery Mobile</a><ul>
 <li><a href="#resolving-the-routing-conflicts">Resolving the routing conflicts</a></li>
 <li><a href="#practical-a-backbone-require.jsamd-app-with-jquery-mobile">Practical: A Backbone, Require.js/AMD app with jQuery Mobile</a></li>
@@ -305,7 +305,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#mocks">Mocks</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#practical-1">Practical</a><ul>
+<li><a href="#practical">Practical</a><ul>
 <li><a href="#models-1">Models</a></li>
 <li><a href="#collections-2">Collections</a></li>
 <li><a href="#views-2">Views</a></li>
@@ -4406,32 +4406,32 @@ render: function() {
 <p>这一节将会讨论我在<a href="http://addyosmani.com/largescalejavascript">大型JavaScript应用开发</a>这篇文章中讲到的一些概念。</p>
 <p><em>之后，你可能会对<a href="http://github.com/addyosmani/aura">Aura</a>感兴趣—— - 我的一个比较流行的基于widget的 Backbone.js扩展框架，它是基于这章节我们会讲到的一些概念而建立的。</em></p>
 <h3 id="概要"><a href="#TOC">概要</a></h3>
-<p>At a high-level, one architecture that works for such applications is something which is:</p>
+<p>站在一个高角度来看，一个应用的架构应该是这样：</p>
 <ul>
-<li><strong>Highly decoupled</strong>: encouraging modules to only publish and subscribe to events of interest rather than directly communicating with each other. This helps us to build applications who’s units of code aren’t highly tied (coupled) together and can thus be reused more easily.</li>
-<li><strong>Supports module-level security</strong>: whereby modules are only able to execute behavior they’ve been permitted to. Application security is an area which is often overlooked in JavaScript applications, but can be quite easily implemented in a flexible manner.</li>
-<li><strong>Supports failover</strong>: allowing an application continuing to function even if particular modules fail. The typical example I give of this is the GMail chat widget. Imagine being able to build applications in a way that if one widget on the page fails (e.g chat), the rest of your application (mail) can continue to function without being affected.</li>
+<li><strong>高度解耦</strong>: 鼓励模块仅公开和订阅感兴趣的事件而不是直接互相通讯。这有利于构建出来的应用每个单元的代码都不会高度的粘连在一起(解耦)，并且更容易重用。</li>
+<li><strong>支持模块级的安全性</strong>: 凭借什么模块只能执行它们被允许的行为。在Javascript应用中应用安全是一块经常被忽略的区域，但是可以非常容易通过灵活的方式实现。</li>
+<li><strong>支持故障转移</strong>: 当某些部分模块失效时应用还可以平坦地运行。典型的例子就是GMail聊天部件。想象一下可以有一种方式构建应用，当页面中某个部件失败时(比如chat)，应用(mail)的剩余部分还可以继续运行不受影响。</li>
 </ul>
-<p>This is an architecture which has been implemented by a number of different companies in the past, including Yahoo! (for their modularized homepage - which Nicholas Zakas has <a href="http://www.youtube.com/watch?v=vXjVFPosQHw">spoken</a> about) and AOL for some of our upcoming projects.</p>
-<p>The three design patterns that make this architecture possible are the:</p>
+<p>这中架构在过去已经被很多公司所应用，包括Yahoo! (他们模块化的首页——Nicholas Zakas有相关的<a href="http://www.youtube.com/watch?v=vXjVFPosQHw">谈论</a>) 和AOL应用到一些我们即将推出的项目。</p>
+<p>需要三种设计模式可以实现这种架构：</p>
 <ul>
-<li><strong>Module pattern</strong>: used for encapsulating unique blocks of code, where functions and variables can be kept either public or private. (<q>private</q> in the simulation of privacy sense, as of course don’t have true privacy in JavaScript)</li>
-<li><strong>Mediator pattern</strong>: used when the communication between modules may be complex, but is still well defined. If it appears a system may have too many relationships between modules in your code, it may be time to have a central point of control, which is where the pattern fits in.</li>
-<li><strong>Facade pattern</strong>: used for providing a convenient higher-level interface to a larger body of code, hiding its true underlying complexity</li>
+<li><strong>模块模式</strong>: 用于封装第一无二的代码块，function和变量可以为公开或者私有。(’私有’只是模仿概念，当然在JavaScript中没有真正的私有)</li>
+<li><strong>中介者模式</strong>: 用于当模块之间的通讯变得复杂时，但是也需要好的定义。如果出现一个系统，代码中模块之间有很多关系，此时就可能需要一个中央控制点，这个就非常适合使用这个模式。</li>
+<li><strong>门面模式</strong>: 用于给一块庞大的代码提供方便的高层次的接口，影藏其内部的复杂性。</li>
 </ul>
-<p>Their specific roles in this architecture can be found below.</p>
+<p>它们在这种架构中对应的角色是：</p>
 <ul>
-<li><strong>Modules</strong>: There are almost two concepts of what defines a module. As AMD is being used as a module wrapper, technically each model, view and collection can be considered a module. We then have the concept of modules being distinct blocks of code outside of just MVC/MV*. For the latter, these types of <q>modules</q> are primarily concerned with broadcasting and subscribing to events of interest rather than directly communicating with each other.They are made possible through the Mediator pattern.</li>
-<li><strong>Mediator</strong>: The mediator has a varying role depending on just how you wish to implement it. In my article, I mention using it as a module manager with the ability to start and stop modules at will, however when it comes to Backbone, I feel that simplifying it down to the role of a central <q>controller</q> that provides pub/sub capabilities should suffice. One can of course go all out in terms of building a module system that supports module starting, stopping, pausing etc, however the scope of this is outside of this chapter.</li>
-<li><strong>Facade</strong>: This acts as a secure middle-layer that both abstracts an application core (Mediator) and relays messages from the modules back to the Mediator so they don’t touch it directly. The Facade also performs the duty of application security guard; it checks event notifications from modules against a configuration (permissions.js, which we will look at later) to ensure requests from modules are only processed if they are permitted to execute the behavior passed.</li>
+<li><strong>模块</strong>: 模块定义基本上有2个概念。由AMD作为模块包装器，从技术角度来讲，每个model，view和collection都可以认为是一个模块。然而我们模块的概念是不仅限于MVC/MV*的代码块。后面，这种’模块’主要与广播和订阅感兴趣的事件而不是相互之间直接通讯相关。它们可能通过中介者模式实现。</li>
+<li><strong>中介者</strong>: 中介者会有不同的角色，这要看你怎么期望如何去实现它。在我写的文章上中，我提到用它作为模块管理，它具有开启和停止模块的能力，不过使用Backbone之后，我认为它可以简化降级为中央’控制器(controller)’的角色，提供发布/订阅(pub/sub) 的能力就够了。当然我们可以全力以赴构建一个模块系统支持模块的启动，停止，暂停等等，不过这已超出这章的范围。</li>
+<li><strong>门面</strong>: 这个扮演的是安全的中间层，提取应用的核心(中介者，Mediator)并且把从模块过来的消息回传给中介者，这样他们就不用直接接触了。门面同样执行应用的安全保障；它要根据配置(permissions.js, 后面我们会提到)检查模块的事件通知，确保来自模块的请求传入的行为是允许执行的。</li>
 </ul>
-<h3 id="practical"><a href="#TOC">Practical</a></h3>
-<p>For the practical section of this chapter, we’ll be extending the well-known Backbone Todo application using the three patterns mentioned above.</p>
-<p>The application is broken down into AMD modules that cover everything from Backbone models through to application-level modules. The views publish events of interest to the rest of the application and modules can then subscribe to these event notifications.</p>
-<p>All subscriptions from modules go through a facade (or sandbox). What this does is check against the subscriber name and the <q>channel/notification</q> it’s attempting to subscribe to. If a channel <em>doesn’t</em> have permissions to be subscribed to (something established through permissions.js), the subscription isn’t permitted.</p>
-<p><strong>Mediator</strong></p>
-<p>Found in <code>aura/mediator.js</code></p>
-<p>Below is a very simple AMD-wrapped implementation of the mediator pattern, based on prior work by Ryan Florence. It accepts as its input an object, to which it attaches <code>publish()</code> and <code>subscribe()</code> methods. In a larger application, the mediator can contain additional utilities, such as handlers for initializing, starting and stopping modules, but for demonstration purposes, these two methods should work fine for our needs.</p>
+<h3 id="实践-2"><a href="#TOC">实践</a></h3>
+<p>作为这章的实践部分，我们将使用前面提到的这3中模式扩展Backbone Todo应用。</p>
+<p>这个应用被分解成了AMD模块，把Backbone模块都转换成应用级的模块。view给其它部分发布感兴趣的事件，模块可以订阅这些事件通知。</p>
+<p>模块的所有订阅都通过一个门面(或者沙箱)。检查订阅者的名称和它尝试订阅的’通道/通知(channel/notification)’。如果一个通道没有被许可订阅(通过permissions.js确定), 那么这个订阅就被禁止。</p>
+<p><strong>中介者</strong></p>
+<p>代码在<code>aura/mediator.js</code></p>
+<p>下面是一个非常简单的额AMD包装的中介者模式实现，基于Ryan Florence之前的工作。他接受传入一个object，给它附加<code>publish()</code>和<code>subscribe()</code>方法。在一个大的应用中，中介者可能包含其它工具库，比如初始化处理器，启动和停止模块。为作示例，下面2个方法可以作为很好的说明。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([], <span class="kw">function</span>(obj){
 
   <span class="kw">var</span> channels = {};
@@ -4453,9 +4453,9 @@ render: function() {
   <span class="kw">return</span> obj;
 
 });</code></pre>
-<p><strong>Facade</strong></p>
-<p>Found in <code>aura/facade.js</code></p>
-<p>Next, we have an implementation of the facade pattern. Now the classical facade pattern applied to JavaScript would probably look a little like this:</p>
+<p><strong>门面</strong></p>
+<p>代码在<code>aura/facade.js</code></p>
+<p>下面看下门面模式的实现。传统门面模式在JavaScript可能会向下面这样：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">
 <span class="kw">var</span> module = (<span class="kw">function</span>() {
     <span class="kw">var</span> _private = {
@@ -4486,9 +4486,9 @@ render: function() {
 
 <span class="kw">module</span>.<span class="fu">facade</span>({<span class="dt">run</span>: <span class="kw">true</span>, <span class="dt">val</span>:<span class="dv">10</span>});
 <span class="co">//outputs current value: 10, running</span></code></pre>
-<p>It’s effectively a variation of the module pattern, where instead of simply returning an interface of supported methods, your API can completely hide the true implementation powering it, returning something simpler. This allows the logic being performed in the background to be as complex as necessary, whilst all the end-user experiences is a simplified API they pass options to (note how in our case, a single method abstraction is exposed). This is a beautiful way of providing APIs that can be easily consumed.</p>
-<p>That said, to keep things simple, our implementation of an AMD-compatible facade will act a little more like a proxy. Modules will communicate directly through the facade to access the mediator’s <code>publish()</code> and <code>subscribe()</code> methods, however, they won’t as such touch the mediator directly.This enables the facade to provide application-level validation of any subscriptions and publications made.</p>
-<p>It also allows us to implement a simple, but flexible, permissions checker (as seen below) which will validate subscriptions made against a permissions configuration to see whether it’s permitted or not.</p>
+<p>它实际上市模块模式的一种变体，API可以完全影藏其真实实现，返回更简洁，而不是简单的返回一个支持方法的接口。把尽可能复杂的逻辑影藏在背后，给用户端的是体验始终是简单的API，他们只需要传入选项即可(注意我们的例子中是如何只返回一个抽象出来的方法)。这是一种提供简单接口调用的很好的方式。</p>
+<p>也就是说，为了保持简单，我们AMD兼容的门面实现将有点像一个代理。模块将直接通过门面来访问中介者的<code>publish()</code>和<code>subscribe()</code>方法，不管怎么样，他们不会这么直接与中介者接触。这样门面可以提供应用级的对订阅和通知的校验。</p>
+<p>我们也可以实现一个简单，但是灵活的权限检查器(如下所示)，对应权限配置验证订阅是否被允许。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([ <span class="st">&quot;../aura/mediator&quot;</span> , <span class="st">&quot;../aura/permissions&quot;</span> ], <span class="kw">function</span> (mediator, permissions) {
 
     <span class="kw">var</span> facade = facade || {};
@@ -4510,11 +4510,11 @@ render: function() {
     <span class="kw">return</span> facade;
 
 });</code></pre>
-<p><strong>Permissions</strong></p>
-<p>Found in <code>aura/permissions.js</code></p>
-<p>In our simple permissions configuration, we support checking against subscription requests to establish whether they are allowed to clear. This enforces a flexible security layer for the application.</p>
-<p>To visually see how this works, consider changing say, permissions -&gt; renderDone -&gt; todoCounter to be false. This will completely disable the application from from rendering or displaying the counts component for Todo items left (because they aren’t allowed to subscribe to that event notification). The rest of the Todo app can still however be used without issue.</p>
-<p>It’s a very dumbed down example of the potential for application security, but imagine how powerful this might be in a large app with a significant number of visual widgets.</p>
+<p><strong>权限</strong></p>
+<p>代码在<code>aura/permissions.js</code></p>
+<p>在我们的权限配置中，支持检查订阅请求，确定他们是否允许清除。给应用强制加了一个灵活的安全层。</p>
+<p>为了形象的了解其工作原理，考虑改变下说法，许可-&gt;渲染完成-&gt;todo计数器为false。这将完全禁止应用渲染或者显示对左边todo项计数的组件(因为他们不允许订阅那个事件通知)。其它部分可以正常运行。</p>
+<p>下面是一个简化的示例，但可以想象一下在一个庞大的app中其强大的能力。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([], <span class="kw">function</span> () {
 
     <span class="co">// Permissions</span>
@@ -4568,13 +4568,13 @@ render: function() {
     <span class="kw">return</span> permissions;
 
 });</code></pre>
-<p><strong>Subscribers</strong></p>
-<p>Found in <code>subscribers.js</code></p>
-<p>Subscriber <q>modules</q> communicate through the facade back to the mediator and perform actions when a notification event of a particular name is published.</p>
-<p>For example, when a user enters in a new piece of text for a Todo item and hits <q>enter</q> the application publishes a notification saying two things: a) a new Todo item is available and b) the text content of the new item is X. It’s then left up to the rest of the application to do with this information whatever it wishes.</p>
-<p>In order to update your Backbone application to primarily use pub/sub, a lot of the work you may end up doing will be moving logic coupled inside of specific views to modules outside of it which are reactionary.</p>
-<p>Take the <code>todoSaver</code> for example - its responsibility is saving new Todo items to models once the a <code>notificationName</code> called <q>newContentAvailable</q> has fired. If you take a look at the permissions structure in the last code sample, you’ll notice that <q>newContentAvailable</q> is present there. If I wanted to prevent subscribers from being able to subscribe to this notification, I simply set it to a boolean value of <code>false</code>.</p>
-<p>Again, this is a massive oversimplification of how advanced your permissions structures could get, but it’s certainly one way of controlling what parts of your application can or can’t be accessed by specific modules at any time.</p>
+<p><strong>订阅者</strong></p>
+<p>代码在<code>subscribers.js</code></p>
+<p>订阅者’模块’通过门面与中介者通讯，并且当指定的事件发布通知时执行相应的操作。</p>
+<p>比如，当一个用户输入一项todo内容并’回车’时，应用发布一个消息通知告诉2件事：a) 有一项新的todo项可用了，b) 新的项目文本内容是X。然后就是让其它部分做任何想做的事情了。</p>
+<p>要把Backbone应用升级为以使用发布/订阅(pub/sub)为主，你最终可能会做一些工作，把与特定view相关的逻辑转移到外围的模块。</p>
+<p>以<code>todoSaver</code>为例—— 它的职责是一旦’notificationName’调用’newContentAvailable’被处罚则保存新的todo到model。’newContentAvailable’在上一个例子权限结构中可以找到。如果我想阻止订阅者订阅这个消息通知，只要把它设为flase就可以了。</p>
+<p>此外，这是一个极其简化的获取权限结构的方式，但是无论在什么时候都能有效的控制应用的某些部分是否可以被指定的模块访问。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">define([<span class="st">&quot;jquery&quot;</span>, <span class="st">&quot;underscore&quot;</span>, <span class="st">&quot;aura/facade&quot;</span>],
 <span class="kw">function</span> ($, _, facade) {
 
@@ -4673,27 +4673,27 @@ render: function() {
 
 
 });</code></pre>
-<p>That’s it for this section. If you’ve been intrigued by some of the concepts covered, I encourage you to consider taking a look at my <a href="http://addyosmani.com/blog/large-scale-javascript-application-architecture/">slides</a> on Large-scale JS from the jQuery Summit or my longer post on the topic <a href="http://addyosmani.com/largescalejavascript">here</a> for more information.</p>
-<h2 id="paginating-backbone.js-requests-collections"><a href="#TOC"><a name="pagination">Paginating Backbone.js Requests &amp; Collections</a></a></h2>
-<p>Pagination is a ubiquitous problem we often find ourselves needing to solve on the web. Perhaps most predominantly when working with back-end APIs and JavaScript-heavy clients which consume them.</p>
-<p>On this topic, we’re going to go through a set of <strong>pagination components</strong> I wrote for Backbone.js, which should hopefully come in useful if you’re working on applications which need to tackle this problem. They’re part of an extension called <a href="http://github.com/addyosmani/backbone-paginator">Backbone.Paginator</a>.</p>
-<p>When working with a structural framework like Backbone.js, the three types of pagination we are most likely to run into are:</p>
-<p><strong>Requests to a service layer (API)</strong>- e.g query for results containing the term <q>Brendan</q> - if 5,000 results are available only display 20 results per page (leaving us with 250 possible result pages that can be navigated to).</p>
-<p>This problem actually has quite a great deal more to it, such as maintaining persistence of other URL parameters (e.g sort, query, order) which can change based on a user’s search configuration in a UI. One also had to think of a clean way of hooking views up to this pagination so you can easily navigate between pages (e.g First, Last, Next, Previous, 1,2,3), manage the number of results displayed per page and so on.</p>
-<p><strong>Further client-side pagination of data returned -</strong> e.g we’ve been returned a JSON response containing 100 results. Rather than displaying all 100 to the user, we only display 20 of these results within a navigatable UI in the browser.</p>
-<p>Similar to the request problem, client-pagination has its own challenges like navigation once again (Next, Previous, 1,2,3), sorting, order, switching the number of results to display per page and so on.</p>
-<p><strong>Infinite results</strong> - with services such as Facebook, the concept of numeric pagination is instead replaced with a <q>Load More</q> or <q>View More</q> button. Triggering this normally fetches the next <q>page</q> of N results but rather than replacing the previous set of results loaded entirely, we simply append to them instead.</p>
-<p>A request pager which simply appends results in a view rather than replacing on each new fetch is effectively an <q>infinite</q> pager.</p>
-<p><strong>Let’s now take a look at exactly what we’re getting out of the box:</strong></p>
-<p><em>Paginator is a set of opinionated components for paginating collections of data using Backbone.js. It aims to provide both solutions for assisting with pagination of requests to a server (e.g an API) as well as pagination of single-loads of data, where we may wish to further paginate a collection of N results into M pages within a view.</em></p>
-<h2 id="paginators-pieces"><a href="#TOC">Paginator’s pieces</a></h2>
-<p>Backbone.Paginator supports two main pagination components:</p>
+<p>以上就是这个小节，如果你对上面的一些概念感兴趣可以看下我在Jquery首脑会议上有关大规模js应用的<a href="http://addyosmani.com/blog/large-scale-javascript-application-architecture/">幻灯片</a>， 或者更早的<a href="http://addyosmani.com/largescalejavascript">文章</a>。</p>
+<h2 id="分页backbone.js请求和collections"><a href="#TOC"><a name="pagination">分页Backbone.js请求和Collections</a></a></h2>
+<p>分页是做web应用无处不在的问题。可能大部分都会使用后端的API然后用沉重的JavaScript去调用。</p>
+<p>这里，我们将使用一组我为Backbone.js写的<strong>分页组件</strong>，对你解决此类问题应该有帮助。他们是<a href="http://github.com/addyosmani/backbone-paginator">Backbone.Paginator</a>的一部分。</p>
+<p>当使用像Backbone.js这类框架开发时，一般会遇到下面这3种情况的分页：</p>
+<p><strong>请求服务器层(API)</strong>- 比如查询包含’Brendan’的期刊——如果有5,000个结果，每页只显示20条(那就有250页可供我们跳转了)。</p>
+<p>这里其实有很多问题需要处理，比如保持其它URL参数(比如分类，查询，排序)在UI中能让用户定制搜索结果。还需要有一种清晰的方式能让view随着分页的切换而更新(比如首页、末页、下一页、上一页、1、2、3)，管理每页需要显示的数量等等。</p>
+<p><strong>更多的是在客户端对返回的数据进行分页——</strong> 比如返回包含100条结果的JSON数据。但是通过一个可导航的UI在浏览器中只展示20条数据。</p>
+<p>与通过请求的问题类似，客户端分页也有其难点，比如重新导航(下一页，上一页，1，2，3)，分类，排序，切换每页显示的条数等等。</p>
+<p><strong>无限结果</strong> ——像Facebook这种服务，其内容的数字分页被替换成’加载更多’和 ’查看更多’按钮。通常触发这个按钮会抓取下一页内容，不过展示结果不会替换上一页内容而是追加进去。</p>
+<p>将结果追加到view的请求分页就是一个’无限’分页。</p>
+<p><strong>现在我们来看下能从这一块得出什么结论：</strong></p>
+<p><em>分页器是一组自以为是的组件，使用Backbone.js对数据集合进行分页。它即提供对服务器进行分页请求（API)同时也要支持单次加载完整数据进行分页 ，更进一步也期望可以对N个结果的集合在一个view中分成M页。</em></p>
+<h2 id="分页器组成"><a href="#TOC">分页器组成</a></h2>
+<p>Backbone.Paginator主要支持2个分页组件：</p>
 <ul>
-<li><strong>Backbone.Paginator.requestPager</strong>: For pagination of requests between a client and a server-side API</li>
-<li><strong>Backbone.Paginator.clientPager</strong>: For pagination of data returned from a server which you would like to further paginate within the UI (e.g 60 results are returned, paginate into 3 pages of 20)</li>
+<li><p><strong>Backbone.Paginator.requestPager</strong>: 客户端通过请求服务端的API进行分页。</p></li>
+<li><p><strong>Backbone.Paginator.clientPager</strong>: 从服务器端获取数据之后在UI上进行分页 (比如返回60条结果，每页20条则分成了3页)。</p></li>
 </ul>
-<h2 id="live-examples"><a href="#TOC">Live Examples</a></h2>
-<p>Live previews of both pagination components using the Netflix API can be found below. Fork the repository to experiment with these examples further.</p>
+<h2 id="在线例子"><a href="#TOC">在线例子</a></h2>
+<p>线上两个分页组件的列子都使用了Netflix API。</p>
 <ul>
 <li><a href="http://addyosmani.github.com/backbone.paginator/examples/netflix-request-paging/index.html">Backbone.Paginator.requestPager()</a></li>
 <li><a href="http://addyosmani.github.com/backbone.paginator/examples/netflix-client-paging/index.html">Backbone.Paginator.clientPager()</a></li>
@@ -4701,13 +4701,13 @@ render: function() {
 <li><a href="http://addyosmani.github.com/backbone.paginator/examples/google-diacritic/index.html">Diacritic Plugin</a></li>
 </ul>
 <h2 id="paginator.requestpager"><a href="#TOC">Paginator.requestPager</a></h2>
-<p>In this section we’re going to walkthrough actually using the requestPager.</p>
-<h4 id="create-a-new-paginated-collection"><a href="#TOC">1. Create a new Paginated collection</a></h4>
-<p>First, we define a new Paginated collection using <code>Backbone.Paginator.requestPager()</code> as follows:</p>
-<p><code>javascript var PaginatedCollection = Backbone.Paginator.requestPager.extend({</code> ####2: Set the model for the collection as normal</p>
-<p>Within our collection, we then (as normal) specify the model to be used with this collection followed by the URL (or base URL) for the service providing our data (e.g the Netflix API).</p>
-<p><code>javascript         model: model,</code> ####3. Configure the base URL and the type of the request</p>
-<p>We need to set a base URL. The <code>type</code> of the request is <code>GET</code> by default, and the <code>dataType</code> is <code>jsonp</code> in order to enable cross-domain requests.</p>
+<p>在这一小节我们来实际应用下requestPager。</p>
+<h4 id="创建一个新的分页collection"><a href="#TOC">1. 创建一个新的分页collection</a></h4>
+<p>首先，使用<code>Backbone.Paginator.requestPager()</code>定义一个分页collection：</p>
+<p><code>javascript var PaginatedCollection = Backbone.Paginator.requestPager.extend({</code> ####2: 跟平常一样设置collection的model</p>
+<p>在collection中，跟正常情况一样根据服务器提供data的URL(或者base URL)指定collection使用的model。</p>
+<p><code>javascript         model: model,</code> ####3. 配置base URL和请求类型</p>
+<p>我们需要设置一个base URL。请求的’type<code>默认是</code>GET<code>，</code>dataType<code>默认是</code>jsonp`为了可以跨域。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">    <span class="dt">paginator_core</span>: {
       <span class="co">// the type of the request (GET by default)</span>
       <span class="dt">type</span>: <span class="ch">&#39;GET&#39;</span>,
@@ -4718,27 +4718,24 @@ render: function() {
       <span class="co">// the URL (or base URL) for the service</span>
       <span class="dt">url</span>: <span class="ch">&#39;http://odata.netflix.com/Catalog/People(49446)/TitlesActedIn?&#39;</span>
     },</code></pre>
-<h4 id="configure-how-the-library-will-show-the-results"><a href="#TOC">4. Configure how the library will show the results</a></h4>
-<p>We need to tell the library how many items per page would we like to see, etc…</p>
+<h4 id="配置库如何显示结果"><a href="#TOC">4. 配置库如何显示结果</a></h4>
+<p>我们需要告诉组件库每页需要显示多少条结果，之类…</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">    <span class="dt">paginator_ui</span>: {
-      <span class="co">// the lowest page index your API allows to be accessed</span>
+      <span class="co">// API允许访问的最小页码</span>
       <span class="dt">firstPage</span>: <span class="dv">0</span>,
 
-      <span class="co">// which page should the paginator start from</span>
-      <span class="co">// (also, the actual page the paginator is on)</span>
+      <span class="co">// 分页器开始的页码</span>
+      <span class="co">// (同时也是分页器当前的页码)</span>
       <span class="dt">currentPage</span>: <span class="dv">0</span>,
 
-      <span class="co">// how many items per page should be shown</span>
+      <span class="co">//每页条数</span>
       <span class="dt">perPage</span>: <span class="dv">3</span>,
 
-      <span class="co">// a default number of total pages to query in case the API or</span>
-      <span class="co">// service you are using does not support providing the total</span>
-      <span class="co">// number of pages for us.</span>
-      <span class="co">// 10 as a default in case your service doesn&#39;t return the total</span>
+      <span class="co">//API没有返回总页码时的一个默认总页数。</span>
       <span class="dt">totalPages</span>: <span class="dv">10</span>
     },</code></pre>
-<h4 id="configure-the-parameters-we-want-to-send-to-the-server"><a href="#TOC">5. Configure the parameters we want to send to the server</a></h4>
-<p>Only the base URL won’t be enough for most cases, so you can pass more parameters to the server. Note how you can use functions insead of hardcoded values, and you can also reffer to the values you specified in <code>paginator_ui</code>.</p>
+<h4 id="配置服务器请求的参数"><a href="#TOC">5. 配置服务器请求的参数</a></h4>
+<p>通常有base URL还不够，可以传更多参数给服务器。 注意，你可以使用function来处理value的返回，也可以引用<code>paginator_ui</code>中指定的值。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">    <span class="dt">server_api</span>: {
       <span class="co">// the query field in the request</span>
       <span class="ch">&#39;$filter&#39;</span>: <span class="ch">&#39;&#39;</span>,
@@ -4761,9 +4758,9 @@ render: function() {
       <span class="ch">&#39;$inlinecount&#39;</span>: <span class="ch">&#39;allpages&#39;</span>,
       <span class="ch">&#39;$callback&#39;</span>: <span class="ch">&#39;callback&#39;</span>
     },</code></pre>
-<h4 id="finally-configure-collection.parse-and-were-done"><a href="#TOC">6. Finally, configure Collection.parse() and we’re done</a></h4>
-<p>The last thing we need to do is configure our collection’s <code>parse()</code> method. We want to ensure we’re returning the correct part of our JSON response containing the data our collection will be populated with, which below is <code>response.d.results</code> (for the Netflix API).</p>
-<p>You might also notice that we’re setting <code>this.totalPages</code> to the total page count returned by the API. This allows us to define the maximum number of (result) pages available for the current/last request so that we can clearly display this in the UI. It also allows us to infuence whether clicking say, a <q>next</q> button should proceed with a request or not.</p>
+<h4 id="最后配置collection.parse"><a href="#TOC">6. 最后，配置Collection.parse()</a></h4>
+<p>最后我们需要做的事就是配置collection的<code>parse()</code>方法。我们要确保返回JSON响应数据的正确部分给collection填充，下面例子是<code>response.d.results</code> (Netflix API)。</p>
+<p>你可能注意到我们把<code>this.totalPages</code>的值设为API返回数据的总页数。它可用于定义当前/最后页请求的最大可用页数，这样可以在UI上清晰的显示。同样用于决定点击是否有效，点击’下一页’按钮是否需要请求。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">        <span class="dt">parse</span>: <span class="kw">function</span> (response) {
             <span class="co">// Be sure to change this based on how your results</span>
             <span class="co">// are structured (e.g d.results is Netflix specific)</span>
@@ -4777,25 +4774,25 @@ render: function() {
     });
 
 });</code></pre>
-<h4 id="convenience-methods"><a href="#TOC">Convenience methods:</a></h4>
-<p>For your convenience, the following methods are made available for use in your views to interact with the <code>requestPager</code>:</p>
+<h4 id="便利方法"><a href="#TOC">便利方法：</a></h4>
+<p>为了方便，下面这些方法是便于在view中与<code>requestPager</code>交互：</p>
 <ul>
-<li><strong>Collection.goTo( n, options )</strong> - go to a specific page</li>
-<li><strong>Collection.requestNextPage( options )</strong> - go to the next page</li>
-<li><strong>Collection.requestPreviousPage( options )</strong> - go to the previous page</li>
-<li><strong>Collection.howManyPer( n )</strong> - set the number of items to display per page</li>
+<li><strong>Collection.goTo( n, options )</strong> - 跳转到指定页</li>
+<li><strong>Collection.requestNextPage( options )</strong> - 跳转到下一页</li>
+<li><strong>Collection.requestPreviousPage( options )</strong> - 跳转到上一页</li>
+<li><strong>Collection.howManyPer( n )</strong> - 设置每页显示的数量</li>
 </ul>
-<p><strong>requestPager</strong> collection’s methods <code>.goTo()</code>, <code>.requestNextPage()</code> and <code>.requestPreviousPage()</code> are all extension of the original <a href="http://documentcloud.github.com/backbone/#Collection-fetch">Backbone Collection.fetch() method</a>. As so, they all can take the same option object as parameter.</p>
-<p>This option object can use <code>success</code> and <code>error</code> parameters to pass a function to be executed after server answer.</p>
+<p><strong>requestPager</strong> collection的<code>.goTo()</code>, <code>.requestNextPage()</code>和<code>.requestPreviousPage()</code>都是<a href="http://documentcloud.github.com/backbone/#Collection-fetch">Backbone Collection.fetch() method</a>的扩展。所以，他们都可以接受相同的option参数对象。</p>
+<p>这个option对象可以使用<code>success</code>和<code>error</code>参数传入一个function，服务器响应之后执行。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">Collection</span>.<span class="fu">goTo</span>(n, {
   <span class="dt">success</span>: <span class="kw">function</span>( collection, response ) {
-    <span class="co">// called is server request success</span>
+    <span class="co">// 调用服务器请求成功</span>
   },
   <span class="dt">error</span>: <span class="kw">function</span>( collection, response ) {
-    <span class="co">// called if server request fail</span>
+    <span class="co">// 调用服务器请求失败</span>
   }
 });</code></pre>
-<p>To manage callback, you could also use the <a href="http://api.jquery.com/jQuery.ajax/#jqXHR">jqXHR</a> returned by these methods to manage callback.</p>
+<p>可以使用<a href="http://api.jquery.com/jQuery.ajax/#jqXHR">jqXHR</a>返回的这些方法来管理回调。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">Collection
   .<span class="fu">requestNextPage</span>()
   .<span class="fu">done</span>(<span class="kw">function</span>( data, textStatus, jqXHR ) {
@@ -4808,17 +4805,17 @@ render: function() {
     <span class="co">// do something after server request is complete</span>
   });
 });</code></pre>
-<p>If you’d like to add the incoming models to the current collection, instead of replacing the collection’s contents, pass <code>{add: true}</code> as an option to these methods.</p>
+<p>如果想把返回的models添加到当前的collection，而不是替代collection的内容，可以传入<code>{add: true}</code>。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">Collection</span>.<span class="fu">requestPreviousPage</span>({ <span class="dt">add</span>: <span class="kw">true</span> });</code></pre>
 <h2 id="paginator.clientpager"><a href="#TOC">Paginator.clientPager</a></h2>
-<p>The <code>clientPager</code> works similar to the <code>requestPager</code>, except that our configuration values influence the pagination of data already returned at a UI-level. Whilst not shown (yet) there is also a lot more UI logic that ties in with the <code>clientPager</code>. An example of this can be seen in <q>views/clientPagination.js</q>.</p>
-<h4 id="create-a-new-paginated-collection-with-a-model-and-url"><a href="#TOC">1. Create a new paginated collection with a model and URL</a></h4>
-<p>As with <code>requestPager</code>, let’s first create a new Paginated <code>Backbone.Paginator.clientPager</code> collection, with a model:</p>
+<p><code>clientPager</code>跟<code>requestPager</code>类似，除了配置值是在UI级别影响已返回的数据分页。虽然没有显示，很多UI逻辑也与<code>clientPager</code>相关联。可以看’views/clientPagination.js’里的例子。</p>
+<h4 id="根据model和url创建一个分页collection"><a href="#TOC">1. 根据model和URL创建一个分页collection</a></h4>
+<p>创建一个<code>Backbone.Paginator.clientPager</code> collection：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">    <span class="kw">var</span> PaginatedCollection = <span class="kw">Backbone.Paginator.clientPager</span>.<span class="fu">extend</span>({
 
         <span class="dt">model</span>: model,</code></pre>
-<h4 id="configure-the-base-url-and-the-type-of-the-request"><a href="#TOC">2. Configure the base URL and the type of the request</a></h4>
-<p>We need to set a base URL. The <code>type</code> of the request is <code>GET</code> by default, and the <code>dataType</code> is <code>jsonp</code> in order to enable cross-domain requests.</p>
+<h4 id="配置base-url和请求的类型"><a href="#TOC">2. 配置base URL和请求的类型</a></h4>
+<p>与requestPager的例子一致。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">    <span class="dt">paginator_core</span>: {
       <span class="co">// the type of the request (GET by default)</span>
       <span class="dt">type</span>: <span class="ch">&#39;GET&#39;</span>,
@@ -4829,8 +4826,8 @@ render: function() {
       <span class="co">// the URL (or base URL) for the service</span>
       <span class="dt">url</span>: <span class="ch">&#39;http://odata.netflix.com/v2/Catalog/Titles?&amp;&#39;</span>
     },</code></pre>
-<h4 id="configure-how-the-library-will-show-the-results-1"><a href="#TOC">3. Configure how the library will show the results</a></h4>
-<p>We need to tell the library how many items per page would we like to see, etc…</p>
+<h4 id="配置如何显示结果"><a href="#TOC">3. 配置如何显示结果</a></h4>
+<p>与requestPager例子同理。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">    <span class="dt">paginator_ui</span>: {
       <span class="co">// the lowest page index your API allows to be accessed</span>
       <span class="dt">firstPage</span>: <span class="dv">1</span>,
@@ -4848,8 +4845,8 @@ render: function() {
       <span class="co">// 10 as a default in case your service doesn&#39;t return the total</span>
       <span class="dt">totalPages</span>: <span class="dv">10</span>
     },</code></pre>
-<h4 id="configure-the-parameters-we-want-to-send-to-the-server-1"><a href="#TOC">4. Configure the parameters we want to send to the server</a></h4>
-<p>Only the base URL won’t be enough for most cases, so you can pass more parameters to the server. Note how you can use functions insead of hardcoded values, and you can also reffer to the values you specified in <code>paginator_ui</code>.</p>
+<h4 id="配置传递给服务器的参数"><a href="#TOC">4. 配置传递给服务器的参数</a></h4>
+<p>与requestPager例子同理。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">    <span class="dt">server_api</span>: {
       <span class="co">// the query field in the request</span>
       <span class="ch">&#39;$filter&#39;</span>: <span class="ch">&#39;substringof(\&#39;america\&#39;,Name)&#39;</span>,
@@ -4872,36 +4869,32 @@ render: function() {
       <span class="ch">&#39;$inlinecount&#39;</span>: <span class="ch">&#39;allpages&#39;</span>,
       <span class="ch">&#39;$callback&#39;</span>: <span class="ch">&#39;callback&#39;</span>
     },</code></pre>
-<h4 id="finally-configure-collection.parse-and-were-done-1"><a href="#TOC">5. Finally, configure Collection.parse() and we’re done</a></h4>
-<p>And finally we have our <code>parse()</code> method, which in this case isn’t concerned with the total number of result pages available on the server as we have our own total count of pages for the paginated data in the UI.</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript">    <span class="dt">parse</span>: <span class="kw">function</span> (response) {
-            <span class="kw">var</span> tags = <span class="kw">response.d</span>.<span class="fu">results</span>;
-            <span class="kw">return</span> tags;
-        }
-
-    });</code></pre>
-<h4 id="convenience-methods-1"><a href="#TOC">Convenience methods:</a></h4>
-<p>As mentioned, your views can hook into a number of convenience methods to navigate around UI-paginated data. For <code>clientPager</code> these include:</p>
+<h4 id="最后配置collection.parse-1"><a href="#TOC">5. 最后配置Collection.parse()</a></h4>
+<p>与requestPager例子同理。 ```javascript parse: function (response) { var tags = response.d.results; return tags; }</p>
+<pre><code>});</code></pre>
+<p>```</p>
+<h4 id="便捷方法"><a href="#TOC">便捷方法：</a></h4>
+<p><code>clientPager</code>有下面这些方法在分页之间跳转，与requestPager的例子相似：</p>
 <ul>
-<li><strong>Collection.goTo(n)</strong> - go to a specific page</li>
-<li><strong>Collection.previousPage()</strong> - go to the previous page</li>
-<li><strong>Collection.nextPage()</strong> - go to the next page</li>
-<li><strong>Collection.howManyPer(n)</strong> - set how many items to display per page</li>
-<li><strong>Collection.setSort(sortBy, sortDirection)</strong> - update sort on the current view. Sorting will automatically detect if you’re trying to sort numbers (even if they’re strored as strings) and will do the right thing.</li>
-<li><strong>Collection.setFilter(filterFields, filterWords)</strong> - filter the current view. Filtering supports multiple words without any specific order, so you’ll basically get a full-text search ability. Also, you can pass it only one field from the model, or you can pass an array with fields and all of them will get filtered. Last option is to pass it an object containing a comparison method and rules. Currently, only <code>levenshtein</code> method is available.</li>
+<li><strong>Collection.goTo(n)</strong></li>
+<li><strong>Collection.previousPage()</strong></li>
+<li><strong>Collection.nextPage()</strong></li>
+<li><strong>Collection.howManyPer(n)</strong></li>
+<li><strong>Collection.setSort(sortBy, sortDirection)</strong> - 当前view更新排序。排序是自动的，可以对数字排序(尽管是被当成字符串)。</li>
+<li><strong>Collection.setFilter(filterFields, filterWords)</strong> - 过滤当前view。过滤支持多个词，没有特定顺序，所有有完整文本搜索能力。同样，也可以传入一个或多个model，都可以进行过滤。最后一个选项是传入一个包含比较放和规则的对象。现在只有<code>levenshtein</code>方法可用。</li>
 </ul>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">  <span class="kw">this</span>.<span class="fu">collection</span>.<span class="fu">setFilter</span>(
     {<span class="ch">&#39;Name&#39;</span>: {<span class="dt">cmp_method</span>: <span class="ch">&#39;levenshtein&#39;</span>, <span class="dt">max_distance</span>: <span class="dv">7</span>}}
     , <span class="st">&quot;Amreican P&quot;</span> <span class="co">// Note the switched &#39;r&#39; and &#39;e&#39;, and the &#39;P&#39; from &#39;Pie&#39;</span>
   );</code></pre>
-<p>Also note that the levenshtein plugin should be loaded and enabled using the <code>useLevenshteinPlugin</code> variable.</p>
-<p>Last but not less important: Performing Levenshtein comparison returns the <code>distance</code> between to strings. It won’t let you <em>search</em> lenghty text.</p>
-<p>The distance between two strings means the number of characters that should be added, removed or moved to the left or to the right so the strings get equal.</p>
-<p>That means that comparing <q>Something</q> in <q>This is a test that could show something</q> will return 32, which is bigger than comparing <q>Something</q> and <q>ABCDEFG</q> (9).</p>
-<p>Use levenshtein only for short texts (titles, names, etc).</p>
+<p>同样注意，levenshtein插件可以<code>useLevenshteinPlugin</code>变量加载和启用。</p>
+<p>最后：Levenshtein比较返回两个字符串间的<code>距离(distance)</code>。它不允许<em>搜索</em>冗长的文本。</p>
+<p>两个字符串之间的距离就是要使2个字符串相等需要添加，移除或者移动到左边或者右边的字符个数。</p>
+<p>比如比较<q>Something</q>和<q>This is a test that could show something</q>会返回31，要比比较<q>Something</q>和<q>ABCDEFG</q>(9)大。</p>
+<p>仅在短文本(titles, names, 等)中使用levenshtein。</p>
 <ul>
-<li><p><strong>Collection.doFakeFilter(filterFields, filterWords)</strong> - returns the models count after fake-applying a call to <code>Collection.setFilter</code>.</p></li>
-<li><p><strong>Collection.setFieldFilter(rules)</strong> - filter each value of each model according to <code>rules</code> that you pass as argument. Example: You have a collection of books with <q>release year</q> and <q>author</q>. You can filter only the books that were released between 1999 and 2003. And then you can add another <code>rule</code> that will filter those books only to authors who’s name start with <q>A</q>. Possible rules: function, required, min, max, range, minLength, maxLength, rangeLength, oneOf, equalTo, pattern.</p></li>
+<li><p><strong>Collection.doFakeFilter(filterFields, filterWords)</strong> - 返回执行一个虚拟的<code>Collection.setFilter</code>调用后models的计数。</p></li>
+<li><p><strong>Collection.setFieldFilter(rules)</strong> - 对model的每个值应用<code>rules</code>进行过滤。示例：有一个book的collection ，book有’release year’和’author’属性。你可以过滤出版时间在1999到2003间的书。然后可添加另外一个’规则’继续过滤这些书，作者名称以’A’开头的。规则可以是：function, required, min, max, range, minLength, maxLength, rangeLength, oneOf, equalTo, pattern。</p></li>
 </ul>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">
   <span class="kw">my_collection</span>.<span class="fu">setFieldFilter</span>([
@@ -4925,9 +4918,9 @@ render: function() {
   <span class="co">//{field: &#39;color_name&#39;, type: &#39;oneOf&#39;, value: [&#39;green&#39;, &#39;yellow&#39;]}</span>
   <span class="co">//{field: &#39;color_name&#39;, type: &#39;pattern&#39;, value: new RegExp(&#39;gre*&#39;, &#39;ig&#39;)}</span></code></pre>
 <ul>
-<li><strong>Collection.doFakeFieldFilter(rules)</strong> - returns the models count after fake-applying a call to <code>Collection.setFieldFilter</code>.</li>
+<li><strong>Collection.doFakeFieldFilter(rules)</strong> - 翻译执行<code>Collection.setFieldFilter</code>虚拟调用之后的models计数。</li>
 </ul>
-<h4 id="implementation-notes"><a href="#TOC">Implementation notes:</a></h4>
+<h4 id="实现提示"><a href="#TOC">实现提示：</a></h4>
 <p>You can use some variables in your <code>View</code> to represent the actual state of the paginator.</p>
 <p><code>totalUnfilteredRecords</code> - Contains the number of records, including all records filtered in any way. (Only available in <code>clientPager</code>)</p>
 <p><code>totalRecords</code> - Contains the number of records</p>
@@ -4936,7 +4929,7 @@ render: function() {
 <p><code>totalPages</code> - The number of total pages.</p>
 <p><code>startRecord</code> - The posicion of the first record shown in the current page (eg 41 to 50 from 2000 records) (Only available in <code>clientPager</code>)</p>
 <p><code>endRecord</code> - The posicion of the last record shown in the current page (eg 41 to 50 from 2000 records) (Only available in <code>clientPager</code>)</p>
-<h2 id="plugins"><a href="#TOC">Plugins</a></h2>
+<h2 id="插件"><a href="#TOC">插件</a></h2>
 <p><strong>Diacritic.js</strong></p>
 <p>A plugin for Backbone.Paginator that replaces diacritic characters (<code>´</code>, <code>˝</code>, <code>̏</code>, <code>˚</code>,<code>~</code> etc.) with characters that match them most closely. This is particularly useful for filtering.</p>
 <p>To enable the plugin, set <code>this.useDiacriticsPlugin</code> to true, as can be seen in the example below:</p>
@@ -6115,7 +6108,7 @@ test(<span class="st">&quot;should find a model by id&quot;</span>, <span class=
     <span class="kw">mock</span>.<span class="fu">verify</span>();
     ok( <span class="kw">spy</span>.<span class="fu">calledOnce</span> );
 });</code></pre>
-<h1 id="practical-1"><a href="#TOC">Practical</a></h1>
+<h1 id="practical"><a href="#TOC">Practical</a></h1>
 <p>We can now begin writing test specs for our Todo application, which are listed and separated by component (e.g Models, Collections etc.). It’s useful to pay attention to the name of the test, the logic being tested and most importantly the assertions being made as this will give you some insight into how what we’ve learned can be applied to a complete application.</p>
 <p>To get the most out of this section, I recommend looking at the QUnit Koans included in the <code>practicals\qunit-koans</code> folder - this is a port of the Backbone.js Jasmine Koans over to QUnit that I converted for this post.</p>
 <p><em>In case you haven’t had a chance to try out one of the Koans kits as yet, they are a set of unit tests using a specific testing framework that both demonstrate how a set of specs for an application may be written, but also leave some tests unfilled so that you can complete them as an exercise.</em></p>

@@ -5238,24 +5238,24 @@ build文件可以[与应用的各个部分并行下载](http://requirejs.org/doc
 
 上面这个build文件的设计平衡了扩展性和性能。
 
-**Examples of the grouped sets of code dependencies**
+**分组代码依赖示例**
 
-The contents of the vendor.js which is not built into a package may use some *no conflict* calls as well.
+vendor.js没有构建到一个包里面，可能会使用一些*no conflict*调用。
 
 ```javascript
-// List of vendor libraries, e.g. jQuery, Underscore, Backbone, etc.
-// this module is used with the r.js optimizer tool during build
+// vendor库列表, 比如jQuery, Underscore, Backbone, 等等。
+// 此模块构建时使r.js进行优化
 // @see <http://requirejs.org/docs/faq-optimization.html>
 define([ "jquery", "underscore", "backbone", "modernizr", "mustache" ],
 function ($,        _,            Backbone,   Modernizr,   Mustache) {
-    // call no conflicts so if needed you can use multiple versions of $
+    // 调用no conflicts可以使用多版本的$
     $.noConflict();
     _.noConflict();
     Backbone.noConflict();
 });
 ```
 
-For your application common library code.
+应用的通用库代码。
 
 ```javascript
 // List of utility libraries,
@@ -5271,14 +5271,13 @@ function (ajax,         baselib,         localstorage,         debug) {
 });
 ```
 
-An example where you intend to use require the common models in another package file.
+在另一个包文件中引入通用models的例子。
 
 ```javascript
-// List of models
-// models in this directory are intended for site-wide usage
-// grouping site-wide models in this module (object)
-// optimizes the performance and keeps dependencies organized
-// when the (build) optimizer is run.
+// models列表
+// 这个目录下的models被广泛使用
+// 在这个模块(object)中分组这些models
+// 当build时优化性能和保持依赖关系。
 define([ "models/branding", "models/section" ],
 function (Branding,          Section) {
     return {
@@ -5288,68 +5287,66 @@ function (Branding,          Section) {
 });
 ```
 
-#### A quick note on code standards
+#### 代码规范的简短说明
 
-Notice that in the above examples the parameters may begin with lower or upper case characters. The variable names uses in the parameters that begin with *Uppercase* are *Constructors* and the *lowercase* variable names are not, they may be instances created by a constructor, or perhaps an object or function that is not meant to used with *new*.
+注意上面的例子中参数可能是大写或者小写字母开头。参数变量中*大写*开头的是*构造器(Constructors)*，*小写*开头的变量则可能是构造器创建的一个实例，或者一个不能*new*的object或function。
 
-The convention recommended is to use Upper CamelCase for constructors and lower camelCase for others.
+推荐约定是构造器使用首字母大写的驼峰式命名(CamelCase)，其它用首字母小写的驼峰式命名(camelCase)。
 
-#### Common Pitfall when organizing code in modules
+#### 组织模块代码时的常见陷阱
 
-Be careful not define circular dependencies. For example, in a common *models* package (models.js) dependencies are listed for the files in your models directory
-
+小心不要定义循环依赖。举个例子，一个公共*models*包(models.js)依赖项中列举了models目录下的文件
     define([ "models/branding", "models/section" ], function (branding, section)
     // ...
     return { "branding" : branding, "section", section }
 
-Then when another packages requires a common model you can access the models objects returned from your common models.js file like so...
-
+然后另外的包引入了一个公用的model，可以像下面这样访问models.js返回的modes对象。
     define([ "models", "utils" ], function (models, utils) {
     var branding = models.branding, debug = utils.debug;
 
-Perhaps after using the model a few times you get into the habit of requiring "model". Later you need add another common model with extends a model you already defined. So the pitfall begins, you add a new model inside your models directory and add a reference this same model in the model.js:
+可能使用这种方式引入"model"一段时间之后就形成了习惯。然后你需要添加一个公用model,这个model继承自一个已定义的model。 然后陷阱就出现了，你会添加一个新的model到models目录下并且在model.js里添加引用：
 
     define([ "models/branding", "models/section", "models/section-b" ], function (branding, section)
     // ...
     return { "branding" : branding, "section", section, "section-b" : section-b }
 
-However in your *models/section-b.js* file you define a dependency using the model.js which returns the models in an object like so...
+然而，*models/section-b.js*文件里你定义了一个对model.js的依赖...
 
     define([ "models" ], function (models, utils) {
     var section = models.section;
 
-Above is the mistake in models.js a dependency was added for models/section-b and in section-b a dependency is defined for model. The new models/section-b.js requires *model* and model.js requires *models/section-b.js* - a circular dependency. This should result in a load timeout error from require.js, but not tell you about the circular dependency.
+上面这个错误就是在models.js的依赖项中添加了models/section-b，而section-b的定义中又有对model.js的依赖。这样就形成了循环依赖。会导致require.js加载超时的错误，但不会告诉你有循环依赖。
 
-For other common mistakes see the [COMMON ERRORS](http://requirejs.org/docs/errors.html "RequireJS common errors page") page on the Require.js site.
+其它常见错误可以参考Require.js站点的[COMMON ERRORS](http://requirejs.org/docs/errors.html "RequireJS common errors page")页面。
 
-#### Executing the Build with r.js
+#### 使用r.js执行构建
 
-If you intalled r.js with Node's npm (package manager) like so...
+如果已经通过Node的npm安装过r.js...
 
     > npm install requirejs
 
-...you can execute the build on the command line:
+就可以执行build了：
 
     > r.js -o app.build.js
 
 
-##<a name="practicalrequirejs">Practical: Building a modular Backbone app with AMD & Require.js</a>
+##<a name="practicalrequirejs">实践：使用AMD和Require.js构建模块化的Backbone app</a>
 
-In this chapter, we'll look at our first practical Backbone & Require.js project - how to build a modular Todo application. The application will allow us to add new todos, edit new todos and clear todo items that have been marked as completed. For a more advanced practical, see the section on mobile Backbone development.
+在这一章中，将实践一下我们第一个Backbone和Require.js项目——如何构建一个模块化的Todo应用。这个应用可以添加todos,编辑todo项和清除已标记完成的todo项。更高级的实践，可以参考移动Backbone开发的部分。
 
-The complete code for the application can can be found in the `practicals/modular-todo-app` folder of this repo (thanks to Thomas Davis and J&eacute;r&ocirc;me Gravel-Niquet). Alternatively grab a copy of my side-project [TodoMVC](https://github.com/addyosmani/todomvc) which contains the sources to both AMD and non-AMD versions.
+完整代码在仓库的`practicals/modular-todo-app`目录下(感谢Thomas Davis和J&eacute;r&ocirc;me Gravel-Niquet)。另外我的一个业余项目[TodoMVC](https://github.com/addyosmani/todomvc)包含了AMD和非AMD版本的源代码。
 
-**Note:** Thomas may be covering a practical on this exercise in more detail on [backbonetutorials.com](http://backbonetutorials.com) at some point soon, but for this section I'll be covering what I consider the core concepts.
+**提示:** Thomas可能在某些方面讲述了更详细的实践经验[backbonetutorials.com](http://backbonetutorials.com)，但是这一章节我会讲到我认为是和核心的概念。
 
-###Overview
+###概览
 
-Writing a 'modular' Backbone application can be a straight-forward process. There are however, some key conceptual differences to be aware of if opting to use AMD as your module format of choice:
+编写'模块化'Backbone应用时一个简单的过程。但是，如果选择AMD作为模块格式的话需要注意一些关键概念上的差异：
 
-* As AMD isn't a standard native to JavaScript or the browser, it's necessary to use a script loader (such as Require.js or curl.js) in order to support defining components and modules using this module format. As we've already reviewed, there are a number of advantages to using the AMD as well as Require.js to assist here.
-* Models, views, controllers and routers need to be encapsulated *using* the AMD-format. This allows each component of our Backbone application to cleanly manage dependencies (e.g collections required by a view) in the same way that AMD allows non-Backbone modules to.
-* Non-Backbone components/modules (such as utilities or application helpers) can also be encapsulated using AMD. I encourage you to try developing these modules in such a way that they can both be used and tested independent of your Backbone code as this will increase their ability to be re-used elsewhere.
+* 因为AMD不是JavaScript或者浏览器的原生标准，它需要使用脚本加载器(比如Require.js或者curl.js)来支持这种格式的组件和模块的定义。正如我们所看到的，使用AMD和Require.js的同时协助会有那么多的好处。
+* Models, views, controllers和routers需要被包装成AMD格式。这样可以在Backbone应用中每个组件都清晰的管理依赖关系 (比如collections被一个view引入)，跟AMD的非Backbone模块一样。
+* 非Backbone组件/模块(比如utilities或者helpers)同样也可以包装成AMD方式。鼓励尝试开发这些模块时可以被独立使用和测试，不依赖于Backbone代码， 这样可以增加它们的复用性。
 
-Now that we've reviewed the basics, let's take a look at developing our application. For reference, the structure of our app is as follows:
+我们回顾了下基本概念，现在我们开始开发这个应用。下面是这个app的结构，作为参考：
 
 ```
 index.html
@@ -5375,9 +5372,9 @@ index.html
 ...css/
 ```
 
-###Markup
+###页面标签
 
-The markup for the application is relatively simple and consists of three primary parts: an input section for entering new todo items (`create-todo`), a list section to display existing items (which can also be edited in-place) (`todo-list`) and finally a section summarizing how many items are left to be completed (`todo-stats`).
+这个应用的页面标签非常的简单，分为三个主要部分：一个input输入部分用于创建新的todo(`create-todo`)，一个列表部分展示所有存在的项(也可以就地编辑) (`todo-list`)和一个概括信息部分显示有多少条项待完成(`todo-stats`)。
 
 ```
 <div id="todoapp">
@@ -5400,15 +5397,15 @@ The markup for the application is relatively simple and consists of three primar
 </div>
 ```
 
-The rest of the tutorial will now focus on the JavaScript side of the practical.
+教程的后面部分将重点聚焦在JavaScript实践上。
 
-###Configuration options
+###配置选项
 
-If you've read the earlier chapter on AMD, you may have noticed that explicitly needing to define each dependency a Backbone module (view, collection or other module) may require with it can get a little tedious. This can however be improved.
+如果你已经看过前面关于AMD的章节，就会注意到需要明确定义Backbone模块(view, collection或其它模块)的每个依赖项有点冗长。不过这点可以优化。
 
-In order to simplify referencing common paths the modules in our application may use, we use a Require.js [configuration object](http://requirejs.org/docs/api.html#config), which is typically defined as a top-level script file. Configuration objects have a number of useful capabilities, the most useful being mode name-mapping. Name-maps are basically a key:value pair, where the key defines the alias you wish to use for a path and the value represents the true location of the path.
+为了简化应用中可能会引用到的通用路径，我们可以使用Require.js [配置对象](http://requirejs.org/docs/api.html#config)，它通常定义在一个顶级脚本文件中。配置对象有很多有用的功能，最实用是名称映射。命名map是一个基本的key:value值对，key是要用到的路径的别名，value则是真是的路径。
 
-In the code-sample below, you can see some typical examples of common name-maps which include: `backbone`, `underscore`, `jquery` and depending on your choice, the RequireJS `text` plugin, which assists with loading text assets like templates.
+下面这段代码中，你会看到一些典型的常用命名映射表的例子：`backbone`，`underscore`，`jquery`，RequireJS `text`插件。
 
 **main.js**
 
@@ -5428,16 +5425,16 @@ require(['views/app'], function(AppView){
 });
 ```
 
-The `require()` at the end of our main.js file is simply there so we can load and instantiate the primary view for our application (`views/app.js`). You'll commonly see both this and the configuration object included in most top-level script files for a project.
+main.js文件末尾的`require()`完成载入和实例化应用的主view(`views/app.js`)。通常会看到它和配置对象包含在一个项目的顶级脚本文件中。
 
-In addition to offering name-mapping, the configuration object can be used to define additional properties such as `waitSeconds` - the number of seconds to wait before script loading times out and `locale`, should you wish to load up i18n bundles for custom languages. The `baseUrl` is simply the path to use for module lookups.
+除了提供命名映射之外，配置对象还可以用于定义其它属性，比如`waitSeconds`——脚本加载的超时时间，`时区(locale)`, 如果你想加载i18n自定义语言包的话。`baseUrl`用于检索模块的路径。
 
-For more information on configuration objects, please feel free to check out the excellent guide to them in the [RequireJS docs](http://requirejs.org/docs/api.html#config).
+更多关于配置对象的信息可以大胆免费的阅读[RequireJS docs](http://requirejs.org/docs/api.html#config)。
 
 
-###Modularizing our models, views and collections
+###模块化models, views和collections
 
-Before we dive into AMD-wrapped versions of our Backbone components, let's review a sample of a non-AMD view. The following view listens for changes to its model (a Todo item) and re-renders if a user edits the value of the item.
+在深入探索把Backbone组件包装成AMD之前，我们先来回顾下一个简单的无AMD的view。下面这个view监听里它的mode(一个Todo元素)的变化并且当用户编辑这个项时重新渲染。
 
 ```javascript
 var TodoView = Backbone.View.extend({
@@ -5466,7 +5463,7 @@ var TodoView = Backbone.View.extend({
     ...
 ```
 
-Note how for templating the common practice of referencing a script by an ID (or other selector) and obtaining its value is used. This of course requires that the template being accessed is implicitly defined in our markup. The following is the 'embedded' version of our template being referenced above:
+在脚本中通常通过一个ID(或者其它选择器)获取模板的引用并获取它的内容。显然模板含蓄的定义在页面标签中。下面是前面引用的'内嵌'版本的模板：
 
 ```
 <script type="text/template" id="item-template">
@@ -5483,9 +5480,9 @@ Note how for templating the common practice of referencing a script by an ID (or
 </script>
 ```
 
-Whilst there is nothing wrong with the template itself, once we begin to develop larger applications requiring multiple templates, including them all in our markup on page-load can quickly become both unmanageable and come with performance costs. We'll look at solving this problem in a minute.
+这里模板本身没有问题，一旦我们要开发大应用需要很多模板时，把他们都包含在页面内载入就会变得无法管理和损失性能。需要立马解决掉这个问题。
 
-Let's now take a look at the AMD-version of our view. As discussed earlier, the 'module' is wrapped using AMD's `define()` which allows us to specify the dependencies our view requires. Using the mapped paths to 'jquery' etc. simplifies referencing common dependencies and instances of dependencies are themselves mapped to local variables that we can access (e.g 'jquery' is mapped to `$`).
+现在我们来看下AMD版本的view。正如前面讨论的，'module'使用AMD的`define()`来包裹， 可以指定view引入的依赖项。使用映射路径'jquery'等。简化通用依赖的引用并且依赖项的实例被映射到本地变量(比如'jquery'`$`)。
 
 **views/todos.js**
 
@@ -5538,9 +5535,9 @@ define([
     ...
 ```
 
- From a maintenance perspective, there's nothing logically different in this version of our view, except for how we approach templating.
+从维护的角度来看，这版本的view没有什么逻辑上的不同，除了获取模板的方式之外。
 
-Using the Require.js text plugin (the dependency marked `text`), we can actually store all of the contents for the template we looked at earlier in an external file (todos.html).
+使用Require.js text插件(依赖项为`text`)，可以把之前看到的模板保存在外部文件中(todos.html)。
 
 **templates/todos.html**
 
@@ -5557,9 +5554,9 @@ Using the Require.js text plugin (the dependency marked `text`), we can actually
 </div>
 ```
 
-There's no longer a need to be concerned with IDs for the template as we can map its contents to a local variable (in this case `todosTemplate`). We then simply pass this to the Underscore.js templating function `_.template()` the same way we normally would have the value of our template script.
+这里就没有必要通过IDs来或去模板内容了，模板映射到了一个本地变量上(上面代码中的`todosTemplate`)。然后传给Underscore.js模板渲染方法`_.template()`，跟从script模板标签获取之后的处理方式一样。
 
-Next, let's look at how to define models as dependencies which can be pulled into collections. Here's an AMD-compatible model module, which has two default values: a `content` attribute for the content of a Todo item and a boolean `done` state, allowing us to trigger whether the item has been completed or not.
+接下来，我们看下如何定义models作为依赖项可以被拉进collections。这里有一个AMD兼容的model模块，有2个默认值：一个`content`属性是Todo item的内容和一个布尔值`done`，标识这个项是否已完成。
 
 **models/todo.js**
 
@@ -5593,7 +5590,7 @@ define(['underscore', 'backbone'], function(_, Backbone) {
 });
 ```
 
-As per other types of dependencies, we can easily map our model module to a local variable (in this case `Todo`) so it can be referenced as the model to use for our `TodosCollection`. This collection also supports a simple `done()` filter for narrowing down Todo items that have been completed and a `remaining()` filter for those that are still outstanding.
+根据其它类型的依赖，我们可以容易的把model模块映射到本地变量(这个例子中是`Todo`)，这样就可以被作为`TodosCollection`的model使用。这个collection同样支持简单的`done()`过滤，筛选出已完成的Todo项，和一个`remaining()`过滤，筛选出仍在进行的项。
 
 **collections/todos.js**
 
@@ -5625,7 +5622,7 @@ define([
     ...
 ```
 
-In addition to allowing users to add new Todo items from views (which we then insert as models in a collection), we ideally also want to be able to display how many items have been completed and how many are remaining. We've already defined filters that can provide us this information in the above collection, so let's use them in our main application view.
+另外为了让用户在view中添加新的Todo项(作为models插入到collection中)，同时也期望显示有多少条项已完成和待完成。上面那个collection中已经定义了这样的filter，所以可以在主view中使用它们。
 
 **views/app.js**
 
@@ -5662,10 +5659,9 @@ define([
     },
     ...
 ```
+上面我们使用到了这个项目中的第二个模板，`templates/stats.html`映射到`statsTemplate`，用于渲染所有`完成`和`待完成` 状态。原理就是给模板传入Todos collection的lenth(`Todos.length` - 已创建的todo项数量) ，已完成的项的数量(`Todos.done().length`)和待完成项的数量(`Todos.remaining().length`)。
 
-Above, we map the second template for this project, `templates/stats.html` to `statsTemplate` which is used for rendering the overall `done` and `remaining` states. This works by simply passing our template the length of our overall Todos collection (`Todos.length` - the number of Todo items created so far) and similarly the length (counts) for items that have been completed (`Todos.done().length`) or are remaining (`Todos.remaining().length`).
-
-The contents of our `statsTemplate` can be seen below. It's nothing too complicated, but does use ternary conditions to evaluate whether we should state there's "1 item" or "2 item<i>s</i>" in a particular state.
+`statsTemplate`模板的内容在下面。没什么复杂，不过这里用了三元表达式来输出是"item"还是"items"。
 
 ```
 <% if (total) { %>
@@ -5684,58 +5680,57 @@ The contents of our `statsTemplate` can be seen below. It's nothing too complica
       <% } %>
 ```
 
+Todo app剩下的代码主要是处理用户和应用的事件，不过目前已基本包含了这部分实践的核心概念。
+
+想分析整个应用如何联合起来可以浏览[代码库](https://github.com/addyosmani/backbone-fundamentals/tree/master/practicals/modular-todo-app) 。希望对你有用。
+
+**提示:** 虽然这第一部分实践内容没有使用到build配置文件和Require.js优化器，我们将在构建移动Backbone应用的章节使用到。
 
 
-The rest of the source for the Todo app mainly consists of code for handling user and application events, but that rounds up most of the core concepts for this practical.
+##<a name="decouplingbackbone">中介者(Mediator)模式和门面(Facade)模式解耦Backbone</a>
 
-To see how everything ties together, feel free to grab the source by cloning this repo or browse it [online](https://github.com/addyosmani/backbone-fundamentals/tree/master/practicals/modular-todo-app) to learn more. I hope you find it helpful!.
+这一节将会讨论我在[大型JavaScript应用开发](http://addyosmani.com/largescalejavascript)这篇文章中讲到的一些概念。
 
-**Note:** While this first practical doesn't use a build profile as outlined in the chapter on using the Require.js optimizer, we will be using one in the section on building mobile Backbone applications.
+*之后，你可能会对[Aura](http://github.com/addyosmani/aura)感兴趣—— - 我的一个比较流行的基于widget的  Backbone.js扩展框架，它是基于这章节我们会讲到的一些概念而建立的。*
 
+### 概要
 
-##<a name="decouplingbackbone">Decoupling Backbone with the Mediator and Facade patterns</a>
+站在一个高角度来看，一个应用的架构应该是这样：
 
-In this section we'll discuss applying some of the concepts I cover in my article on [Large-scale JavaScript Application development](http://addyosmani.com/largescalejavascript) to Backbone.
+* **高度解耦**: 鼓励模块仅公开和订阅感兴趣的事件而不是直接互相通讯。这有利于构建出来的应用每个单元的代码都不会高度的粘连在一起(解耦)，并且更容易重用。
+* **支持模块级的安全性**: 凭借什么模块只能执行它们被允许的行为。在Javascript应用中应用安全是一块经常被忽略的区域，但是可以非常容易通过灵活的方式实现。
+* **支持故障转移**: 当某些部分模块失效时应用还可以平坦地运行。典型的例子就是GMail聊天部件。想象一下可以有一种方式构建应用，当页面中某个部件失败时(比如chat)，应用(mail)的剩余部分还可以继续运行不受影响。
 
-*After, you may be interested in taking a look At [Aura](http://github.com/addyosmani/aura) - my popular widget-based Backbone.js extension framework based on many of the concepts we will be covering in this section.*
-
-### Summary
-
-At a high-level, one architecture that works for such applications is something which is:
-
-* **Highly decoupled**: encouraging modules to only publish and subscribe to events of interest rather than directly communicating with each other. This helps us to build applications who's units of code aren't highly tied (coupled) together and can thus be reused more easily.
-* **Supports module-level security**: whereby modules are only able to execute behavior they've been permitted to. Application security is an area which is often overlooked in JavaScript applications, but can be quite easily implemented in a flexible manner.
-* **Supports failover**: allowing an application continuing to function even if particular modules fail. The typical example I give of this is the GMail chat widget. Imagine being able to build applications in a way that if one widget on the page fails (e.g chat), the rest of your application (mail) can continue to function without being affected.
-
-This is an architecture which has been implemented by a number of different companies in the past, including Yahoo! (for their modularized homepage - which Nicholas Zakas has [spoken](http://www.youtube.com/watch?v=vXjVFPosQHw) about) and AOL for some of our upcoming projects.
-
-The three design patterns that make this architecture possible are the:
-
-* **Module pattern**: used for encapsulating unique blocks of code, where functions and variables can be kept either public or private. ('private' in the simulation of privacy sense, as of course don't have true privacy in JavaScript)
-* **Mediator pattern**: used when the communication between modules may be complex, but is still well defined. If it appears a system may have too many relationships between modules in your code, it may be time to have a central point of control, which is where the pattern fits in.
-* **Facade pattern**: used for providing a convenient higher-level interface to a larger body of code, hiding its true underlying complexity
-
-Their specific roles in this architecture can be found below.
-
-* **Modules**: There are almost two concepts of what defines a module. As AMD is being used as a module wrapper, technically each model, view and collection can be considered a module. We then have the concept of modules being distinct blocks of code outside of just MVC/MV*. For the latter, these types of 'modules' are primarily concerned with broadcasting and subscribing to events of interest rather than directly communicating with each other.They are made possible through the Mediator pattern.
-* **Mediator**: The mediator has a varying role depending on just how you wish to implement it. In my article, I mention using it as a module manager with the ability to start and stop modules at will, however when it comes to Backbone, I feel that simplifying it down to the role of a central 'controller' that provides pub/sub capabilities should suffice. One can of course go all out in terms of building a module system that supports module starting, stopping, pausing etc, however the scope of this is outside of this chapter.
-* **Facade**: This acts as a secure middle-layer that both abstracts an application core (Mediator) and relays messages from the modules back to the Mediator so they don't touch it directly. The Facade also performs the duty of application security guard; it checks event notifications from modules against a configuration (permissions.js, which we will look at later) to ensure requests from modules are only processed if they are permitted to execute the behavior passed.
+这中架构在过去已经被很多公司所应用，包括Yahoo! (他们模块化的首页——Nicholas Zakas有相关的[谈论](http://www.youtube.com/watch?v=vXjVFPosQHw)) 和AOL应用到一些我们即将推出的项目。
 
 
-### Practical
+需要三种设计模式可以实现这种架构：
 
-For the practical section of this chapter, we'll be extending the well-known Backbone Todo application using the three patterns mentioned above.
+* **模块模式**: 用于封装第一无二的代码块，function和变量可以为公开或者私有。('私有'只是模仿概念，当然在JavaScript中没有真正的私有)
+* **中介者模式**: 用于当模块之间的通讯变得复杂时，但是也需要好的定义。如果出现一个系统，代码中模块之间有很多关系，此时就可能需要一个中央控制点，这个就非常适合使用这个模式。
+* **门面模式**: 用于给一块庞大的代码提供方便的高层次的接口，影藏其内部的复杂性。
 
-The application is broken down into AMD modules that cover everything from Backbone models through to application-level modules. The views publish events of interest to the rest of the application and modules can then subscribe to these event notifications.
+它们在这种架构中对应的角色是：
 
-All subscriptions from modules go through a facade (or sandbox). What this does is check against the subscriber name and the 'channel/notification' it's attempting to subscribe to. If a channel *doesn't* have permissions to be subscribed to (something established through permissions.js), the subscription isn't permitted.
+* **模块**: 模块定义基本上有2个概念。由AMD作为模块包装器，从技术角度来讲，每个model，view和collection都可以认为是一个模块。然而我们模块的概念是不仅限于MVC/MV*的代码块。后面，这种'模块'主要与广播和订阅感兴趣的事件而不是相互之间直接通讯相关。它们可能通过中介者模式实现。
+* **中介者**: 中介者会有不同的角色，这要看你怎么期望如何去实现它。在我写的文章上中，我提到用它作为模块管理，它具有开启和停止模块的能力，不过使用Backbone之后，我认为它可以简化降级为中央'控制器(controller)'的角色，提供发布/订阅(pub/sub) 的能力就够了。当然我们可以全力以赴构建一个模块系统支持模块的启动，停止，暂停等等，不过这已超出这章的范围。
+* **门面**: 这个扮演的是安全的中间层，提取应用的核心(中介者，Mediator)并且把从模块过来的消息回传给中介者，这样他们就不用直接接触了。门面同样执行应用的安全保障；它要根据配置(permissions.js, 后面我们会提到)检查模块的事件通知，确保来自模块的请求传入的行为是允许执行的。
 
 
-**Mediator**
+### 实践
 
-Found in `aura/mediator.js`
+作为这章的实践部分，我们将使用前面提到的这3中模式扩展Backbone Todo应用。
 
-Below is a very simple AMD-wrapped implementation of the mediator pattern, based on prior work by Ryan Florence. It accepts as its input an object, to which it attaches `publish()` and `subscribe()` methods. In a larger application, the mediator can contain additional utilities, such as handlers for initializing, starting and stopping modules, but for demonstration purposes, these two methods should work fine for our needs.
+这个应用被分解成了AMD模块，把Backbone模块都转换成应用级的模块。view给其它部分发布感兴趣的事件，模块可以订阅这些事件通知。
+
+模块的所有订阅都通过一个门面(或者沙箱)。检查订阅者的名称和它尝试订阅的'通道/通知(channel/notification)'。如果一个通道没有被许可订阅(通过permissions.js确定), 那么这个订阅就被禁止。
+
+
+**中介者**
+
+代码在`aura/mediator.js`
+
+下面是一个非常简单的额AMD包装的中介者模式实现，基于Ryan Florence之前的工作。他接受传入一个object，给它附加`publish()`和`subscribe()`方法。在一个大的应用中，中介者可能包含其它工具库，比如初始化处理器，启动和停止模块。为作示例，下面2个方法可以作为很好的说明。
 
 ```javascript
 define([], function(obj){
@@ -5762,11 +5757,11 @@ define([], function(obj){
 ```
 
 
-**Facade**
+**门面**
 
-Found in `aura/facade.js`
+代码在`aura/facade.js`
 
-Next, we have an implementation of the facade pattern. Now the classical facade pattern applied to JavaScript would probably look a little like this:
+下面看下门面模式的实现。传统门面模式在JavaScript可能会向下面这样：
 
 ```javascript
 
@@ -5801,11 +5796,11 @@ module.facade({run: true, val:10});
 //outputs current value: 10, running
 ```
 
-It's effectively a variation of the module pattern, where instead of simply returning an interface of supported methods, your API can completely hide the true implementation powering it, returning something simpler. This allows the logic being performed in the background to be as complex as necessary, whilst all the end-user experiences is a simplified API they pass options to (note how in our case, a single method abstraction is exposed). This is a beautiful way of providing APIs that can be easily consumed.
+它实际上市模块模式的一种变体，API可以完全影藏其真实实现，返回更简洁，而不是简单的返回一个支持方法的接口。把尽可能复杂的逻辑影藏在背后，给用户端的是体验始终是简单的API，他们只需要传入选项即可(注意我们的例子中是如何只返回一个抽象出来的方法)。这是一种提供简单接口调用的很好的方式。
 
-That said, to keep things simple, our implementation of an AMD-compatible facade will act a little more like a proxy. Modules will communicate directly through the facade to access the mediator's `publish()` and `subscribe()` methods, however, they won't as such touch the mediator directly.This enables the facade to provide application-level validation of any subscriptions and publications made.
+也就是说，为了保持简单，我们AMD兼容的门面实现将有点像一个代理。模块将直接通过门面来访问中介者的`publish()`和`subscribe()`方法，不管怎么样，他们不会这么直接与中介者接触。这样门面可以提供应用级的对订阅和通知的校验。
 
-It also allows us to implement a simple, but flexible, permissions checker (as seen below) which will validate subscriptions made against a permissions configuration to see whether it's permitted or not.
+我们也可以实现一个简单，但是灵活的权限检查器(如下所示)，对应权限配置验证订阅是否被允许。
 
 
 ```javascript
@@ -5832,15 +5827,15 @@ define([ "../aura/mediator" , "../aura/permissions" ], function (mediator, permi
 });
 ```
 
-**Permissions**
+**权限**
 
-Found in `aura/permissions.js`
+代码在`aura/permissions.js`
 
-In our simple permissions configuration, we support checking against subscription requests to establish whether they are allowed to clear. This enforces a flexible security layer for the application.
+在我们的权限配置中，支持检查订阅请求，确定他们是否允许清除。给应用强制加了一个灵活的安全层。
 
-To visually see how this works, consider changing say, permissions -> renderDone -> todoCounter to be false. This will completely disable the application from from rendering or displaying the counts component for Todo items left (because they aren't allowed to subscribe to that event notification). The rest of the Todo app can still however be used without issue.
+为了形象的了解其工作原理，考虑改变下说法，许可->渲染完成->todo计数器为false。这将完全禁止应用渲染或者显示对左边todo项计数的组件(因为他们不允许订阅那个事件通知)。其它部分可以正常运行。
 
-It's a very dumbed down example of the potential for application security, but imagine how powerful this might be in a large app with a significant number of visual widgets.
+下面是一个简化的示例，但可以想象一下在一个庞大的app中其强大的能力。
 
 ```javascript
 define([], function () {
@@ -5900,19 +5895,19 @@ define([], function () {
 
 
 
-**Subscribers**
+**订阅者**
 
-Found in `subscribers.js`
+代码在`subscribers.js`
 
-Subscriber 'modules' communicate through the facade back to the mediator and perform actions when a notification event of a particular name is published.
+订阅者'模块'通过门面与中介者通讯，并且当指定的事件发布通知时执行相应的操作。
 
-For example, when a user enters in a new piece of text for a Todo item and hits 'enter' the application publishes a notification saying two things: a) a new Todo item is available and b) the text content of the new item is X. It's then left up to the rest of the application to do with this information whatever it wishes.
+比如，当一个用户输入一项todo内容并'回车'时，应用发布一个消息通知告诉2件事：a) 有一项新的todo项可用了，b) 新的项目文本内容是X。然后就是让其它部分做任何想做的事情了。
 
-In order to update your Backbone application to primarily use pub/sub, a lot of the work you may end up doing will be moving logic coupled inside of specific views to modules outside of it which are reactionary.
+要把Backbone应用升级为以使用发布/订阅(pub/sub)为主，你最终可能会做一些工作，把与特定view相关的逻辑转移到外围的模块。
 
-Take the `todoSaver` for example - its responsibility is saving new Todo items to models once the a `notificationName` called 'newContentAvailable' has fired. If you take a look at the permissions structure in the last code sample, you'll notice that 'newContentAvailable' is present there. If I wanted to prevent subscribers from being able to subscribe to this notification, I simply set it to a boolean value of `false`.
+以`todoSaver`为例—— 它的职责是一旦'notificationName'调用'newContentAvailable'被处罚则保存新的todo到model。'newContentAvailable'在上一个例子权限结构中可以找到。如果我想阻止订阅者订阅这个消息通知，只要把它设为flase就可以了。
 
-Again, this is a massive oversimplification of how advanced your permissions structures could get, but it's certainly one way of controlling what parts of your application can or can't be accessed by specific modules at any time.
+此外，这是一个极其简化的获取权限结构的方式，但是无论在什么时候都能有效的控制应用的某些部分是否可以被指定的模块访问。
 
 ```javascript
 define(["jquery", "underscore", "aura/facade"],
@@ -6015,40 +6010,42 @@ function ($, _, facade) {
 });
 ```
 
-That's it for this section. If you've been intrigued by some of the concepts covered, I encourage you to consider taking a look at my [slides](http://addyosmani.com/blog/large-scale-javascript-application-architecture/) on Large-scale JS from the jQuery Summit or my longer post on the topic [here](http://addyosmani.com/largescalejavascript) for more information.
+以上就是这个小节，如果你对上面的一些概念感兴趣可以看下我在Jquery首脑会议上有关大规模js应用的[幻灯片](http://addyosmani.com/blog/large-scale-javascript-application-architecture/)， 或者更早的[文章](http://addyosmani.com/largescalejavascript)。
 
 
-##<a name="pagination">Paginating Backbone.js Requests & Collections</a>
+##<a name="pagination">分页Backbone.js请求和Collections</a>
 
-Pagination is a ubiquitous problem we often find ourselves needing to solve on the web. Perhaps most predominantly when working with back-end APIs and JavaScript-heavy clients which consume them.
+分页是做web应用无处不在的问题。可能大部分都会使用后端的API然后用沉重的JavaScript去调用。
 
-On this topic, we're going to go through a set of **pagination components** I wrote for Backbone.js, which should hopefully come in useful if you're working on applications which need to tackle this problem. They're part of an extension called [Backbone.Paginator](http://github.com/addyosmani/backbone-paginator).
-
-When working with a structural framework like Backbone.js, the three types of pagination we are most likely to run into are:
-
-**Requests to a service layer (API)**- e.g query for results containing the term 'Brendan' - if 5,000 results are available only display 20 results per page (leaving us with 250 possible result pages that can be navigated to).
-
-This problem actually has quite a great deal more to it, such as maintaining persistence of other URL parameters (e.g sort, query, order) which can change based on a user's search configuration in a UI. One also had to think of a clean way of hooking views up to this pagination so you can easily navigate between pages (e.g First, Last, Next, Previous, 1,2,3), manage the number of results displayed per page and so on.
-
-**Further client-side pagination of data returned -** e.g we've been returned a JSON response containing 100 results. Rather than displaying all 100 to the user, we only display 20 of these results within a navigatable UI in the browser.
-
-Similar to the request problem, client-pagination has its own challenges like navigation once again (Next, Previous, 1,2,3), sorting, order, switching the number of results to display per page and so on.
-
-**Infinite results** - with services such as Facebook, the concept of numeric pagination is instead replaced with a 'Load More' or 'View More' button. Triggering this normally fetches the next 'page' of N results but rather than replacing the previous set of results loaded entirely, we simply append to them instead.
-
-A request pager which simply appends results in a view rather than replacing on each new fetch is effectively an 'infinite' pager.
-
-**Let's now take a look at exactly what we're getting out of the box:**
-
-*Paginator is a set of opinionated components for paginating collections of data using Backbone.js. It aims to provide both solutions for assisting with pagination of requests to a server (e.g an API) as well as pagination of single-loads of data, where we may wish to further paginate a collection of N results into M pages within a view.*
+这里，我们将使用一组我为Backbone.js写的**分页组件**，对你解决此类问题应该有帮助。他们是[Backbone.Paginator](http://github.com/addyosmani/backbone-paginator)的一部分。
 
 
-## Paginator's pieces
+当使用像Backbone.js这类框架开发时，一般会遇到下面这3种情况的分页：
 
-Backbone.Paginator supports two main pagination components:
+**请求服务器层(API)**- 比如查询包含'Brendan'的期刊——如果有5,000个结果，每页只显示20条(那就有250页可供我们跳转了)。
 
-* **Backbone.Paginator.requestPager**: For pagination of requests between a client and a server-side API
-* **Backbone.Paginator.clientPager**: For pagination of data returned from a server which you would like to further paginate within the UI (e.g 60 results are returned, paginate into 3 pages of 20)
+这里其实有很多问题需要处理，比如保持其它URL参数(比如分类，查询，排序)在UI中能让用户定制搜索结果。还需要有一种清晰的方式能让view随着分页的切换而更新(比如首页、末页、下一页、上一页、1、2、3)，管理每页需要显示的数量等等。
+
+**更多的是在客户端对返回的数据进行分页——** 比如返回包含100条结果的JSON数据。但是通过一个可导航的UI在浏览器中只展示20条数据。
+
+与通过请求的问题类似，客户端分页也有其难点，比如重新导航(下一页，上一页，1，2，3)，分类，排序，切换每页显示的条数等等。
+
+**无限结果** ——像Facebook这种服务，其内容的数字分页被替换成'加载更多'和 '查看更多'按钮。通常触发这个按钮会抓取下一页内容，不过展示结果不会替换上一页内容而是追加进去。
+
+将结果追加到view的请求分页就是一个'无限'分页。
+
+**现在我们来看下能从这一块得出什么结论：**
+
+*分页器是一组自以为是的组件，使用Backbone.js对数据集合进行分页。它即提供对服务器进行分页请求（API)同时也要支持单次加载完整数据进行分页 ，更进一步也期望可以对N个结果的集合在一个view中分成M页。*
+
+
+## 分页器组成
+
+Backbone.Paginator主要支持2个分页组件：
+
+* **Backbone.Paginator.requestPager**: 客户端通过请求服务端的API进行分页。
+
+* **Backbone.Paginator.clientPager**: 从服务器端获取数据之后在UI上进行分页 (比如返回60条结果，每页20条则分成了3页)。
 
 
 ## Live Examples

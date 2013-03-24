@@ -6015,40 +6015,42 @@ function ($, _, facade) {
 
 ##<a name="pagination">分页Backbone.js请求和Collections</a>
 
-Pagination is a ubiquitous problem we often find ourselves needing to solve on the web. Perhaps most predominantly when working with back-end APIs and JavaScript-heavy clients which consume them.
+分页是做web应用无处不在的问题。可能大部分都会使用后端的API然后用沉重的JavaScript去调用。
 
-On this topic, we're going to go through a set of **pagination components** I wrote for Backbone.js, which should hopefully come in useful if you're working on applications which need to tackle this problem. They're part of an extension called [Backbone.Paginator](http://github.com/addyosmani/backbone-paginator).
-
-When working with a structural framework like Backbone.js, the three types of pagination we are most likely to run into are:
-
-**Requests to a service layer (API)**- e.g query for results containing the term 'Brendan' - if 5,000 results are available only display 20 results per page (leaving us with 250 possible result pages that can be navigated to).
-
-This problem actually has quite a great deal more to it, such as maintaining persistence of other URL parameters (e.g sort, query, order) which can change based on a user's search configuration in a UI. One also had to think of a clean way of hooking views up to this pagination so you can easily navigate between pages (e.g First, Last, Next, Previous, 1,2,3), manage the number of results displayed per page and so on.
-
-**Further client-side pagination of data returned -** e.g we've been returned a JSON response containing 100 results. Rather than displaying all 100 to the user, we only display 20 of these results within a navigatable UI in the browser.
-
-Similar to the request problem, client-pagination has its own challenges like navigation once again (Next, Previous, 1,2,3), sorting, order, switching the number of results to display per page and so on.
-
-**Infinite results** - with services such as Facebook, the concept of numeric pagination is instead replaced with a 'Load More' or 'View More' button. Triggering this normally fetches the next 'page' of N results but rather than replacing the previous set of results loaded entirely, we simply append to them instead.
-
-A request pager which simply appends results in a view rather than replacing on each new fetch is effectively an 'infinite' pager.
-
-**Let's now take a look at exactly what we're getting out of the box:**
-
-*Paginator is a set of opinionated components for paginating collections of data using Backbone.js. It aims to provide both solutions for assisting with pagination of requests to a server (e.g an API) as well as pagination of single-loads of data, where we may wish to further paginate a collection of N results into M pages within a view.*
+这里，我们将使用一组我为Backbone.js写的**分页组件**，对你解决此类问题应该有帮助。他们是[Backbone.Paginator](http://github.com/addyosmani/backbone-paginator)的一部分。
 
 
-## Paginator's pieces
+当使用像Backbone.js这类框架开发时，一般会遇到下面这3种情况的分页：
 
-Backbone.Paginator supports two main pagination components:
+**请求服务器层(API)**- 比如查询包含'Brendan'的期刊——如果有5,000个结果，每页只显示20条(那就有250页可供我们跳转了)。
 
-* **Backbone.Paginator.requestPager**: For pagination of requests between a client and a server-side API
-* **Backbone.Paginator.clientPager**: For pagination of data returned from a server which you would like to further paginate within the UI (e.g 60 results are returned, paginate into 3 pages of 20)
+这里其实有很多问题需要处理，比如保持其它URL参数(比如分类，查询，排序)在UI中能让用户定制搜索结果。还需要有一种清晰的方式能让view随着分页的切换而更新(比如首页、末页、下一页、上一页、1、2、3)，管理每页需要显示的数量等等。
+
+**更多的是在客户端对返回的数据进行分页——** 比如返回包含100条结果的JSON数据。但是通过一个可导航的UI在浏览器中只展示20条数据。
+
+与通过请求的问题类似，客户端分页也有其难点，比如重新导航(下一页，上一页，1，2，3)，分类，排序，切换每页显示的条数等等。
+
+**无限结果** ——像Facebook这种服务，其内容的数字分页被替换成'加载更多'和 '查看更多'按钮。通常触发这个按钮会抓取下一页内容，不过展示结果不会替换上一页内容而是追加进去。
+
+将结果追加到view的请求分页就是一个'无限'分页。
+
+**现在我们来看下能从这一块得出什么结论：**
+
+*分页器是一组自以为是的组件，使用Backbone.js对数据集合进行分页。它即提供对服务器进行分页请求（API)同时也要支持单次加载完整数据进行分页 ，更进一步也期望可以对N个结果的集合在一个view中分成M页。*
 
 
-## Live Examples
+## 分页器组成
 
-Live previews of both pagination components using the Netflix API can be found below. Fork the repository to experiment with these examples further.
+Backbone.Paginator主要支持2个分页组件：
+
+* **Backbone.Paginator.requestPager**: 客户端通过请求服务端的API进行分页。
+
+* **Backbone.Paginator.clientPager**: 从服务器端获取数据之后在UI上进行分页 (比如返回60条结果，每页20条则分成了3页)。
+
+
+## 在线例子
+
+线上两个分页组件的列子都使用了Netflix API。
 
 * [Backbone.Paginator.requestPager()](http://addyosmani.github.com/backbone.paginator/examples/netflix-request-paging/index.html)
 * [Backbone.Paginator.clientPager()](http://addyosmani.github.com/backbone.paginator/examples/netflix-client-paging/index.html)
@@ -6057,24 +6059,24 @@ Live previews of both pagination components using the Netflix API can be found b
 
 ##Paginator.requestPager
 
-In this section we're going to walkthrough actually using the requestPager.
+在这一小节我们来实际应用下requestPager。
 
-####1. Create a new Paginated collection
-First, we define a new Paginated collection using `Backbone.Paginator.requestPager()` as follows:
+####1. 创建一个新的分页collection
+首先，使用`Backbone.Paginator.requestPager()`定义一个分页collection：
 
 ```javascript
 var PaginatedCollection = Backbone.Paginator.requestPager.extend({
 ```
-####2: Set the model for the collection as normal
+####2: 跟平常一样设置collection的model
 
-Within our collection, we then (as normal) specify the model to be used with this collection followed by the URL (or base URL) for the service providing our data (e.g the Netflix API).
+在collection中，跟正常情况一样根据服务器提供data的URL(或者base URL)指定collection使用的model。
 
 ```javascript
         model: model,
 ```
-####3. Configure the base URL and the type of the request
+####3. 配置base URL和请求类型
 
-We need to set a base URL. The `type` of the request is `GET` by default, and the `dataType` is `jsonp` in order to enable cross-domain requests.
+我们需要设置一个base URL。请求的'type`默认是`GET`，`dataType`默认是`jsonp`为了可以跨域。
 
 ```javascript
     paginator_core: {
@@ -6089,34 +6091,31 @@ We need to set a base URL. The `type` of the request is `GET` by default, and th
     },
 ```
 
-####4. Configure how the library will show the results
+####4. 配置库如何显示结果
 
-We need to tell the library how many items per page would we like to see, etc...
+我们需要告诉组件库每页需要显示多少条结果，之类...
 
 ```javascript
     paginator_ui: {
-      // the lowest page index your API allows to be accessed
+      // API允许访问的最小页码
       firstPage: 0,
 
-      // which page should the paginator start from
-      // (also, the actual page the paginator is on)
+      // 分页器开始的页码
+      // (同时也是分页器当前的页码)
       currentPage: 0,
 
-      // how many items per page should be shown
+      //每页条数
       perPage: 3,
 
-      // a default number of total pages to query in case the API or
-      // service you are using does not support providing the total
-      // number of pages for us.
-      // 10 as a default in case your service doesn't return the total
+      //API没有返回总页码时的一个默认总页数。
       totalPages: 10
     },
 ```
 
-####5. Configure the parameters we want to send to the server
+####5. 配置服务器请求的参数
 
-Only the base URL won't be enough for most cases, so you can pass more parameters to the server.
-Note how you can use functions insead of hardcoded values, and you can also reffer to the values you specified in `paginator_ui`.
+通常有base URL还不够，可以传更多参数给服务器。
+注意，你可以使用function来处理value的返回，也可以引用`paginator_ui`中指定的值。
 
 ```javascript
     server_api: {
@@ -6143,11 +6142,11 @@ Note how you can use functions insead of hardcoded values, and you can also reff
     },
 ```
 
-####6. Finally, configure Collection.parse() and we're done
+####6. 最后，配置Collection.parse()
 
-The last thing we need to do is configure our collection's `parse()` method. We want to ensure we're returning the correct part of our JSON response containing the data our collection will be populated with, which below is `response.d.results` (for the Netflix API).
+最后我们需要做的事就是配置collection的`parse()`方法。我们要确保返回JSON响应数据的正确部分给collection填充，下面例子是`response.d.results` (Netflix API)。
 
-You might also notice that we're setting `this.totalPages` to the total page count returned by the API. This allows us to define the maximum number of (result) pages available for the current/last request so that we can clearly display this in the UI. It also allows us to infuence whether clicking say, a 'next' button should proceed with a request or not.
+你可能注意到我们把`this.totalPages`的值设为API返回数据的总页数。它可用于定义当前/最后页请求的最大可用页数，这样可以在UI上清晰的显示。同样用于决定点击是否有效，点击'下一页'按钮是否需要请求。
 
 ```javascript
         parse: function (response) {
@@ -6165,31 +6164,31 @@ You might also notice that we're setting `this.totalPages` to the total page cou
 });
 ```
 
-####Convenience methods:
+####便利方法：
 
-For your convenience, the following methods are made available for use in your views to interact with the `requestPager`:
+为了方便，下面这些方法是便于在view中与`requestPager`交互：
 
-* **Collection.goTo( n, options )** - go to a specific page
-* **Collection.requestNextPage( options )** - go to the next page
-* **Collection.requestPreviousPage( options )** - go to the previous page
-* **Collection.howManyPer( n )** - set the number of items to display per page
+* **Collection.goTo( n, options )** - 跳转到指定页
+* **Collection.requestNextPage( options )** - 跳转到下一页
+* **Collection.requestPreviousPage( options )** - 跳转到上一页
+* **Collection.howManyPer( n )** - 设置每页显示的数量
 
-**requestPager** collection's methods `.goTo()`, `.requestNextPage()` and `.requestPreviousPage()` are all extension of the original [Backbone Collection.fetch() method](http://documentcloud.github.com/backbone/#Collection-fetch). As so, they all can take the same option object as parameter.
+**requestPager** collection的`.goTo()`, `.requestNextPage()`和`.requestPreviousPage()`都是[Backbone Collection.fetch() method](http://documentcloud.github.com/backbone/#Collection-fetch)的扩展。所以，他们都可以接受相同的option参数对象。
 
-This option object can use `success` and `error` parameters to pass a function to be executed after server answer.
+这个option对象可以使用`success`和`error`参数传入一个function，服务器响应之后执行。
 
 ```javascript
 Collection.goTo(n, {
   success: function( collection, response ) {
-    // called is server request success
+    // 调用服务器请求成功
   },
   error: function( collection, response ) {
-    // called if server request fail
+    // 调用服务器请求失败
   }
 });
 ```
 
-To manage callback, you could also use the [jqXHR](http://api.jquery.com/jQuery.ajax/#jqXHR) returned by these methods to manage callback.
+可以使用[jqXHR](http://api.jquery.com/jQuery.ajax/#jqXHR)返回的这些方法来管理回调。
 
 ```javascript
 Collection
@@ -6206,7 +6205,7 @@ Collection
 });
 ```
 
-If you'd like to add the incoming models to the current collection, instead of replacing the collection's contents, pass `{add: true}` as an option to these methods.
+如果想把返回的models添加到当前的collection，而不是替代collection的内容，可以传入`{add: true}`。
 
 ```javascript
 Collection.requestPreviousPage({ add: true });
@@ -6214,10 +6213,10 @@ Collection.requestPreviousPage({ add: true });
 
 ##Paginator.clientPager
 
-The `clientPager` works similar to the `requestPager`, except that our configuration values influence the pagination of data already returned at a UI-level. Whilst not shown (yet) there is also a lot more UI logic that ties in with the `clientPager`. An example of this can be seen in 'views/clientPagination.js'.
+`clientPager`跟`requestPager`类似，除了配置值是在UI级别影响已返回的数据分页。虽然没有显示，很多UI逻辑也与`clientPager`相关联。可以看'views/clientPagination.js'里的例子。
 
-####1. Create a new paginated collection with a model and URL
-As with `requestPager`, let's first create a new Paginated `Backbone.Paginator.clientPager` collection, with a model:
+####1. 根据model和URL创建一个分页collection
+创建一个`Backbone.Paginator.clientPager` collection：
 
 ```javascript
     var PaginatedCollection = Backbone.Paginator.clientPager.extend({
@@ -6225,9 +6224,9 @@ As with `requestPager`, let's first create a new Paginated `Backbone.Paginator.c
         model: model,
 ```
 
-####2. Configure the base URL and the type of the request
+####2. 配置base URL和请求的类型
 
-We need to set a base URL. The `type` of the request is `GET` by default, and the `dataType` is `jsonp` in order to enable cross-domain requests.
+与requestPager的例子一致。
 
 ```javascript
     paginator_core: {
@@ -6242,9 +6241,9 @@ We need to set a base URL. The `type` of the request is `GET` by default, and th
     },
 ```
 
-####3. Configure how the library will show the results
+####3. 配置如何显示结果
 
-We need to tell the library how many items per page would we like to see, etc...
+与requestPager例子同理。
 
 ```javascript
     paginator_ui: {
@@ -6266,10 +6265,9 @@ We need to tell the library how many items per page would we like to see, etc...
     },
 ```
 
-####4. Configure the parameters we want to send to the server
+####4. 配置传递给服务器的参数
 
-Only the base URL won't be enough for most cases, so you can pass more parameters to the server.
-Note how you can use functions insead of hardcoded values, and you can also reffer to the values you specified in `paginator_ui`.
+与requestPager例子同理。
 
 ```javascript
     server_api: {
@@ -6296,10 +6294,9 @@ Note how you can use functions insead of hardcoded values, and you can also reff
     },
 ```
 
-####5. Finally, configure Collection.parse() and we're done
+####5. 最后配置Collection.parse()
 
-And finally we have our `parse()` method, which in this case isn't concerned with the total number of result pages available on the server as we have our own total count of pages for the paginated data in the UI.
-
+与requestPager例子同理。
 ```javascript
     parse: function (response) {
             var tags = response.d.results;
@@ -6309,16 +6306,16 @@ And finally we have our `parse()` method, which in this case isn't concerned wit
     });
 ```
 
-####Convenience methods:
+####便捷方法：
 
-As mentioned, your views can hook into a number of convenience methods to navigate around UI-paginated data. For `clientPager` these include:
+`clientPager`有下面这些方法在分页之间跳转，与requestPager的例子相似：
 
-* **Collection.goTo(n)** - go to a specific page
-* **Collection.previousPage()** - go to the previous page
-* **Collection.nextPage()** - go to the next page
-* **Collection.howManyPer(n)** - set how many items to display per page
-* **Collection.setSort(sortBy, sortDirection)** - update sort on the current view. Sorting will automatically detect if you're trying to sort numbers (even if they're strored as strings) and will do the right thing.
-* **Collection.setFilter(filterFields, filterWords)** - filter the current view. Filtering supports multiple words without any specific order, so you'll basically get a full-text search ability. Also, you can pass it only one field from the model, or you can pass an array with fields and all of them will get filtered. Last option is to pass it an object containing a comparison method and rules. Currently, only ```levenshtein``` method is available.
+* **Collection.goTo(n)**
+* **Collection.previousPage()**
+* **Collection.nextPage()**
+* **Collection.howManyPer(n)**
+* **Collection.setSort(sortBy, sortDirection)** - 当前view更新排序。排序是自动的，可以对数字排序(尽管是被当成字符串)。
+* **Collection.setFilter(filterFields, filterWords)** - 过滤当前view。过滤支持多个词，没有特定顺序，所有有完整文本搜索能力。同样，也可以传入一个或多个model，都可以进行过滤。最后一个选项是传入一个包含比较放和规则的对象。现在只有```levenshtein```方法可用。
 
 ```javascript
   this.collection.setFilter(
@@ -6327,19 +6324,20 @@ As mentioned, your views can hook into a number of convenience methods to naviga
   );
 ```
 
-Also note that the levenshtein plugin should be loaded and enabled using the ```useLevenshteinPlugin``` variable.
+同样注意，levenshtein插件可以```useLevenshteinPlugin```变量加载和启用。
 
-Last but not less important: Performing Levenshtein comparison returns the ```distance``` between to strings. It won't let you *search* lenghty text.
+最后：Levenshtein比较返回两个字符串间的```距离(distance)```。它不允许*搜索*冗长的文本。
 
-The distance between two strings means the number of characters that should be added, removed or moved to the left or to the right so the strings get equal.
+两个字符串之间的距离就是要使2个字符串相等需要添加，移除或者移动到左边或者右边的字符个数。
 
-That means that comparing "Something" in "This is a test that could show something" will return 32, which is bigger than comparing "Something" and "ABCDEFG" (9).
+比如比较"Something"和"This is a test that could show something"会返回31，要比比较"Something"和"ABCDEFG"(9)大。
 
-Use levenshtein only for short texts (titles, names, etc).
+仅在短文本(titles, names, 等)中使用levenshtein。
 
-* **Collection.doFakeFilter(filterFields, filterWords)** - returns the models count after fake-applying a call to ```Collection.setFilter```.
 
-* **Collection.setFieldFilter(rules)** - filter each value of each model according to `rules` that you pass as argument. Example: You have a collection of books with 'release year' and 'author'. You can filter only the books that were released between 1999 and 2003. And then you can add another `rule` that will filter those books only to authors who's name start with 'A'. Possible rules: function, required, min, max, range, minLength, maxLength, rangeLength, oneOf, equalTo, pattern.
+* **Collection.doFakeFilter(filterFields, filterWords)** - 返回执行一个虚拟的```Collection.setFilter```调用后models的计数。
+
+* **Collection.setFieldFilter(rules)** - 对model的每个值应用`rules`进行过滤。示例：有一个book的collection ，book有'release year'和'author'属性。你可以过滤出版时间在1999到2003间的书。然后可添加另外一个'规则'继续过滤这些书，作者名称以'A'开头的。规则可以是：function, required, min, max, range, minLength, maxLength, rangeLength, oneOf, equalTo, pattern。
 
 
 ```javascript
@@ -6367,9 +6365,9 @@ Use levenshtein only for short texts (titles, names, etc).
 
 ```
 
-* **Collection.doFakeFieldFilter(rules)** - returns the models count after fake-applying a call to ```Collection.setFieldFilter```.
+* **Collection.doFakeFieldFilter(rules)** - 翻译执行```Collection.setFieldFilter```虚拟调用之后的models计数。
 
-####Implementation notes:
+####实现提示：
 
 You can use some variables in your ```View``` to represent the actual state of the paginator.
 
@@ -6387,7 +6385,7 @@ You can use some variables in your ```View``` to represent the actual state of t
 
 ```endRecord``` - The posicion of the last record shown in the current page (eg 41 to 50 from 2000 records) (Only available in ```clientPager```)
 
-## Plugins
+## 插件
 
 **Diacritic.js**
 

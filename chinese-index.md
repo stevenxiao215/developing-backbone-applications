@@ -6369,29 +6369,29 @@ Collection.requestPreviousPage({ add: true });
 
 ####实现提示：
 
-You can use some variables in your ```View``` to represent the actual state of the paginator.
+可以在```View```用一些变量来代表分页器的实际状态。
 
-```totalUnfilteredRecords``` - Contains the number of records, including all records filtered in any way. (Only available in ```clientPager```)
+```totalUnfilteredRecords``` - 结果记录的条数，包括以任何方式过滤掉的结果。(只在 ```clientPager```有效)
 
-```totalRecords``` - Contains the number of records
+```totalRecords``` - 结果记录条数。
 
-```currentPage``` - The actual page were the paginator is at.
+```currentPage``` - 分页器当前的页码。
 
-```perPage``` - The number of records the paginator will show per page.
+```perPage``` - 分页器每页显示的结果条数。
 
-```totalPages``` - The number of total pages.
+```totalPages``` - 总页数。
 
-```startRecord``` - The posicion of the first record shown in the current page (eg 41 to 50 from 2000 records) (Only available in ```clientPager```)
+```startRecord``` - 当前页显示的第一条记录的位置(比如2000条记录中的第41到50条) (只在```clientPager```有效)
 
-```endRecord``` - The posicion of the last record shown in the current page (eg 41 to 50 from 2000 records) (Only available in ```clientPager```)
+```endRecord``` - 当前页显示的最后一条记录的位置(同上)
 
 ## 插件
 
 **Diacritic.js**
 
-A plugin for Backbone.Paginator that replaces diacritic characters (`´`, `˝`, `̏`, `˚`,`~` etc.) with characters that match them most closely. This is particularly useful for filtering.
+这个插件用于Backbone.Paginator把分隔符(`´`, `˝`, `̏`, `˚`,`~`等.)替换与他们相近的字符。
 
-To enable the plugin, set `this.useDiacriticsPlugin` to true, as can be seen in the example below:
+要启用插件，把`this.useDiacriticsPlugin`设为true：
 
 ```javascript
 Paginator.clientPager = Backbone.Collection.extend({
@@ -6415,27 +6415,27 @@ Paginator.clientPager = Backbone.Collection.extend({
 
 ##Backbone & jQuery Mobile
 
-###Resolving the routing conflicts
+###解决路由冲突
 
-The first major hurdle developers typically run into when building Backbone applications with jQuery Mobile is that both frameworks have their own opinions about how to handle application navigation.
+当使用jQuery Mobile开发Backbone应用时开发人员首先面对的主要问题就是这2个框架都有他们自己的方式来处理应用的导航(navigation)。
 
-Backbone's routers offer an explicit way to define custom navigation routes through `Backbone.Router`, whilst jQuery Mobile encourages the use of URL hash fragments to reference separate 'pages' or views in the same document. jQuery Mobile also supports automatically pulling in external content for links through XHR calls meaning that there can be quite a lot of inter-framework confusion about what a link pointing at '#photo/id' should actually be doing.
+Backbone提供`Backbone.Router`以明确的方式定义定制化的导航路由，而jQuery Mobile鼓励使用URL hash fragments在同一个文档中引用独立的'pages'或者views。jQuery Mobile同时也支持自动引入通过XHR调用获取的外部内容，这就意味着这里面有相当多的跨框架混乱，当一个连接指向'#photo/id'时到底该做什么。
 
-Some of the solutions that have been previously proposed to work-around this problem included manually patching Backbone or jQuery Mobile. I discourage opting for these techniques as it becomes necessary to manually patch your framework builds when new releases get made upstream.
+已经有人提出一些方案解决此问题，包括手动修补Backbone或者Backbone。我不太赞同这种做法，因为当框架有新版本发布时又需要进行手动修补。
 
-There's also [jQueryMobile router](https://github.com/azicchetti/jquerymobile-router), which tries to solve this problem differently, however I think my proposed solution is both simpler and allows both frameworks to cohabit quite peacefully without the need to extend either. What we're after is a way to prevent one framework from listening to hash changes so that we can fully rely on the other (e.g. `Backbone.Router`) to handle this for us exclusively.
+同样也有[jQueryMobile router](https://github.com/azicchetti/jquerymobile-router)，尝试用另一种方法来解决此问题，不过我觉得我提出的方案即简单又可以无需对框架做扩展它们也可以和平共处。我的方法就是阻止其中一个框架监听hash change，这样就可以完全依靠另一个框架(比如`Backbone.Router`)来专门处理。
 
-Using jQuery Mobile this can be done by setting:
+如果让jQuery Mobile这么做可以设置： 
 
 ```javascript
 $.mobile.hashListeningEnabled = false;
 ```
 
-prior to initializing any of your other code.
+放在其它所有初始化代码之前。
 
-I discovered this method looking through some jQuery Mobile commits that didn't make their way into the official docs, but am happy to see that they are now covered here http://jquerymobile.com/test/docs/api/globalconfig.html in more detail.
+我是通过一些jQuery Mobile评论发现此方法的，并没有在官方文档里写明。不过非常高兴看到 http://jquerymobile.com/test/docs/api/globalconfig.html这里有更多细节信息。
 
-The next question that arises is, if we're preventing jQuery Mobile from listening to URL hash changes, how can we still get the benefit of being able to navigate to other sections in a document using the built-in transitions and effects supported? Good question. This can now be solve by simply calling `$.mobile.changePage()` as follows:
+如果我们阻止jQuery Mobile监听URL hash change的话，接下来的问题就是，如何继续使用内置的转换和效果支持在文档内切换到其它部分？这是一个非常好的问题，可以通过`$.mobile.changePage()`来解决：
 
 ```javascript
 var url = '#about',
@@ -6446,22 +6446,23 @@ var url = '#about',
 $.mobile.changePage( url , { transition: effect}, reverse, changeHash );
 ```
 
-In the above sample, `url` can refer to a URL or a hash identifier to navigate to, `effect` is simply the transition effect to animate the page in with and the final two parameters decide the direction for the transition (`reverse`) and whether or not the hash in the address bar should be updated (`changeHash`). With respect to the latter, I typically set this to false to avoid managing two sources for hash updates, but feel free to set this to true if you're comfortable doing so.
+上面例子中，`url`可以引用一个URL或者一个要跳转的hash标识，`effect`是页面视图切换是的动画效果，最后2个参数 标识转换动画的方向(`reverse`)及是否更新地址栏URL的hash(`changeHash`)。对于后者，我把它设为false，避免两个地方来管理hash的更新，不过你把它设为true也没有问题。
 
-**Note:** For some parallel work being done to explore how well the jQuery Mobile Router plugin works with Backbone, you may be interested in checking out [https://github.com/Filirom1/jquery-mobile-backbone-requirejs](https://github.com/Filirom1/jquery-mobile-backbone-requirejs).
+**提示：** 更多关于如何解决jQuery Mobile Router插件与Backbone一起工作的问题，可以阅读[https://github.com/Filirom1/jquery-mobile-backbone-requirejs](https://github.com/Filirom1/jquery-mobile-backbone-requirejs)。
 
 
-###Practical: A Backbone, Require.js/AMD app with jQuery Mobile
+###实践：一个使用jQuery Mobile的Backbone, Require.js/AMD app
 
-**Note:** The code for this practical can be found in `practicals/modular-mobile-app`.
+**提示：** 这部分内容的代码在`practicals/modular-mobile-app`。
 
-###Getting started
+###开始
 
-Once you feel comfortable with the [Backbone fundamentals](http://msdn.microsoft.com/en-us/scriptjunkie/hh377172.aspx) and you've put together a rough wireframe of the app you may wish to build, start to think about your application architecture. Ideally, you'll want to logically separate concerns so that it's as easy as possible to maintain the app in the future.
+如果你觉得[Backbone基本原理](http://msdn.microsoft.com/en-us/scriptjunkie/hh377172.aspx)还不错，你可能会对你想要做的一个app开始有个粗略的构想，开始考虑你的应用架构。理想上，你会想逻辑上做分离，将来维护时就更加简单。
 
-**Namespacing**
+**命名空间**
 
-For this application, I opted for the nested namespacing pattern. Implemented correctly, this enables you to clearly identify if items being referenced in your app are views, other modules and so on. This initial structure is a sane place to also include application defaults (unless you prefer maintaining those in a separate file).
+这个应用我选择嵌套的命名空间模式。只要正确实现，就可以清晰的定义app里的元素，views，其它模块等等。这段初始化结构是个包含应用默认值很好的位置(除非你更喜欢在一个独立的文件中维护)。
+
 
 ```javascript
 window.mobileSearch = window.mobileSearch || {
@@ -6483,46 +6484,47 @@ window.mobileSearch = window.mobileSearch || {
 
 **Models**
 
-In the Flickly application, there are at least two unique types of data that need to be modeled - search results and individual photos, both of which contain additional meta-data like photo titles. If you simplify this down, search results are actually groups of photos in their own right, so the application only requires:
+在Flickly应用中，至少有2个唯一型数据需要映射成model——搜索结果和个人照片，两者都包含额外的元数据，照片标题。如果把它简化，搜索结果实际上是按特定顺序的一组照片，所以应用只需要：
 
-* A single model (a photo or 'result' entry)
-* A result collection (containing a group of result entries) for search results
-* A photo collection (containing one or more result entries) for individual photos or photos with more than one image
+* 一个单独的model(照片或者'结果'实体)
+* 一个搜索结果集合(collection)(包含一组结果实体)
+* 一个照片集合(collection)(包含一个或多个结果实体)用于个人照片或者包含多于一张图片的照片。
 
 **Views**
 
-The views we'll need include an application view, a search results view and a photo view. Static views or pages of the single-page application which do not require a dynamic element to them (e.g an 'about' page) can be easily coded up in your document's markup, independent of Backbone.
+我们需要的view包括一个application view,搜索结果view,和一个photo view。单页应用中没有动态元素的静态view(比如'about'页面)可以不依赖于Backbone非常简单的创建出来。
 
 **Routers**
 
-A number of possible routes need to be taken into consideration:
+有下面一些路由需要考虑：
 
-* Basic search queries `#search/kiwis`
-* Search queries with additional parameters (e.g sort, pagination) `#search/kiwis/srelevance/p7`
-* Queries for specific photos `#photo/93839`
-* A default route (no parameters passed)
-
-
-This tutorial will be expanded shortly to fully cover the demo application. In the mean time, please see the practicals folder for the completed application that demonstrates the router resolution discussed earlier between Backbone and jQuery Mobile.
+* 基本的搜索查询`#search/kiwis`
+* 带参数的搜索查询(比如排序，分页) `#search/kiwis/srelevance/p7`
+* 获取指定photo `#photo/93839`
+* 一个默认路由(没有参数传入`)
 
 
-###jQuery Mobile: Going beyond mobile application development
-
-The majority of jQM apps I've seen in production have been developed for the purpose of providing an optimal experience to users on mobile devices. Given that the framework was developed for this purpose, there's nothing fundamentally wrong with this, but many developers forget that jQM is a UI framework not dissimilar to jQuery UI. It's using the widget factory and is capable of being used for a lot more than we give it credit for.
-
-If you open up Flickly in a desktop browser, you'll get an image search UI that's modeled on Google.com, however, review the components (buttons, text inputs, tabs) on the page for a moment. The desktop UI doesn't look anything like a mobile application yet I'm still using jQM for theming mobile components; the tabs, date-picker, sliders - everything in the desktop UI is re-using what jQM would be providing users on mobile devices. Thanks to some media queries, the desktop UI can make optimal use of whitespace, expanding component blocks out and providing alternative layouts whilst still making use of jQM as a component framework.
-
-The benefit of this is that I don't need to go pulling in jQuery UI separately to be able to take advantage of these features. Thanks to the recent ThemeRoller my components can look pretty much exactly how I would like them to and users of the app can get a jQM UI for lower-resolutions and a jQM-ish UI for everything else.
-
-The takeaway here is just to remember that if you're not (already) going through the hassle of conditional script/style loading based on screen-resolution (using matchMedia.js etc), there are simpler approaches that can be taken to cross-device component theming.
+这篇教程将做简短的扩展以包含demo应用的完整内容。同时，也请看下practicals目录下完整程序示范了前面提到的Backbone和jQuery Mobile的router解决方案。
 
 
-#<a name="testing">Unit Testing</a>
+###jQuery Mobile: 超越移动应用开发
+
+我看到的大多数jQM apps都是以给用户提供移动设备体验为目的而开发的。这是这个框架开发出来既定的目的，从根本上说没有什么错误，但是开发人员都忘了jQM是一个UI框架，与jQuery UI没有什么不同。它可用做widget工厂，完全可以比我们原本假定的用于做更多的事情。
 
 
-##<a name="unittestingjasmine">Unit Testing Backbone Applications With Jasmine</a>
+如果你在桌面浏览器中打开Flickly，你会看到一个模仿Google.com的图片搜索UI，不过，分析一下它页面中的组件(按钮，文本输入框，tabs)。桌面UI看起来并不像移动应用， 但仍然可以使用jQM来做移动主题的组件；tabs, date-picker(日期选择), sliders(滑动) ——所有桌面UI都可以使用jQM在移动设备上提供给用户的。有了media queries, 桌面UI可以优化空白的使用，扩展组件的区域，提供可选布局，同时也可以把jQM作为组件框架。
 
-##Introduction
+这样的好处就是不用单独引入jQuery UI利用这些功能。幸好最近有了ThemeRoller，我的组件正如我所期望的那样看起来精确了，低分辨率下应用jQM UI，其它分辨率下应用jQM-ish UI。
+
+需要记住的是如果不准备通过基于屏幕的条件判断来加载script/style的话(使用matchMedia.js等)，有更简单的方式，可以采取跨设备的组件主题。
+
+
+#<a name="testing">单元测试</a>
+
+
+##<a name="unittestingjasmine">使用Jasmine对Backbone应用进行单元测</a>
+
+##简介
 
 One definition of unit testing is the process of taking the smallest piece of testable code in an application, isolating it from the remainder of your codebase and determining if it behaves exactly as expected. In this section, we'll be taking a look at how to unit test Backbone applications using a popular JavaScript testing framework called [Jasmine](http://pivotal.github.com/jasmine/) from Pivotal Labs.
 

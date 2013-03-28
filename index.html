@@ -242,14 +242,14 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#jquery-mobile-超越移动应用开发">jQuery Mobile: 超越移动应用开发</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#unit-testing"><a name="testing">Unit Testing</a></a><ul>
-<li><a href="#unit-testing-backbone-applications-with-jasmine"><a name="unittestingjasmine">Unit Testing Backbone Applications With Jasmine</a></a></li>
-<li><a href="#introduction">Introduction</a></li>
+<li><a href="#单元测试"><a name="testing">单元测试</a></a><ul>
+<li><a href="#使用jasmine对backbone应用进行单元测"><a name="unittestingjasmine">使用Jasmine对Backbone应用进行单元测</a></a></li>
+<li><a href="#简介-1">简介</a></li>
 <li><a href="#jasmine">Jasmine</a></li>
 <li><a href="#suites-specs-spies">Suites, Specs &amp; Spies</a></li>
-<li><a href="#beforeeach-and-aftereach">beforeEach and afterEach()</a></li>
-<li><a href="#shared-scope">Shared scope</a></li>
-<li><a href="#getting-setup">Getting setup</a></li>
+<li><a href="#beforeeach和aftereach">beforeEach和afterEach()</a></li>
+<li><a href="#共享域">共享域</a></li>
+<li><a href="#获取安装">获取安装</a></li>
 <li><a href="#tdd-with-backbone">TDD With Backbone</a></li>
 <li><a href="#models"><a name="testing-jasmine-models">Models</a></a></li>
 <li><a href="#collections-1"><a name="testing-jasmine-collections">Collections</a></a></li>
@@ -261,10 +261,10 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#exercise">Exercise</a></li>
 <li><a href="#further-reading">Further reading</a></li>
 <li><a href="#unit-testing-backbone-applications-with-qunit-and-sinonjs"><a name="unittestingqunit">Unit Testing Backbone Applications With QUnit And SinonJS</a></a></li>
-<li><a href="#introduction-1">Introduction</a></li>
+<li><a href="#introduction">Introduction</a></li>
 </ul></li>
 <li><a href="#qunit">QUnit</a><ul>
-<li><a href="#getting-setup-1">Getting Setup</a><ul>
+<li><a href="#getting-setup">Getting Setup</a><ul>
 <li><a href="#sample-html-with-qunit-compatible-markup">Sample HTML with QUnit-compatible markup:</a></li>
 </ul></li>
 <li><a href="#assertions">Assertions</a><ul>
@@ -5000,53 +5000,53 @@ $.<span class="fu">mobile</span>.<span class="fu">changePage</span>( url , { <sp
 <h3 id="jquery-mobile-超越移动应用开发"><a href="#TOC">jQuery Mobile: 超越移动应用开发</a></h3>
 <p>我看到的大多数jQM apps都是以给用户提供移动设备体验为目的而开发的。这是这个框架开发出来既定的目的，从根本上说没有什么错误，但是开发人员都忘了jQM是一个UI框架，与jQuery UI没有什么不同。它可用做widget工厂，完全可以比我们原本假定的用于做更多的事情。</p>
 <p>如果你在桌面浏览器中打开Flickly，你会看到一个模仿Google.com的图片搜索UI，不过，分析一下它页面中的组件(按钮，文本输入框，tabs)。桌面UI看起来并不像移动应用， 但仍然可以使用jQM来做移动主题的组件；tabs, date-picker(日期选择), sliders(滑动) ——所有桌面UI都可以使用jQM在移动设备上提供给用户的。有了media queries, 桌面UI可以优化空白的使用，扩展组件的区域，提供可选布局，同时也可以把jQM作为组件框架。</p>
-<p>这样的好处就是不用单独引入jQuery UI利用这些功能。Thanks to the recent ThemeRoller my components can look pretty much exactly how I would like them to and users of the app can get a jQM UI for lower-resolutions and a jQM-ish UI for everything else.</p>
-<p>The takeaway here is just to remember that if you’re not (already) going through the hassle of conditional script/style loading based on screen-resolution (using matchMedia.js etc), there are simpler approaches that can be taken to cross-device component theming.</p>
-<h1 id="unit-testing"><a href="#TOC"><a name="testing">Unit Testing</a></a></h1>
-<h2 id="unit-testing-backbone-applications-with-jasmine"><a href="#TOC"><a name="unittestingjasmine">Unit Testing Backbone Applications With Jasmine</a></a></h2>
-<h2 id="introduction"><a href="#TOC">Introduction</a></h2>
-<p>One definition of unit testing is the process of taking the smallest piece of testable code in an application, isolating it from the remainder of your codebase and determining if it behaves exactly as expected. In this section, we’ll be taking a look at how to unit test Backbone applications using a popular JavaScript testing framework called <a href="http://pivotal.github.com/jasmine/">Jasmine</a> from Pivotal Labs.</p>
-<p>For an application to be considered <q>well</q>-tested, distinct functionality should ideally have its own separate unit tests where it’s tested against the different conditions you expect it to work under. All tests must pass before functionality is considered <q>complete</q>. This allows developers to both modify a unit of code and its dependencies with a level of confidence about whether these changes have caused any breakage.</p>
-<p>As a basic example of unit testing is where a developer may wish to assert whether passing specific values through to a sum function results in the correct output being returned. For an example more relevant to this book, we may wish to assert whether a user adding a new Todo item to a list correctly adds a Model of a specific type to a Todos Collection.</p>
-<p>When building modern web-applications, it’s typically considered best-practice to include automated unit testing as a part of your development process. Whilst we’ll be focusing on Jasmine as a solution for this, there are a number of other alternatives worth considering, including QUnit.</p>
+<p>这样的好处就是不用单独引入jQuery UI利用这些功能。幸好最近有了ThemeRoller，我的组件正如我所期望的那样看起来精确了，低分辨率下应用jQM UI，其它分辨率下应用jQM-ish UI。</p>
+<p>需要记住的是如果不准备通过基于屏幕的条件判断来加载script/style的话(使用matchMedia.js等)，有更简单的方式，可以采取跨设备的组件主题。</p>
+<h1 id="单元测试"><a href="#TOC"><a name="testing">单元测试</a></a></h1>
+<h2 id="使用jasmine对backbone应用进行单元测"><a href="#TOC"><a name="unittestingjasmine">使用Jasmine对Backbone应用进行单元测</a></a></h2>
+<h2 id="简介-1"><a href="#TOC">简介</a></h2>
+<p>单元测试的定义就是把整个应用中小片可测试的代码从代码库中隔离，然后检验它的行为是否跟期望的一致。这个章节，我们会讲述如何使用一个流行的测试框架<a href="http://pivotal.github.com/jasmine/">Jasmine</a>来测试Backbone应用，这个框架来自Pivotal Labs。</p>
+<p>一个被称为’好’测试的应用，很明显功能上应该有分开的单元测试，以验证不同情况下它的正确性。所有测试应该在功能完成之前介入。这可以让开发者修改一块代码的时候通过单元测试确认他的修改是否会引发问题，建立代码质量的信心。</p>
+<p>一个最基本的单元测试例子，开发者想要断言传入指定的value給一个sum函数其返回结果是否正确。与我们这本书有关的例子就是，我们想要断言一个用户添加一个新的Todo项到列表中，是否添加了一个指定类型的Model到Todos Collection。</p>
+<p>构建现代的web应用时，通常认为最好的实践方式是在开发过程中引入自动的单元测试。这里我们关注下使用Jasmine的方案，当然也有很多其它选择值得考虑，包括QUnit。</p>
 <h2 id="jasmine"><a href="#TOC">Jasmine</a></h2>
-<p>Jasmine describes itself as a behavior-driven development (BDD) framework for testing JavaScript code. Before we jump into how the framework works, it’s useful to understand exactly what <a href="http://en.wikipedia.org/wiki/Behavior_Driven_Development">BDD</a> is.</p>
-<p>BDD is a second-generation testing approach first described by <a href="http://dannorth.net/introducing-bdd/">Dan North</a> (the authority on BDD) which attempts to test the behavior of software. It’s considered second-generation as it came out of merging ideas from Domain driven design (DDD) and lean software development, helping teams to deliver high quality software by answering many of the more confusing questions early on in the agile process. Such questions commonly include those concerning documentation and testing.</p>
-<p>If you were to read a book on BDD, it’s likely to also be described as being <q>outside-in and pull-based</q>. The reason for this is that it borrows the idea of pulling features from Lean manufacturing which effectively ensures that the right software solutions are being written by a) focusing on expected outputs of the system and b) ensuring these outputs are achieved.</p>
-<p>BDD recognizes that there are usually multiple stakeholders in a project and not a single amorphous user of the system. These different groups will be affected by the software being written in differing ways and will have a varying opinion of what quality in the system means to them. It’s for this reason that it’s important to understand who the software will be bringing value you and exactly what in it will be valuable to them.</p>
-<p>Finally, BDD relies on automation. Once you’ve defined the quality expected, your team will likely want to check on the functionality of the solution being built regularly and compare it to the results they expect. In order to facilitate this efficiently, the process has to be automated. BDD relies heavily on the automation of specification-testing and Jasmine is a tool which can assist with this.</p>
-<p>BDD helps both developers and non-technical stakeholders:</p>
+<p>Jasmine自称是一个用于测试JavaScript代码的行为-驱动开发(Behavior-Driven Development，BDD)的框架。在开始使用这个框架之前，我们先来弄清楚下什么是<a href="http://en.wikipedia.org/wiki/Behavior_Driven_Development">BDD</a>。</p>
+<p>BDD是一种第二代测试方法，由<a href="http://dannorth.net/introducing-bdd/">Dan North</a> (BDD方面的权威)首次定义，它是试图测试软件的行为。称之为第二代是因为其想法来自于领域驱动设计(Domain driven design，DDD)和精益软件开发，通过在敏捷过程中回答许多令人困惑的问题来帮助团队产出高质量软件。这类问题通常包含相关文档和测试。</p>
+<p>如果阅读过一本关于BDD的书籍，有可能它会被描述成’由外及内的、基于拉(pull)的(outside-in and pull-based)’。原因就是它从精益生产借鉴了pull特性， 通过a) 注重系统的预期输出(outputs),b) 确保这些输出被达到，这2两点有效的确保开发出正确的软件方案。</p>
+<p>BDD提出在一个项目中通常有多元利益体并且系统不是只有一个单一的无形用户。这些不同的群体，将会以不同的形式影响所编写的软件，而且软件系统的质量对于他们的意义他们有不同的理解。所以，要明白对于这个软件谁会给你带来价值以及软件会给他们带来什么价值，这点非常重要。</p>
+<p>最后，BDD依赖于自动化。一旦定义好你期望的质量，你的团队可能就会定期的检查正在做的功能是否与他们期望的一致。为了促进效率，这个过程需要自动完成。BDDIn order to facilitate this efficiently, the process has to be automated. BDD严重依赖于自动规格测试，而Jasmine正好是一个做这件事的工具。</p>
+<p>BDD可以帮助开发者和非技术的利益相关者做到：</p>
 <ul>
-<li>Better understand and represent the models of the problems being solved</li>
-<li>Explain supported tests cases in a language that non-developers can read</li>
-<li>Focus on minimizing translation of the technical code being written and the domain language spoken by the business</li>
+<li>更好的理解和提出解决问题的模式</li>
+<li>把测试用例以非开发人员也能读懂的方式解释清楚</li>
+<li>着眼于最小化编写的技术代码到业务表达语言之间的转换。</li>
 </ul>
-<p>What this means is that developers should be able to show Jasmine unit tests to a project stakeholder and (at a high level, thanks to a common vocabulary being used) they’ll ideally be able to understand what the code supports.</p>
-<p>Developers often implement BDD in unison with another testing paradigm known as <a href="http://en.wikipedia.org/wiki/Test-driven_development">TDD</a> (test-driven development). The main idea behind TDD is:</p>
+<p>这就意味着开发者要把Jasmine单元测试给项目的利益相关者做展示，然后他们在观念上要理解代码的用途。</p>
+<p>开发者经常跟另外一种测试方法<a href="http://en.wikipedia.org/wiki/Test-driven_development">TDD</a> (test-driven development)一样来实施BDD。TDD背后的主要观点：</p>
 <ul>
-<li>Write unit tests which describe the functionality you would like your code to support</li>
-<li>Watch these tests fail (as the code to support them hasn’t yet been written)</li>
-<li>Write code to make the tests pass</li>
-<li>Rinse, repeat and refactor</li>
+<li>编写单元测试描述你的代码想要支持的功能</li>
+<li>看着这些测试失败(因为要支持这些功能的代码写好)</li>
+<li>编写代码让测试通过</li>
+<li>清理，重复和重构</li>
 </ul>
-<p>In this chapter we’re going to use both BDD (with TDD) to write unit tests for a Backbone application.</p>
-<p><strong><em>Note:</em></strong> I’ve seen a lot of developers also opt for writing tests to validate behavior of their code after having written it. While this is fine, note that it can come with pitfalls such as only testing for behavior your code currently supports, rather than behavior the problem needs to be supported.</p>
+<p>这一章我们将会用这两种方式(BDD和TDD)来为Backbone应用编写单元测试。</p>
+<p><strong><em>提示</em></strong> 我看到很多开发者仍然是在完成编码之后才编写测试来做验证。虽然这也还不错，不过容易调入陷入，它只能测试到你现在代码所支持的行为，而不一定完整包含我们原本设计需要支持的功能。</p>
 <h2 id="suites-specs-spies"><a href="#TOC">Suites, Specs &amp; Spies</a></h2>
-<p>When using Jasmine, you’ll be writing suites and specifications (specs). Suites basically describe scenarios whilst specs describe what can be done in these scenarios.</p>
-<p>Each spec is a JavaScript function, described with a call to <code>it()</code> using a description string and a function. The description should describe the behaviour the particular unit of code should exhibit and keeping in mind BDD, it should ideally be meaningful. Here’s an example of a basic spec:</p>
+<p>使用Jasmine时，要编写suites(套件)和specs(specifications，规格说明)。Suites主要描述场景，specs描述在这些场景l里要做些什么。</p>
+<p>每个spec就是一个一个JavaScript函数，调用<code>it()</code>来描述，传入一个描述字符串和一个function。描述语要描述出指定单元代码的展现结果，牢记BDD的观念，表述应该有意义。下面是一个简单的例子：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">it(<span class="ch">&#39;should be incrementing in value&#39;</span>, <span class="kw">function</span>(){
     <span class="kw">var</span> counter = <span class="dv">0</span>;
     counter++;
 });</code></pre>
-<p>On its own, a spec isn’t particularly useful until expectations are set about the behavior of the code. Expectations in specs are defined using the <code>expect()</code> function and an <a href="https://github.com/pivotal/jasmine/wiki/Matchers">expectation matcher</a> (e.g <code>toEqual()</code>, <code>toBeTruthy()</code>, <code>toContain()</code>). A revised example using an expectation matcher would look like:</p>
+<p>就其本身而言，一个spec如果没有设置行为代码的期望结果就没有什么用处了。使用<code>expect()</code>函数和<a href="https://github.com/pivotal/jasmine/wiki/Matchers">expectation matcher</a> (比如<code>toEqual()</code>, <code>toBeTruthy()</code>, <code>toContain()</code>)来定义期望结果。示例：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">it(<span class="ch">&#39;should be incrementing in value&#39;</span>, <span class="kw">function</span>(){
     <span class="kw">var</span> counter = <span class="dv">0</span>;
     counter++;
     expect(counter).<span class="fu">toEqual</span>(<span class="dv">1</span>);
 });</code></pre>
-<p>The above code passes our behavioral expectation as <code>counter</code> equals 1. Notice how easy this was to read the expectation on the last line (you probably grokked it without any explanation).</p>
-<p>Specs are grouped into suites which we describe using Jasmine’s <code>describe()</code> function, again passing a string as a description and a function. The name/description for your suite is typically that of the component or module you’re testing.</p>
-<p>Jasmine will use it as the group name when it reports the results of the specs you’ve asked it to run. A simple suite containing our sample spec could look like:</p>
+<p>上面代码中对<code>counter</code>的期望值要等于1。这种代码读起来非常简单(凭直觉就可以理解了，无需任何解释)。</p>
+<p>一组Specs就构成了suites，通过Jasmine的<code>describe()</code>函数定义，传入一个描述字符串和一个函数。suite的名称或者描述通常是需要测试的组件或者模块。</p>
+<p>Jasmine会把它作为给出报告时运行specs的分组名称。下面是一个简单的示例：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">describe(<span class="ch">&#39;Stats&#39;</span>, <span class="kw">function</span>(){
     it(<span class="ch">&#39;can increment a number&#39;</span>, <span class="kw">function</span>(){
         ...
@@ -5056,7 +5056,7 @@ $.<span class="fu">mobile</span>.<span class="fu">changePage</span>( url , { <sp
         ...
     });
 });</code></pre>
-<p>Suites also share a functional scope and so it’s possible to declare variables and functions inside a describe block which are accessible within specs:</p>
+<p>Suites共享一个函数域，所以可以在describe函数内声明变量， specs里的函数也可以访问到：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">describe(<span class="ch">&#39;Stats&#39;</span>, <span class="kw">function</span>(){
     <span class="kw">var</span> counter = <span class="dv">1</span>;
 
@@ -5072,9 +5072,9 @@ $.<span class="fu">mobile</span>.<span class="fu">changePage</span>( url , { <sp
         expect(counter).<span class="fu">toEqual</span>(<span class="dv">1</span>);
     });
 });</code></pre>
-<p><strong><em>Note:</em></strong> Suites are executed in the order in which they are described, which can be useful to know if you would prefer to see test results for specific parts of your application reported first.</p>
-<p>Jasmine also supports <strong>spies</strong> - a way to mock, spy and fake behavior in our unit tests. Spies replace the function they’re spying on, allowing us to simulate behavior we would like to mock (i.e test free of the actual implementation).</p>
-<p>In the below example, we’re spying on the <code>setComplete</code> method of a dummy Todo function to test that arguments can be passed to it as expected.</p>
+<p><strong><em>提示：</em></strong> Suites是按其定义的顺序执行，如果你要看整个应用测试报告的某个特定部分的测试结果，这可能非常有用。</p>
+<p>Jasmine同样支持<strong>spies(监视)</strong> ——在单元测试中一种模仿，监视，和伪造行为的方法。Spies会替换它们监视的函数，可以模仿我们想要伪造的行为。</p>
+<p>在下面这个例子中，我们用一个虚拟的Todo function监视<code>setComplete</code>方法，测试传入的参数是否符合期望。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Todo = <span class="kw">function</span>(){
 };
 
@@ -5097,12 +5097,12 @@ describe(<span class="ch">&#39;a simple spy&#39;</span>, <span class="kw">functi
 
     });
 });</code></pre>
-<p>What you’re more likely to use spies for is testing <a href="http://en.wikipedia.org/wiki/Asynchronous_communication">asynchronous</a> behavior in your application such as AJAX requests. Jasmine supports:</p>
+<p>更有可能会用到spies的地方是测试<a href="http://en.wikipedia.org/wiki/Asynchronous_communication">asynchronous(异步)</a>行为，比如AJAX请求。Jasmine支持：</p>
 <ul>
-<li>Writing tests which can mock AJAX requests using spies. This allows us to test code which runs before an AJAX request and right after. It’s also possible to mock/fake responses the server can return and the benefit of this type of testing is that it’s faster as no real calls are being made to a server</li>
-<li>Asynchronous tests which don’t rely on spies</li>
+<li>使用spies模仿AJAX请求来编写测试。可以在AJAX请求之前和请求之后运行测试代码。也可以伪造服务器端的响应，这种类型的测试好处就是更快，不需要等待实际的服务器调用。</li>
+<li>异步测试部需要依赖spies</li>
 </ul>
-<p>For the first kind of test, it’s possible to both fake an AJAX request and verify that the request was both calling the correct URL and executed a callback where one was provided.</p>
+<p>第一种测试，可以伪造AJAX请求，验证请求的URL是否正确以及执行回调，如果有的话。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">it(<span class="st">&quot;the callback should be executed on success&quot;</span>, <span class="kw">function</span> () {
     spyOn($, <span class="st">&quot;ajax&quot;</span>).<span class="fu">andCallFake</span>(<span class="kw">function</span>(options) {
         <span class="kw">options</span>.<span class="fu">success</span>();
@@ -5123,12 +5123,12 @@ describe(<span class="ch">&#39;a simple spy&#39;</span>, <span class="kw">functi
         <span class="dt">success</span>: callback
     });
 }</code></pre>
-<p>If you feel lost having seen matchers like <code>andCallFake()</code> and <code>toHaveBeenCalled()</code>, don’t worry. All of these are Spy-specific matchers and are documented on the Jasmine <a href="https://github.com/pivotal/jasmine/wiki/Spies">wiki</a>.</p>
-<p>For the second type of test (asynchronous tests), we can take the above further by taking advantage of three other methods Jasmine supports:</p>
+<p><code>andCallFake()</code>，<code>toHaveBeenCalled()</code>是匹配方法，所有Spy可用的匹配方法可以看Jasmine <a href="https://github.com/pivotal/jasmine/wiki/Spies">wiki</a>。</p>
+<p>第二种测试(异步测试)，我们可以用Jasmine支持的下面这三个方法对前面的例子做些改进：</p>
 <ul>
-<li>runs(function) - a block which runs as if it was directly called</li>
-<li>waits(timeout) - a native timeout before the next block is run</li>
-<li>waitsFor(function, optional message, optional timeout) - a way to pause specs until some other work has completed. Jasmine waits until the supplied function returns true here before it moves on to the next block.</li>
+<li>runs(function) - 立即运行一个代码块</li>
+<li>waits(timeout) - 下一个代码块执行前等待一段时间</li>
+<li>waitsFor(function, optional message, optional timeout)——暂停specs知道某些工作完成。Jasmine会等待这里提供的函数返回true然后再继续执行下一块代码。</li>
 </ul>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">it(<span class="st">&quot;should make an actual AJAX request to a server&quot;</span>, <span class="kw">function</span> () {
 
@@ -5152,9 +5152,9 @@ describe(<span class="ch">&#39;a simple spy&#39;</span>, <span class="kw">functi
         <span class="dt">success</span>: callback
     });
 }</code></pre>
-<p><strong><em>Note:</em></strong> It’s useful to remember that when making real requests to a web server in your unit tests, this has the potential to massively slow down the speed at which tests run (due to many factors including server latency). As this also introduces an external dependency that can (and should) be minimized in your unit testing, it is strongly recommended that you opt for spies to remove the need for a web server to be used here.</p>
-<h2 id="beforeeach-and-aftereach"><a href="#TOC">beforeEach and afterEach()</a></h2>
-<p>Jasmine also supports specifying code that can be run before each (<code>beforeEach()</code>) and after each (<code>afterEach</code>) test. This is useful for enforcing consistent conditions (such as resetting variables that may be required by specs). In the following example, <code>beforeEach()</code> is used to create a new sample Todo model specs can use for testing attributes.</p>
+<p><strong><em>提示：</em></strong> 当在单元测试中创建真实的服务器端请求时，会极大的拖慢测试运行的速度(有很多因素，包括服务器延迟)。同时也引入了外部依赖，原本可以(也应该要)最小化你的单元测试，所以强烈推荐你选择spies，避免使用真实的服务器端调用。</p>
+<h2 id="beforeeach和aftereach"><a href="#TOC">beforeEach和afterEach()</a></h2>
+<p>Jasmine同样支持在每个测试之前(<code>beforeEach()</code>)或者之后(<code>afterEach</code>)执行特定的代码。这对强制为一致的条件非常有用(比如重置specs引入的变量)。下面这个例子中，<code>beforeEach()</code>中创建一个specs用于测试属性的Todo model。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">beforeEach(<span class="kw">function</span>(){
    <span class="kw">this</span>.<span class="fu">todo</span> = <span class="kw">new</span> <span class="kw">Backbone</span>.<span class="fu">Model</span>({
       <span class="dt">text</span>: <span class="st">&quot;Buy some more groceries&quot;</span>,
@@ -5165,30 +5165,30 @@ describe(<span class="ch">&#39;a simple spy&#39;</span>, <span class="kw">functi
 it(<span class="st">&quot;should contain a text value if not the default value&quot;</span>, <span class="kw">function</span>(){
    expect(<span class="kw">this</span>.<span class="fu">todo</span>.<span class="fu">get</span>(<span class="ch">&#39;text&#39;</span>)).<span class="fu">toEqual</span>(<span class="st">&quot;Buy some more groceries&quot;</span>);
 });</code></pre>
-<p>Each nested <code>describe()</code> in your tests can have their own <code>beforeEach()</code> and <code>afterEach()</code> methods which support including setup and teardown methods relevant to a particular suite. We’ll be using <code>beforeEach()</code> in practice a little later.</p>
-<h2 id="shared-scope"><a href="#TOC">Shared scope</a></h2>
-<p>In the previous section you may have noticed that we initially declared a variable <code>this.todo</code> in our <code>beforeEach()</code> call and were then able to continue using this in <code>afterEach()</code>. This is thanks to a powerful feature of Jasmine known as shared functional scope. Shared scope allows <code>this</code> properties to be common to all blocks (including <code>runs()</code>), but not declared variables (i.e <code>var</code>s).</p>
-<h2 id="getting-setup"><a href="#TOC">Getting setup</a></h2>
-<p>Now that we’ve reviewed some fundamentals, let’s go through downloading Jasmine and getting everything setup to write tests.</p>
-<p>A standalone release of Jasmine can be <a href="http://pivotal.github.com/jasmine/download.html">downloaded</a> from the official release page.</p>
-<p>You’ll need a file called SpecRunner.html in addition to the release. It can be downloaded from https://github.com/pivotal/jasmine/tree/master/lib/jasmine-core/example or as part of a download of the complete Jasmine <a href="https://github.com/pivotal/jasmine/zipball/master">repo</a>.Alternatively, you can <code>git clone</code> the main Jasmine repository from https://github.com/pivotal/jasmine.git.</p>
-<p>Let’s review <a href="https://github.com/pivotal/jasmine/blob/master/lib/jasmine-core/example/SpecRunner.html">SpecRunner.html</a>:</p>
-<p>It first includes both Jasmine and the necessary CSS required for reporting:</p>
+<p>每个<code>describe()</code>中都可嵌套自己的<code>beforeEach()</code>和<code>afterEach()</code>方法，which support including setup and teardown methods relevant to a particular suite。后面我们会使用<code>beforeEach()</code>来实践下。</p>
+<h2 id="共享域"><a href="#TOC">共享域</a></h2>
+<p>前面你可能注意到<code>beforeEach()</code>调用中我们定义了一个变量<code>this.todo</code>，然后在<code>afterEach()</code>也可以继续使用它。这要归功于Jasmine的共享函数域。共享域可以让所有块(包括<code>runs()</code>)访问的<code>this</code>的属性都是相同的，除了声明的变量之外(<code>var</code>声明的变量)。</p>
+<h2 id="获取安装"><a href="#TOC">获取安装</a></h2>
+<p>现在我们来分析下基本原理，先下载Jasmine并且做好编写测试前的准备。</p>
+<p>官方独立版本可以从这里<a href="https://github.com/pivotal/jasmine/downloads">下载</a>。</p>
+<p>下载到的包中还有一个SpecRunner.html文件。 Jasmine代码仓库可以从用git从这里获取https://github.com/pivotal/jasmine.git。</p>
+<p>我们来看下SpecRunner.html文件(下面示例代码可能相对于新版本的Jasmine较老了)：</p>
+<p>首先引入Jasmine和必要用于report的css：</p>
 <pre><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;lib/jasmine-1.1.0.rc1/jasmine.css&quot;/&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;lib/jasmine-1.1.0.rc1/jasmine.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;lib/jasmine-1.1.0.rc1/jasmine-html.js&quot;&gt;&lt;/script&gt;</code></pre>
-<p>Next, some sample tests are included:</p>
+<p>然后，引入一些测试：</p>
 <pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;spec/SpecHelper.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;spec/PlayerSpec.js&quot;&gt;&lt;/script&gt;</code></pre>
-<p>And finally the sources being tested:</p>
+<p>最后是需要被测试的代码：</p>
 <pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;src/Player.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;src/Song.js&quot;&gt;&lt;/script&gt;</code></pre>
-<p><strong><em>Note:</em></strong> Below this section of SpecRunner is code responsible for running the actual tests. Given that we won’t be covering modifying this code, I’m going to skip reviewing it. I do however encourage you to take a look through <a href="https://github.com/pivotal/jasmine/blob/master/lib/jasmine-core/example/spec/PlayerSpec.js">PlayerSpec.js</a> and <a href="https://github.com/pivotal/jasmine/blob/master/lib/jasmine-core/example/spec/SpecHelper.js">SpecHelper.js</a>. They’re a useful basic example to go through how a minimal set of tests might work.</p>
+<p><strong><em>提示：</em></strong> SpecRunner后面的代码是负责运行测试。 这里不做分析，鼓励你看看PlayerSpec.js和SpecHelper.js的代码。这是个如何做一组测试的很好的例子。</p>
 <h2 id="tdd-with-backbone"><a href="#TOC">TDD With Backbone</a></h2>
-<p>When developing applications with Backbone, it can be necessary to test both individual modules of code as well as modules, views, collections and routers. Taking a TDD approach to testing, let’s review some specs for testing these Backbone components using the popular Backbone <a href="https://github.com/addyosmani/todomvc/tree/master/todo-example/backbone">Todo</a> application. For this section we will be using a modified version of Larry Myers Backbone Koans project, which can be found in the <code>practicals\jasmine-koans</code> folder.</p>
+<p>当使用Backbone开发应用时，需要测试个别的模块代码同时也要测试models, views, collections和routers。采用TDD测试方法，我们来看下测试Backbone <a href="https://github.com/addyosmani/todomvc/tree/gh-pages/architecture-examples/backbone">Todo</a>这个示例项目中Backbone组件的一些specs。这一节我们将使用一个由Larry Myers修改版本的Backbone Koans项目， 在<code>practicals\jasmine-koans</code>目录下。</p>
 <h2 id="models"><a href="#TOC"><a name="testing-jasmine-models">Models</a></a></h2>
-<p>The complexity of Backbone models can vary greatly depending on what your application is trying to achieve. In the following example, we’re going to test default values, attributes, state changes and validation rules.</p>
-<p>First, we begin our suite for model testing using <code>describe()</code>:</p>
+<p>Backbone models的复杂程度完全依赖于应用要实现的功能。下面例子中，我们将测试默认值，属性，状态改变，和验证规则。</p>
+<p>首先，使用<code>describe()</code>创建suite：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">describe(<span class="ch">&#39;Tests for Todo&#39;</span>, <span class="kw">function</span>() {</code></pre>
 <p>Models should ideally have default values for attributes. This helps ensure that when creating instances without a value set for any specific attribute, a default one (e.g <q></q>) is used instead. The idea here is to allow your application to interact with models without any unexpected behavior.</p>
 <p>In the following spec, we create a new Todo without any attributes passed then check to find out what the value of the <code>text</code> attribute is. As no value has been set, we expect a default value of <code>&quot;&quot;</code> to be returned.</p>
@@ -5609,12 +5609,12 @@ expect(<span class="ch">&#39;click&#39;</span>).<span class="fu">toHaveBeenTrigg
 <li><a href="http://japhr.blogspot.com/2011/12/phantomjs-and-backbonejs-and-requirejs.html">Backbone, PhantomJS and Jasmine</a></li>
 </ul>
 <h2 id="unit-testing-backbone-applications-with-qunit-and-sinonjs"><a href="#TOC"><a name="unittestingqunit">Unit Testing Backbone Applications With QUnit And SinonJS</a></a></h2>
-<h2 id="introduction-1"><a href="#TOC">Introduction</a></h2>
+<h2 id="introduction"><a href="#TOC">Introduction</a></h2>
 <p>QUnit is a powerful JavaScript test suite written by jQuery team member <a href="http://bassistance.de/">Jörn Zaefferer</a> and used by many large open-source projects (such as jQuery and Backbone.js) to test their code. It’s both capable of testing standard JavaScript code in the browser as well as code on the server-side (where environments supported include Rhino, V8 and SpiderMonkey). This makes it a robust solution for a large number of use-cases.</p>
 <p>Quite a few Backbone.js contributors feel that QUnit is a better introductory framework for testing if you don’t wish to start off with Jasmine and BDD right away. As we’ll see later on in this chapter, QUnit can also be combined with third-party solutions such as SinonJS to produce an even more powerful testing solution supporting spies and mocks, which some say is preferable over Jasmine.</p>
 <p>My personal recommendation is that it’s worth comparing both frameworks and opting for the solution that you feel the most comfortable with.</p>
 <h1 id="qunit"><a href="#TOC">QUnit</a></h1>
-<h2 id="getting-setup-1"><a href="#TOC">Getting Setup</a></h2>
+<h2 id="getting-setup"><a href="#TOC">Getting Setup</a></h2>
 <p>Luckily, getting QUnit setup is a fairly straight-forward process that will take less than 5 minutes.</p>
 <p>We first setup a testing environment composed of three files:</p>
 <ul>

@@ -6723,11 +6723,11 @@ function getTodo(id, callback) {
 }
 ```
 
-***提示：*** It's useful to remember that when making real requests to a web server in your unit tests, this has the potential to massively slow down the speed at which tests run (due to many factors including server latency). As this also introduces an external dependency that can (and should) be minimized in your unit testing, it is strongly recommended that you opt for spies to remove the need for a web server to be used here.
+***提示：*** 当在单元测试中创建真实的服务器端请求时，会极大的拖慢测试运行的速度(有很多因素，包括服务器延迟)。同时也引入了外部依赖，原本可以(也应该要)最小化你的单元测试，所以强烈推荐你选择spies，避免使用真实的服务器端调用。
 
-##beforeEach and afterEach()
+##beforeEach和afterEach()
 
-Jasmine also supports specifying code that can be run before each (```beforeEach()```) and after each (```afterEach```) test. This is useful for enforcing consistent conditions (such as resetting variables that may be required by specs). In the following example, ```beforeEach()``` is used to create a new sample Todo model specs can use for testing attributes.
+Jasmine同样支持在每个测试之前(```beforeEach()```)或者之后(```afterEach```)执行特定的代码。这对强制为一致的条件非常有用(比如重置specs引入的变量)。下面这个例子中，```beforeEach()```中创建一个specs用于测试属性的Todo model。
 
 ```javascript
 beforeEach(function(){
@@ -6742,24 +6742,24 @@ it("should contain a text value if not the default value", function(){
 });
 ```
 
-Each nested ```describe()``` in your tests can have their own ```beforeEach()``` and ```afterEach()``` methods which support including setup and teardown methods relevant to a particular suite. We'll be using ```beforeEach()``` in practice a little later.
+每个```describe()```中都可嵌套自己的```beforeEach()```和```afterEach()```方法，which support including setup and teardown methods relevant to a particular suite。后面我们会使用```beforeEach()```来实践下。
 
-##Shared scope
+##共享域
 
-In the previous section you may have noticed that we initially declared a variable ```this.todo``` in our ```beforeEach()``` call and were then able to continue using this in ```afterEach()```. This is thanks to a powerful feature of Jasmine known as shared  functional scope. Shared scope allows ```this``` properties to be common to all blocks (including ```runs()```), but not declared variables (i.e ```var```s).
+前面你可能注意到```beforeEach()```调用中我们定义了一个变量```this.todo```，然后在```afterEach()```也可以继续使用它。这要归功于Jasmine的共享函数域。共享域可以让所有块(包括```runs()```)访问的```this```的属性都是相同的，除了声明的变量之外(```var```声明的变量)。
 
 
-##Getting setup
+##获取安装
 
-Now that we've reviewed some fundamentals, let's go through downloading Jasmine and getting everything setup to write tests.
+现在我们来分析下基本原理，先下载Jasmine并且做好编写测试前的准备。
 
-A standalone release of Jasmine can be [downloaded](http://pivotal.github.com/jasmine/download.html) from the official release page.
+官方独立版本可以从这里[下载](https://github.com/pivotal/jasmine/downloads)。
 
-You'll need a file called SpecRunner.html in addition to the release. It can be downloaded from https://github.com/pivotal/jasmine/tree/master/lib/jasmine-core/example or as part of a download of the complete Jasmine [repo](https://github.com/pivotal/jasmine/zipball/master).Alternatively, you can ```git clone``` the main Jasmine repository from https://github.com/pivotal/jasmine.git.
+下载到的包中还有一个SpecRunner.html文件。 Jasmine代码仓库可以从用git从这里获取https://github.com/pivotal/jasmine.git。
 
-Let's review [SpecRunner.html](https://github.com/pivotal/jasmine/blob/master/lib/jasmine-core/example/SpecRunner.html):
+我们来看下SpecRunner.html文件(下面示例代码可能相对于新版本的Jasmine较老了)：
 
-It first includes both Jasmine and the necessary CSS required for reporting:
+首先引入Jasmine和必要用于report的css：
 
 
 	<link rel="stylesheet" type="text/css" href="lib/jasmine-1.1.0.rc1/jasmine.css"/>
@@ -6767,39 +6767,39 @@ It first includes both Jasmine and the necessary CSS required for reporting:
 	<script type="text/javascript" src="lib/jasmine-1.1.0.rc1/jasmine-html.js"></script>
 
 
-Next, some sample tests are included:
+然后，引入一些测试：
 
 
 	<script type="text/javascript" src="spec/SpecHelper.js"></script>
 	<script type="text/javascript" src="spec/PlayerSpec.js"></script>
 
 
-And finally the sources being tested:
+最后是需要被测试的代码：
 
 
 	<script type="text/javascript" src="src/Player.js"></script>
 	<script type="text/javascript" src="src/Song.js"></script>
 
 
-***Note:*** Below this section of SpecRunner is code responsible for running the actual tests. Given that we won't be covering modifying this code, I'm going to skip reviewing it. I do however encourage you to take a look through [PlayerSpec.js](https://github.com/pivotal/jasmine/blob/master/lib/jasmine-core/example/spec/PlayerSpec.js) and [SpecHelper.js](https://github.com/pivotal/jasmine/blob/master/lib/jasmine-core/example/spec/SpecHelper.js). They're a useful basic example to go through how a minimal set of tests might work.
+***提示：*** SpecRunner后面的代码是负责运行测试。 这里不做分析，鼓励你看看PlayerSpec.js和SpecHelper.js的代码。这是个如何做一组测试的很好的例子。
 
 ##TDD With Backbone
 
-When developing applications with Backbone, it can be necessary to test both individual modules of code as well as modules, views, collections and routers. Taking a TDD approach to testing, let's review some specs for testing these Backbone components using the popular Backbone [Todo](https://github.com/addyosmani/todomvc/tree/master/todo-example/backbone) application. For this section we will be using a modified version of Larry Myers Backbone Koans project, which can be found in the `practicals\jasmine-koans` folder.
+当使用Backbone开发应用时，需要测试个别的模块代码同时也要测试models, views, collections和routers。采用TDD测试方法，我们来看下测试Backbone [Todo](https://github.com/addyosmani/todomvc/tree/gh-pages/architecture-examples/backbone)这个示例项目中Backbone组件的一些specs。这一节我们将使用一个由Larry Myers修改版本的Backbone Koans项目， 在`practicals\jasmine-koans`目录下。
 
 ##<a name="testing-jasmine-models">Models</a>
 
-The complexity of Backbone models can vary greatly depending on what your application is trying to achieve. In the following example, we're going to test default values, attributes, state changes and validation rules.
+Backbone models的复杂程度完全依赖于应用要实现的功能。下面例子中，我们将测试默认值，属性，状态改变，和验证规则。
 
-First, we begin our suite for model testing using ```describe()```:
+首先，使用```describe()```创建suite：
 
 ```javascript
 describe('Tests for Todo', function() {
 ```
 
-Models should ideally have default values for attributes. This helps ensure that when creating instances without a value set for any specific attribute, a default one (e.g "") is used instead. The idea here is to allow your application to interact with models without any unexpected behavior.
+Model的属性理想上应该有默认值。可以确保创建实例时未指定值的话可以使用默认值替代。这里的意思主要是与models交互是可以避免一些意外的行为。
 
-In the following spec, we create a new Todo without any attributes passed then check to find out what the value of the ```text``` attribute is. As no value has been set, we expect a default value of ```""``` to be returned.
+下面这个spec，创建一个Todo没有传入任何属性，然后检查下```text```属性的值是什么。因为没有设置任何值，所以我们期望的值是返回```""```。
 
 ```javascript
 it('Can be created with default values for its attributes.', function() {

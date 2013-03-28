@@ -6526,52 +6526,52 @@ window.mobileSearch = window.mobileSearch || {
 
 ##简介
 
-One definition of unit testing is the process of taking the smallest piece of testable code in an application, isolating it from the remainder of your codebase and determining if it behaves exactly as expected. In this section, we'll be taking a look at how to unit test Backbone applications using a popular JavaScript testing framework called [Jasmine](http://pivotal.github.com/jasmine/) from Pivotal Labs.
+单元测试的定义就是把整个应用中小片可测试的代码从代码库中隔离，然后检验它的行为是否跟期望的一致。这个章节，我们会讲述如何使用一个流行的测试框架[Jasmine](http://pivotal.github.com/jasmine/)来测试Backbone应用，这个框架来自Pivotal Labs。
 
-For an application to be considered 'well'-tested, distinct functionality should ideally have its own separate unit tests where it's tested against the different conditions you expect it to work under. All tests must pass before functionality is considered 'complete'. This allows developers to both modify a unit of code and its dependencies with a level of confidence about whether these changes have caused any breakage.
+一个被称为'好'测试的应用，很明显功能上应该有分开的单元测试，以验证不同情况下它的正确性。所有测试应该在功能完成之前介入。这可以让开发者修改一块代码的时候通过单元测试确认他的修改是否会引发问题，建立代码质量的信心。
 
-As a basic example of unit testing is where a developer may wish to assert whether passing specific values through to a sum function results in the correct output being returned. For an example more relevant to this book, we may wish to assert whether a user adding a new Todo item to a list correctly adds a Model of a specific type to a Todos Collection.
+一个最基本的单元测试例子，开发者想要断言传入指定的value給一个sum函数其返回结果是否正确。与我们这本书有关的例子就是，我们想要断言一个用户添加一个新的Todo项到列表中，是否添加了一个指定类型的Model到Todos Collection。
 
-When building modern web-applications, it's typically considered best-practice to include automated unit testing as a part of your development process. Whilst we'll be focusing on Jasmine as a solution for this, there are a number of other alternatives worth considering, including QUnit.
+构建现代的web应用时，通常认为最好的实践方式是在开发过程中引入自动的单元测试。这里我们关注下使用Jasmine的方案，当然也有很多其它选择值得考虑，包括QUnit。
 
 ##Jasmine
 
-Jasmine describes itself as a behavior-driven development (BDD) framework for testing JavaScript code. Before we jump into how the framework works, it's useful to understand exactly what [BDD](http://en.wikipedia.org/wiki/Behavior_Driven_Development) is.
+Jasmine自称是一个用于测试JavaScript代码的行为-驱动开发(Behavior-Driven Development，BDD)的框架。在开始使用这个框架之前，我们先来弄清楚下什么是[BDD](http://en.wikipedia.org/wiki/Behavior_Driven_Development)。
 
-BDD is a second-generation testing approach first described by [Dan North](http://dannorth.net/introducing-bdd/) (the authority on BDD) which attempts to test the behavior of software. It's considered second-generation as it came out of merging ideas from Domain driven design (DDD) and lean software development, helping teams to deliver high quality software by answering many of the more confusing questions early on in the agile process. Such questions commonly include those concerning documentation and testing.
+BDD是一种第二代测试方法，由[Dan North](http://dannorth.net/introducing-bdd/) (BDD方面的权威)首次定义，它是试图测试软件的行为。称之为第二代是因为其想法来自于领域驱动设计(Domain driven design，DDD)和精益软件开发，通过在敏捷过程中回答许多令人困惑的问题来帮助团队产出高质量软件。这类问题通常包含相关文档和测试。
 
-If you were to read a book on BDD, it's likely to also be described as being 'outside-in and pull-based'. The reason for this is that it borrows the idea of pulling features from Lean manufacturing which effectively ensures that the right software solutions are being written by a) focusing on expected outputs of the system and b) ensuring these outputs are achieved.
+如果阅读过一本关于BDD的书籍，有可能它会被描述成'由外及内的、基于拉(pull)的(outside-in and pull-based)'。原因就是它从精益生产借鉴了pull特性， 通过a) 注重系统的预期输出(outputs),b) 确保这些输出被达到，这2两点有效的确保开发出正确的软件方案。
 
-BDD recognizes that there are usually multiple stakeholders in a project and not a single amorphous user of the system. These different groups will be affected by the software being written in differing ways and will have a varying opinion of what quality in the system means to them. It's for this reason that it's important to understand who the software will be bringing value you and exactly what in it will be valuable to them.
+BDD提出在一个项目中通常有多元利益体并且系统不是只有一个单一的无形用户。这些不同的群体，将会以不同的形式影响所编写的软件，而且软件系统的质量对于他们的意义他们有不同的理解。所以，要明白对于这个软件谁会给你带来价值以及软件会给他们带来什么价值，这点非常重要。
 
-Finally, BDD relies on automation. Once you've defined the quality expected, your team will likely want to check on the functionality of the solution being built regularly and compare it to the results they expect. In order to facilitate this efficiently, the process has to be automated. BDD relies heavily on the automation of specification-testing and Jasmine is a tool which can assist with this.
+最后，BDD依赖于自动化。一旦定义好你期望的质量，你的团队可能就会定期的检查正在做的功能是否与他们期望的一致。为了促进效率，这个过程需要自动完成。BDDIn order to facilitate this efficiently, the process has to be automated. BDD严重依赖于自动规格测试，而Jasmine正好是一个做这件事的工具。
 
-BDD helps both developers and non-technical stakeholders:
+BDD可以帮助开发者和非技术的利益相关者做到：
 
 
-* Better understand and represent the models of the problems being solved
-* Explain supported tests cases in a language that non-developers can read
-* Focus on minimizing translation of the technical code being written and the domain language spoken by the business
+* 更好的理解和提出解决问题的模式
+* 把测试用例以非开发人员也能读懂的方式解释清楚
+* 着眼于最小化编写的技术代码到业务表达语言之间的转换。
 
-What this means is that developers should be able to show Jasmine unit tests to a project stakeholder and (at a high level, thanks to a common vocabulary being used) they'll ideally be able to understand what the code supports.
+这就意味着开发者要把Jasmine单元测试给项目的利益相关者做展示，然后他们在观念上要理解代码的用途。
 
-Developers often implement BDD in unison with another testing paradigm known as [TDD](http://en.wikipedia.org/wiki/Test-driven_development) (test-driven development). The main idea behind TDD is:
+开发者经常跟另外一种测试方法[TDD](http://en.wikipedia.org/wiki/Test-driven_development) (test-driven development)一样来实施BDD。TDD背后的主要观点：
 
-* Write unit tests which describe the functionality you would like your code to support
-* Watch these tests fail (as the code to support them hasn't yet been written)
-* Write code to make the tests pass
-* Rinse, repeat and refactor
+* 编写单元测试描述你的代码想要支持的功能
+* 看着这些测试失败(因为要支持这些功能的代码写好)
+* 编写代码让测试通过
+* 清理，重复和重构
 
-In this chapter we're going to use both BDD (with TDD) to write unit tests for a Backbone application.
+这一章我们将会用这两种方式(BDD和TDD)来为Backbone应用编写单元测试。
 
-***Note:*** I've seen a lot of developers also opt for writing tests to validate behavior of their code after having written it. While this is fine, note that it can come with pitfalls such as only testing for behavior your code currently supports, rather than behavior the problem needs to be supported.
+***提示*** 我看到很多开发者仍然是在完成编码之后才编写测试来做验证。虽然这也还不错，不过容易调入陷入，它只能测试到你现在代码所支持的行为，而不一定完整包含我们原本设计需要支持的功能。
 
 
 ##Suites, Specs & Spies
 
-When using Jasmine, you'll be writing suites and specifications (specs). Suites basically describe scenarios whilst specs describe what can be done in these scenarios.
+使用Jasmine时，要编写suites(套件)和specs(specifications，规格说明)。Suites主要描述场景，specs描述在这些场景l里要做些什么。
 
-Each spec is a JavaScript function, described with a call to ```it()``` using a description string and a function. The description should describe the behaviour the particular unit of code should exhibit and keeping in mind BDD, it should ideally be meaningful. Here's an example of a basic spec:
+每个spec就是一个一个JavaScript函数，调用```it()```来描述，传入一个描述字符串和一个function。描述语要描述出指定单元代码的展现结果，牢记BDD的观念，表述应该有意义。下面是一个简单的例子：
 
 ```javascript
 it('should be incrementing in value', function(){
@@ -6580,7 +6580,7 @@ it('should be incrementing in value', function(){
 });
 ```
 
-On its own, a spec isn't particularly useful until expectations are set about the behavior of the code. Expectations in specs are defined using the ```expect()``` function and an [expectation matcher](https://github.com/pivotal/jasmine/wiki/Matchers) (e.g ```toEqual()```, ```toBeTruthy()```, ```toContain()```). A revised example using an expectation matcher would look like:
+就其本身而言，一个spec如果没有设置行为代码的期望结果就没有什么用处了。使用```expect()```函数和[expectation matcher](https://github.com/pivotal/jasmine/wiki/Matchers) (比如```toEqual()```, ```toBeTruthy()```, ```toContain()```)来定义期望结果。示例：
 
 ```javascript
 it('should be incrementing in value', function(){
@@ -6590,11 +6590,11 @@ it('should be incrementing in value', function(){
 });
 ```
 
-The above code passes our behavioral expectation as ```counter``` equals 1. Notice how easy this was to read the expectation on the last line (you probably grokked it without any explanation).
+上面代码中对```counter```的期望值要等于1。这种代码读起来非常简单(凭直觉就可以理解了，无需任何解释)。
 
-Specs are grouped into suites which we describe using Jasmine's ```describe()``` function, again passing a string as a description and a function. The name/description for your suite is typically that of the component or module you're testing.
+一组Specs就构成了suites，通过Jasmine的```describe()```函数定义，传入一个描述字符串和一个函数。suite的名称或者描述通常是需要测试的组件或者模块。
 
-Jasmine will use it as the group name when it reports the results of the specs you've asked it to run. A simple suite containing our sample spec could look like:
+Jasmine会把它作为给出报告时运行specs的分组名称。下面是一个简单的示例：
 
 ```javascript
 describe('Stats', function(){
@@ -6608,7 +6608,7 @@ describe('Stats', function(){
 });
 ```
 
-Suites also share a functional scope and so it's possible to declare variables and functions inside a describe block which are accessible within specs:
+Suites共享一个函数域，所以可以在describe函数内声明变量， specs里的函数也可以访问到：
 
 ```javascript
 describe('Stats', function(){
@@ -6628,11 +6628,11 @@ describe('Stats', function(){
 });
 ```
 
-***Note:*** Suites are executed in the order in which they are described, which can be useful to know if you would prefer to see test results for specific parts of your application reported first.
+***提示：*** Suites是按其定义的顺序执行，如果你要看整个应用测试报告的某个特定部分的测试结果，这可能非常有用。
 
-Jasmine also supports **spies** - a way to mock, spy and fake behavior in our unit tests. Spies replace the function they're spying on, allowing us to simulate behavior we would like to mock (i.e test free of the actual implementation).
+Jasmine同样支持**spies(监视)** ——在单元测试中一种模仿，监视，和伪造行为的方法。Spies会替换它们监视的函数，可以模仿我们想要伪造的行为。
 
-In the below example, we're spying on the ```setComplete``` method of a dummy Todo function to test that arguments can be passed to it as expected.
+在下面这个例子中，我们用一个虚拟的Todo function监视```setComplete```方法，测试传入的参数是否符合期望。
 
 ```javascript
 var Todo = function(){
@@ -6659,12 +6659,12 @@ describe('a simple spy', function(){
 });
 ```
 
-What you're more likely to use spies for is testing [asynchronous](http://en.wikipedia.org/wiki/Asynchronous_communication) behavior in your application such as AJAX requests. Jasmine supports:
+更有可能会用到spies的地方是测试[asynchronous(异步)](http://en.wikipedia.org/wiki/Asynchronous_communication)行为，比如AJAX请求。Jasmine支持：
 
-* Writing tests which can mock AJAX requests using spies. This allows us to test code which runs before an AJAX request and right after. It's also possible to mock/fake responses the server can return and the benefit of this type of testing is that it's faster as no real calls are being made to a server
-* Asynchronous tests which don't rely on spies
+* 使用spies模仿AJAX请求来编写测试。可以在AJAX请求之前和请求之后运行测试代码。也可以伪造服务器端的响应，这种类型的测试好处就是更快，不需要等待实际的服务器调用。
+* 异步测试部需要依赖spies
 
-For the first kind of test, it's possible to both fake an AJAX request and verify that the request was both calling the correct URL and executed a callback where one was provided.
+第一种测试，可以伪造AJAX请求，验证请求的URL是否正确以及执行回调，如果有的话。
 
 ```javascript
 it("the callback should be executed on success", function () {
@@ -6689,13 +6689,13 @@ function getTodo(id, callback) {
 }
 ```
 
-If you feel lost having seen matchers like ```andCallFake()``` and ```toHaveBeenCalled()```, don't worry. All of these are Spy-specific matchers and are documented on the Jasmine [wiki](https://github.com/pivotal/jasmine/wiki/Spies).
+```andCallFake()```，```toHaveBeenCalled()```是匹配方法，所有Spy可用的匹配方法可以看Jasmine [wiki](https://github.com/pivotal/jasmine/wiki/Spies)。
 
-For the second type of test (asynchronous tests), we can take the above further by taking advantage of three other methods Jasmine supports:
+第二种测试(异步测试)，我们可以用Jasmine支持的下面这三个方法对前面的例子做些改进：
 
-* runs(function) - a block which runs as if it was directly called
-* waits(timeout) - a native timeout before the next block is run
-* waitsFor(function, optional message, optional timeout) - a way to pause specs until some other work has completed. Jasmine waits until the supplied function returns true here before it moves on to the next block.
+* runs(function) - 立即运行一个代码块
+* waits(timeout) - 下一个代码块执行前等待一段时间
+* waitsFor(function, optional message, optional timeout)——暂停specs知道某些工作完成。Jasmine会等待这里提供的函数返回true然后再继续执行下一块代码。
 
 
 ```javascript
@@ -6723,7 +6723,7 @@ function getTodo(id, callback) {
 }
 ```
 
-***Note:*** It's useful to remember that when making real requests to a web server in your unit tests, this has the potential to massively slow down the speed at which tests run (due to many factors including server latency). As this also introduces an external dependency that can (and should) be minimized in your unit testing, it is strongly recommended that you opt for spies to remove the need for a web server to be used here.
+***提示：*** It's useful to remember that when making real requests to a web server in your unit tests, this has the potential to massively slow down the speed at which tests run (due to many factors including server latency). As this also introduces an external dependency that can (and should) be minimized in your unit testing, it is strongly recommended that you opt for spies to remove the need for a web server to be used here.
 
 ##beforeEach and afterEach()
 

@@ -5190,13 +5190,13 @@ it(<span class="st">&quot;should contain a text value if not the default value&q
 <p>Backbone models的复杂程度完全依赖于应用要实现的功能。下面例子中，我们将测试默认值，属性，状态改变，和验证规则。</p>
 <p>首先，使用<code>describe()</code>创建suite：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">describe(<span class="ch">&#39;Tests for Todo&#39;</span>, <span class="kw">function</span>() {</code></pre>
-<p>Models should ideally have default values for attributes. This helps ensure that when creating instances without a value set for any specific attribute, a default one (e.g <q></q>) is used instead. The idea here is to allow your application to interact with models without any unexpected behavior.</p>
-<p>In the following spec, we create a new Todo without any attributes passed then check to find out what the value of the <code>text</code> attribute is. As no value has been set, we expect a default value of <code>&quot;&quot;</code> to be returned.</p>
+<p>Model的属性理想上应该有默认值。可以确保创建实例时未指定值的话可以使用默认值替代。这里的意思主要是与models交互是可以避免一些意外的行为。</p>
+<p>下面这个spec，创建一个Todo没有传入任何属性，然后检查下<code>text</code>属性的值是什么。因为没有设置任何值，所以我们期望的值是返回<code>&quot;&quot;</code>。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">it(<span class="ch">&#39;Can be created with default values for its attributes.&#39;</span>, <span class="kw">function</span>() {
     <span class="kw">var</span> todo = <span class="kw">new</span> Todo();
     expect(<span class="kw">todo</span>.<span class="fu">get</span>(<span class="ch">&#39;text&#39;</span>)).<span class="fu">toBe</span>(<span class="st">&quot;&quot;</span>);
 });</code></pre>
-<p>If testing this spec before your models have been written, you’ll incur a failing test, as expected. What’s required for the spec to pass is a default value for the attribute <code>text</code>. We can implement this default value with some other useful defaults (which we’ll be using shortly) in our Todo model as follows:</p>
+<p>如果你在编写model前测试这个spec的话，会引发失败。这个spec需要传入一个<code>text</code>属性的默认值。示例：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">
 <span class="kw">window</span>.<span class="fu">Todo</span> = <span class="kw">Backbone.Model</span>.<span class="fu">extend</span>({
 
@@ -5205,18 +5205,15 @@ it(<span class="st">&quot;should contain a text value if not the default value&q
       <span class="dt">done</span>:  <span class="kw">false</span>,
       <span class="dt">order</span>: <span class="dv">0</span>
     }</code></pre>
-<p>Next, we want to test that our model will pass attributes that are set such that retrieving the value of these attributes after initialization will be what we expect. Notice that here, in addition to testing for an expected value for <code>text</code>, we’re also testing the other default values are what we expect them to be.</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript">it(<span class="ch">&#39;Will set passed attributes on the model instance when created.&#39;</span>, <span class="kw">function</span>() {
-    <span class="kw">var</span> todo = <span class="kw">new</span> Todo({ <span class="dt">text</span>: <span class="ch">&#39;Get oil change for car.&#39;</span> });
+<p>接下来，我们测试下model在初始化之后会把属性值设为传入的值。另外也测试下其它几个属性的默认值是否是我们期望的。</p>
+<p>```javascript it(<q>Will set passed attributes on the model instance when created.</q>, function() { var todo = new Todo({ text: <q>Get oil change for car.</q> });</p>
+<pre><code>// what are the values expected here for each of the
+// attributes in our Todo?
 
-    <span class="co">// what are the values expected here for each of the</span>
-    <span class="co">// attributes in our Todo?</span>
-
-    expect(<span class="kw">todo</span>.<span class="fu">get</span>(<span class="ch">&#39;text&#39;</span>)).<span class="fu">toBe</span>(<span class="st">&quot;Get oil change for car.&quot;</span>);
-    expect(<span class="kw">todo</span>.<span class="fu">get</span>(<span class="ch">&#39;done&#39;</span>)).<span class="fu">toBe</span>(<span class="kw">false</span>);
-    expect(<span class="kw">todo</span>.<span class="fu">get</span>(<span class="ch">&#39;order&#39;</span>)).<span class="fu">toBe</span>(<span class="dv">0</span>);
-});</code></pre>
-<p>Backbone models support a model.change() event which is triggered when the state of a model changes. In the following example, by <q>state</q> I’m referring to the value of a Todo model’s attributes. The reason changes of state are important to test are that there may be state-dependent events in your application e.g you may wish to display a confirmation view once a Todo model has been updated.</p>
+expect(todo.get(&#39;text&#39;)).toBe(&quot;Get oil change for car.&quot;);
+expect(todo.get(&#39;done&#39;)).toBe(false);
+expect(todo.get(&#39;order&#39;)).toBe(0);</code></pre>
+<p>}); ``` Backbone models支持model.change()事件，当model的状态改变时触发。下面这个例子中，通过设置Todo model属性值来改变它的’state(状态)’，状态改变的原因非常值得测试，因为应用中可能有状态依赖的事件，比如当model被修改时想要显示一个确认视图。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">it(<span class="ch">&#39;Fires a custom event when the state changes.&#39;</span>, <span class="kw">function</span>() {
 
     <span class="kw">var</span> spy = <span class="kw">jasmine</span>.<span class="fu">createSpy</span>(<span class="ch">&#39;-change event callback-&#39;</span>);
@@ -5231,35 +5228,34 @@ it(<span class="st">&quot;should contain a text value if not the default value&q
 
     expect(spy).<span class="fu">toHaveBeenCalled</span>();
 });</code></pre>
-<p>It’s common to include validation logic in your models to ensure both the input passed from users (and other modules) in the application are <q>valid</q>. A Todo app may wish to validate the text input supplied in case it contains rude words. Similarly if we’re storing the <code>done</code> state of a Todo item using booleans, we need to validate that truthy/falsy values are passed and not just any arbitrary string.</p>
-<p>In the following spec, we take advantage of the fact that validations which fail model.validate() trigger an <q>error</q> event. This allows us to test if validations are correctly failing when invalid input is supplied.</p>
-<p>We create an errorCallback spy using Jasmine’s built in <code>createSpy()</code> method which allows us to spy on the error event as follows:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript">it(<span class="ch">&#39;Can contain custom validation rules, and will trigger an error event on failed validation.&#39;</span>, <span class="kw">function</span>() {
+<p>通常在model中引入验证逻辑来确保来自用户的输入(或者其它模块)是有效的’(valid)’。Todo app可能会验证text输入框输入进来的内容没有粗鲁的单词。 同样的， 当保存Todo项<code>done</code>状态时，需要验证传入的值是true/false， 而不是字符串。</p>
+<p>在下面的spec中，我们用了一些是验证失败的值，让model.validate()触发<q>error</q>事件。检验一下传入无效值是是否会真的触发失败。</p>
+<p>使用Jasmine内置<code>createSpy()</code>方法创建一个errorCallback spy，就可以检测error事件了：</p>
+<p>```javascript it(<q>Can contain custom validation rules, and will trigger an error event on failed validation.</q>, function() {</p>
+<pre><code>var errorCallback = jasmine.createSpy(&#39;-error event callback-&#39;);
 
-    <span class="kw">var</span> errorCallback = <span class="kw">jasmine</span>.<span class="fu">createSpy</span>(<span class="ch">&#39;-error event callback-&#39;</span>);
+var todo = new Todo();
 
-    <span class="kw">var</span> todo = <span class="kw">new</span> Todo();
+todo.on(&#39;error&#39;, errorCallback);
 
-    <span class="kw">todo</span>.<span class="fu">on</span>(<span class="ch">&#39;error&#39;</span>, errorCallback);
+// What would you need to set on the todo properties to
+// cause validation to fail?
 
-    <span class="co">// What would you need to set on the todo properties to</span>
-    <span class="co">// cause validation to fail?</span>
+todo.set({done:&#39;a non-integer value&#39;});
 
-    <span class="kw">todo</span>.<span class="fu">set</span>({<span class="dt">done</span>:<span class="ch">&#39;a non-integer value&#39;</span>});
+var errorArgs = errorCallback.mostRecentCall.args;
 
-    <span class="kw">var</span> errorArgs = <span class="kw">errorCallback.mostRecentCall</span>.<span class="fu">args</span>;
-
-    expect(errorArgs).<span class="fu">toBeDefined</span>();
-    expect(errorArgs[<span class="dv">0</span>]).<span class="fu">toBe</span>(todo);
-    expect(errorArgs[<span class="dv">1</span>]).<span class="fu">toBe</span>(<span class="ch">&#39;Todo.done must be a boolean value.&#39;</span>);
-});</code></pre>
-<p>The code to make the above failing test support validation is relatively simple. In our model, we override the validate() method (as recommended in the Backbone docs), checking to make sure a model both has a <q>done</q> property and is a valid boolean before allowing it to pass.</p>
+expect(errorArgs).toBeDefined();
+expect(errorArgs[0]).toBe(todo);
+expect(errorArgs[1]).toBe(&#39;Todo.done must be a boolean value.&#39;);</code></pre>
+<p>});</p>
+<p>``` 要让上面这段失败测试代码支持验证非常简单。这个model中，我们重写validate()方法(像Backbone文档推荐的那样)，检查model有’done’属性并且给它传入值时是一个合法的布尔值。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="dt">validate</span>: <span class="kw">function</span>(attrs) {
     <span class="kw">if</span> (<span class="kw">attrs</span>.<span class="fu">hasOwnProperty</span>(<span class="ch">&#39;done&#39;</span>) &amp;&amp; !<span class="kw">_</span>.<span class="fu">isBoolean</span>(<span class="kw">attrs</span>.<span class="fu">done</span>)) {
         <span class="kw">return</span> <span class="ch">&#39;Todo.done must be a boolean value.&#39;</span>;
     }
 }</code></pre>
-<p>If you would like to review the final code for our Todo model, you can find it below:</p>
+<p>这个完整的Todo model代码如下：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> NAUGHTY_WORDS = <span class="ot">/crap</span><span class="fl">|</span><span class="ot">poop</span><span class="fl">|</span><span class="ot">hell</span><span class="fl">|</span><span class="ot">frogs/gi</span>;
 
 <span class="kw">function</span> sanitize(str) {
@@ -5290,8 +5286,8 @@ it(<span class="st">&quot;should contain a text value if not the default value&q
 
 });</code></pre>
 <h2 id="collections-1"><a href="#TOC"><a name="testing-jasmine-collections">Collections</a></a></h2>
-<p>We now need to define specs to tests a Backbone collection of Todo models (a TodoList). Collections are responsible for a number of list tasks including managing order and filtering.</p>
-<p>A few specific specs that come to mind when working with collections are:</p>
+<p>现在我们需要定义specs来测试Backbone Todo model的collection(一个TodoList)。Collections处理列表的排序，过滤等。</p>
+<p>测试collections时可能会有下面这些明确的specs：</p>
 <ul>
 <li>Making sure we can add new Todo models as both objects and arrays</li>
 <li>Attribute testing to make sure attributes such as the base URL of the collection are values we expect</li>

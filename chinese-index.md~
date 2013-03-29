@@ -6048,9 +6048,9 @@ Backbone.Paginator主要支持2个分页组件：
 * **Backbone.Paginator.clientPager**: 从服务器端获取数据之后在UI上进行分页 (比如返回60条结果，每页20条则分成了3页)。
 
 
-## Live Examples
+## 在线例子
 
-Live previews of both pagination components using the Netflix API can be found below. Fork the repository to experiment with these examples further.
+线上两个分页组件的列子都使用了Netflix API。
 
 * [Backbone.Paginator.requestPager()](http://addyosmani.github.com/backbone.paginator/examples/netflix-request-paging/index.html)
 * [Backbone.Paginator.clientPager()](http://addyosmani.github.com/backbone.paginator/examples/netflix-client-paging/index.html)
@@ -6059,24 +6059,24 @@ Live previews of both pagination components using the Netflix API can be found b
 
 ##Paginator.requestPager
 
-In this section we're going to walkthrough actually using the requestPager.
+在这一小节我们来实际应用下requestPager。
 
-####1. Create a new Paginated collection
-First, we define a new Paginated collection using `Backbone.Paginator.requestPager()` as follows:
+####1. 创建一个新的分页collection
+首先，使用`Backbone.Paginator.requestPager()`定义一个分页collection：
 
 ```javascript
 var PaginatedCollection = Backbone.Paginator.requestPager.extend({
 ```
-####2: Set the model for the collection as normal
+####2: 跟平常一样设置collection的model
 
-Within our collection, we then (as normal) specify the model to be used with this collection followed by the URL (or base URL) for the service providing our data (e.g the Netflix API).
+在collection中，跟正常情况一样根据服务器提供data的URL(或者base URL)指定collection使用的model。
 
 ```javascript
         model: model,
 ```
-####3. Configure the base URL and the type of the request
+####3. 配置base URL和请求类型
 
-We need to set a base URL. The `type` of the request is `GET` by default, and the `dataType` is `jsonp` in order to enable cross-domain requests.
+我们需要设置一个base URL。请求的'type`默认是`GET`，`dataType`默认是`jsonp`为了可以跨域。
 
 ```javascript
     paginator_core: {
@@ -6091,34 +6091,31 @@ We need to set a base URL. The `type` of the request is `GET` by default, and th
     },
 ```
 
-####4. Configure how the library will show the results
+####4. 配置库如何显示结果
 
-We need to tell the library how many items per page would we like to see, etc...
+我们需要告诉组件库每页需要显示多少条结果，之类...
 
 ```javascript
     paginator_ui: {
-      // the lowest page index your API allows to be accessed
+      // API允许访问的最小页码
       firstPage: 0,
 
-      // which page should the paginator start from
-      // (also, the actual page the paginator is on)
+      // 分页器开始的页码
+      // (同时也是分页器当前的页码)
       currentPage: 0,
 
-      // how many items per page should be shown
+      //每页条数
       perPage: 3,
 
-      // a default number of total pages to query in case the API or
-      // service you are using does not support providing the total
-      // number of pages for us.
-      // 10 as a default in case your service doesn't return the total
+      //API没有返回总页码时的一个默认总页数。
       totalPages: 10
     },
 ```
 
-####5. Configure the parameters we want to send to the server
+####5. 配置服务器请求的参数
 
-Only the base URL won't be enough for most cases, so you can pass more parameters to the server.
-Note how you can use functions insead of hardcoded values, and you can also reffer to the values you specified in `paginator_ui`.
+通常有base URL还不够，可以传更多参数给服务器。
+注意，你可以使用function来处理value的返回，也可以引用`paginator_ui`中指定的值。
 
 ```javascript
     server_api: {
@@ -6145,11 +6142,11 @@ Note how you can use functions insead of hardcoded values, and you can also reff
     },
 ```
 
-####6. Finally, configure Collection.parse() and we're done
+####6. 最后，配置Collection.parse()
 
-The last thing we need to do is configure our collection's `parse()` method. We want to ensure we're returning the correct part of our JSON response containing the data our collection will be populated with, which below is `response.d.results` (for the Netflix API).
+最后我们需要做的事就是配置collection的`parse()`方法。我们要确保返回JSON响应数据的正确部分给collection填充，下面例子是`response.d.results` (Netflix API)。
 
-You might also notice that we're setting `this.totalPages` to the total page count returned by the API. This allows us to define the maximum number of (result) pages available for the current/last request so that we can clearly display this in the UI. It also allows us to infuence whether clicking say, a 'next' button should proceed with a request or not.
+你可能注意到我们把`this.totalPages`的值设为API返回数据的总页数。它可用于定义当前/最后页请求的最大可用页数，这样可以在UI上清晰的显示。同样用于决定点击是否有效，点击'下一页'按钮是否需要请求。
 
 ```javascript
         parse: function (response) {
@@ -6167,31 +6164,31 @@ You might also notice that we're setting `this.totalPages` to the total page cou
 });
 ```
 
-####Convenience methods:
+####便利方法：
 
-For your convenience, the following methods are made available for use in your views to interact with the `requestPager`:
+为了方便，下面这些方法是便于在view中与`requestPager`交互：
 
-* **Collection.goTo( n, options )** - go to a specific page
-* **Collection.requestNextPage( options )** - go to the next page
-* **Collection.requestPreviousPage( options )** - go to the previous page
-* **Collection.howManyPer( n )** - set the number of items to display per page
+* **Collection.goTo( n, options )** - 跳转到指定页
+* **Collection.requestNextPage( options )** - 跳转到下一页
+* **Collection.requestPreviousPage( options )** - 跳转到上一页
+* **Collection.howManyPer( n )** - 设置每页显示的数量
 
-**requestPager** collection's methods `.goTo()`, `.requestNextPage()` and `.requestPreviousPage()` are all extension of the original [Backbone Collection.fetch() method](http://documentcloud.github.com/backbone/#Collection-fetch). As so, they all can take the same option object as parameter.
+**requestPager** collection的`.goTo()`, `.requestNextPage()`和`.requestPreviousPage()`都是[Backbone Collection.fetch() method](http://documentcloud.github.com/backbone/#Collection-fetch)的扩展。所以，他们都可以接受相同的option参数对象。
 
-This option object can use `success` and `error` parameters to pass a function to be executed after server answer.
+这个option对象可以使用`success`和`error`参数传入一个function，服务器响应之后执行。
 
 ```javascript
 Collection.goTo(n, {
   success: function( collection, response ) {
-    // called is server request success
+    // 调用服务器请求成功
   },
   error: function( collection, response ) {
-    // called if server request fail
+    // 调用服务器请求失败
   }
 });
 ```
 
-To manage callback, you could also use the [jqXHR](http://api.jquery.com/jQuery.ajax/#jqXHR) returned by these methods to manage callback.
+可以使用[jqXHR](http://api.jquery.com/jQuery.ajax/#jqXHR)返回的这些方法来管理回调。
 
 ```javascript
 Collection
@@ -6208,7 +6205,7 @@ Collection
 });
 ```
 
-If you'd like to add the incoming models to the current collection, instead of replacing the collection's contents, pass `{add: true}` as an option to these methods.
+如果想把返回的models添加到当前的collection，而不是替代collection的内容，可以传入`{add: true}`。
 
 ```javascript
 Collection.requestPreviousPage({ add: true });
@@ -6216,10 +6213,10 @@ Collection.requestPreviousPage({ add: true });
 
 ##Paginator.clientPager
 
-The `clientPager` works similar to the `requestPager`, except that our configuration values influence the pagination of data already returned at a UI-level. Whilst not shown (yet) there is also a lot more UI logic that ties in with the `clientPager`. An example of this can be seen in 'views/clientPagination.js'.
+`clientPager`跟`requestPager`类似，除了配置值是在UI级别影响已返回的数据分页。虽然没有显示，很多UI逻辑也与`clientPager`相关联。可以看'views/clientPagination.js'里的例子。
 
-####1. Create a new paginated collection with a model and URL
-As with `requestPager`, let's first create a new Paginated `Backbone.Paginator.clientPager` collection, with a model:
+####1. 根据model和URL创建一个分页collection
+创建一个`Backbone.Paginator.clientPager` collection：
 
 ```javascript
     var PaginatedCollection = Backbone.Paginator.clientPager.extend({
@@ -6227,9 +6224,9 @@ As with `requestPager`, let's first create a new Paginated `Backbone.Paginator.c
         model: model,
 ```
 
-####2. Configure the base URL and the type of the request
+####2. 配置base URL和请求的类型
 
-We need to set a base URL. The `type` of the request is `GET` by default, and the `dataType` is `jsonp` in order to enable cross-domain requests.
+与requestPager的例子一致。
 
 ```javascript
     paginator_core: {
@@ -6244,9 +6241,9 @@ We need to set a base URL. The `type` of the request is `GET` by default, and th
     },
 ```
 
-####3. Configure how the library will show the results
+####3. 配置如何显示结果
 
-We need to tell the library how many items per page would we like to see, etc...
+与requestPager例子同理。
 
 ```javascript
     paginator_ui: {
@@ -6268,10 +6265,9 @@ We need to tell the library how many items per page would we like to see, etc...
     },
 ```
 
-####4. Configure the parameters we want to send to the server
+####4. 配置传递给服务器的参数
 
-Only the base URL won't be enough for most cases, so you can pass more parameters to the server.
-Note how you can use functions insead of hardcoded values, and you can also reffer to the values you specified in `paginator_ui`.
+与requestPager例子同理。
 
 ```javascript
     server_api: {
@@ -6298,10 +6294,9 @@ Note how you can use functions insead of hardcoded values, and you can also reff
     },
 ```
 
-####5. Finally, configure Collection.parse() and we're done
+####5. 最后配置Collection.parse()
 
-And finally we have our `parse()` method, which in this case isn't concerned with the total number of result pages available on the server as we have our own total count of pages for the paginated data in the UI.
-
+与requestPager例子同理。
 ```javascript
     parse: function (response) {
             var tags = response.d.results;
@@ -6311,16 +6306,16 @@ And finally we have our `parse()` method, which in this case isn't concerned wit
     });
 ```
 
-####Convenience methods:
+####便捷方法：
 
-As mentioned, your views can hook into a number of convenience methods to navigate around UI-paginated data. For `clientPager` these include:
+`clientPager`有下面这些方法在分页之间跳转，与requestPager的例子相似：
 
-* **Collection.goTo(n)** - go to a specific page
-* **Collection.previousPage()** - go to the previous page
-* **Collection.nextPage()** - go to the next page
-* **Collection.howManyPer(n)** - set how many items to display per page
-* **Collection.setSort(sortBy, sortDirection)** - update sort on the current view. Sorting will automatically detect if you're trying to sort numbers (even if they're strored as strings) and will do the right thing.
-* **Collection.setFilter(filterFields, filterWords)** - filter the current view. Filtering supports multiple words without any specific order, so you'll basically get a full-text search ability. Also, you can pass it only one field from the model, or you can pass an array with fields and all of them will get filtered. Last option is to pass it an object containing a comparison method and rules. Currently, only ```levenshtein``` method is available.
+* **Collection.goTo(n)**
+* **Collection.previousPage()**
+* **Collection.nextPage()**
+* **Collection.howManyPer(n)**
+* **Collection.setSort(sortBy, sortDirection)** - 当前view更新排序。排序是自动的，可以对数字排序(尽管是被当成字符串)。
+* **Collection.setFilter(filterFields, filterWords)** - 过滤当前view。过滤支持多个词，没有特定顺序，所有有完整文本搜索能力。同样，也可以传入一个或多个model，都可以进行过滤。最后一个选项是传入一个包含比较放和规则的对象。现在只有```levenshtein```方法可用。
 
 ```javascript
   this.collection.setFilter(
@@ -6329,19 +6324,20 @@ As mentioned, your views can hook into a number of convenience methods to naviga
   );
 ```
 
-Also note that the levenshtein plugin should be loaded and enabled using the ```useLevenshteinPlugin``` variable.
+同样注意，levenshtein插件可以```useLevenshteinPlugin```变量加载和启用。
 
-Last but not less important: Performing Levenshtein comparison returns the ```distance``` between to strings. It won't let you *search* lenghty text.
+最后：Levenshtein比较返回两个字符串间的```距离(distance)```。它不允许*搜索*冗长的文本。
 
-The distance between two strings means the number of characters that should be added, removed or moved to the left or to the right so the strings get equal.
+两个字符串之间的距离就是要使2个字符串相等需要添加，移除或者移动到左边或者右边的字符个数。
 
-That means that comparing "Something" in "This is a test that could show something" will return 32, which is bigger than comparing "Something" and "ABCDEFG" (9).
+比如比较"Something"和"This is a test that could show something"会返回31，要比比较"Something"和"ABCDEFG"(9)大。
 
-Use levenshtein only for short texts (titles, names, etc).
+仅在短文本(titles, names, 等)中使用levenshtein。
 
-* **Collection.doFakeFilter(filterFields, filterWords)** - returns the models count after fake-applying a call to ```Collection.setFilter```.
 
-* **Collection.setFieldFilter(rules)** - filter each value of each model according to `rules` that you pass as argument. Example: You have a collection of books with 'release year' and 'author'. You can filter only the books that were released between 1999 and 2003. And then you can add another `rule` that will filter those books only to authors who's name start with 'A'. Possible rules: function, required, min, max, range, minLength, maxLength, rangeLength, oneOf, equalTo, pattern.
+* **Collection.doFakeFilter(filterFields, filterWords)** - 返回执行一个虚拟的```Collection.setFilter```调用后models的计数。
+
+* **Collection.setFieldFilter(rules)** - 对model的每个值应用`rules`进行过滤。示例：有一个book的collection ，book有'release year'和'author'属性。你可以过滤出版时间在1999到2003间的书。然后可添加另外一个'规则'继续过滤这些书，作者名称以'A'开头的。规则可以是：function, required, min, max, range, minLength, maxLength, rangeLength, oneOf, equalTo, pattern。
 
 
 ```javascript
@@ -6369,33 +6365,33 @@ Use levenshtein only for short texts (titles, names, etc).
 
 ```
 
-* **Collection.doFakeFieldFilter(rules)** - returns the models count after fake-applying a call to ```Collection.setFieldFilter```.
+* **Collection.doFakeFieldFilter(rules)** - 翻译执行```Collection.setFieldFilter```虚拟调用之后的models计数。
 
-####Implementation notes:
+####实现提示：
 
-You can use some variables in your ```View``` to represent the actual state of the paginator.
+可以在```View```用一些变量来代表分页器的实际状态。
 
-```totalUnfilteredRecords``` - Contains the number of records, including all records filtered in any way. (Only available in ```clientPager```)
+```totalUnfilteredRecords``` - 结果记录的条数，包括以任何方式过滤掉的结果。(只在 ```clientPager```有效)
 
-```totalRecords``` - Contains the number of records
+```totalRecords``` - 结果记录条数。
 
-```currentPage``` - The actual page were the paginator is at.
+```currentPage``` - 分页器当前的页码。
 
-```perPage``` - The number of records the paginator will show per page.
+```perPage``` - 分页器每页显示的结果条数。
 
-```totalPages``` - The number of total pages.
+```totalPages``` - 总页数。
 
-```startRecord``` - The posicion of the first record shown in the current page (eg 41 to 50 from 2000 records) (Only available in ```clientPager```)
+```startRecord``` - 当前页显示的第一条记录的位置(比如2000条记录中的第41到50条) (只在```clientPager```有效)
 
-```endRecord``` - The posicion of the last record shown in the current page (eg 41 to 50 from 2000 records) (Only available in ```clientPager```)
+```endRecord``` - 当前页显示的最后一条记录的位置(同上)
 
-## Plugins
+## 插件
 
 **Diacritic.js**
 
-A plugin for Backbone.Paginator that replaces diacritic characters (`´`, `˝`, `̏`, `˚`,`~` etc.) with characters that match them most closely. This is particularly useful for filtering.
+这个插件用于Backbone.Paginator把分隔符(`´`, `˝`, `̏`, `˚`,`~`等.)替换与他们相近的字符。
 
-To enable the plugin, set `this.useDiacriticsPlugin` to true, as can be seen in the example below:
+要启用插件，把`this.useDiacriticsPlugin`设为true：
 
 ```javascript
 Paginator.clientPager = Backbone.Collection.extend({
@@ -6419,27 +6415,27 @@ Paginator.clientPager = Backbone.Collection.extend({
 
 ##Backbone & jQuery Mobile
 
-###Resolving the routing conflicts
+###解决路由冲突
 
-The first major hurdle developers typically run into when building Backbone applications with jQuery Mobile is that both frameworks have their own opinions about how to handle application navigation.
+当使用jQuery Mobile开发Backbone应用时开发人员首先面对的主要问题就是这2个框架都有他们自己的方式来处理应用的导航(navigation)。
 
-Backbone's routers offer an explicit way to define custom navigation routes through `Backbone.Router`, whilst jQuery Mobile encourages the use of URL hash fragments to reference separate 'pages' or views in the same document. jQuery Mobile also supports automatically pulling in external content for links through XHR calls meaning that there can be quite a lot of inter-framework confusion about what a link pointing at '#photo/id' should actually be doing.
+Backbone提供`Backbone.Router`以明确的方式定义定制化的导航路由，而jQuery Mobile鼓励使用URL hash fragments在同一个文档中引用独立的'pages'或者views。jQuery Mobile同时也支持自动引入通过XHR调用获取的外部内容，这就意味着这里面有相当多的跨框架混乱，当一个连接指向'#photo/id'时到底该做什么。
 
-Some of the solutions that have been previously proposed to work-around this problem included manually patching Backbone or jQuery Mobile. I discourage opting for these techniques as it becomes necessary to manually patch your framework builds when new releases get made upstream.
+已经有人提出一些方案解决此问题，包括手动修补Backbone或者Backbone。我不太赞同这种做法，因为当框架有新版本发布时又需要进行手动修补。
 
-There's also [jQueryMobile router](https://github.com/azicchetti/jquerymobile-router), which tries to solve this problem differently, however I think my proposed solution is both simpler and allows both frameworks to cohabit quite peacefully without the need to extend either. What we're after is a way to prevent one framework from listening to hash changes so that we can fully rely on the other (e.g. `Backbone.Router`) to handle this for us exclusively.
+同样也有[jQueryMobile router](https://github.com/azicchetti/jquerymobile-router)，尝试用另一种方法来解决此问题，不过我觉得我提出的方案即简单又可以无需对框架做扩展它们也可以和平共处。我的方法就是阻止其中一个框架监听hash change，这样就可以完全依靠另一个框架(比如`Backbone.Router`)来专门处理。
 
-Using jQuery Mobile this can be done by setting:
+如果让jQuery Mobile这么做可以设置： 
 
 ```javascript
 $.mobile.hashListeningEnabled = false;
 ```
 
-prior to initializing any of your other code.
+放在其它所有初始化代码之前。
 
-I discovered this method looking through some jQuery Mobile commits that didn't make their way into the official docs, but am happy to see that they are now covered here http://jquerymobile.com/test/docs/api/globalconfig.html in more detail.
+我是通过一些jQuery Mobile评论发现此方法的，并没有在官方文档里写明。不过非常高兴看到 http://jquerymobile.com/test/docs/api/globalconfig.html这里有更多细节信息。
 
-The next question that arises is, if we're preventing jQuery Mobile from listening to URL hash changes, how can we still get the benefit of being able to navigate to other sections in a document using the built-in transitions and effects supported? Good question. This can now be solve by simply calling `$.mobile.changePage()` as follows:
+如果我们阻止jQuery Mobile监听URL hash change的话，接下来的问题就是，如何继续使用内置的转换和效果支持在文档内切换到其它部分？这是一个非常好的问题，可以通过`$.mobile.changePage()`来解决：
 
 ```javascript
 var url = '#about',
@@ -6450,22 +6446,23 @@ var url = '#about',
 $.mobile.changePage( url , { transition: effect}, reverse, changeHash );
 ```
 
-In the above sample, `url` can refer to a URL or a hash identifier to navigate to, `effect` is simply the transition effect to animate the page in with and the final two parameters decide the direction for the transition (`reverse`) and whether or not the hash in the address bar should be updated (`changeHash`). With respect to the latter, I typically set this to false to avoid managing two sources for hash updates, but feel free to set this to true if you're comfortable doing so.
+上面例子中，`url`可以引用一个URL或者一个要跳转的hash标识，`effect`是页面视图切换是的动画效果，最后2个参数 标识转换动画的方向(`reverse`)及是否更新地址栏URL的hash(`changeHash`)。对于后者，我把它设为false，避免两个地方来管理hash的更新，不过你把它设为true也没有问题。
 
-**Note:** For some parallel work being done to explore how well the jQuery Mobile Router plugin works with Backbone, you may be interested in checking out [https://github.com/Filirom1/jquery-mobile-backbone-requirejs](https://github.com/Filirom1/jquery-mobile-backbone-requirejs).
+**提示：** 更多关于如何解决jQuery Mobile Router插件与Backbone一起工作的问题，可以阅读[https://github.com/Filirom1/jquery-mobile-backbone-requirejs](https://github.com/Filirom1/jquery-mobile-backbone-requirejs)。
 
 
-###Practical: A Backbone, Require.js/AMD app with jQuery Mobile
+###实践：一个使用jQuery Mobile的Backbone, Require.js/AMD app
 
-**Note:** The code for this practical can be found in `practicals/modular-mobile-app`.
+**提示：** 这部分内容的代码在`practicals/modular-mobile-app`。
 
-###Getting started
+###开始
 
-Once you feel comfortable with the [Backbone fundamentals](http://msdn.microsoft.com/en-us/scriptjunkie/hh377172.aspx) and you've put together a rough wireframe of the app you may wish to build, start to think about your application architecture. Ideally, you'll want to logically separate concerns so that it's as easy as possible to maintain the app in the future.
+如果你觉得[Backbone基本原理](http://msdn.microsoft.com/en-us/scriptjunkie/hh377172.aspx)还不错，你可能会对你想要做的一个app开始有个粗略的构想，开始考虑你的应用架构。理想上，你会想逻辑上做分离，将来维护时就更加简单。
 
-**Namespacing**
+**命名空间**
 
-For this application, I opted for the nested namespacing pattern. Implemented correctly, this enables you to clearly identify if items being referenced in your app are views, other modules and so on. This initial structure is a sane place to also include application defaults (unless you prefer maintaining those in a separate file).
+这个应用我选择嵌套的命名空间模式。只要正确实现，就可以清晰的定义app里的元素，views，其它模块等等。这段初始化结构是个包含应用默认值很好的位置(除非你更喜欢在一个独立的文件中维护)。
+
 
 ```javascript
 window.mobileSearch = window.mobileSearch || {
@@ -6487,93 +6484,94 @@ window.mobileSearch = window.mobileSearch || {
 
 **Models**
 
-In the Flickly application, there are at least two unique types of data that need to be modeled - search results and individual photos, both of which contain additional meta-data like photo titles. If you simplify this down, search results are actually groups of photos in their own right, so the application only requires:
+在Flickly应用中，至少有2个唯一型数据需要映射成model——搜索结果和个人照片，两者都包含额外的元数据，照片标题。如果把它简化，搜索结果实际上是按特定顺序的一组照片，所以应用只需要：
 
-* A single model (a photo or 'result' entry)
-* A result collection (containing a group of result entries) for search results
-* A photo collection (containing one or more result entries) for individual photos or photos with more than one image
+* 一个单独的model(照片或者'结果'实体)
+* 一个搜索结果集合(collection)(包含一组结果实体)
+* 一个照片集合(collection)(包含一个或多个结果实体)用于个人照片或者包含多于一张图片的照片。
 
 **Views**
 
-The views we'll need include an application view, a search results view and a photo view. Static views or pages of the single-page application which do not require a dynamic element to them (e.g an 'about' page) can be easily coded up in your document's markup, independent of Backbone.
+我们需要的view包括一个application view,搜索结果view,和一个photo view。单页应用中没有动态元素的静态view(比如'about'页面)可以不依赖于Backbone非常简单的创建出来。
 
 **Routers**
 
-A number of possible routes need to be taken into consideration:
+有下面一些路由需要考虑：
 
-* Basic search queries `#search/kiwis`
-* Search queries with additional parameters (e.g sort, pagination) `#search/kiwis/srelevance/p7`
-* Queries for specific photos `#photo/93839`
-* A default route (no parameters passed)
-
-
-This tutorial will be expanded shortly to fully cover the demo application. In the mean time, please see the practicals folder for the completed application that demonstrates the router resolution discussed earlier between Backbone and jQuery Mobile.
+* 基本的搜索查询`#search/kiwis`
+* 带参数的搜索查询(比如排序，分页) `#search/kiwis/srelevance/p7`
+* 获取指定photo `#photo/93839`
+* 一个默认路由(没有参数传入`)
 
 
-###jQuery Mobile: Going beyond mobile application development
-
-The majority of jQM apps I've seen in production have been developed for the purpose of providing an optimal experience to users on mobile devices. Given that the framework was developed for this purpose, there's nothing fundamentally wrong with this, but many developers forget that jQM is a UI framework not dissimilar to jQuery UI. It's using the widget factory and is capable of being used for a lot more than we give it credit for.
-
-If you open up Flickly in a desktop browser, you'll get an image search UI that's modeled on Google.com, however, review the components (buttons, text inputs, tabs) on the page for a moment. The desktop UI doesn't look anything like a mobile application yet I'm still using jQM for theming mobile components; the tabs, date-picker, sliders - everything in the desktop UI is re-using what jQM would be providing users on mobile devices. Thanks to some media queries, the desktop UI can make optimal use of whitespace, expanding component blocks out and providing alternative layouts whilst still making use of jQM as a component framework.
-
-The benefit of this is that I don't need to go pulling in jQuery UI separately to be able to take advantage of these features. Thanks to the recent ThemeRoller my components can look pretty much exactly how I would like them to and users of the app can get a jQM UI for lower-resolutions and a jQM-ish UI for everything else.
-
-The takeaway here is just to remember that if you're not (already) going through the hassle of conditional script/style loading based on screen-resolution (using matchMedia.js etc), there are simpler approaches that can be taken to cross-device component theming.
+这篇教程将做简短的扩展以包含demo应用的完整内容。同时，也请看下practicals目录下完整程序示范了前面提到的Backbone和jQuery Mobile的router解决方案。
 
 
-#<a name="testing">Unit Testing</a>
+###jQuery Mobile: 超越移动应用开发
+
+我看到的大多数jQM apps都是以给用户提供移动设备体验为目的而开发的。这是这个框架开发出来既定的目的，从根本上说没有什么错误，但是开发人员都忘了jQM是一个UI框架，与jQuery UI没有什么不同。它可用做widget工厂，完全可以比我们原本假定的用于做更多的事情。
 
 
-##<a name="unittestingjasmine">Unit Testing Backbone Applications With Jasmine</a>
+如果你在桌面浏览器中打开Flickly，你会看到一个模仿Google.com的图片搜索UI，不过，分析一下它页面中的组件(按钮，文本输入框，tabs)。桌面UI看起来并不像移动应用， 但仍然可以使用jQM来做移动主题的组件；tabs, date-picker(日期选择), sliders(滑动) ——所有桌面UI都可以使用jQM在移动设备上提供给用户的。有了media queries, 桌面UI可以优化空白的使用，扩展组件的区域，提供可选布局，同时也可以把jQM作为组件框架。
 
-##Introduction
+这样的好处就是不用单独引入jQuery UI利用这些功能。幸好最近有了ThemeRoller，我的组件正如我所期望的那样看起来精确了，低分辨率下应用jQM UI，其它分辨率下应用jQM-ish UI。
 
-One definition of unit testing is the process of taking the smallest piece of testable code in an application, isolating it from the remainder of your codebase and determining if it behaves exactly as expected. In this section, we'll be taking a look at how to unit test Backbone applications using a popular JavaScript testing framework called [Jasmine](http://pivotal.github.com/jasmine/) from Pivotal Labs.
+需要记住的是如果不准备通过基于屏幕的条件判断来加载script/style的话(使用matchMedia.js等)，有更简单的方式，可以采取跨设备的组件主题。
 
-For an application to be considered 'well'-tested, distinct functionality should ideally have its own separate unit tests where it's tested against the different conditions you expect it to work under. All tests must pass before functionality is considered 'complete'. This allows developers to both modify a unit of code and its dependencies with a level of confidence about whether these changes have caused any breakage.
 
-As a basic example of unit testing is where a developer may wish to assert whether passing specific values through to a sum function results in the correct output being returned. For an example more relevant to this book, we may wish to assert whether a user adding a new Todo item to a list correctly adds a Model of a specific type to a Todos Collection.
+#<a name="testing">单元测试</a>
 
-When building modern web-applications, it's typically considered best-practice to include automated unit testing as a part of your development process. Whilst we'll be focusing on Jasmine as a solution for this, there are a number of other alternatives worth considering, including QUnit.
+
+##<a name="unittestingjasmine">使用Jasmine对Backbone应用进行单元测</a>
+
+##简介
+
+单元测试的定义就是把整个应用中小片可测试的代码从代码库中隔离，然后检验它的行为是否跟期望的一致。这个章节，我们会讲述如何使用一个流行的测试框架[Jasmine](http://pivotal.github.com/jasmine/)来测试Backbone应用，这个框架来自Pivotal Labs。
+
+一个被称为'好'测试的应用，很明显功能上应该有分开的单元测试，以验证不同情况下它的正确性。所有测试应该在功能完成之前介入。这可以让开发者修改一块代码的时候通过单元测试确认他的修改是否会引发问题，建立代码质量的信心。
+
+一个最基本的单元测试例子，开发者想要断言传入指定的value給一个sum函数其返回结果是否正确。与我们这本书有关的例子就是，我们想要断言一个用户添加一个新的Todo项到列表中，是否添加了一个指定类型的Model到Todos Collection。
+
+构建现代的web应用时，通常认为最好的实践方式是在开发过程中引入自动的单元测试。这里我们关注下使用Jasmine的方案，当然也有很多其它选择值得考虑，包括QUnit。
 
 ##Jasmine
 
-Jasmine describes itself as a behavior-driven development (BDD) framework for testing JavaScript code. Before we jump into how the framework works, it's useful to understand exactly what [BDD](http://en.wikipedia.org/wiki/Behavior_Driven_Development) is.
+Jasmine自称是一个用于测试JavaScript代码的行为-驱动开发(Behavior-Driven Development，BDD)的框架。在开始使用这个框架之前，我们先来弄清楚下什么是[BDD](http://en.wikipedia.org/wiki/Behavior_Driven_Development)。
 
-BDD is a second-generation testing approach first described by [Dan North](http://dannorth.net/introducing-bdd/) (the authority on BDD) which attempts to test the behavior of software. It's considered second-generation as it came out of merging ideas from Domain driven design (DDD) and lean software development, helping teams to deliver high quality software by answering many of the more confusing questions early on in the agile process. Such questions commonly include those concerning documentation and testing.
+BDD是一种第二代测试方法，由[Dan North](http://dannorth.net/introducing-bdd/) (BDD方面的权威)首次定义，它是试图测试软件的行为。称之为第二代是因为其想法来自于领域驱动设计(Domain driven design，DDD)和精益软件开发，通过在敏捷过程中回答许多令人困惑的问题来帮助团队产出高质量软件。这类问题通常包含相关文档和测试。
 
-If you were to read a book on BDD, it's likely to also be described as being 'outside-in and pull-based'. The reason for this is that it borrows the idea of pulling features from Lean manufacturing which effectively ensures that the right software solutions are being written by a) focusing on expected outputs of the system and b) ensuring these outputs are achieved.
+如果阅读过一本关于BDD的书籍，有可能它会被描述成'由外及内的、基于拉(pull)的(outside-in and pull-based)'。原因就是它从精益生产借鉴了pull特性， 通过a) 注重系统的预期输出(outputs),b) 确保这些输出被达到，这2两点有效的确保开发出正确的软件方案。
 
-BDD recognizes that there are usually multiple stakeholders in a project and not a single amorphous user of the system. These different groups will be affected by the software being written in differing ways and will have a varying opinion of what quality in the system means to them. It's for this reason that it's important to understand who the software will be bringing value you and exactly what in it will be valuable to them.
+BDD提出在一个项目中通常有多元利益体并且系统不是只有一个单一的无形用户。这些不同的群体，将会以不同的形式影响所编写的软件，而且软件系统的质量对于他们的意义他们有不同的理解。所以，要明白对于这个软件谁会给你带来价值以及软件会给他们带来什么价值，这点非常重要。
 
-Finally, BDD relies on automation. Once you've defined the quality expected, your team will likely want to check on the functionality of the solution being built regularly and compare it to the results they expect. In order to facilitate this efficiently, the process has to be automated. BDD relies heavily on the automation of specification-testing and Jasmine is a tool which can assist with this.
+最后，BDD依赖于自动化。一旦定义好你期望的质量，你的团队可能就会定期的检查正在做的功能是否与他们期望的一致。为了促进效率，这个过程需要自动完成。BDDIn order to facilitate this efficiently, the process has to be automated. BDD严重依赖于自动规格测试，而Jasmine正好是一个做这件事的工具。
 
-BDD helps both developers and non-technical stakeholders:
+BDD可以帮助开发者和非技术的利益相关者做到：
 
 
-* Better understand and represent the models of the problems being solved
-* Explain supported tests cases in a language that non-developers can read
-* Focus on minimizing translation of the technical code being written and the domain language spoken by the business
+* 更好的理解和提出解决问题的模式
+* 把测试用例以非开发人员也能读懂的方式解释清楚
+* 着眼于最小化编写的技术代码到业务表达语言之间的转换。
 
-What this means is that developers should be able to show Jasmine unit tests to a project stakeholder and (at a high level, thanks to a common vocabulary being used) they'll ideally be able to understand what the code supports.
+这就意味着开发者要把Jasmine单元测试给项目的利益相关者做展示，然后他们在观念上要理解代码的用途。
 
-Developers often implement BDD in unison with another testing paradigm known as [TDD](http://en.wikipedia.org/wiki/Test-driven_development) (test-driven development). The main idea behind TDD is:
+开发者经常跟另外一种测试方法[TDD](http://en.wikipedia.org/wiki/Test-driven_development) (test-driven development)一样来实施BDD。TDD背后的主要观点：
 
-* Write unit tests which describe the functionality you would like your code to support
-* Watch these tests fail (as the code to support them hasn't yet been written)
-* Write code to make the tests pass
-* Rinse, repeat and refactor
+* 编写单元测试描述你的代码想要支持的功能
+* 看着这些测试失败(因为要支持这些功能的代码写好)
+* 编写代码让测试通过
+* 清理，重复和重构
 
-In this chapter we're going to use both BDD (with TDD) to write unit tests for a Backbone application.
+这一章我们将会用这两种方式(BDD和TDD)来为Backbone应用编写单元测试。
 
-***Note:*** I've seen a lot of developers also opt for writing tests to validate behavior of their code after having written it. While this is fine, note that it can come with pitfalls such as only testing for behavior your code currently supports, rather than behavior the problem needs to be supported.
+***提示*** 我看到很多开发者仍然是在完成编码之后才编写测试来做验证。虽然这也还不错，不过容易调入陷入，它只能测试到你现在代码所支持的行为，而不一定完整包含我们原本设计需要支持的功能。
 
 
 ##Suites, Specs & Spies
 
-When using Jasmine, you'll be writing suites and specifications (specs). Suites basically describe scenarios whilst specs describe what can be done in these scenarios.
+使用Jasmine时，要编写suites(套件)和specs(specifications，规格说明)。Suites主要描述场景，specs描述在这些场景l里要做些什么。
 
-Each spec is a JavaScript function, described with a call to ```it()``` using a description string and a function. The description should describe the behaviour the particular unit of code should exhibit and keeping in mind BDD, it should ideally be meaningful. Here's an example of a basic spec:
+每个spec就是一个一个JavaScript函数，调用```it()```来描述，传入一个描述字符串和一个function。描述语要描述出指定单元代码的展现结果，牢记BDD的观念，表述应该有意义。下面是一个简单的例子：
 
 ```javascript
 it('should be incrementing in value', function(){
@@ -6582,7 +6580,7 @@ it('should be incrementing in value', function(){
 });
 ```
 
-On its own, a spec isn't particularly useful until expectations are set about the behavior of the code. Expectations in specs are defined using the ```expect()``` function and an [expectation matcher](https://github.com/pivotal/jasmine/wiki/Matchers) (e.g ```toEqual()```, ```toBeTruthy()```, ```toContain()```). A revised example using an expectation matcher would look like:
+就其本身而言，一个spec如果没有设置行为代码的期望结果就没有什么用处了。使用```expect()```函数和[expectation matcher](https://github.com/pivotal/jasmine/wiki/Matchers) (比如```toEqual()```, ```toBeTruthy()```, ```toContain()```)来定义期望结果。示例：
 
 ```javascript
 it('should be incrementing in value', function(){
@@ -6592,11 +6590,11 @@ it('should be incrementing in value', function(){
 });
 ```
 
-The above code passes our behavioral expectation as ```counter``` equals 1. Notice how easy this was to read the expectation on the last line (you probably grokked it without any explanation).
+上面代码中对```counter```的期望值要等于1。这种代码读起来非常简单(凭直觉就可以理解了，无需任何解释)。
 
-Specs are grouped into suites which we describe using Jasmine's ```describe()``` function, again passing a string as a description and a function. The name/description for your suite is typically that of the component or module you're testing.
+一组Specs就构成了suites，通过Jasmine的```describe()```函数定义，传入一个描述字符串和一个函数。suite的名称或者描述通常是需要测试的组件或者模块。
 
-Jasmine will use it as the group name when it reports the results of the specs you've asked it to run. A simple suite containing our sample spec could look like:
+Jasmine会把它作为给出报告时运行specs的分组名称。下面是一个简单的示例：
 
 ```javascript
 describe('Stats', function(){
@@ -6610,7 +6608,7 @@ describe('Stats', function(){
 });
 ```
 
-Suites also share a functional scope and so it's possible to declare variables and functions inside a describe block which are accessible within specs:
+Suites共享一个函数域，所以可以在describe函数内声明变量， specs里的函数也可以访问到：
 
 ```javascript
 describe('Stats', function(){
@@ -6630,11 +6628,11 @@ describe('Stats', function(){
 });
 ```
 
-***Note:*** Suites are executed in the order in which they are described, which can be useful to know if you would prefer to see test results for specific parts of your application reported first.
+***提示：*** Suites是按其定义的顺序执行，如果你要看整个应用测试报告的某个特定部分的测试结果，这可能非常有用。
 
-Jasmine also supports **spies** - a way to mock, spy and fake behavior in our unit tests. Spies replace the function they're spying on, allowing us to simulate behavior we would like to mock (i.e test free of the actual implementation).
+Jasmine同样支持**spies(监视)** ——在单元测试中一种模仿，监视，和伪造行为的方法。Spies会替换它们监视的函数，可以模仿我们想要伪造的行为。
 
-In the below example, we're spying on the ```setComplete``` method of a dummy Todo function to test that arguments can be passed to it as expected.
+在下面这个例子中，我们用一个虚拟的Todo function监视```setComplete```方法，测试传入的参数是否符合期望。
 
 ```javascript
 var Todo = function(){
@@ -6661,12 +6659,12 @@ describe('a simple spy', function(){
 });
 ```
 
-What you're more likely to use spies for is testing [asynchronous](http://en.wikipedia.org/wiki/Asynchronous_communication) behavior in your application such as AJAX requests. Jasmine supports:
+更有可能会用到spies的地方是测试[asynchronous(异步)](http://en.wikipedia.org/wiki/Asynchronous_communication)行为，比如AJAX请求。Jasmine支持：
 
-* Writing tests which can mock AJAX requests using spies. This allows us to test code which runs before an AJAX request and right after. It's also possible to mock/fake responses the server can return and the benefit of this type of testing is that it's faster as no real calls are being made to a server
-* Asynchronous tests which don't rely on spies
+* 使用spies模仿AJAX请求来编写测试。可以在AJAX请求之前和请求之后运行测试代码。也可以伪造服务器端的响应，这种类型的测试好处就是更快，不需要等待实际的服务器调用。
+* 异步测试部需要依赖spies
 
-For the first kind of test, it's possible to both fake an AJAX request and verify that the request was both calling the correct URL and executed a callback where one was provided.
+第一种测试，可以伪造AJAX请求，验证请求的URL是否正确以及执行回调，如果有的话。
 
 ```javascript
 it("the callback should be executed on success", function () {
@@ -6691,13 +6689,13 @@ function getTodo(id, callback) {
 }
 ```
 
-If you feel lost having seen matchers like ```andCallFake()``` and ```toHaveBeenCalled()```, don't worry. All of these are Spy-specific matchers and are documented on the Jasmine [wiki](https://github.com/pivotal/jasmine/wiki/Spies).
+```andCallFake()```，```toHaveBeenCalled()```是匹配方法，所有Spy可用的匹配方法可以看Jasmine [wiki](https://github.com/pivotal/jasmine/wiki/Spies)。
 
-For the second type of test (asynchronous tests), we can take the above further by taking advantage of three other methods Jasmine supports:
+第二种测试(异步测试)，我们可以用Jasmine支持的下面这三个方法对前面的例子做些改进：
 
-* runs(function) - a block which runs as if it was directly called
-* waits(timeout) - a native timeout before the next block is run
-* waitsFor(function, optional message, optional timeout) - a way to pause specs until some other work has completed. Jasmine waits until the supplied function returns true here before it moves on to the next block.
+* runs(function) - 立即运行一个代码块
+* waits(timeout) - 下一个代码块执行前等待一段时间
+* waitsFor(function, optional message, optional timeout)——暂停specs知道某些工作完成。Jasmine会等待这里提供的函数返回true然后再继续执行下一块代码。
 
 
 ```javascript
@@ -6725,11 +6723,11 @@ function getTodo(id, callback) {
 }
 ```
 
-***Note:*** It's useful to remember that when making real requests to a web server in your unit tests, this has the potential to massively slow down the speed at which tests run (due to many factors including server latency). As this also introduces an external dependency that can (and should) be minimized in your unit testing, it is strongly recommended that you opt for spies to remove the need for a web server to be used here.
+***提示：*** 当在单元测试中创建真实的服务器端请求时，会极大的拖慢测试运行的速度(有很多因素，包括服务器延迟)。同时也引入了外部依赖，原本可以(也应该要)最小化你的单元测试，所以强烈推荐你选择spies，避免使用真实的服务器端调用。
 
-##beforeEach and afterEach()
+##beforeEach和afterEach()
 
-Jasmine also supports specifying code that can be run before each (```beforeEach()```) and after each (```afterEach```) test. This is useful for enforcing consistent conditions (such as resetting variables that may be required by specs). In the following example, ```beforeEach()``` is used to create a new sample Todo model specs can use for testing attributes.
+Jasmine同样支持在每个测试之前(```beforeEach()```)或者之后(```afterEach```)执行特定的代码。这对强制为一致的条件非常有用(比如重置specs引入的变量)。下面这个例子中，```beforeEach()```中创建一个specs用于测试属性的Todo model。
 
 ```javascript
 beforeEach(function(){
@@ -6744,24 +6742,24 @@ it("should contain a text value if not the default value", function(){
 });
 ```
 
-Each nested ```describe()``` in your tests can have their own ```beforeEach()``` and ```afterEach()``` methods which support including setup and teardown methods relevant to a particular suite. We'll be using ```beforeEach()``` in practice a little later.
+每个```describe()```中都可嵌套自己的```beforeEach()```和```afterEach()```方法，which support including setup and teardown methods relevant to a particular suite。后面我们会使用```beforeEach()```来实践下。
 
-##Shared scope
+##共享域
 
-In the previous section you may have noticed that we initially declared a variable ```this.todo``` in our ```beforeEach()``` call and were then able to continue using this in ```afterEach()```. This is thanks to a powerful feature of Jasmine known as shared  functional scope. Shared scope allows ```this``` properties to be common to all blocks (including ```runs()```), but not declared variables (i.e ```var```s).
+前面你可能注意到```beforeEach()```调用中我们定义了一个变量```this.todo```，然后在```afterEach()```也可以继续使用它。这要归功于Jasmine的共享函数域。共享域可以让所有块(包括```runs()```)访问的```this```的属性都是相同的，除了声明的变量之外(```var```声明的变量)。
 
 
-##Getting setup
+##获取安装
 
-Now that we've reviewed some fundamentals, let's go through downloading Jasmine and getting everything setup to write tests.
+现在我们来分析下基本原理，先下载Jasmine并且做好编写测试前的准备。
 
-A standalone release of Jasmine can be [downloaded](http://pivotal.github.com/jasmine/download.html) from the official release page.
+官方独立版本可以从这里[下载](https://github.com/pivotal/jasmine/downloads)。
 
-You'll need a file called SpecRunner.html in addition to the release. It can be downloaded from https://github.com/pivotal/jasmine/tree/master/lib/jasmine-core/example or as part of a download of the complete Jasmine [repo](https://github.com/pivotal/jasmine/zipball/master).Alternatively, you can ```git clone``` the main Jasmine repository from https://github.com/pivotal/jasmine.git.
+下载到的包中还有一个SpecRunner.html文件。 Jasmine代码仓库可以从用git从这里获取https://github.com/pivotal/jasmine.git。
 
-Let's review [SpecRunner.html](https://github.com/pivotal/jasmine/blob/master/lib/jasmine-core/example/SpecRunner.html):
+我们来看下SpecRunner.html文件(下面示例代码可能相对于新版本的Jasmine较老了)：
 
-It first includes both Jasmine and the necessary CSS required for reporting:
+首先引入Jasmine和必要用于report的css：
 
 
 	<link rel="stylesheet" type="text/css" href="lib/jasmine-1.1.0.rc1/jasmine.css"/>
@@ -6769,39 +6767,39 @@ It first includes both Jasmine and the necessary CSS required for reporting:
 	<script type="text/javascript" src="lib/jasmine-1.1.0.rc1/jasmine-html.js"></script>
 
 
-Next, some sample tests are included:
+然后，引入一些测试：
 
 
 	<script type="text/javascript" src="spec/SpecHelper.js"></script>
 	<script type="text/javascript" src="spec/PlayerSpec.js"></script>
 
 
-And finally the sources being tested:
+最后是需要被测试的代码：
 
 
 	<script type="text/javascript" src="src/Player.js"></script>
 	<script type="text/javascript" src="src/Song.js"></script>
 
 
-***Note:*** Below this section of SpecRunner is code responsible for running the actual tests. Given that we won't be covering modifying this code, I'm going to skip reviewing it. I do however encourage you to take a look through [PlayerSpec.js](https://github.com/pivotal/jasmine/blob/master/lib/jasmine-core/example/spec/PlayerSpec.js) and [SpecHelper.js](https://github.com/pivotal/jasmine/blob/master/lib/jasmine-core/example/spec/SpecHelper.js). They're a useful basic example to go through how a minimal set of tests might work.
+***提示：*** SpecRunner后面的代码是负责运行测试。 这里不做分析，鼓励你看看PlayerSpec.js和SpecHelper.js的代码。这是个如何做一组测试的很好的例子。
 
 ##TDD With Backbone
 
-When developing applications with Backbone, it can be necessary to test both individual modules of code as well as modules, views, collections and routers. Taking a TDD approach to testing, let's review some specs for testing these Backbone components using the popular Backbone [Todo](https://github.com/addyosmani/todomvc/tree/master/todo-example/backbone) application. For this section we will be using a modified version of Larry Myers Backbone Koans project, which can be found in the `practicals\jasmine-koans` folder.
+当使用Backbone开发应用时，需要测试个别的模块代码同时也要测试models, views, collections和routers。采用TDD测试方法，我们来看下测试Backbone [Todo](https://github.com/addyosmani/todomvc/tree/gh-pages/architecture-examples/backbone)这个示例项目中Backbone组件的一些specs。这一节我们将使用一个由Larry Myers修改版本的Backbone Koans项目， 在`practicals\jasmine-koans`目录下。
 
 ##<a name="testing-jasmine-models">Models</a>
 
-The complexity of Backbone models can vary greatly depending on what your application is trying to achieve. In the following example, we're going to test default values, attributes, state changes and validation rules.
+Backbone models的复杂程度完全依赖于应用要实现的功能。下面例子中，我们将测试默认值，属性，状态改变，和验证规则。
 
-First, we begin our suite for model testing using ```describe()```:
+首先，使用```describe()```创建suite：
 
 ```javascript
 describe('Tests for Todo', function() {
 ```
 
-Models should ideally have default values for attributes. This helps ensure that when creating instances without a value set for any specific attribute, a default one (e.g "") is used instead. The idea here is to allow your application to interact with models without any unexpected behavior.
+Model的属性理想上应该有默认值。可以确保创建实例时未指定值的话可以使用默认值替代。这里的意思主要是与models交互是可以避免一些意外的行为。
 
-In the following spec, we create a new Todo without any attributes passed then check to find out what the value of the ```text``` attribute is. As no value has been set, we expect a default value of ```""``` to be returned.
+下面这个spec，创建一个Todo没有传入任何属性，然后检查下```text```属性的值是什么。因为没有设置任何值，所以我们期望的值是返回```""```。
 
 ```javascript
 it('Can be created with default values for its attributes.', function() {
@@ -6810,7 +6808,7 @@ it('Can be created with default values for its attributes.', function() {
 });
 ```
 
-If testing this spec before your models have been written, you'll incur a failing test, as expected. What's required for the spec to pass is a default value for the attribute ```text```. We can implement this default value with some other useful defaults (which we'll be using shortly) in our Todo model as follows:
+如果你在编写model前测试这个spec的话，会引发失败。这个spec需要传入一个```text```属性的默认值。示例：
 
 ```javascript
 
@@ -6824,7 +6822,7 @@ window.Todo = Backbone.Model.extend({
 
 ```
 
-Next, we want to test that our model will pass attributes that are set such that retrieving the value of these attributes after initialization will be what we expect. Notice that here, in addition to testing for an expected value for ```text```, we're also testing the other default values are what we expect them to be.
+接下来，我们测试下model在初始化之后会把属性值设为传入的值。另外也测试下其它几个属性的默认值是否是我们期望的。
 
 ```javascript
 it('Will set passed attributes on the model instance when created.', function() {
@@ -6838,8 +6836,7 @@ it('Will set passed attributes on the model instance when created.', function() 
     expect(todo.get('order')).toBe(0);
 });
 ```
-
-Backbone models support a model.change() event which is triggered when the state of a model changes. In the following example, by 'state' I'm referring to the value of a Todo model's attributes. The reason changes of state are important to test are that there may be state-dependent events in your application e.g you may wish to display a confirmation view once a Todo model has been updated.
+Backbone models支持model.change()事件，当model的状态改变时触发。下面这个例子中，通过设置Todo model属性值来改变它的'state(状态)'，状态改变的原因非常值得测试，因为应用中可能有状态依赖的事件，比如当model被修改时想要显示一个确认视图。
 
 ```javascript
 it('Fires a custom event when the state changes.', function() {
@@ -6858,11 +6855,12 @@ it('Fires a custom event when the state changes.', function() {
 });
 ```
 
-It's common to include validation logic in your models to ensure both the input passed from users (and other modules) in the application are 'valid'. A Todo app may wish to validate the text input supplied in case it contains rude words. Similarly if we're storing the ```done``` state of a Todo item using booleans, we need to validate that truthy/falsy values are passed and not just any arbitrary string.
+通常在model中引入验证逻辑来确保来自用户的输入(或者其它模块)是有效的'(valid)'。Todo app可能会验证text输入框输入进来的内容没有粗鲁的单词。 同样的，
+当保存Todo项```done```状态时，需要验证传入的值是true/false， 而不是字符串。
 
-In the following spec, we take advantage of the fact that validations which fail model.validate() trigger an "error" event. This allows us to test if validations are correctly failing when invalid input is supplied.
+在下面的spec中，我们用了一些是验证失败的值，让model.validate()触发"error"事件。检验一下传入无效值是是否会真的触发失败。
 
-We create an errorCallback spy using Jasmine's built in ```createSpy()``` method which allows us to spy on the error event as follows:
+使用Jasmine内置```createSpy()```方法创建一个errorCallback spy，就可以检测error事件了：
 
 ```javascript
 it('Can contain custom validation rules, and will trigger an error event on failed validation.', function() {
@@ -6886,8 +6884,7 @@ it('Can contain custom validation rules, and will trigger an error event on fail
 });
 
 ```
-
-The code to make the above failing test support validation is relatively simple. In our model, we override the validate() method (as recommended in the Backbone docs), checking to make sure a model both has a 'done' property and is a valid boolean before allowing it to pass.
+要让上面这段失败测试代码支持验证非常简单。这个model中，我们重写validate()方法(像Backbone文档推荐的那样)，检查model有'done'属性并且给它传入值时是一个合法的布尔值。
 
 ```javascript
 validate: function(attrs) {
@@ -6897,7 +6894,7 @@ validate: function(attrs) {
 }
 ```
 
-If you would like to review the final code for our Todo model, you can find it below:
+这个完整的Todo model代码如下：
 
 ```javascript
 var NAUGHTY_WORDS = /crap|poop|hell|frogs/gi;
@@ -6934,14 +6931,15 @@ window.Todo = Backbone.Model.extend({
 
 ##<a name="testing-jasmine-collections">Collections</a>
 
-We now need to define specs to tests a Backbone collection of Todo models (a TodoList). Collections are responsible for a number of list tasks including managing order and filtering.
+现在我们需要定义specs来测试Backbone Todo model的collection(一个TodoList)。Collections处理列表的排序，过滤等。
 
-A few specific specs that come to mind when working with collections are:
+测试collections时可能会有下面这些明确的specs：
 
-* Making sure we can add new Todo models as both objects and arrays
-* Attribute testing to make sure attributes such as the base URL of the collection are values we expect
-* Purposefully adding items with a status of ```done:true``` and checking against how many items the collection thinks have been completed vs. those that are remaining
+* 可以添加新的Todo model对象或者对象的数组。
+* 属性测试，确保类似collection的base URL是我们期望的值。
+* 有意的添加状态```done:true```的todo项， 然后检查collection认为已完成项的数量和未完成项的数量。
 
+这一节我们只会讲到前2个问题，第三个问题作为读者的扩着练习。
 In this section we're going to cover the first two of these with the third left as an extended exercise I recommend trying out.
 
 Testing Todo models can be added to a collection as objects or arrays is relatively trivial. First, we initialize a new TodoList collection and check to make sure its length (i.e the number of Todo models it contains) is 0. Next, we add new Todos, both as objects and arrays, checking the length property of the collection at each stage to ensure the overall count is what we expect:

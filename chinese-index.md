@@ -6808,7 +6808,7 @@ it('Can be created with default values for its attributes.', function() {
 });
 ```
 
-If testing this spec before your models have been written, you'll incur a failing test, as expected. What's required for the spec to pass is a default value for the attribute ```text```. We can implement this default value with some other useful defaults (which we'll be using shortly) in our Todo model as follows:
+如果你在编写model前测试这个spec的话，会引发失败。这个spec需要传入一个```text```属性的默认值。示例：
 
 ```javascript
 
@@ -6822,7 +6822,7 @@ window.Todo = Backbone.Model.extend({
 
 ```
 
-Next, we want to test that our model will pass attributes that are set such that retrieving the value of these attributes after initialization will be what we expect. Notice that here, in addition to testing for an expected value for ```text```, we're also testing the other default values are what we expect them to be.
+接下来，我们测试下model在初始化之后会把属性值设为传入的值。另外也测试下其它几个属性的默认值是否是我们期望的。
 
 ```javascript
 it('Will set passed attributes on the model instance when created.', function() {
@@ -6836,8 +6836,7 @@ it('Will set passed attributes on the model instance when created.', function() 
     expect(todo.get('order')).toBe(0);
 });
 ```
-
-Backbone models support a model.change() event which is triggered when the state of a model changes. In the following example, by 'state' I'm referring to the value of a Todo model's attributes. The reason changes of state are important to test are that there may be state-dependent events in your application e.g you may wish to display a confirmation view once a Todo model has been updated.
+Backbone models支持model.change()事件，当model的状态改变时触发。下面这个例子中，通过设置Todo model属性值来改变它的'state(状态)'，状态改变的原因非常值得测试，因为应用中可能有状态依赖的事件，比如当model被修改时想要显示一个确认视图。
 
 ```javascript
 it('Fires a custom event when the state changes.', function() {
@@ -6856,11 +6855,12 @@ it('Fires a custom event when the state changes.', function() {
 });
 ```
 
-It's common to include validation logic in your models to ensure both the input passed from users (and other modules) in the application are 'valid'. A Todo app may wish to validate the text input supplied in case it contains rude words. Similarly if we're storing the ```done``` state of a Todo item using booleans, we need to validate that truthy/falsy values are passed and not just any arbitrary string.
+通常在model中引入验证逻辑来确保来自用户的输入(或者其它模块)是有效的'(valid)'。Todo app可能会验证text输入框输入进来的内容没有粗鲁的单词。 同样的，
+当保存Todo项```done```状态时，需要验证传入的值是true/false， 而不是字符串。
 
-In the following spec, we take advantage of the fact that validations which fail model.validate() trigger an "error" event. This allows us to test if validations are correctly failing when invalid input is supplied.
+在下面的spec中，我们用了一些是验证失败的值，让model.validate()触发"error"事件。检验一下传入无效值是是否会真的触发失败。
 
-We create an errorCallback spy using Jasmine's built in ```createSpy()``` method which allows us to spy on the error event as follows:
+使用Jasmine内置```createSpy()```方法创建一个errorCallback spy，就可以检测error事件了：
 
 ```javascript
 it('Can contain custom validation rules, and will trigger an error event on failed validation.', function() {
@@ -6884,8 +6884,7 @@ it('Can contain custom validation rules, and will trigger an error event on fail
 });
 
 ```
-
-The code to make the above failing test support validation is relatively simple. In our model, we override the validate() method (as recommended in the Backbone docs), checking to make sure a model both has a 'done' property and is a valid boolean before allowing it to pass.
+要让上面这段失败测试代码支持验证非常简单。这个model中，我们重写validate()方法(像Backbone文档推荐的那样)，检查model有'done'属性并且给它传入值时是一个合法的布尔值。
 
 ```javascript
 validate: function(attrs) {
@@ -6895,7 +6894,7 @@ validate: function(attrs) {
 }
 ```
 
-If you would like to review the final code for our Todo model, you can find it below:
+这个完整的Todo model代码如下：
 
 ```javascript
 var NAUGHTY_WORDS = /crap|poop|hell|frogs/gi;
@@ -6932,17 +6931,17 @@ window.Todo = Backbone.Model.extend({
 
 ##<a name="testing-jasmine-collections">Collections</a>
 
-We now need to define specs to tests a Backbone collection of Todo models (a TodoList). Collections are responsible for a number of list tasks including managing order and filtering.
+现在我们需要定义specs来测试Backbone Todo model的collection(一个TodoList)。Collections处理列表的排序，过滤等。
 
-A few specific specs that come to mind when working with collections are:
+测试collections时可能会有下面这些明确的specs：
 
-* Making sure we can add new Todo models as both objects and arrays
-* Attribute testing to make sure attributes such as the base URL of the collection are values we expect
-* Purposefully adding items with a status of ```done:true``` and checking against how many items the collection thinks have been completed vs. those that are remaining
+* 可以添加新的Todo model对象或者对象的数组。
+* 属性测试，确保类似collection的base URL是我们期望的值。
+* 有意的添加状态```done:true```的todo项， 然后检查collection认为已完成项的数量和未完成项的数量。
 
-In this section we're going to cover the first two of these with the third left as an extended exercise I recommend trying out.
+这一节我们只会讲到前2个问题，第三个问题作为读者的扩着练习。
 
-Testing Todo models can be added to a collection as objects or arrays is relatively trivial. First, we initialize a new TodoList collection and check to make sure its length (i.e the number of Todo models it contains) is 0. Next, we add new Todos, both as objects and arrays, checking the length property of the collection at each stage to ensure the overall count is what we expect:
+测试Todo models可通过一个对象或者数组来添加相对简单。首先，初始化一个TodoList collection，确保其长度为0。然后，添加新的Todos，对象和数组两种情况都添加一次，然后检查collection的length属性是否符合期望值：
 
 ```javascript
 describe('Tests for TodoList', function() {
@@ -6968,7 +6967,7 @@ describe('Tests for TodoList', function() {
 ...
 ```
 
-Similar to model attributes, it's also quite straight-forward to test attributes in collections. Here we have a spec that ensures the collection.url (i.e the url reference to the collection's location on the server) is what we expect it to be:
+跟model的属性一样，测试collections的属性也非常简单。下面是一个简单的测试collection.url的spec例子：
 
 ```javascript
 it('Can have a url property to define the basic url structure for all contained models.', function() {
@@ -6980,9 +6979,9 @@ it('Can have a url property to define the basic url structure for all contained 
 
 ```
 
-For the third spec, it's useful to remember that the implementation for our collection will have methods for filtering how many Todo items are done and how many are remaining - we can call these ```done()``` and ```remaining()```. Consider writing a spec which creates a new collection and adds one new model that has a preset ```done``` state of ```true``` and two others that have the default ```done``` state of ```false```. Testing the length of what's returned using ```done()``` and ```remaining()``` should allow us to know whether the state management in our application is working or needs a little tweaking.
+对于第三个spec，collection会实现``done()```和```remaining()```方法，分别过滤已完成Todo项和未完成项。编写一个spec，创建一个collection，添加一个```done```状态为为```true```的model，2个```done```状态为```false```的model。然后测试调用```done()```和```remaining()```方法返回的结果的length，看是否正常。
 
-The final implementation for our TodoList collection can be found below:
+TodoList collection实现代码可以像下面这样：
 
 
 ```javascript
@@ -7018,11 +7017,11 @@ The final implementation for our TodoList collection can be found below:
 
 ##<a name="testing-jasmine-views">Views</a>
 
-Before we take a look at testing Backbone views, let's briefly review a jQuery plugin that can assist with writing Jasmine specs for them.
+在开始测试Backbone views前，先简短的来看一个编写Jasmine specs的jQuery plugin。
 
 **The Jasmine jQuery Plugin**
 
-As we know our Todo application will be using jQuery for DOM manipulation, there's a useful jQuery plugin called [jasmine-jquery](https://github.com/velesin/jasmine-jquery) we can use to help simplify BDD testing rendered elements that our views may produce.
+Todo application使用jQuery来做DOM操作，有一个[jasmine-jquery](https://github.com/velesin/jasmine-jquery) 插件可以帮助简化BDD测试 testing rendered elements that our views may produce.
 
 The plugin provides a number of additional Jasmine [matchers](https://github.com/pivotal/jasmine/wiki/Matchers) to help test jQuery wrapped sets such as:
 

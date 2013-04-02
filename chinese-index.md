@@ -7192,7 +7192,7 @@ describe("TodoView", function() {
 
 ```Expected '' to contain '<label class="todo-content">My Todo</label>'.```
 
-The reason for this is the default behavior for render() doesn't create any markup. Let's write a replacement for render() which fixes this:
+原因是render()的默认行为不创建任何标签。我们来编写一个替代的render()来解决它：
 
 ```javascript
 render: function() {
@@ -7204,9 +7204,9 @@ render: function() {
 }
 ```
 
-The above specifies an inline string template and replaces fields found in the template within the "<% %>" blocks with their corresponding values from the associated model. As we're now also returning the TodoView instance from the method, the first spec will also pass. It's worth noting that there are serious drawbacks to using HTML strings in your specs to test against like this. Even minor changes to your template (a simple tab or whitespace) would cause your spec to fail, despite the rendered output being the same. It's also more time consuming to maintain as most templates in real-world applications are significantly more complex. A better option for testing rendered output is using jQuery to both select and inspect values.
+上面指定了一行模板字符串，然后用model对应的属性值替换"<% %>"区域内的内容。同时也返回TodoView实例，所以第一个spec也可以通过。像这样在spec中使用HTML字符串来进行测试有非常大的缺点。即便是模板微小的变化(一个tab或者空格符)就会导致spec失败，即便渲染结果是一样的。实际应用中模板也会更复杂，将耗费更多的时间去维护。更好的测试渲染输出结果的方法是使用jQuery来选择和检查。
 
-With this in mind, let's re-write the specs, this time using some of the custom matchers offered by jasmine-jquery:
+基于这个思想，我们来重写这个spec，使用jasmine-jquery提供的自定义matchers：
 
 
 ```javascript
@@ -7224,10 +7224,9 @@ describe("Template", function() {
 });
 ```
 
+讨论单元测试不提到fixtures是不可能的。Fixtures通常包含单元测试当需要时(可以是本地或者从外部文件)载入的测试数据(比如HTML)。 一直以来我们都是把jQuery的期望建立在view的el属性上。大部分情况这是有效的，不过，有时我们需要把标签渲染到document。再specs中处理这个问题的最理想方式就是使用fixtures (jasmine-jquery插件带给我们的另外一个特性)。
 
-It would be impossible to discuss unit testing without mentioning fixtures. Fixtures typically contain test data (e.g HTML) that is loaded in when needed (either locally or from an external file) for unit testing. So far we've been establishing jQuery expectations based on the view's el property. This works for a number of cases, however, there are instances where it may be necessary to render markup into the document. The most optimal way to handle this within specs is through using fixtures (another feature brought to us by the jasmine-jquery plugin).
-
-Re-writing the last spec to use fixtures would look as follows:
+使用fixtures重写上面这个spec：
 
 
 ```javascript
@@ -7256,10 +7255,10 @@ describe("TodoView", function() {
 });
 ```
 
-What we're now doing in the above spec is appending the rendered todo item into the fixture. We then set expectations against the fixture, which may be something desirable when a view is setup against an element which already exists in the DOM. It would be necessary to provide both the fixture and test the ```el``` property correctly picking up the element expected when the view is instantiated.
+在上面这个spec中，把渲染的todo元素append到fixture。然后对这个fixture设置期望，当view对应到一个已经存在的DOM元素之后的一些desirable。有必要提供fixture和测试当view初始化的时候```el```属性是否指向正确的元素。
 
 
-##Rendering with a templating system
+##使用模板系统进行渲染
 
 
 JavaScript templating systems (such as Handlebars, Mustache and even Underscore's own Micro-templating) support conditional logic in template strings. What this effectively means is that we can add if/else/ternery expressions inline which can then be evaluated as needed, allowing us to build even more powerful templates.

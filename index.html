@@ -254,8 +254,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#models"><a name="testing-jasmine-models">Models</a></a></li>
 <li><a href="#collections-1"><a name="testing-jasmine-collections">Collections</a></a></li>
 <li><a href="#views-1"><a name="testing-jasmine-views">Views</a></a></li>
-<li><a href="#initial-setup">Initial setup</a></li>
-<li><a href="#view-rendering">View rendering</a></li>
+<li><a href="#初始化-1">初始化</a></li>
+<li><a href="#view渲染">View渲染</a></li>
 <li><a href="#rendering-with-a-templating-system">Rendering with a templating system</a></li>
 <li><a href="#conclusions">Conclusions</a></li>
 <li><a href="#exercise">Exercise</a></li>
@@ -5289,12 +5289,12 @@ expect(errorArgs[1]).toBe(&#39;Todo.done must be a boolean value.&#39;);</code><
 <p>现在我们需要定义specs来测试Backbone Todo model的collection(一个TodoList)。Collections处理列表的排序，过滤等。</p>
 <p>测试collections时可能会有下面这些明确的specs：</p>
 <ul>
-<li>Making sure we can add new Todo models as both objects and arrays</li>
-<li>Attribute testing to make sure attributes such as the base URL of the collection are values we expect</li>
-<li>Purposefully adding items with a status of <code>done:true</code> and checking against how many items the collection thinks have been completed vs. those that are remaining</li>
+<li>可以添加新的Todo model对象或者对象的数组。</li>
+<li>属性测试，确保类似collection的base URL是我们期望的值。</li>
+<li>有意的添加状态<code>done:true</code>的todo项， 然后检查collection认为已完成项的数量和未完成项的数量。</li>
 </ul>
-<p>In this section we’re going to cover the first two of these with the third left as an extended exercise I recommend trying out.</p>
-<p>Testing Todo models can be added to a collection as objects or arrays is relatively trivial. First, we initialize a new TodoList collection and check to make sure its length (i.e the number of Todo models it contains) is 0. Next, we add new Todos, both as objects and arrays, checking the length property of the collection at each stage to ensure the overall count is what we expect:</p>
+<p>这一节我们只会讲到前2个问题，第三个问题作为读者的扩着练习。</p>
+<p>测试Todo models可通过一个对象或者数组来添加相对简单。首先，初始化一个TodoList collection，确保其长度为0。然后，添加新的Todos，对象和数组两种情况都添加一次，然后检查collection的length属性是否符合期望值：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">describe(<span class="ch">&#39;Tests for TodoList&#39;</span>, <span class="kw">function</span>() {
 
     it(<span class="ch">&#39;Can add Model instances as objects and arrays.&#39;</span>, <span class="kw">function</span>() {
@@ -5316,15 +5316,15 @@ expect(errorArgs[1]).toBe(&#39;Todo.done must be a boolean value.&#39;);</code><
         expect(<span class="kw">todos</span>.<span class="fu">length</span>).<span class="fu">toBe</span>(<span class="dv">3</span>);
     });
 ...</code></pre>
-<p>Similar to model attributes, it’s also quite straight-forward to test attributes in collections. Here we have a spec that ensures the collection.url (i.e the url reference to the collection’s location on the server) is what we expect it to be:</p>
+<p>跟model的属性一样，测试collections的属性也非常简单。下面是一个简单的测试collection.url的spec例子：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">it(<span class="ch">&#39;Can have a url property to define the basic url structure for all contained models.&#39;</span>, <span class="kw">function</span>() {
         <span class="kw">var</span> todos = <span class="kw">new</span> TodoList();
 
         <span class="co">// what has been specified as the url base in our model?</span>
         expect(<span class="kw">todos</span>.<span class="fu">url</span>).<span class="fu">toBe</span>(<span class="ch">&#39;/todos/&#39;</span>);
 });</code></pre>
-<p>For the third spec, it’s useful to remember that the implementation for our collection will have methods for filtering how many Todo items are done and how many are remaining - we can call these <code>done()</code> and <code>remaining()</code>. Consider writing a spec which creates a new collection and adds one new model that has a preset <code>done</code> state of <code>true</code> and two others that have the default <code>done</code> state of <code>false</code>. Testing the length of what’s returned using <code>done()</code> and <code>remaining()</code> should allow us to know whether the state management in our application is working or needs a little tweaking.</p>
-<p>The final implementation for our TodoList collection can be found below:</p>
+<p>对于第三个spec，collection会实现``done()<code>和</code>remaining()<code>方法，分别过滤已完成Todo项和未完成项。编写一个spec，创建一个collection，添加一个</code>done<code>状态为为</code>true<code>的model，2个</code>done<code>状态为</code>false<code>的model。然后测试调用</code>done()<code>和</code>remaining()```方法返回的结果的length，看是否正常。</p>
+<p>TodoList collection实现代码可以像下面这样：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"> <span class="kw">window</span>.<span class="fu">TodoList</span> = <span class="kw">Backbone.Collection</span>.<span class="fu">extend</span>({
 
         <span class="dt">model</span>: Todo,
@@ -5353,34 +5353,34 @@ expect(errorArgs[1]).toBe(&#39;Todo.done must be a boolean value.&#39;);</code><
 
     });</code></pre>
 <h2 id="views-1"><a href="#TOC"><a name="testing-jasmine-views">Views</a></a></h2>
-<p>Before we take a look at testing Backbone views, let’s briefly review a jQuery plugin that can assist with writing Jasmine specs for them.</p>
+<p>在开始测试Backbone views前，先简短的来看一个编写Jasmine specs的jQuery plugin。</p>
 <p><strong>The Jasmine jQuery Plugin</strong></p>
-<p>As we know our Todo application will be using jQuery for DOM manipulation, there’s a useful jQuery plugin called <a href="https://github.com/velesin/jasmine-jquery">jasmine-jquery</a> we can use to help simplify BDD testing rendered elements that our views may produce.</p>
-<p>The plugin provides a number of additional Jasmine <a href="https://github.com/pivotal/jasmine/wiki/Matchers">matchers</a> to help test jQuery wrapped sets such as:</p>
+<p>Todo application使用jQuery来做DOM操作，有一个<a href="https://github.com/velesin/jasmine-jquery">jasmine-jquery</a> 插件可以帮助简化BDD测试view创建的元素。</p>
+<p>这个插件提供了很多额外的Jasmine <a href="https://github.com/pivotal/jasmine/wiki/Matchers">matchers</a> 以帮助测试jQuery包装的sets：</p>
 <ul>
-<li><code>toBe(jQuerySelector)</code> e.g <code>expect($('&lt;div id=&quot;some-id&quot;&gt;&lt;/div&gt;')).toBe('div#some-id')</code></li>
-<li><code>toBeChecked()</code> e.g <code>expect($('&lt;input type=&quot;checkbox&quot; checked=&quot;checked&quot;/&gt;')).toBeChecked()</code></li>
-<li><code>toBeSelected()</code> e.g <code>expect($('&lt;option selected=&quot;selected&quot;&gt;&lt;/option&gt;')).toBeSelected()</code></li>
+<li><code>toBe(jQuerySelector)</code>示例 ： <code>expect($('&lt;div id=&quot;some-id&quot;&gt;&lt;/div&gt;')).toBe('div#some-id')</code></li>
+<li><code>toBeChecked()</code> 示例：<code>expect($('&lt;input type=&quot;checkbox&quot; checked=&quot;checked&quot;/&gt;')).toBeChecked()</code></li>
+<li><code>toBeSelected()</code> 示例 <code>expect($('&lt;option selected=&quot;selected&quot;&gt;&lt;/option&gt;')).toBeSelected()</code></li>
 </ul>
-<p>and <a href="https://github.com/velesin/jasmine-jquery">many others</a>. The complete list of matchers supported can be found on the project homepage. It’s useful to know that similar to the standard Jasmine matchers, the custom matchers above can be inverted using the .not prefix (i.e <code>expect(x).not.toBe(y)</code>):</p>
+<p>更多可以参看 <a href="https://github.com/velesin/jasmine-jquery">这里</a>。它支持的完整matchers可以在项目主页上找到。它跟标准的Jasmine matchers类似，上面的matchers可以加.not前缀反过来使用(比如<code>expect(x).not.toBe(y)</code>)：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">expect($(<span class="ch">&#39;&lt;div&gt;I am an example&lt;/div&gt;&#39;</span>)).<span class="fu">not</span>.<span class="fu">toHaveText</span>(<span class="ot">/other/</span>)</code></pre>
-<p>jasmine-jquery also includes a fixtures model, allowing us to load in arbitrary HTML content we may wish to use in our tests. Fixtures can be used as follows:</p>
-<p>Include some HTML in an external fixtures file:</p>
+<p>jasmine-jquery同时包含一个固定装置模型(fixtures model)，可以加载任意HTML内容到时候。可以像下面这样使用：</p>
+<p>在一个外部文件中包含一段HTML：</p>
 <p>some.fixture.html: <code>&lt;div id=&quot;sample-fixture&quot;&gt;some HTML content&lt;/div&gt;</code></p>
-<p>Next, inside our actual test we would load it as follows:</p>
+<p>然后，实际测试时想下面这样载入：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">loadFixtures(<span class="ch">&#39;some.fixture.html&#39;</span>)
 $(<span class="ch">&#39;some-fixture&#39;</span>).<span class="fu">myTestedPlugin</span>();
 expect($(<span class="ch">&#39;#some-fixture&#39;</span>)).<span class="fu">to</span>&lt;the rest of your matcher would go here&gt;</code></pre>
-<p>The jasmine-jquery plugin is by default setup to load fixtures from a specific directory: spec/javascripts/fixtures. If you wish to configure this path you can do so by initially setting <code>jasmine.getFixtures().fixturesPath = 'your custom path'</code>.</p>
-<p>Finally, jasmine-jquery includes support for spying on jQuery events without the need for any extra plumbing work. This can be done using the <code>spyOnEvent()</code> and <code>assert(eventName).toHaveBeenTriggered(selector)</code> functions. An example of usage may look as follows:</p>
+<p>jasmine-jquery插件默认会从一个特定目录加载fixtures：spec/javascripts/fixtures。如果想配置这个路径的话在初始化设置中<code>jasmine.getFixtures().fixturesPath = 'your custom path'</code>。</p>
+<p>最后，jasmine-jquery包含对jQuery事件spying的支持，而且不需要什么额外的工作。可使用<code>spyOnEvent()</code>和<code>assert(eventName).toHaveBeenTriggered(selector)</code>方法来完成。下面是一个示例：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">spyOnEvent($(<span class="ch">&#39;#el&#39;</span>), <span class="ch">&#39;click&#39;</span>);
 $(<span class="ch">&#39;#el&#39;</span>).<span class="fu">click</span>();
 expect(<span class="ch">&#39;click&#39;</span>).<span class="fu">toHaveBeenTriggeredOn</span>($(<span class="ch">&#39;#el&#39;</span>));</code></pre>
-<p><strong>View testing</strong></p>
-<p>In this section we will review three dimensions to writing specs for Backbone Views: initial setup, view rendering and finally templating. The latter two of these are the most commonly tested, however we’ll review shortly why writing specs for the initialization of your views can also be of benefit.</p>
-<h2 id="initial-setup"><a href="#TOC">Initial setup</a></h2>
-<p>At their most basic, specs for Backbone views should validate that they are being correctly tied to specific DOM elements and are backed by valid data models. The reason to consider doing this is that failures to such specs can trip up more complex tests later on and they’re fairly simple to write, given the overall value offered.</p>
-<p>To help ensure a consistent testing setup for our specs, we use <code>beforeEach()</code> to append both an empty <code>UL</code> (#todoList) to the DOM and initialize a new instance of a TodoView using an empty Todo model. <code>afterEach()</code> is used to remove the previous #todoList <code>UL</code> as well as the previous instance of the view.</p>
+<p><strong>View测试</strong></p>
+<p>这一小节我们从三个维度来看下编写Backbone Views的specs：初始化，view渲染和模板生成。后两个跟通常的测试差不多，不过我会简短的说下为什么对views的初始化编写specs也是有好处的。</p>
+<h2 id="初始化-1"><a href="#TOC">初始化</a></h2>
+<p>最基本的，为Backbone views写的specs需要验证view被正确的绑定到指定的DOM元素，被有效的数据model支持。考虑这样做的原因是，如果这些specs失败的话会导致后面一些更复杂的测试也失败，而且这些specs写起来比较简单，可以提供一个整体的价值。</p>
+<p>为确保一致的测试配置条件，使用<code>beforeEach()</code>追加一个空的<code>UL</code> (#todoList)到DOM并且用一个空的Todo model初始化一个TodoView实例。在<code>afterEach()</code>中移除前面的#todoList <code>UL</code>和view实例。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">describe(<span class="ch">&#39;Tests for TodoView&#39;</span>, <span class="kw">function</span>() {
 
     beforeEach(<span class="kw">function</span>() {
@@ -5395,22 +5395,22 @@ expect(<span class="ch">&#39;click&#39;</span>).<span class="fu">toHaveBeenTrigg
     });
 
 ...</code></pre>
-<p>The first spec useful to write is a check that the TodoView we’ve created is using the correct <code>tagName</code> (element or className). The purpose of this test is to make sure it’s been correctly tied to a DOM element when it was created.</p>
-<p>Backbone views typically create empty DOM elements once initialized, however these elements are not attached to the visible DOM in order to allow them to be constructed without an impact on the performance of rendering.</p>
+<p>第一个spec就是检查我们创建的TodoView使用了正确的<code>tagName</code>(元素或者className)。目的就是确保创建时正确的绑定到DOM元素。</p>
+<p>Backbone views通常一旦初始化会创建一些空的DOM元素，不过这些元素不会附加到可见的DOM中， 目的是在不影响性能和渲染的情况下让他们构建出来。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">it(<span class="ch">&#39;Should be tied to a DOM element when created, based off the property provided.&#39;</span>, <span class="kw">function</span>() {
     <span class="co">//what html element tag name represents this view?</span>
     expect(<span class="kw">todoView.el.tagName</span>.<span class="fu">toLowerCase</span>()).<span class="fu">toBe</span>(<span class="ch">&#39;li&#39;</span>);
 });</code></pre>
-<p>Once again, if the TodoView has not already been written, we will experience failing specs. Thankfully, solving this is as simple as creating a new Backbone.View with a specific <code>tagName</code>.</p>
+<p>如果TodoView还没编写好的话，specs就会失败。通过指定<code>tagName</code>创建一个Backbone.View。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> todoView = <span class="kw">Backbone.View</span>.<span class="fu">extend</span>({
     <span class="dt">tagName</span>:  <span class="st">&quot;li&quot;</span>
 });</code></pre>
-<p>If instead of testing against the <code>tagName</code> you would prefer to use a className instead, we can take advantage of jasmine-jquery’s <code>toHaveClass()</code> matcher to cater for this.</p>
+<p>也可以通过测试className来替代<code>tagName</code>，可以使用更高级的jasmine-jquery matcher <code>toHaveClass()</code>来完成。</p>
 <pre><code>it(&#39;Should have a class of &quot;todos&quot;&#39;), function(){
    expect(this.view.$el).toHaveClass(&#39;todos&#39;);
 });</code></pre>
-<p>The <code>toHaveClass()</code> matcher operates on jQuery objects and if the plugin hadn’t been used, an exception would have been incurred (it is of course also possible to test for the className by accessing el.className if not opting to use jasmine-jquery).</p>
-<p>You may have noticed that in <code>beforeEach()</code>, we passed our view an initial (albeit unfilled) Todo model. Views should be backed by a model instance which provides data. As this is quite important to our view’s ability to function, we can write a spec to ensure a model is both defined (using the <code>toBeDefined()</code> matcher) and then test attributes of the model to ensure defaults both exist and are the value we expect them to be.</p>
+<p><code>toHaveClass()</code> matcher对jQuery操作，而且如果没有使用这个插件的话就会引发异常(如果没有使用jasmine-jquery插件也可通过获取el.className来判断)。</p>
+<p>你可能注意到<code>beforeEach()</code>中我们传入里一个新创建的Todo给view。Views应该基于一个有数据的model实例。因为它对view的功能非常重要，我们可以写一个spec来确保model是一定义(使用<code>toBeDefined()</code> matcher) 并且测试model有默认属性，而且是我们期望的值。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">it(<span class="ch">&#39;Is backed by a model instance, which provides the data.&#39;</span>, <span class="kw">function</span>() {
 
     expect(<span class="kw">todoView</span>.<span class="fu">model</span>).<span class="fu">toBeDefined</span>();
@@ -5418,11 +5418,11 @@ expect(<span class="ch">&#39;click&#39;</span>).<span class="fu">toHaveBeenTrigg
     <span class="co">// what&#39;s the value for Todo.get(&#39;done&#39;) here?</span>
     expect(<span class="kw">todoView.model</span>.<span class="fu">get</span>(<span class="ch">&#39;done&#39;</span>)).<span class="fu">toBe</span>(<span class="kw">false</span>); <span class="co">//or toBeFalsy()</span>
 });</code></pre>
-<h2 id="view-rendering"><a href="#TOC">View rendering</a></h2>
-<p>Next we’re going to take a look at writing specs for view rendering. Specifically, we want to test that our TodoView elements are actually rendering as expected.</p>
-<p>In smaller applications, those new to BDD might argue that visual confirmation of view rendering could replace unit testing of views. The reality is that when dealing with applications that might grow to multiple-views, it often makes sense to automate this process as much as possible from the get-go. There are also aspects of rendering that require verification beyond what is visually presented on-screen (which we’ll see very shortly).</p>
-<p>We’re going to begin testing views by writing two specs. The first spec will check that the view’s <code>render()</code> method is correctly returning the view instance, which is necessary for chaining. Our second spec will check that the HTML produced is exactly what we expect based on the properties of the model instance that’s been associated with our TodoView.</p>
-<p>Unlike some of the previous specs we’ve covered, this section will make greater use of <code>beforeEach()</code> to both demonstrate how to use nested suites and also ensure a consistent set of conditions for our specs. In our first view spec for TodoView, we’re simply going to create a sample model (based on Todo) and instantiate a TodoView which associates it with the model.</p>
+<h2 id="view渲染"><a href="#TOC">View渲染</a></h2>
+<p>接下来看下给view渲染编写specs。特别是，我们想测试下TodoView实际被渲染出来的元素是否符合期望。</p>
+<p>对于小的额applications，有些BDD新手认为视觉上确认view的渲染可以替代view的单元测试。实际上，开发的应用可能变成多视个view时，通常从开端就劲量让这个过程自动化。同样也有aspects来验证屏幕上所看到的渲染效果。</p>
+<p>我们编写两个spec来测试view。第一个测试检车view的<code>render()</code>方法正确的返回view实例，可以用于链式调用。第二个测试检查生成的HTML是基于TodoView相关联的mode实例的属性所期望的结果。</p>
+<p>不同于前面我们写的specs，这一节我们会大量使用<code>beforeEach()</code>彰显如何使用嵌套的suites，以及确保specs的条件一致。第一个TodoView的spec，将创建一个简单的model (基于Todo)，然后用这个model初始化一个TodoView。</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">describe(<span class="st">&quot;TodoView&quot;</span>, <span class="kw">function</span>() {
 
   beforeEach(<span class="kw">function</span>() {
@@ -5452,8 +5452,8 @@ expect(<span class="ch">&#39;click&#39;</span>).<span class="fu">toHaveBeenTrigg
   });
 
 });</code></pre>
-<p>Once these specs are run, only the second one (<q>produces the correct HTML</q>) fails. Our first spec (<q>returns the view object</q>), which is testing that the TodoView instance is returned from <code>render()</code>, only passed as this is Backbone’s default behavior. We haven’t yet overwritten the <code>render()</code> method with our own version.</p>
-<p><strong>Note:</strong> For the purposes of maintaining readability, all template examples in this section will use a minimal version of the following Todo view template. As it’s relatively trivial to expand this, please feel free to refer to this sample if needed:</p>
+<p>这些specs一旦运行，只有第二个(<q>produces the correct HTML</q>)失败。第一个spec (<q>returns the view object</q>)，测试<code>render()</code>返回的TodoView实例， 可以通过因为这是Backbone的默认行为。我们并没有重写<code>render()</code>方法。</p>
+<p><strong>提示：</strong> 为了维护可读性，这一节中所有的模板例子都将使用下面这个最小化版本的Todo view模板。需要使用时可以返回来查看：</p>
 <pre><code>&lt;div class=&quot;todo &lt;%= done ? &#39;done&#39; : &#39;&#39; %&gt;&quot;&gt;
         &lt;div class=&quot;display&quot;&gt;
           &lt;input class=&quot;check&quot; type=&quot;checkbox&quot; &lt;%= done ? &#39;checked=&quot;checked&quot;&#39; : &#39;&#39; %&gt; /&gt;
@@ -5464,7 +5464,7 @@ expect(<span class="ch">&#39;click&#39;</span>).<span class="fu">toHaveBeenTrigg
           &lt;input class=&quot;todo-input&quot; type=&quot;text&quot; value=&quot;&lt;%= content %&gt;&quot; /&gt;
         &lt;/div&gt;
 &lt;/div&gt;</code></pre>
-<p>The second spec fails with the following message:</p>
+<p>第二个spec失败会有下面这段提示：</p>
 <p><code>Expected '' to contain '&lt;label class=&quot;todo-content&quot;&gt;My Todo&lt;/label&gt;'.</code></p>
 <p>The reason for this is the default behavior for render() doesn’t create any markup. Let’s write a replacement for render() which fixes this:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="dt">render</span>: <span class="kw">function</span>() {

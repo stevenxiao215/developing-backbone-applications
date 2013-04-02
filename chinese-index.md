@@ -7021,28 +7021,29 @@ TodoList collection实现代码可以像下面这样：
 
 **The Jasmine jQuery Plugin**
 
-Todo application使用jQuery来做DOM操作，有一个[jasmine-jquery](https://github.com/velesin/jasmine-jquery) 插件可以帮助简化BDD测试 testing rendered elements that our views may produce.
+Todo application使用jQuery来做DOM操作，有一个[jasmine-jquery](https://github.com/velesin/jasmine-jquery) 插件可以帮助简化BDD测试view创建的元素。
 
-The plugin provides a number of additional Jasmine [matchers](https://github.com/pivotal/jasmine/wiki/Matchers) to help test jQuery wrapped sets such as:
 
-* ```toBe(jQuerySelector)``` e.g ```expect($('<div id="some-id"></div>')).toBe('div#some-id')```
-* ```toBeChecked()``` e.g ```expect($('<input type="checkbox" checked="checked"/>')).toBeChecked()```
-* ```toBeSelected()``` e.g ```expect($('<option selected="selected"></option>')).toBeSelected()```
+这个插件提供了很多额外的Jasmine [matchers](https://github.com/pivotal/jasmine/wiki/Matchers) 以帮助测试jQuery包装的sets：
 
-and [many others](https://github.com/velesin/jasmine-jquery). The complete list of matchers supported can be found on the project homepage. It's useful to know that similar to the standard Jasmine matchers, the custom matchers above can be inverted using the .not prefix (i.e ```expect(x).not.toBe(y)```):
+* ```toBe(jQuerySelector)```示例 ： ```expect($('<div id="some-id"></div>')).toBe('div#some-id')```
+* ```toBeChecked()``` 示例：```expect($('<input type="checkbox" checked="checked"/>')).toBeChecked()```
+* ```toBeSelected()``` 示例 ```expect($('<option selected="selected"></option>')).toBeSelected()```
+
+更多可以参看 [这里](https://github.com/velesin/jasmine-jquery)。它支持的完整matchers可以在项目主页上找到。它跟标准的Jasmine matchers类似，上面的matchers可以加.not前缀反过来使用(比如```expect(x).not.toBe(y)```)：
 
 ```javascript
 expect($('<div>I am an example</div>')).not.toHaveText(/other/)
 ```
 
-jasmine-jquery also includes a fixtures model, allowing us to load in arbitrary HTML content we may wish to use in our tests. Fixtures can be used as follows:
+jasmine-jquery同时包含一个固定装置模型(fixtures model)，可以加载任意HTML内容到时候。可以像下面这样使用：
 
-Include some HTML in an external fixtures file:
+在一个外部文件中包含一段HTML：
 
 some.fixture.html:
 ```<div id="sample-fixture">some HTML content</div>```
 
-Next, inside our actual test we would load it as follows:
+然后，实际测试时想下面这样载入：
 
 ```javascript
 loadFixtures('some.fixture.html')
@@ -7050,9 +7051,9 @@ $('some-fixture').myTestedPlugin();
 expect($('#some-fixture')).to<the rest of your matcher would go here>
 ```
 
-The jasmine-jquery plugin is by default setup to load fixtures from a specific directory: spec/javascripts/fixtures. If you wish to configure this path you can do so by initially setting ```jasmine.getFixtures().fixturesPath = 'your custom path'```.
+jasmine-jquery插件默认会从一个特定目录加载fixtures：spec/javascripts/fixtures。如果想配置这个路径的话在初始化设置中```jasmine.getFixtures().fixturesPath = 'your custom path'```。
 
-Finally, jasmine-jquery includes support for spying on jQuery events without the need for any extra plumbing work. This can be done using the ```spyOnEvent()``` and ```assert(eventName).toHaveBeenTriggered(selector)``` functions. An example of usage may look as follows:
+最后，jasmine-jquery包含对jQuery事件spying的支持，而且不需要什么额外的工作。可使用```spyOnEvent()```和```assert(eventName).toHaveBeenTriggered(selector)```方法来完成。下面是一个示例：
 
 ```javascript
 spyOnEvent($('#el'), 'click');
@@ -7060,15 +7061,15 @@ $('#el').click();
 expect('click').toHaveBeenTriggeredOn($('#el'));
 ```
 
-**View testing**
+**View测试**
 
-In this section we will review three dimensions to writing specs for Backbone Views: initial setup, view rendering and finally templating. The latter two of these are the most commonly tested, however we'll review shortly why writing specs for the initialization of your views can also be of benefit.
+这一小节我们从三个维度来看下编写Backbone Views的specs：初始化，view渲染和模板生成。后两个跟通常的测试差不多，不过我会简短的说下为什么对views的初始化编写specs也是有好处的。
 
-##Initial setup
+##初始化
 
-At their most basic, specs for Backbone views should validate that they are being correctly tied to specific DOM elements and are backed by valid data models. The reason to consider doing this is that failures to such specs can trip up more complex tests later on and they're fairly simple to write, given the overall value offered.
+最基本的，为Backbone views写的specs需要验证view被正确的绑定到指定的DOM元素，被有效的数据model支持。考虑这样做的原因是，如果这些specs失败的话会导致后面一些更复杂的测试也失败，而且这些specs写起来比较简单，可以提供一个整体的价值。
 
-To help ensure a consistent testing setup for our specs, we use ```beforeEach()``` to append both an empty ```UL``` (#todoList) to the DOM and initialize a new instance of a TodoView using an empty Todo model. ```afterEach()``` is used to remove the previous #todoList  ```UL``` as well as the previous instance of the view.
+为确保一致的测试配置条件，使用```beforeEach()```追加一个空的```UL``` (#todoList)到DOM并且用一个空的Todo model初始化一个TodoView实例。在```afterEach()```中移除前面的#todoList  ```UL```和view实例。
 
 ```javascript
 describe('Tests for TodoView', function() {
@@ -7087,9 +7088,9 @@ describe('Tests for TodoView', function() {
 ...
 ```
 
-The first spec useful to write is a check that the TodoView we've created is using the correct ```tagName``` (element or className). The purpose of this test is to make sure it's been correctly tied to a DOM element when it was created.
+第一个spec就是检查我们创建的TodoView使用了正确的```tagName```(元素或者className)。目的就是确保创建时正确的绑定到DOM元素。
 
-Backbone views typically create empty DOM elements once initialized, however these elements are not attached to the visible DOM in order to allow them to be constructed without an impact on the performance of rendering.
+Backbone views通常一旦初始化会创建一些空的DOM元素，不过这些元素不会附加到可见的DOM中， 目的是在不影响性能和渲染的情况下让他们构建出来。
 
 ```javascript
 it('Should be tied to a DOM element when created, based off the property provided.', function() {
@@ -7098,7 +7099,7 @@ it('Should be tied to a DOM element when created, based off the property provide
 });
 ```
 
-Once again, if the TodoView has not already been written, we will experience failing specs. Thankfully, solving this is as simple as creating a new Backbone.View with a specific ```tagName```.
+如果TodoView还没编写好的话，specs就会失败。通过指定```tagName```创建一个Backbone.View。
 
 ```javascript
 var todoView = Backbone.View.extend({
@@ -7106,7 +7107,7 @@ var todoView = Backbone.View.extend({
 });
 ```
 
-If instead of testing against the ```tagName``` you would prefer to use a className instead, we can take advantage of jasmine-jquery's ```toHaveClass()``` matcher to cater for this.
+也可以通过测试className来替代```tagName```，可以使用更高级的jasmine-jquery matcher ```toHaveClass()```来完成。
 
 ```
 it('Should have a class of "todos"'), function(){
@@ -7114,9 +7115,9 @@ it('Should have a class of "todos"'), function(){
 });
 ```
 
-The ```toHaveClass()``` matcher operates on jQuery objects and if the plugin hadn't been used, an exception would have been incurred (it is of course also possible to test for the className by accessing el.className if not opting to use jasmine-jquery).
+```toHaveClass()``` matcher对jQuery操作，而且如果没有使用这个插件的话就会引发异常(如果没有使用jasmine-jquery插件也可通过获取el.className来判断)。
 
-You may have noticed that in ```beforeEach()```, we passed our view an initial (albeit unfilled) Todo model. Views should be backed by a model instance which provides data. As this is quite important to our view's ability to function, we can write a spec to ensure a model is both defined (using the ```toBeDefined()``` matcher) and then test attributes of the model to ensure defaults both exist and are the value we expect them to be.
+你可能注意到```beforeEach()```中我们传入里一个新创建的Todo给view。Views应该基于一个有数据的model实例。因为它对view的功能非常重要，我们可以写一个spec来确保model是一定义(使用```toBeDefined()``` matcher) 并且测试model有默认属性，而且是我们期望的值。
 
 ```javascript
 it('Is backed by a model instance, which provides the data.', function() {
@@ -7128,16 +7129,15 @@ it('Is backed by a model instance, which provides the data.', function() {
 });
 ```
 
-##View rendering
+##View渲染
 
+接下来看下给view渲染编写specs。特别是，我们想测试下TodoView实际被渲染出来的元素是否符合期望。
 
-Next we're going to take a look at writing specs for view rendering. Specifically, we want to test that our TodoView elements are actually rendering as expected.
+对于小的额applications，有些BDD新手认为视觉上确认view的渲染可以替代view的单元测试。实际上，开发的应用可能变成多视个view时，通常从开端就劲量让这个过程自动化。同样也有aspects来验证屏幕上所看到的渲染效果。
 
-In smaller applications, those new to BDD might argue that visual confirmation of view rendering could replace unit testing of views. The reality is that when dealing with applications that might grow to multiple-views, it often makes sense to automate this process as much as possible from the get-go. There are also aspects of rendering that require verification beyond what is visually presented on-screen (which we'll see very shortly).
+我们编写两个spec来测试view。第一个测试检车view的```render()```方法正确的返回view实例，可以用于链式调用。第二个测试检查生成的HTML是基于TodoView相关联的mode实例的属性所期望的结果。
 
-We're going to begin testing views by writing two specs. The first spec will check that the view's ```render()``` method is correctly returning the view instance, which is necessary for chaining. Our second spec will check that the HTML produced is exactly what we expect based on the properties of the model instance that's been associated with our TodoView.
-
-Unlike some of the previous specs we've covered, this section will make greater use of ```beforeEach()``` to both demonstrate how to use nested suites and also ensure a consistent set of conditions for our specs. In our first view spec for TodoView, we're simply going to create a sample model (based on Todo) and instantiate a TodoView which associates it with the model.
+不同于前面我们写的specs，这一节我们会大量使用```beforeEach()```彰显如何使用嵌套的suites，以及确保specs的条件一致。第一个TodoView的spec，将创建一个简单的model (基于Todo)，然后用这个model初始化一个TodoView。
 
 ```javascript
 describe("TodoView", function() {
@@ -7171,12 +7171,9 @@ describe("TodoView", function() {
 });
 ```
 
+这些specs一旦运行，只有第二个('produces the correct HTML')失败。第一个spec ('returns the view object')，测试```render()```返回的TodoView实例， 可以通过因为这是Backbone的默认行为。我们并没有重写```render()```方法。
 
-Once these specs are run, only the second one ('produces the correct HTML') fails. Our first spec ('returns the view object'), which is testing that the TodoView instance is returned from ```render()```, only passed as this is Backbone's default behavior. We haven't yet overwritten the ```render()``` method with our own version.
-
-**Note:** For the purposes of maintaining readability, all template examples in this section will use a minimal version of the following Todo view template. As it's relatively trivial to expand this, please feel free to refer to this sample if needed:
-
-
+**提示：** 为了维护可读性，这一节中所有的模板例子都将使用下面这个最小化版本的Todo view模板。需要使用时可以返回来查看：
 
 	<div class="todo <%= done ? 'done' : '' %>">
 	        <div class="display">
@@ -7191,7 +7188,7 @@ Once these specs are run, only the second one ('produces the correct HTML') fail
 
 
 
-The second spec fails with the following message:
+第二个spec失败会有下面这段提示：
 
 ```Expected '' to contain '<label class="todo-content">My Todo</label>'.```
 

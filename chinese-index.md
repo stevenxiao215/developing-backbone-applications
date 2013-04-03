@@ -7496,13 +7496,13 @@ test( 'Our first QUnit test - asserting results', function(){
 });
 ```
 
-What we're doing in the above is defining a variable with a specific value and then testing to ensure the value was what we expected it to be. This was done using the comparison assertion, ```equal()```, which expects its first argument to be a value being tested and the second argument to be the expected value. We also used ```ok()```, which allows us to easily test against functions or variables that evaluate to booleans.
+上面所做的就是定义了一个变量，然后测试这个变量的值是否是期望的值。用的是比较断言```equal()```，期望第一个参数的值与第二个参数的值相等。同时也使用```ok()```, 测试functions或者变量是布尔值。
 
-Note: Optionally in our test case, we could have passed an 'expected' value to ```test()``` defining the number of assertions we expect to run. This takes the form: `test( name, [expected], test );` or by manually settings the expectation at the top of the test function, like so: `expect( 1 )`. I recommend you to make it a habit and always define how many assertions you expect. More on this later.
+提示：在测试用例的任何地方，都可以给```test()```传递我们期望运行的定义的断言个数。通过: `test( name, [expected], test );` 或者在测试方法头部手动设置期望的值，像这样：`expect( 1 )`。推荐你养成这种习惯，定义期望的断言个数。后面我们提到更多。
 
-As testing a simple static variable is fairly trivial, we can take this further to test actual functions. In the following example we test the output of a function that reverses a string to ensure that the output is correct using ```equal()``` and ```notEqual()```:
+测试一个静态变量没啥意思，接下来我们来测试一个实际的函数。下面这个例子我们使用```equal()```和```notEqual()```来测试reverseString函数的输出：
 
-####Comparing the actual output of a function against the expected output:
+####比较一个函数的输出是否与期望的输出相符合：
 
 ```javascript
 function reverseString( str ){
@@ -7519,14 +7519,14 @@ test( 'reverseString()', function() {
 })
 ```
 
-Running these tests in the QUnit test runner (which you would see when your HTML test page was loaded) we would find that four of the assertions pass whilst the last one does not. The reason the test against `'double'` fails is because it was purposefully written incorrectly. In your own projects if a test fails to pass and your assertions are correct, you've probably just found a bug!
+在QUnit test runner(HTML测试页面载入时就可以看到了)中运行这些测试，会发现4个通过，最后一个失败。与`'double'`比较失败是有意编写的。如果在你的项目中有失败的断言可能是找到一个bug了！
 
 
-##Adding structure to assertions
+##给断言中添加结构
 
-Housing all of our assertions in one test case can quickly become difficult to maintain, but luckily QUnit supports structuring blocks of assertions more cleanly. This can be done using ```module()``` - a method that allows us to easily group tests together. A typical approach to grouping might be keeping multiple tests testing a specific method as part of the same group (module).
+把所有断言都放到一个测试用例中很快就会变得难以维护，不过QUnit可以支持更加清晰的组织断言块。可以使用```module()```——这个方法可以把测试分组在一起。一个典型的分组方法就是把测试同一个方法的多个测试分为一个组(module)。
 
-####Basic QUnit Modules:
+####简单的QUnit模块:
 ```javascript
 module( 'Module One' );
 test( 'first test', function() {} );

@@ -268,11 +268,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#qunit兼容的简短html">QUnit兼容的简短HTML：</a></li>
 </ul></li>
 <li><a href="#断言assertions">断言(Assertions)</a><ul>
-<li><a href="#basic-test-case-using-test-name-callback">Basic test case using test( name, callback ):</a></li>
-<li><a href="#comparing-the-actual-output-of-a-function-against-the-expected-output">Comparing the actual output of a function against the expected output:</a></li>
+<li><a href="#一个基本的测试用例">一个基本的测试用例：</a></li>
+<li><a href="#比较一个函数的输出是否与期望的输出相符合">比较一个函数的输出是否与期望的输出相符合：</a></li>
 </ul></li>
-<li><a href="#adding-structure-to-assertions">Adding structure to assertions</a><ul>
-<li><a href="#basic-qunit-modules">Basic QUnit Modules:</a></li>
+<li><a href="#给断言中添加结构">给断言中添加结构</a><ul>
+<li><a href="#简单的qunit模块">简单的QUnit模块:</a></li>
 <li><a href="#using-setup-and-teardown">Using setup() and teardown() :</a></li>
 <li><a href="#using-setup-and-teardown-for-instantiation-and-clean-up">Using setup() and teardown() for instantiation and clean-up:</a></li>
 </ul></li>
@@ -5664,18 +5664,18 @@ expect(<span class="ch">&#39;click&#39;</span>).<span class="fu">toHaveBeenTrigg
 <img src="img/3e5545.png" alt="screenshot 3"><figcaption>screenshot 3</figcaption>
 </figure>
 <h2 id="断言assertions"><a href="#TOC">断言(Assertions)</a></h2>
-<p>QUnit supports a number of basic <strong>assertions</strong>, which are used in testing to verify that the result being returned by our code is what we expect. If an assertion fails, we know that a bug exists.Similar to Jasmine, QUnit can be used to easily test for regressions. Specifically, when a bug is found one can write an assertion to test the existence of the bug, write a patch and then commit both. If subsequent changes to the code break the test you’ll know what was responsible and be able to address it more easily.</p>
-<p>Some of the supported QUnit assertions we’re going to look at first are:</p>
+<p>QUnit支持一些基本的<strong>断言</strong>，用于验证代码返回的结果是否我们期望的值。如果一个断言失败了，我们就知道存在bug。与Jasmine类似，QUnit可以非常简单的用于回归测试。 尤其是，当发现一个bug时可以写一个断言来测试这个bug的存在，写一个pathc然后一起提交。如果之后代码的变更break了这个测试，你就知道哪里的问题，更容易解决了。</p>
+<p>我们先来看一些QUnit支出的断言：</p>
 <ul>
-<li><code>ok ( state, message )</code> - passes if the first argument is truthy</li>
-<li><code>equal ( actual, expected, message )</code> - a simple comparison assertion with type coercion</li>
-<li><code>notEqual ( actual, expected, message )</code> - the opposite of the above</li>
-<li><code>expect( amount )</code> - the number of assertions expected to run within each test</li>
-<li><code>strictEqual( actual, expected, message)</code> - offers a much stricter comparison than <code>equal()</code> and is considered the preferred method of checking equality as it avoids stumbling on subtle coercion bugs</li>
-<li><code>deepEqual( actual, expected, message )</code> - similar to <code>strictEqual</code>, comparing the contents (with <code>===</code>) of the given objects, arrays and primitives.</li>
+<li><code>ok ( state, message )</code> - 如果第一个参数是true则通过</li>
+<li><code>equal ( actual, expected, message )</code> - 简单的强制类型的相等比较断言</li>
+<li><code>notEqual ( actual, expected, message )</code> - 与上一个相反</li>
+<li><code>expect( amount )</code> - 每个test期望的断言的总数量</li>
+<li><code>strictEqual( actual, expected, message)</code> - 比<code>equal()</code>更严格的比较，这个方法可以更好的避免一些细节上无意的bugs</li>
+<li><code>deepEqual( actual, expected, message )</code> - 与<code>strictEqual</code>相似，使用(<code>===</code>)比较对象，数组，元数据内容。</li>
 </ul>
-<p>Creating new test cases with QUnit is relatively straight-forward and can be done using <code>test()</code>, which constructs a test where the first argument is the <code>name</code> of the test to be displayed in our results and the second is a <code>callback</code> function containing all of our assertions. This is called as soon as QUnit is running.</p>
-<h4 id="basic-test-case-using-test-name-callback"><a href="#TOC">Basic test case using test( name, callback ):</a></h4>
+<p>创建QUnit测试用例非常简单，使用<code>test()</code>，第一参数是<code>name</code>显示在测试结果中，第二个参数<code>callback</code>包含所有的断言。这个方法调用之后QUnit就运行了。</p>
+<h4 id="一个基本的测试用例"><a href="#TOC">一个基本的测试用例：</a></h4>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> myString = <span class="ch">&#39;Hello Backbone.js&#39;</span>;
 
 test( <span class="ch">&#39;Our first QUnit test - asserting results&#39;</span>, <span class="kw">function</span>(){
@@ -5687,10 +5687,10 @@ test( <span class="ch">&#39;Our first QUnit test - asserting results&#39;</span>
     <span class="co">// equal( actualValue, expectedValue, message )</span>
     equal( myString, <span class="ch">&#39;Hello Backbone.js&#39;</span>, <span class="ch">&#39;The value expected is Hello Backbone.js!&#39;</span>);
 });</code></pre>
-<p>What we’re doing in the above is defining a variable with a specific value and then testing to ensure the value was what we expected it to be. This was done using the comparison assertion, <code>equal()</code>, which expects its first argument to be a value being tested and the second argument to be the expected value. We also used <code>ok()</code>, which allows us to easily test against functions or variables that evaluate to booleans.</p>
-<p>Note: Optionally in our test case, we could have passed an <q>expected</q> value to <code>test()</code> defining the number of assertions we expect to run. This takes the form: <code>test( name, [expected], test );</code> or by manually settings the expectation at the top of the test function, like so: <code>expect( 1 )</code>. I recommend you to make it a habit and always define how many assertions you expect. More on this later.</p>
-<p>As testing a simple static variable is fairly trivial, we can take this further to test actual functions. In the following example we test the output of a function that reverses a string to ensure that the output is correct using <code>equal()</code> and <code>notEqual()</code>:</p>
-<h4 id="comparing-the-actual-output-of-a-function-against-the-expected-output"><a href="#TOC">Comparing the actual output of a function against the expected output:</a></h4>
+<p>上面所做的就是定义了一个变量，然后测试这个变量的值是否是期望的值。用的是比较断言<code>equal()</code>，期望第一个参数的值与第二个参数的值相等。同时也使用<code>ok()</code>, 测试functions或者变量是布尔值。</p>
+<p>提示：在测试用例的任何地方，都可以给<code>test()</code>传递我们期望运行的定义的断言个数。通过: <code>test( name, [expected], test );</code> 或者在测试方法头部手动设置期望的值，像这样：<code>expect( 1 )</code>。推荐你养成这种习惯，定义期望的断言个数。后面我们提到更多。</p>
+<p>测试一个静态变量没啥意思，接下来我们来测试一个实际的函数。下面这个例子我们使用<code>equal()</code>和<code>notEqual()</code>来测试reverseString函数的输出：</p>
+<h4 id="比较一个函数的输出是否与期望的输出相符合"><a href="#TOC">比较一个函数的输出是否与期望的输出相符合：</a></h4>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> reverseString( str ){
     <span class="kw">return</span> <span class="kw">str</span>.<span class="fu">split</span>(<span class="st">&quot;&quot;</span>).<span class="fu">reverse</span>().<span class="fu">join</span>(<span class="st">&quot;&quot;</span>);
 }
@@ -5703,10 +5703,10 @@ test( <span class="ch">&#39;reverseString()&#39;</span>, <span class="kw">functi
     notEqual( reverseString(<span class="ch">&#39;world&#39;</span>), <span class="ch">&#39;dlroo&#39;</span>, <span class="ch">&#39;The value was expected to not be dlroo&#39;</span> );
     equal( reverseString(<span class="ch">&#39;bubble&#39;</span>), <span class="ch">&#39;double&#39;</span>, <span class="ch">&#39;The value expected was elbbub&#39;</span> );
 })</code></pre>
-<p>Running these tests in the QUnit test runner (which you would see when your HTML test page was loaded) we would find that four of the assertions pass whilst the last one does not. The reason the test against <code>'double'</code> fails is because it was purposefully written incorrectly. In your own projects if a test fails to pass and your assertions are correct, you’ve probably just found a bug!</p>
-<h2 id="adding-structure-to-assertions"><a href="#TOC">Adding structure to assertions</a></h2>
-<p>Housing all of our assertions in one test case can quickly become difficult to maintain, but luckily QUnit supports structuring blocks of assertions more cleanly. This can be done using <code>module()</code> - a method that allows us to easily group tests together. A typical approach to grouping might be keeping multiple tests testing a specific method as part of the same group (module).</p>
-<h4 id="basic-qunit-modules"><a href="#TOC">Basic QUnit Modules:</a></h4>
+<p>在QUnit test runner(HTML测试页面载入时就可以看到了)中运行这些测试，会发现4个通过，最后一个失败。与<code>'double'</code>比较失败是有意编写的。如果在你的项目中有失败的断言可能是找到一个bug了！</p>
+<h2 id="给断言中添加结构"><a href="#TOC">给断言中添加结构</a></h2>
+<p>把所有断言都放到一个测试用例中很快就会变得难以维护，不过QUnit可以支持更加清晰的组织断言块。可以使用<code>module()</code>——这个方法可以把测试分组在一起。一个典型的分组方法就是把测试同一个方法的多个测试分为一个组(module)。</p>
+<h4 id="简单的qunit模块"><a href="#TOC">简单的QUnit模块:</a></h4>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">module( <span class="ch">&#39;Module One&#39;</span> );
 test( <span class="ch">&#39;first test&#39;</span>, <span class="kw">function</span>() {} );
 test( <span class="ch">&#39;another test&#39;</span>, <span class="kw">function</span>() {} );

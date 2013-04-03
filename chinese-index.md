@@ -7261,9 +7261,9 @@ describe("TodoView", function() {
 ##使用模板系统进行渲染
 
 
-JavaScript templating systems (such as Handlebars, Mustache and even Underscore's own Micro-templating) support conditional logic in template strings. What this effectively means is that we can add if/else/ternery expressions inline which can then be evaluated as needed, allowing us to build even more powerful templates.
+JavaScript模板系统(比如Handlebars, Mustache 以及Underscore的Micro-templating)在模板字符串中支持条件逻辑。这就意味着我们可以一行字符串内使用if/else/三元表单时，可以构建更强大的模板。
 
-In our case, when a user sets a Todo item to be complete (done), we may wish to provide them with visual feedback (such as a striked line through the text) to differentiate the item from those that are remaining. This can be done by attaching a new class to the item. Let's begin by writing a test we would ideally like to work:
+在我们的案例中，当一个用户设置一个Tood项为完成(done)是，我们期望给他一点视觉上的反馈(比如文本上加一条横线)以区分其余的的项。可以通过给这个项附加一个class来实现。下面开始编写测试：
 
 
 ```javascript
@@ -7282,13 +7282,13 @@ describe("When a todo is done", function() {
 });
 ```
 
-This will fail with the following message:
+这样会失败，并引发下面消息：
 
 ```Expected '<label class="todo-content">My Todo</label>'
 to have class 'done'.
 ```
 
-which can be fixed in the existing render() method as follows:
+可以在render()方法中解决：
 
 
 ```javascript
@@ -7305,10 +7305,9 @@ render: function() {
 }
 ```
 
+不过，很快它就会变得不那么方便了。随着模板中逻辑的增加，它就会变得越复杂。木板库就可以帮助我们解决这些问题。前面提到有很多流行的木板系统可以选择，这里我们选择Underscore内置的Microtemplating。它有很多高级额选项等着你去探索。这么做的好处是不需要额外的文件，不需要做太大的调整我们就可以轻易改变这个Jasmine specs。
 
-This can however get unwieldily fairly quickly. As the logic in our templates increases, so does the complexity involved. This is where templates libraries can help. As mentioned earlier, there are a number of popular options available, but for the purposes of this chapter we're going to stick to using Underscore's built-in Microtemplating. Whilst there are more advanced options you're free to explore, the benefit of this is that no additional files are required and we can easily change the existing Jasmine specs without too much adjustment.
-
-The TodoView object modified to use Underscore templating would look as follows:
+使用Underscore木板的TodoView对象：
 
 ```javascript
 var TodoView = Backbone.View.extend({
@@ -7329,10 +7328,9 @@ var TodoView = Backbone.View.extend({
 });
 ```
 
+上面，initialize()方法在实例化的时候编译提供的Underscore木板(使用_.template()函数)。一种常见的引用模板的方式是把它们放到自定义类型的script标签中(比如type="text/template")。因为它不是浏览器能识别的脚本类型，所以会被忽略，不过可以通过id属性来获取到这里面的独立的模板代码然后使用它。在实际应用中，也可以从外部文件中加载模板进行测试。
 
-Above, the initialize() method compiles a supplied Underscore template (using the _.template() function) in the instantiation. A more common way of referencing templates is placing them in a script tag using a custom script type (e.g type="text/template"). As this isn't a script type any browser understands, it's simply ignored, however referencing the script by an id attribute allows the template to be kept separate to other parts of the page which wish to use it. In real world applications, it's preferable to either do this or load in templates stored in external files for testing.
-
-For testing purposes, we're going to continue using the string injection approach to keep things simple. There is however a useful trick that can be applied to automatically create or extend templates in the Jasmine scope for each test. By creating a new directory (say, 'templates') in the 'spec' folder and adding a new script file with the following contents, to jasmine.yml or SpecRunner.html, we can add a todo property which contains the Underscore template we wish to use:
+为了保持简单，仅用于测试的目的，我们继续使用字符串的形式。这里有个技巧可以在Jasmine域内每个测试都可以自动创建或者扩展模版。在'spec'目录下创建一个目录('templates')然后添加一个脚本文件，如下面内容，to jasmine.yml or SpecRunner.html，我们可以添加一个todo属性包含Underscore模版：
 
 ```javascript
 beforeEach(function() {
@@ -7344,8 +7342,7 @@ beforeEach(function() {
 });
 ```
 
-To finish this off, we simply update our existing spec to reference the template when instantiating the TodoView object:
-
+最后，稍微修改下初始化TodoView对象时指向的template：
 
 ```javascript
 describe("TodoView", function() {
@@ -7363,8 +7360,7 @@ describe("TodoView", function() {
 });
 ```
 
-
-The existing specs we've looked at would continue to pass using this approach, leaving us free to adjust the template with some additional conditional logic for Todos with a status of 'done':
+在现有的specs中我们继续使用这种方式，我们给模版为Todo的状态添加一些条件逻辑：
 
 ```javascript
 beforeEach(function() {
@@ -7376,53 +7372,52 @@ beforeEach(function() {
 });
 ```
 
-This will now also pass without any issues. Remember that jasmine-jquery also supports loading external fixtures into your specs easily using its build in ```loadFixtures()``` and ```readFixtures()``` methods. For more information, consider reading the official jasmine-jquery [docs](https://github.com/velesin/jasmine-jquery).
+目前没有任何问题。不过请记得jasmine-jquery同样可以使用内置的```loadFixtures()```和```readFixtures()```方法轻易的支持载入外部fixtures到specs中。更多信息可以阅读官方[文档](https://github.com/velesin/jasmine-jquery)。
 
 
-##Conclusions
+##总结
 
-We have now covered how to write Jasmine tests for models, views and collections with Backbone.js. Whilst testing routing can at times be desirable, some developers feel it can be more optimal to leave this to third-party tools such as Selenium, so do keep this in mind.
+现在我们已经讨论如何为Backbone.js应用中的models, views和collections编写Jasmine测试。虽然测试路由(routing)有时是可取的，有些开发者认为它可以由第三方工具更好的完成比如Selenium，所以请记住这点。
 
 James Newbery was kind enough to help me with writing the Views section above and his articles on [Testing Backbone Apps With SinonJS](http://tinnedfruit.com/2011/04/26/testing-backbone-apps-with-jasmine-sinon-3.html) were of great inspiration (you'll actually find some Handlebars examples of the view specs in part 3 of his article). If you would like to learn more about writing spies and mocks for Backbone using [SinonJS](http://sinonjs.org) as well as how to test Backbone routers, do consider reading his series.
 
-##Exercise
+##练习
 
-As an exercise, I recommend now trying the Jasmine Koans in `practicals\jasmine-joans` and trying to fix some of the purposefully failing tests it has to offer. This is an excellent way of not just learning how Jasmine specs and suites work, but working through the examples (without peeking back) will also put your Backbone skills to test too.
+作为练习，推荐大家尝试下Jasmine Koans，在`practicals\jasmine-joans`目录下，然后尝试fix一些里面有意提供的失败的测试。这是一种很好的了解Jasmine specs 和 suites工作原理和学习Backbone技巧的方式。
 
 
-##Further reading
+##扩展阅读
 * [Jasmine + Backbone Revisited](http://japhr.blogspot.com/2011/11/jasmine-backbonejs-revisited.html)
 * [Backbone, PhantomJS and Jasmine](http://japhr.blogspot.com/2011/12/phantomjs-and-backbonejs-and-requirejs.html)
 
 
-##<a name="unittestingqunit">Unit Testing Backbone Applications With QUnit And SinonJS</a>
+##<a name="unittestingqunit">使用QUnit和SinonJS做Backbone应用的单元测试</a>
 
-##Introduction
+##简介
 
-QUnit is a powerful JavaScript test suite written by jQuery team member [Jörn Zaefferer](http://bassistance.de/) and used by many large open-source projects (such as jQuery and Backbone.js) to test their code. It's both capable of testing standard JavaScript code in the browser as well as code on the server-side (where environments supported include Rhino, V8 and SpiderMonkey). This makes it a robust solution for a large number of use-cases.
+QUnit是由jQuery团队成员[Jörn Zaefferer](http://bassistance.de/)写的一个强大的JavaScript测试套件，并且大量的开源项目(比如jQuery和Backbone.js)用于测试他们的代码。它可用于标准的运行于浏览器的JavaScript代码，也可用于测试服务器端的代码(支持包括 Rhino, V8和SpiderMonkey环境)。这使得它可以为大量用例提供强大的解决方案。
 
-Quite a few Backbone.js contributors feel that QUnit is a better introductory framework for testing if you don't wish to start off with Jasmine and BDD right away. As we'll see later on in this chapter, QUnit can also be combined with third-party solutions such as SinonJS to produce an even more powerful testing solution supporting spies and mocks, which some say is preferable over Jasmine.
+不少Backbone.js贡献者认为如果不想使用Jasmine和BDD的话，QUnit是一个不错的入门级测试框架。正如我们后面会将到的，QUnit可以与一些第三方方案相结合，比如SinonJS，以提供支持spie和mock的更强大的测试方案，所以有些人说它要优于Jasmine。
 
-My personal recommendation is that it's worth comparing both frameworks and opting for the solution that you feel the most comfortable with.
-
+个人认为还是值得比较下这2个框架，选择你自己最合适的。
 
 #QUnit
 
-##Getting Setup
+##建立配置
 
-Luckily, getting QUnit setup is a fairly straight-forward process that will take less than 5 minutes.
+建立起QUnit的配置非常简单，只需要几分钟。
 
-We first setup a testing environment composed of three files:
+首先我们通过三个文件建立起测试环境：
 
-* A HTML **structure** for displaying test results,
-* The **qunit.js** file composing the testing framework and,
-* The **qunit.css** file for styling test results.
+* 一个HTML**结构**用于显示测试结果，
+* **qunit.js**测试框架文件，
+* **qunit.css**显示测试结果的样式。
 
-The latter two of these can be downloaded from the [QUnit website](http://qunitjs.com).
+后面2个文件可以从[QUnit网站](http://qunitjs.com)下载。
 
-If you would prefer, you can use a hosted version of the QUnit source files for testing purposes. The hosted URLs can be found at [http://github.com/jquery/qunit/raw/master/qunit/].
+也可以使用在线托管的QUnit源文件进行测试。从这里[https://github.com/jquery/qunit]可以找到。
 
-####Sample HTML with QUnit-compatible markup:
+####QUnit兼容的简短HTML：
 
 ```html
 <!DOCTYPE html>
@@ -7449,43 +7444,43 @@ If you would prefer, you can use a hosted version of the QUnit source files for 
 </html>
 ```
 
-Let's go through the elements above with qunit mentioned in their ID. When QUnit is running:
+我们通过ID分别来看下上面元素的作用，当QUnit运行时：
 
-* **qunit-header** shows the name of the test suite
-* **qunit-banner** shows up as red if a test fails and green if all tests pass
-* **qunit-testrunner-toolbar** contains additional options for configuring the display of tests
-* **qunit-userAgent** displays the navigator.userAgent property
-* **qunit-tests** is a container for our test results
+* **qunit-header** 显示suite的名称
+* **qunit-banner** 如果有测试失败显示红色，如果全部测试都通过显示绿色
+* **qunit-testrunner-toolbar** 包含额外的显示测试的选项
+* **qunit-userAgent** 显示navigator.userAgent属性
+* **qunit-tests** 包含所有测试的结果
 
-When running correctly, the above test runner looks as follows:
+如果正确的运行，页面看起来就会像下面这样：
 
 ![screenshot 1](img/7d4de12.png)
 
-The numbers of the form (a, b, c) after each test name correspond to a) failed asserts, b) passed asserts and c) total asserts. Clicking on a test name expands it to display all of the assertions for that test case. Assertions in green have successfully passed.
+每个测试名称后面的数字以(a, b, c)这种格式显示，分别对应a) 失败的断言(assert), b) 通过的断言，c) 断言总数。 点击测试名称展开显示这个测试用例的所有断言。绿色的表示测试通过。
 
 ![screenshot 2](img/9df4.png)
 
-If however any tests fail, the test gets highlighted (and the qunit-banner at the top switches to red):
+如果有测试失败，这个测试就会高亮(顶部qunit-banner也会变成红色)：
 
 ![screenshot 3](img/3e5545.png)
 
 
-##Assertions
+##断言(Assertions)
 
-QUnit supports a number of basic **assertions**, which are used in testing to verify that the result being returned by our code is what we expect. If an assertion fails, we know that a bug exists.Similar to Jasmine, QUnit can be used to easily test for regressions. Specifically, when a bug is found one can write an assertion to test the existence of the bug, write a patch and then commit both. If subsequent changes to the code break the test you'll know what was responsible and be able to address it more easily.
+QUnit支持一些基本的**断言**，用于验证代码返回的结果是否我们期望的值。如果一个断言失败了，我们就知道存在bug。与Jasmine类似，QUnit可以非常简单的用于回归测试。 尤其是，当发现一个bug时可以写一个断言来测试这个bug的存在，写一个pathc然后一起提交。如果之后代码的变更break了这个测试，你就知道哪里的问题，更容易解决了。
 
-Some of the supported QUnit assertions we're going to look at first are:
+我们先来看一些QUnit支出的断言：
 
-*   `ok ( state, message )` - passes if the first argument is truthy
-*   `equal ( actual, expected, message )` - a simple comparison assertion with type coercion
-*   `notEqual ( actual, expected, message )` - the opposite of the above
-*   `expect( amount )` - the number of assertions expected to run within each test
-*   `strictEqual( actual, expected, message)` - offers a much stricter comparison than `equal()` and is considered the preferred method of checking equality as it avoids stumbling on subtle coercion bugs
-*   `deepEqual( actual, expected, message )` - similar to `strictEqual`, comparing the contents (with `===`) of the given objects, arrays and primitives.
+*   `ok ( state, message )` - 如果第一个参数是true则通过
+*   `equal ( actual, expected, message )` - 简单的强制类型的相等比较断言
+*   `notEqual ( actual, expected, message )` - 与上一个相反
+*   `expect( amount )` - 每个test期望的断言的总数量
+*   `strictEqual( actual, expected, message)` - 比`equal()`更严格的比较，这个方法可以更好的避免一些细节上无意的bugs
+*   `deepEqual( actual, expected, message )` - 与`strictEqual`相似，使用(`===`)比较对象，数组，元数据内容。
 
-Creating new test cases with QUnit is relatively straight-forward and can be done using ```test()```, which constructs a test where the first argument is the ```name``` of the test to be displayed in our results and the second is a ```callback``` function containing all of our assertions. This is called as soon as QUnit is running.
+创建QUnit测试用例非常简单，使用```test()```，第一参数是```name```显示在测试结果中，第二个参数```callback```包含所有的断言。这个方法调用之后QUnit就运行了。
 
-####Basic test case using test( name, callback ):
+####一个基本的测试用例：
 
 ```javascript
 var myString = 'Hello Backbone.js';

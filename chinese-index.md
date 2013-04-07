@@ -7541,9 +7541,9 @@ test( 'third test', function() {} );
 test( 'another test', function() {} );
 ```
 
-We can take this further by introducing ```setup()``` and ```teardown()``` callbacks to our modules, where ```setup()``` is run before each test whilst ```teardown()``` is run after each test.
+可以更进一步引入```setup()```和```teardown()```作为modules的回调，```setup()```在每个测试之前运行，```teardown()```在每个测试之后运行。
 
-####Using setup() and teardown() :
+####使用setup()和teardown() :
 ```javascript
 module( "Module One", {
     setup: function() {
@@ -7559,9 +7559,9 @@ test("first test", function() {
 });
 ```
 
-These callbacks can be used to define (or clear) any components we wish to instantiate for use in one or more of our tests. As we'll see shortly, this is ideal for defining new instances of views, collections, models or routers from a project that we can then reference across multiple tests.
+这些回调可用于定义(或清除)任何想要在测试中实例化的组件。下面我们会看到，它可以用于定义在多个测试中都需要引用的views, collections, models或者routers实例。
 
-####Using setup() and teardown() for instantiation and clean-up:
+####使用setup()和teardown()进行实例化和清除：
 ```javascript
 // Define a simple model and collection modeling a store and
 // list of stores
@@ -7597,14 +7597,14 @@ test( "test ordering", function() {
 
 ```
 
-Here, a list of stores is created and stored on ```setup()```. A ```teardown()``` callback is used to simply clear our a list of errors we might be storing within the window scope, but is otherwise not needed.
+创建了一个店铺(store)的list，然后再```setup()```中往列表中添加了很多store。```teardown()```回调中清除了在windo域下可能引发的errors，不过在其它环境下没有必要。
 
 
-##Assertion examples
+##断言示例
 
-Before we continue any further, let's review some more examples of how QUnits various assertions can be correctly used when writing tests:
+在进一步探索之前我们还是来看下QUnit各种断言的例子：
 
-###equal - a comparison assertion. It passes if actual == expected
+###equal - 一个比较断言。actual == expected则通过
 
 ```javascript
 test( "equal", 2, function() {
@@ -7615,7 +7615,7 @@ test( "equal", 2, function() {
 ```
 
 
-###notEqual - a comparison assertion. It passes if actual != expected
+###notEqual - 比较断言。actual != expected则通过
 
 ```javascript
 test( "notEqual", 2, function() {
@@ -7625,7 +7625,7 @@ test( "notEqual", 2, function() {
 });
 ```
 
-###strictEqual - a comparison assertion. It passes if actual === expected.
+###strictEqual - 比较断言。actual === expected则通过
 
 ```javascript
 test( "strictEqual", 2, function() {
@@ -7635,7 +7635,7 @@ test( "strictEqual", 2, function() {
 });
 ```
 
-###notStrictEqual - a comparison assertion. It passes if actual !== expected.
+###notStrictEqual - 比较断言。 actual !== expected则通过
 
 ```javascript
 test("notStrictEqual", 2, function() {
@@ -7645,7 +7645,7 @@ test("notStrictEqual", 2, function() {
 });
 ```
 
-###deepEqual - a recursive comparison assertion. Unlike strictEqual(), it works on objects, arrays and primitives.
+###deepEqual - 递归比较断言。不同于strictEqual()，它是针对于对象，数组和原始值(primitives)。
 
 ```javascript
 test("deepEqual", 4, function() {
@@ -7661,7 +7661,7 @@ test("deepEqual", 4, function() {
 });
 ```
 
-###notDeepEqual - a comparison assertion. This returns the opposite of deepEqual
+###notDeepEqual - 比较断言。与deepEqual相反
 
 ```javascript
 test("notDeepEqual", 2, function() {
@@ -7671,7 +7671,7 @@ test("notDeepEqual", 2, function() {
 });
 ```
 
-###raises - an assertion which tests if a callback throws any exceptions
+###raises - 测试一个断言的回调是否抛出异常
 
 ```javascript
 test("raises", 1, function() {
@@ -7683,8 +7683,7 @@ test("raises", 1, function() {
 
 ##Fixtures
 
-
-From time to time we may need to write tests that modify the DOM. Managing the clean-up of such operations between tests can be a genuine pain, but thankfully QUnit has a solution to this problem in the form of the `#qunit-fixture` element, seen below.
+我们时常编写测试需要修改DOM。要在测试之间清晰的管理这些操作是非常痛苦的，QUnit给我们提供一种方案来解决这个问题。通过`#qunit-fixture`这个元素，看下面。
 
 ####Fixture markup:
 ```html
@@ -7708,14 +7707,14 @@ From time to time we may need to write tests that modify the DOM. Managing the c
 </html>
 ```
 
-We can either opt to place static markup in the fixture or just insert/append any DOM elements we may need to it. QUnit will automatically reset the `innerHTML` of the fixture after each test to its original value. In case you're using jQuery, it's useful to know that QUnit checks for its availability and will opt to use ```$(el).html()``` instead, which will cleanup any jQuery event handlers too.
+我们可以把静态标签放到这个fixture或者只insert/append我们需要的DOM元素到里面。QUnit会自动在每个测试完之后重置fixture的`innerHTML`，恢复成原始值。如果你使用jQuery，QUnit会使用```$(el).html()```，会清空掉jQuery事件。
 
 
-###Fixtures example:
+###Fixtures示例：
 
-Let us now go through a more complete example of using fixtures. One thing that most of us are used to doing in jQuery is working with lists - they're often used to define the markup for menus, grids and a number of other components. You may have used jQuery plugins before that manipulated a given list in a particular way and it can be useful to test that the final (manipulated) output of the plugin is what was expected.
+我们来看一个稍微复杂的fixtures例子。我们在jQuery中经常使用到列表- 他们通常用于定义菜单，表格和一些其它组件。可能你之前也用过jQuery插件操作某种方式给定的列表，测试这种插件操作之后的最终输出非常有必要。
 
-For the purposes of our next example, we're going to use Ben Alman's `$.enumerate()` plugin, which can prepend each item in a list by its index, optionally allowing us to set what the first number in the list is. The code snippet for the plugin can be found below, followed by an example of the output is generates:
+下面这个例子，我们会使用Ben Alman编写的`$.enumerate()`插件，可以通过索引在每个元素前插入元素，这样就可以任何设置列表项前的数字。下面是示例代码：
 
 ```javascript
 $.fn.enumerate = function( start ) {
@@ -7748,29 +7747,29 @@ $.fn.enumerate = function( start ) {
 */
 ```
 
-Let's now write some specs for the plugin. First, we define the markup for a list containing some sample items inside our ```qunit-fixture``` element:
+我们来给这个插件写些specs。首先在```qunit-fixture```元素内定义一个列表标签包含一些简单的项：
 
 ```html
-&lt;div id=&quot;qunit-fixture&quot;&gt;
-    &lt;ul&gt;
-      &lt;li&gt;hello&lt;/li&gt;
-      &lt;li&gt;world&lt;/li&gt;
-      &lt;li&gt;i&lt;/li&gt;
-      &lt;li&gt;am&lt;/li&gt;
-      &lt;li&gt;foo&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/div&gt;
+<div id="qunit-fixture">
+    <ul>
+        <li>hello</li>
+        <li>world</li>
+        <li>i</li>
+        <li>am</li>
+        <li>foo</li>
+    </ul>
+</div>
 ```
 
-Next, we need to think about what should be tested. `$.enumerate()` supports a few different use cases, including:
+接下来，我们需要思考下应该测试什么。`$.enumerate()`支持一些不同的案例，包括：
 
-* **No arguments passed** - i.e ```$(el).enumerate()```
-* **0 passed as an argument** - i.e ```$(el).enumerate(0)```
-* **1 passed as an argument** - i.e ```$(el).enumerate(1)```
+* **没有参数传入** - i.e ```$(el).enumerate()```
+* **传入0作为参数** - i.e ```$(el).enumerate(0)```
+* **传入1作为参数** - i.e ```$(el).enumerate(1)```
 
-As the text value for each list item is of the form "n. item-text" and we only require this to test against the expected output, we can simply access the content using ```$(el).eq(index).text()``` (for more information on .eq() see [here](http://api.jquery.com/eq/)).
+因为每个列表项的文本内容格式是"n. 文本"，而且我们仅需要这部分来测试期望的输出，我们可以使用```$(el).eq(index).text()```来获取文本(更多关于.eq()的信息可以参考[这里](http://api.jquery.com/eq/))。
 
-and finally, here are our test cases:
+最后，下面是我们的测试用例：
 
 ```javascript
 module("jQuery#enumerate");
@@ -7804,13 +7803,13 @@ test( "1 passed as an argument", 3, function() {
 
 ```
 
-##Asynchronous code
+##异步代码
 
-As with Jasmine, the effort required to run synchronous tests with QUnit is fairly straight-forward. That said, what about tests that require asynchronous callbacks (such as expensive processes, Ajax requests and so on)? When we're dealing with asynchronous code, rather than letting QUnit control when the next test runs, we can inform that we need it to stop running and wait until it's okay to continue once again.
+与Jasmine相比，QUnit运行异步代码相当简单直接。就是说，什么样的测试需要异步回调(比如消耗比较大的过程，Ajax请求等等)? 当处理异步代码是，我们可以通知申明需要停止运行或者等到条件OK时继续运行，而不是让QUnit控制什么时候执行下一个测试。
 
-Remember: running asynchronous code without any special considerations can cause incorrect assertions to appear in other tests, so we want to make sure we get it right.
+记住：运行异步代码如果不做些特定考虑的话可能会导致断言出现在其它测试中，所以我们要确保其正确。
 
-Writing QUnit tests for asynchronous code is made possible using the ```start()``` and ```stop()``` methods, which programmatically set the start and stop points during such tests. Here's a simple example:
+可以使用```start()```和```stop()```方法来执行异步代码，在每个测试中设置start和stop位置。下面是一个示例：
 
 ```javascript
 test("An async test", function(){
@@ -7830,7 +7829,7 @@ test("An async test", function(){
 });
 ```
 
-A jQuery ```$.ajax()``` request is used to connect to a test resource and assert that the data returned is correct. ```deepEqual()``` is used here as it allows us to compare different data types (e.g objects, arrays) and ensures that what is returned is exactly what we're expecting. We know that our Ajax request is asynchronous and so we first call ```stop()```, run the code making the request and finally at the very end of our callback, inform QUnit that it is okay to continue running other tests.
+调用了jQuery```$.ajax()```方法请求测试资源并且断言返回的数据是正确的。这里使用```deepEqual()```是因为它可以比较不同的数据类型(e.g objects, arrays) and ensures that what is returned is exactly what we're expecting. We know that our Ajax request is asynchronous and so we first call ```stop()```, run the code making the request and finally at the very end of our callback, inform QUnit that it is okay to continue running other tests.
 
 Note: rather than including ```stop()```, we can simply exclude it and substitute ```test()``` with ```asyncTest()``` if we prefer. This improves readability when dealing with a mixture of asynchronous and synchronous tests in your suite. Whilst this setup should work fine for many use-cases, there is no guarantee that the callback in our ```$.ajax()``` request will actually get called. To factor this into our tests, we can use ```expect()``` once again to define how many assertions we expect to see within our test. This is a healthy safety blanket as it ensures that if a test completes with an insufficient number of assertions, we know something went wrong and fix it.
 

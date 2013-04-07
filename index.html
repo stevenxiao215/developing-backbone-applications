@@ -273,21 +273,21 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul></li>
 <li><a href="#给断言中添加结构">给断言中添加结构</a><ul>
 <li><a href="#简单的qunit模块">简单的QUnit模块:</a></li>
-<li><a href="#using-setup-and-teardown">Using setup() and teardown() :</a></li>
-<li><a href="#using-setup-and-teardown-for-instantiation-and-clean-up">Using setup() and teardown() for instantiation and clean-up:</a></li>
+<li><a href="#使用setup和teardown">使用setup()和teardown() :</a></li>
+<li><a href="#使用setup和teardown进行实例化和清除">使用setup()和teardown()进行实例化和清除：</a></li>
 </ul></li>
-<li><a href="#assertion-examples">Assertion examples</a><ul>
-<li><a href="#equal---a-comparison-assertion.-it-passes-if-actual-expected">equal - a comparison assertion. It passes if actual == expected</a></li>
-<li><a href="#notequal---a-comparison-assertion.-it-passes-if-actual-expected">notEqual - a comparison assertion. It passes if actual != expected</a></li>
-<li><a href="#strictequal---a-comparison-assertion.-it-passes-if-actual-expected.">strictEqual - a comparison assertion. It passes if actual === expected.</a></li>
-<li><a href="#notstrictequal---a-comparison-assertion.-it-passes-if-actual-expected.">notStrictEqual - a comparison assertion. It passes if actual !== expected.</a></li>
-<li><a href="#deepequal---a-recursive-comparison-assertion.-unlike-strictequal-it-works-on-objects-arrays-and-primitives.">deepEqual - a recursive comparison assertion. Unlike strictEqual(), it works on objects, arrays and primitives.</a></li>
-<li><a href="#notdeepequal---a-comparison-assertion.-this-returns-the-opposite-of-deepequal">notDeepEqual - a comparison assertion. This returns the opposite of deepEqual</a></li>
-<li><a href="#raises---an-assertion-which-tests-if-a-callback-throws-any-exceptions">raises - an assertion which tests if a callback throws any exceptions</a></li>
+<li><a href="#断言示例">断言示例</a><ul>
+<li><a href="#equal---一个比较断言actual-expected则通过">equal - 一个比较断言。actual == expected则通过</a></li>
+<li><a href="#notequal---比较断言actual-expected则通过">notEqual - 比较断言。actual != expected则通过</a></li>
+<li><a href="#strictequal---比较断言actual-expected则通过">strictEqual - 比较断言。actual === expected则通过</a></li>
+<li><a href="#notstrictequal---比较断言-actual-expected则通过">notStrictEqual - 比较断言。 actual !== expected则通过</a></li>
+<li><a href="#deepequal---递归比较断言不同于strictequal它是针对于对象数组和原始值primitives">deepEqual - 递归比较断言。不同于strictEqual()，它是针对于对象，数组和原始值(primitives)。</a></li>
+<li><a href="#notdeepequal---比较断言与deepequal相反">notDeepEqual - 比较断言。与deepEqual相反</a></li>
+<li><a href="#raises---测试一个断言的回调是否抛出异常">raises - 测试一个断言的回调是否抛出异常</a></li>
 </ul></li>
 <li><a href="#fixtures">Fixtures</a><ul>
 <li><a href="#fixture-markup">Fixture markup:</a></li>
-<li><a href="#fixtures-example">Fixtures example:</a></li>
+<li><a href="#fixtures示例">Fixtures示例：</a></li>
 </ul></li>
 <li><a href="#asynchronous-code">Asynchronous code</a></li>
 </ul></li>
@@ -5718,8 +5718,8 @@ test( <span class="ch">&#39;another test&#39;</span>, <span class="kw">function<
 module( <span class="ch">&#39;Module Three&#39;</span> );
 test( <span class="ch">&#39;third test&#39;</span>, <span class="kw">function</span>() {} );
 test( <span class="ch">&#39;another test&#39;</span>, <span class="kw">function</span>() {} );</code></pre>
-<p>We can take this further by introducing <code>setup()</code> and <code>teardown()</code> callbacks to our modules, where <code>setup()</code> is run before each test whilst <code>teardown()</code> is run after each test.</p>
-<h4 id="using-setup-and-teardown"><a href="#TOC">Using setup() and teardown() :</a></h4>
+<p>可以更进一步引入<code>setup()</code>和<code>teardown()</code>作为modules的回调，<code>setup()</code>在每个测试之前运行，<code>teardown()</code>在每个测试之后运行。</p>
+<h4 id="使用setup和teardown"><a href="#TOC">使用setup()和teardown() :</a></h4>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">module( <span class="st">&quot;Module One&quot;</span>, {
     <span class="dt">setup</span>: <span class="kw">function</span>() {
         <span class="co">// run before</span>
@@ -5732,8 +5732,8 @@ test( <span class="ch">&#39;another test&#39;</span>, <span class="kw">function<
 test(<span class="st">&quot;first test&quot;</span>, <span class="kw">function</span>() {
     <span class="co">// run the first test</span>
 });</code></pre>
-<p>These callbacks can be used to define (or clear) any components we wish to instantiate for use in one or more of our tests. As we’ll see shortly, this is ideal for defining new instances of views, collections, models or routers from a project that we can then reference across multiple tests.</p>
-<h4 id="using-setup-and-teardown-for-instantiation-and-clean-up"><a href="#TOC">Using setup() and teardown() for instantiation and clean-up:</a></h4>
+<p>这些回调可用于定义(或清除)任何想要在测试中实例化的组件。下面我们会看到，它可以用于定义在多个测试中都需要引用的views, collections, models或者routers实例。</p>
+<h4 id="使用setup和teardown进行实例化和清除"><a href="#TOC">使用setup()和teardown()进行实例化和清除：</a></h4>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// Define a simple model and collection modeling a store and</span>
 <span class="co">// list of stores</span>
 
@@ -5765,34 +5765,34 @@ test( <span class="st">&quot;test ordering&quot;</span>, <span class="kw">functi
     <span class="kw">var</span> actual = <span class="kw">this</span>.<span class="fu">list</span>.<span class="fu">pluck</span>(<span class="st">&quot;name&quot;</span>);
     deepEqual( actual, expected, <span class="st">&quot;is maintained by comparator&quot;</span> );
 });</code></pre>
-<p>Here, a list of stores is created and stored on <code>setup()</code>. A <code>teardown()</code> callback is used to simply clear our a list of errors we might be storing within the window scope, but is otherwise not needed.</p>
-<h2 id="assertion-examples"><a href="#TOC">Assertion examples</a></h2>
-<p>Before we continue any further, let’s review some more examples of how QUnits various assertions can be correctly used when writing tests:</p>
-<h3 id="equal---a-comparison-assertion.-it-passes-if-actual-expected"><a href="#TOC">equal - a comparison assertion. It passes if actual == expected</a></h3>
+<p>创建了一个店铺(store)的list，然后再<code>setup()</code>中往列表中添加了很多store。<code>teardown()</code>回调中清除了在windo域下可能引发的errors，不过在其它环境下没有必要。</p>
+<h2 id="断言示例"><a href="#TOC">断言示例</a></h2>
+<p>在进一步探索之前我们还是来看下QUnit各种断言的例子：</p>
+<h3 id="equal---一个比较断言actual-expected则通过"><a href="#TOC">equal - 一个比较断言。actual == expected则通过</a></h3>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">test( <span class="st">&quot;equal&quot;</span>, <span class="dv">2</span>, <span class="kw">function</span>() {
   <span class="kw">var</span> actual = <span class="dv">6</span> - <span class="dv">5</span>;
   equal( actual, <span class="kw">true</span>,  <span class="st">&quot;passes as 1 == true&quot;</span> );
   equal( actual, <span class="dv">1</span>,     <span class="st">&quot;passes as 1 == 1&quot;</span> );
 });</code></pre>
-<h3 id="notequal---a-comparison-assertion.-it-passes-if-actual-expected"><a href="#TOC">notEqual - a comparison assertion. It passes if actual != expected</a></h3>
+<h3 id="notequal---比较断言actual-expected则通过"><a href="#TOC">notEqual - 比较断言。actual != expected则通过</a></h3>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">test( <span class="st">&quot;notEqual&quot;</span>, <span class="dv">2</span>, <span class="kw">function</span>() {
   <span class="kw">var</span> actual = <span class="dv">6</span> - <span class="dv">5</span>;
   notEqual( actual, <span class="kw">false</span>, <span class="st">&quot;passes as 1 != false&quot;</span> );
   notEqual( actual, <span class="dv">0</span>,     <span class="st">&quot;passes as 1 != 0&quot;</span> );
 });</code></pre>
-<h3 id="strictequal---a-comparison-assertion.-it-passes-if-actual-expected."><a href="#TOC">strictEqual - a comparison assertion. It passes if actual === expected.</a></h3>
+<h3 id="strictequal---比较断言actual-expected则通过"><a href="#TOC">strictEqual - 比较断言。actual === expected则通过</a></h3>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">test( <span class="st">&quot;strictEqual&quot;</span>, <span class="dv">2</span>, <span class="kw">function</span>() {
   <span class="kw">var</span> actual = <span class="dv">6</span> - <span class="dv">5</span>;
   strictEqual( actual, <span class="kw">true</span>,  <span class="st">&quot;fails as 1 !== true&quot;</span> );
   strictEqual( actual, <span class="dv">1</span>,     <span class="st">&quot;passes as 1 === 1&quot;</span> );
 });</code></pre>
-<h3 id="notstrictequal---a-comparison-assertion.-it-passes-if-actual-expected."><a href="#TOC">notStrictEqual - a comparison assertion. It passes if actual !== expected.</a></h3>
+<h3 id="notstrictequal---比较断言-actual-expected则通过"><a href="#TOC">notStrictEqual - 比较断言。 actual !== expected则通过</a></h3>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">test(<span class="st">&quot;notStrictEqual&quot;</span>, <span class="dv">2</span>, <span class="kw">function</span>() {
   <span class="kw">var</span> actual = <span class="dv">6</span> - <span class="dv">5</span>;
   notStrictEqual( actual, <span class="kw">true</span>,  <span class="st">&quot;passes as 1 !== true&quot;</span> );
   notStrictEqual( actual, <span class="dv">1</span>,     <span class="st">&quot;fails as 1 === 1&quot;</span> );
 });</code></pre>
-<h3 id="deepequal---a-recursive-comparison-assertion.-unlike-strictequal-it-works-on-objects-arrays-and-primitives."><a href="#TOC">deepEqual - a recursive comparison assertion. Unlike strictEqual(), it works on objects, arrays and primitives.</a></h3>
+<h3 id="deepequal---递归比较断言不同于strictequal它是针对于对象数组和原始值primitives"><a href="#TOC">deepEqual - 递归比较断言。不同于strictEqual()，它是针对于对象，数组和原始值(primitives)。</a></h3>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">test(<span class="st">&quot;deepEqual&quot;</span>, <span class="dv">4</span>, <span class="kw">function</span>() {
   <span class="kw">var</span> actual = {<span class="dt">q</span>: <span class="ch">&#39;foo&#39;</span>, <span class="dt">t</span>: <span class="ch">&#39;bar&#39;</span>};
   <span class="kw">var</span> el =  $(<span class="ch">&#39;div&#39;</span>);
@@ -5804,20 +5804,20 @@ test( <span class="st">&quot;test ordering&quot;</span>, <span class="kw">functi
   deepEqual(el, children, <span class="st">&quot;fails - objects not equivalent&quot;</span> );
 
 });</code></pre>
-<h3 id="notdeepequal---a-comparison-assertion.-this-returns-the-opposite-of-deepequal"><a href="#TOC">notDeepEqual - a comparison assertion. This returns the opposite of deepEqual</a></h3>
+<h3 id="notdeepequal---比较断言与deepequal相反"><a href="#TOC">notDeepEqual - 比较断言。与deepEqual相反</a></h3>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">test(<span class="st">&quot;notDeepEqual&quot;</span>, <span class="dv">2</span>, <span class="kw">function</span>() {
   <span class="kw">var</span> actual = {<span class="dt">q</span>: <span class="ch">&#39;foo&#39;</span>, <span class="dt">t</span>: <span class="ch">&#39;bar&#39;</span>};
   notEqual( actual, {<span class="dt">q</span>: <span class="ch">&#39;foo&#39;</span>, <span class="dt">t</span>: <span class="ch">&#39;bar&#39;</span>},   <span class="st">&quot;passes - objects are not equal&quot;</span> );
   notDeepEqual( actual, {<span class="dt">q</span>: <span class="ch">&#39;foo&#39;</span>, <span class="dt">t</span>: <span class="ch">&#39;bar&#39;</span>},   <span class="st">&quot;fails - objects are equivalent&quot;</span> );
 });</code></pre>
-<h3 id="raises---an-assertion-which-tests-if-a-callback-throws-any-exceptions"><a href="#TOC">raises - an assertion which tests if a callback throws any exceptions</a></h3>
+<h3 id="raises---测试一个断言的回调是否抛出异常"><a href="#TOC">raises - 测试一个断言的回调是否抛出异常</a></h3>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">test(<span class="st">&quot;raises&quot;</span>, <span class="dv">1</span>, <span class="kw">function</span>() {
   raises(<span class="kw">function</span>() {
     <span class="kw">throw</span> <span class="kw">new</span> Error( <span class="st">&quot;Oh no! It&#39;s an error!&quot;</span> );
   }, <span class="st">&quot;passes - an error was thrown inside our callback&quot;</span>);
 });</code></pre>
 <h2 id="fixtures"><a href="#TOC">Fixtures</a></h2>
-<p>From time to time we may need to write tests that modify the DOM. Managing the clean-up of such operations between tests can be a genuine pain, but thankfully QUnit has a solution to this problem in the form of the <code>#qunit-fixture</code> element, seen below.</p>
+<p>我们时常编写测试需要修改DOM。要在测试之间清晰的管理这些操作是非常痛苦的，QUnit给我们提供一种方案来解决这个问题。通过<code>#qunit-fixture</code>这个元素，看下面。</p>
 <h4 id="fixture-markup"><a href="#TOC">Fixture markup:</a></h4>
 <pre class="sourceCode html"><code class="sourceCode html"><span class="dt">&lt;!DOCTYPE </span>html<span class="dt">&gt;</span>
 <span class="kw">&lt;html&gt;</span>
@@ -5837,10 +5837,10 @@ test( <span class="st">&quot;test ordering&quot;</span>, <span class="kw">functi
     <span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">&quot;qunit-fixture&quot;</span><span class="kw">&gt;&lt;/div&gt;</span>
 <span class="kw">&lt;/body&gt;</span>
 <span class="kw">&lt;/html&gt;</span></code></pre>
-<p>We can either opt to place static markup in the fixture or just insert/append any DOM elements we may need to it. QUnit will automatically reset the <code>innerHTML</code> of the fixture after each test to its original value. In case you’re using jQuery, it’s useful to know that QUnit checks for its availability and will opt to use <code>$(el).html()</code> instead, which will cleanup any jQuery event handlers too.</p>
-<h3 id="fixtures-example"><a href="#TOC">Fixtures example:</a></h3>
-<p>Let us now go through a more complete example of using fixtures. One thing that most of us are used to doing in jQuery is working with lists - they’re often used to define the markup for menus, grids and a number of other components. You may have used jQuery plugins before that manipulated a given list in a particular way and it can be useful to test that the final (manipulated) output of the plugin is what was expected.</p>
-<p>For the purposes of our next example, we’re going to use Ben Alman’s <code>$.enumerate()</code> plugin, which can prepend each item in a list by its index, optionally allowing us to set what the first number in the list is. The code snippet for the plugin can be found below, followed by an example of the output is generates:</p>
+<p>我们可以把静态标签放到这个fixture或者只insert/append我们需要的DOM元素到里面。QUnit会自动在每个测试完之后重置fixture的<code>innerHTML</code>，恢复成原始值。如果你使用jQuery，QUnit会使用<code>$(el).html()</code>，会清空掉jQuery事件。</p>
+<h3 id="fixtures示例"><a href="#TOC">Fixtures示例：</a></h3>
+<p>我们来看一个稍微复杂的fixtures例子。我们在jQuery中经常使用到列表- 他们通常用于定义菜单，表格和一些其它组件。可能你之前也用过jQuery插件操作某种方式给定的列表，测试这种插件操作之后的最终输出非常有必要。</p>
+<p>下面这个例子，我们会使用Ben Alman编写的<code>$.enumerate()</code>插件，可以通过索引在每个元素前插入元素，这样就可以任何设置列表项前的数字。下面是示例代码：</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">$.<span class="fu">fn</span>.<span class="fu">enumerate</span> = <span class="kw">function</span>( start ) {
       <span class="kw">if</span> ( <span class="kw">typeof</span> start !== <span class="st">&quot;undefined&quot;</span> ) {
         <span class="co">// Since `start` value was provided, enumerate and return</span>
@@ -5869,16 +5869,16 @@ test( <span class="st">&quot;test ordering&quot;</span>, <span class="kw">functi
 <span class="co">      &lt;li&gt;5. foo&lt;/li&gt;</span>
 <span class="co">    &lt;/ul&gt;</span>
 <span class="co">*/</span></code></pre>
-<p>Let’s now write some specs for the plugin. First, we define the markup for a list containing some sample items inside our <code>qunit-fixture</code> element:</p>
-<pre class="sourceCode html"><code class="sourceCode html"><span class="dv">&amp;lt;</span>div id=<span class="dv">&amp;quot;</span>qunit-fixture<span class="dv">&amp;quot;&amp;gt;</span>
-    <span class="dv">&amp;lt;</span>ul<span class="dv">&amp;gt;</span>
-      <span class="dv">&amp;lt;</span>li<span class="dv">&amp;gt;</span>hello<span class="dv">&amp;lt;</span>/li<span class="dv">&amp;gt;</span>
-      <span class="dv">&amp;lt;</span>li<span class="dv">&amp;gt;</span>world<span class="dv">&amp;lt;</span>/li<span class="dv">&amp;gt;</span>
-      <span class="dv">&amp;lt;</span>li<span class="dv">&amp;gt;</span>i<span class="dv">&amp;lt;</span>/li<span class="dv">&amp;gt;</span>
-      <span class="dv">&amp;lt;</span>li<span class="dv">&amp;gt;</span>am<span class="dv">&amp;lt;</span>/li<span class="dv">&amp;gt;</span>
-      <span class="dv">&amp;lt;</span>li<span class="dv">&amp;gt;</span>foo<span class="dv">&amp;lt;</span>/li<span class="dv">&amp;gt;</span>
-    <span class="dv">&amp;lt;</span>/ul<span class="dv">&amp;gt;</span>
-  <span class="dv">&amp;lt;</span>/div<span class="dv">&amp;gt;</span></code></pre>
+<p>我们来给这个插件写些specs。首先在<code>qunit-fixture</code>元素内定义一个列表标签包含一些简单的项：</p>
+<pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">&quot;qunit-fixture&quot;</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;ul&gt;</span>
+        <span class="kw">&lt;li&gt;</span>hello<span class="kw">&lt;/li&gt;</span>
+        <span class="kw">&lt;li&gt;</span>world<span class="kw">&lt;/li&gt;</span>
+        <span class="kw">&lt;li&gt;</span>i<span class="kw">&lt;/li&gt;</span>
+        <span class="kw">&lt;li&gt;</span>am<span class="kw">&lt;/li&gt;</span>
+        <span class="kw">&lt;li&gt;</span>foo<span class="kw">&lt;/li&gt;</span>
+    <span class="kw">&lt;/ul&gt;</span>
+<span class="kw">&lt;/div&gt;</span></code></pre>
 <p>Next, we need to think about what should be tested. <code>$.enumerate()</code> supports a few different use cases, including:</p>
 <ul>
 <li><strong>No arguments passed</strong> - i.e <code>$(el).enumerate()</code></li>

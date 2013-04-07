@@ -7829,30 +7829,29 @@ test("An async test", function(){
 });
 ```
 
-调用了jQuery```$.ajax()```方法请求测试资源并且断言返回的数据是正确的。这里使用```deepEqual()```是因为它可以比较不同的数据类型(e.g objects, arrays) and ensures that what is returned is exactly what we're expecting. We know that our Ajax request is asynchronous and so we first call ```stop()```, run the code making the request and finally at the very end of our callback, inform QUnit that it is okay to continue running other tests.
+调用了jQuery```$.ajax()```方法请求测试资源并且断言返回的数据是正确的。这里使用```deepEqual()```是因为它可以比较不同的数据类型(e.g objects, arrays)，确保返回的值与我们期望的相符。Ajax请求是异步的，所以我们先调用了```stop()```，执行请求并且在回调中通知QUnit可以继续运行其它测试。
 
-Note: rather than including ```stop()```, we can simply exclude it and substitute ```test()``` with ```asyncTest()``` if we prefer. This improves readability when dealing with a mixture of asynchronous and synchronous tests in your suite. Whilst this setup should work fine for many use-cases, there is no guarantee that the callback in our ```$.ajax()``` request will actually get called. To factor this into our tests, we can use ```expect()``` once again to define how many assertions we expect to see within our test. This is a healthy safety blanket as it ensures that if a test completes with an insufficient number of assertions, we know something went wrong and fix it.
-
+提示：除了执行```stop()```，我们可以用```asyncTest()```来替代```test()```执行测试代码。它可以提高在suite中混合了同步和异步代码的可读性。虽然它可以在很多情况下运行得很好，但是不能担保```$.ajax()```请求后的回调会正确的执行。考虑到这个因素，可以使用```expect()```来定义测试期望的断言总数，如果测试完成后断言个数不相符合，可能就要检查下哪里出问题了。
 
 
 #SinonJS
 
-Similar to the section on testing Backbone.js apps using the Jasmine BDD framework, we're nearly ready to take what we've learned and write a number of QUnit tests for our Todo application.
+跟前面使用Jasmine BDD框架测试Backbone.js app类似，我们通过给Todo应用写一些QUnit测试来学习。
 
-Before we start though, you may have noticed that QUnit doesn't support test spies. Test spies are functions which record arguments, exceptions and return values for any of their calls. They're typically used to test callbacks and how functions may be used in the application being tested. In testing frameworks, spies can usually be either anonymous functions or wrap functions which already exist.
+你可能注意到QUnit不支持spies。Test spies记录参数，异常并且返回值给其它的调用。通常用于测试回调，以及函数如何被使用。在测试框架中，spies可以是匿名也可以是包裹已有的函数。
 
 
-##What is SinonJS?
+##什么是SinonJS?
 
-In order for us to substitute support for spies in QUnit, we will be taking advantage of a mocking framework called [SinonJS](http://sinonjs.org/) by Christian Johansen. We will also be using the [SinonJS-QUnit adapter](http://sinonjs.org/qunit/) which provides seamless integration with QUnit (meaning setup is minimal). Sinon.JS is completely test-framework agnostic and should be easy to use with any testing framework, so it's ideal for our needs.
+在QUnit中我们可以用Christian Johansen编写的模拟框架[SinonJS](http://sinonjs.org/)来支持spies。同时还要使用[SinonJS-QUnit adapter](http://sinonjs.org/qunit/)来与QUnit进行无缝集成。Sinon.JS 是完全与测试框架无关的，而且可以容易的与任何测试框架一同使用，所以对于我们的需求它是非常理想的选择。
 
-The framework supports three features we'll be taking advantage of for unit testing our application:
+这个框架支持三项特性我们会在单元测试中用上：
 
-* **Anonymous spies**
-* **Spying on existing methods**
-* **A rich inspection interface**
+* **匿名spies**
+* **监测(Spying on)已有的方法**
+* **丰富的监视接口**
 
-Using ```this.spy()``` without any arguments creates an anonymous spy. This is comparable to ```jasmine.createSpy()``` and we can observe basic usage of a SinonJS spy in the following example:
+使用```this.spy()```不传入任何参数则创建一个匿名的spy。可以与```jasmine.createSpy()```做比较， 下面是基本的使用SinonJS spy的例子：
 
 ####Basic Spies:
 ```javascript
@@ -7867,7 +7866,7 @@ test("should call all subscribers for a message exactly once", function () {
 });
 ```
 
-We can also use ```this.spy()``` to spy on existing functions (like jQuery's ```$.ajax```) in the example below. When spying on a function which already exists, the function behaves normally but we get access to data about its calls which can be very useful for testing purposes.
+同样可以使用```this.spy()```来监视下面例子中已有的函数(比如jQuery的```$.ajax```)。当监视了一个已有函数时，它的函数行为跟正常情况一样，但是我们可以访问到调用的相关数据用于测试。
 
 ####Spying On Existing Functions:
 ```javascript
@@ -7882,10 +7881,10 @@ test( "should inspect jQuery.getJSON's usage of jQuery.ajax", function () {
 });
 ```
 
-SinonJS comes with a rich spy interface which allows us to test whether a spy was called with a specific argument, if it was called a specific number of times and test against the values of arguments. A complete list of features supported in the interface can be found here (http://sinonjs.org/docs/), but let's take a look at some examples demonstrating some of the most commonly used ones:
+SinonJS提供了一套丰富的监视接口，可以测试一个spy是否使用指定的参数调用，是否被调用了指定的次数，以及测试调用时参数的值。接口支持的完整特性可以看这里(http://sinonjs.org/docs/)，我们通过一些例子来看下常用的特性：
 
 
-####Matching arguments: test a spy was called with a specific set of arguments:
+####参数匹配：测试一个spy是否使用指定参数调用：
 
 ```javascript
 test( "Should call a subscriber with standard matching": function () {
@@ -7898,7 +7897,7 @@ test( "Should call a subscriber with standard matching": function () {
 });
 ```
 
-####Stricter argument matching: test a spy was called at least once with specific arguments and no others:
+####严格的参数匹配：测试一个spy使用指定的参数并且无其它参数，至少被调用一次： 
 
 ```javascript
 test( "Should call a subscriber with strict matching": function () {
@@ -7916,7 +7915,7 @@ test( "Should call a subscriber with strict matching": function () {
 });
 ```
 
-####Testing call order: testing if a spy was called before or after another spy:
+####测试调用顺序：测试一个spy是否在另一个spy之前或之后调用：
 
 ```javascript
 test( "Should call a subscriber and maintain call order": function () {
@@ -7934,7 +7933,7 @@ test( "Should call a subscriber and maintain call order": function () {
 });
 ```
 
-####Match execution counts: test a spy was called a specific number of times:
+####匹配执行次数：测试一个是否被调用了指定的次数：
 
 ```javascript
 test( "Should call a subscriber and check call counts", function () {
@@ -7959,7 +7958,7 @@ test( "Should call a subscriber and check call counts", function () {
 
 ##Stubs and mocks
 
-SinonJS also supports two other powerful features which are useful to be aware of: stubs and mocks. Both stubs and mocks implement all of the features of the spy API, but have some added functionality.
+SinonJS还支持另外2个强大的特性：stub和mock。also supports two other powerful features which are useful to be aware of: stubs and mocks. Both stubs and mocks implement all of the features of the spy API, but have some added functionality.
 
 ###Stubs
 

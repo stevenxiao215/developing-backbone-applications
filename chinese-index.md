@@ -7956,17 +7956,17 @@ test( "Should call a subscriber and check call counts", function () {
 ```
 
 
-##Stubs and mocks
+##Stubs和mocks
 
-SinonJS还支持另外2个强大的特性：stub和mock。also supports two other powerful features which are useful to be aware of: stubs and mocks. Both stubs and mocks implement all of the features of the spy API, but have some added functionality.
+SinonJS还支持另外2个强大的特性：stubs和mocks。stubs和mocks都实现了spy API的所有特性，但是添加写其它功能。
 
 ###Stubs
 
-A stub allows us to replace any existing behaviour for a specific method with something else. They can be very useful for simulating exceptions and are most often used to write test cases when certain dependencies of your code-base may not yet be written.
+一个stub可以允许我们把指定的方法的行为替换成其它的东西。它可以用于模拟异常，常用于编写当必要依赖项代码还没编写时的测试。
 
-Let us briefly re-explore our Backbone Todo application, which contained a Todo model and a TodoList collection. For the purpose of this walkthrough, we want to isolate our TodoList collection and fake the Todo model to test how adding new models might behave.
+我们重新回到Backbone Todo application，包含一个Todo model和一个TodoList collection。作为演示，我们把TodoList collection单独隔离，仿造Todo model来测试添加新的models会发生什么。
 
-We can pretend that the models have yet to be written just to demonstrate how stubbing might be carried out. A shell collection just containing a reference to the model to be used might look like this:
+假设models并没有编写好，仅示范stubbing如何进行。一个包含model引用的collection外壳：
 
 ```javascript
 var TodoList = Backbone.Collection.extend({
@@ -7977,19 +7977,19 @@ var TodoList = Backbone.Collection.extend({
 this.todoList;
 ```
 
-Assuming our collection is instantiating new models itself, it's necessary for us to stub the models constructor function for the the test. This can be done by creating a simple stub as follows:
+假设collection自身可以实例化models，我们需要为这个测试stub models的构造函数。可以像下面这样：
 
 ```javascript
 this.todoStub = sinon.stub( window, "Todo" );
 ```
 
-The above creates a stub of the Todo method on the window object. When stubbing a persistent object, it's necessary to restore it to its original state. This can be done in a ```teardown()``` as follows:
+上面在window上创建了一个Todo方法的stub。当stubbing一个持久对象时，可能还需要恢复其原始状态。可以使用```teardown()``` ：
 
 ```javascript
 this.todoStub.restore();
 ```
 
-After this, we need to alter what the constructor returns, which can be efficiently done using a plain ```Backbone.Model``` constructor. Whilst this isn't a Todo model, it does still provide us an actual Backbone model.
+然后，我们需要改变这个构造函数的返回，使用真实的```Backbone.Model```构造器。虽然它不是一个Todo model，但它给我们提供了一个实际的Backbone model。
 
 
 ```javascript
@@ -8002,13 +8002,13 @@ teardown: function() {
 });
 ```
 
-The expectation here might be that this snippet would ensure our TodoList collection always instantiates a stubbed Todo model, but because a reference to the model in the collection is already present, we need to reset the model property of our collection as follows:
+这里的期望可能是这段代码可以确保TodoList collection总是实例化stubbed Todo model，不过collection已经存在一个model的引用，我们需要重新设置下collection的model属性：
 
 ```javascript
 this.todoList.model = Todo;
 ```
 
-The result of this is that when our TodoList collection instantiates new Todo models, it will return our plain Backbone model instance as desired. This allows us to write a spec for testing the addition of new model literals as follows:
+这样做的结果就是，当TodoList collection实例化新的Todo models时，它会返回给我们一个纯净的Backbone model。下面编写一个spec测试下添加字面的model：
 
 ```javascript
 module( "Should function when instantiated with model literals", {
@@ -8051,10 +8051,9 @@ test("should find a model by id", function() {
 
 ###Mocks
 
-Mocks are effectively the same as stubs, however they mock a complete API out and have some built-in expectations for how they should be used. The difference between a mock and a spy is that as the expectations for their use are pre-defined, it will fail if any of these are not met.
+Mocks实际上跟stubs一样，不过它们会模仿出完整的API并且如何使用它们有一些内置的期望。 mock也spy的区别就是因为它们使用的expectations是预定义的，如果有任何不符就会失败。
 
-Here's a snippet with sample usage of a mock based on PubSubJS. Here, we have a `clearTodo()` method as a callback and use mocks to verify its behavior.
-
+这有个基于PubSubJS使用mock的例子。有一个`clearTodo()` 方法做为回调，使用mocks来校验它的行为。
 ```javascript
 test("should call all subscribers when exceptions", function () {
     var myAPI = { clearTodo: function () {} };
@@ -8074,23 +8073,23 @@ test("should call all subscribers when exceptions", function () {
 
 
 
-Practical
+实践
 ====================
 
-We can now begin writing test specs for our Todo application, which are listed and separated by component (e.g Models, Collections etc.). It's useful to pay attention to the name of the test, the logic being tested and most importantly the assertions being made as this will give you some insight into how what we've learned can be applied to a complete application.
+现在我们可以开始给Todo application写测试specs了，根据组件(比如Models, Collections等)来列举和分隔。需要注意测试的名称，被测试的逻辑，以及最重要的断言，这些都可以让你体会到如何将所学到的应用到一个完整的项目中。
 
-To get the most out of this section, I recommend looking at the QUnit Koans included in the `practicals\qunit-koans` folder - this is a port of the Backbone.js Jasmine Koans over to QUnit that I converted for this post.
+另外，建议你看下`practicals\qunit-koans`目录下的QUnit Koans - 这是我为这篇文章将Jasmine Koans转换成了QUnit。
 
-*In case you haven't had a chance to try out one of the Koans kits as yet, they are a set of unit tests using a specific testing framework that both demonstrate how a set of specs for an application may be written, but also leave some tests unfilled so that you can complete them as an exercise.*
+*如果你还没有尝试过Koans kits，它是一组使用特定测试框架的单元测试，展示了如何为一个application编写一组specs，同时也留了一些没有填充的测试作为练习。*
 
 ###Models
 
-For our models we want to at minimum test that:
+对于model我们需要测试下面几点：
 
-* New instances can be created with the expected default values
-* Attributes can be set and retrieved correctly
-* Changes to state correctly fire off custom events where needed
-* Validation rules are correctly enforced
+* 可以使用期望的默认值创建实例
+* 属性可以正常的设置和恢复
+* 状态的改变在需要时可以正确的触发自定义事件
+* 验证规则正确的执行
 
 ```javascript
 module( 'About Backbone.Model');
@@ -8155,11 +8154,11 @@ test('Can contain custom validation rules, and will trigger an error event on fa
 
 ###Collections
 
-For our collection we'll want to test that:
+对于collection我们要测试到下面几点：
 
-* New model instances can be added as both objects and arrays
-* Changes to models result in any necessary custom events being fired
-* A `url` property for defining the URL structure for models is correctly defined
+* 可以添加新的Todo model对象或者对象的数组。
+* models的变化会触发必要的自定义事件。
+* 定义models结构对应的`url`属性是正确的。
 
 
 ```javascript
@@ -8214,13 +8213,13 @@ test('Fires custom named events when the models change.', function() {
 
 ###Views
 
-For our views we want to ensure:
+对于views我们要确保下面几点：
 
-* They are being correctly tied to a DOM element when created
-* They can render, after which the DOM representation of the view should be visible
-* They support wiring up view methods to DOM elements
+* 创建时被正确的绑定到DOM元素。
+* view的每个DOM可见之后会渲染。
+* 支持view方法与DOM元素间的连接。
 
-One could also take this further and test that user interactions with the view correctly result in any models that need to be changed being updated correctly.
+也可以进一步测试用于与view的交互行为会正确触发models必要的更新。
 
 
 ```javascript
@@ -8287,15 +8286,15 @@ asyncTest('Can wire up view methods to DOM elements.', function() {
 
 ###Events
 
-For events, we may want to test a few different use cases:
+对于事件，我们需要做一些不一样的测试用例：
 
-* Extending plain objects to support custom events
-* Binding and triggering custom events on objects
-* Passing along arguments to callbacks when events are triggered
-* Binding a passed context to an event callback
-* Removing custom events
+* 扩展纯对象，支持自定义事件
+* 绑定和触发对象的自定义事件
+* 当事件触发时让参数经过回调函数
+* 把一个传入的上下文绑定到一个事件的回调
+* 移除自定义事件
 
-and a few others that will be detailed in our module below:
+还有一些其它细节将会在面的模块中：
 
 ```javascript
 module( 'About Backbone.Events', {
@@ -8413,7 +8412,7 @@ test('Also can remove custom events from objects.', function() {
 
 ###App
 
-It can also be useful to write specs for any application bootstrap you may have in place. For the following module, our setup initiates and appends a TodoApp view and we can test anything from local instances of views being correctly defined to application interactions correctly resulting in changes to instances of local collections.
+编写应用启动程序的测试specs也非常有必要。下面的模块，setup中启动和添加了一个TodoApp view，然后测试application内的view是否被正确的定义，view的交互是否触发collections的正确变化。
 
 ```javascript
 module( 'About Backbone Applications' , {
@@ -8444,9 +8443,10 @@ test( 'Should bind Collection events to View creation.' , function() {
  });
 ```
 
-##Further Reading & Resources
+##更多阅读和资源
 
-That's it for this section on testing applications with QUnit and SinonJS. I encourage you to try out the [QUnit Backbone.js Koans](https://github.com/addyosmani/backbone-koans-qunit) and see if you can extend some of the examples. For further reading consider looking at some of the additional resources below:
+使用QUnit和SinonJS来测试应用这一节就这么多了。鼓励你尝试下[QUnit Backbone.js Koans](https://github.com/addyosmani/backbone-koans-qunit) 看是否能扩展里面的一些例子。
+可参看下面更多相关阅读资料：
 
 * **[Test-driven JavaScript Development (book)](http://tddjs.com/)**
 * **[SinonJS/QUnit Adapter](http://sinonjs.org/qunit/)**
@@ -8459,10 +8459,9 @@ That's it for this section on testing applications with QUnit and SinonJS. I enc
 
 
 
-# <a name="resources">Resources</a>
+# <a name="resources">参考资源</a>
 
-
-Whilst what we get with Backbone out of the box can be terribly useful, there are some equally beneficial add-ons that can help simplify our development process. These include:
+希望本书所讲的Backbone相关内容能对你有所帮助，下面有些附加组件可能对你的开发过程有帮助：
 
 * [Backbone Marionette](http://marionettejs.com)
 * [Backbone Layout Manager](https://github.com/tbranyen/backbone.layoutmanager)
@@ -8472,23 +8471,20 @@ Whilst what we get with Backbone out of the box can be terribly useful, there ar
 * [Backbone CouchDB](https://github.com/janmonschke/backbone-couchdb)
 * [Backbone Validations - HTML5 inspired validations](https://github.com/n-time/backbone.validations)
 
-In time, there will be tutorials in the book covering some of these resources but until then, please feel free to check them out.
+上面可能涵盖了本书中所提到的一些资源，不过请尽情使用吧。
 
 
-# <a name="conclusions">Conclusions</a>
+# <a name="conclusions">总结</a>
 
+这就是本书'Developing Backbone.js Applications'所有内容。希望本书对你很实用，给你探索Backbone.js之旅带来一个良好的开端。
 
-That's it for 'Developing Backbone.js Applications'. I hope you found this book both useful, enlightening and a good start for your journey into exploring Backbone.js.
+如果你对本书有更多其它话题，或者认为本书需要扩展讲解的地方可与作者原作者联系。他会乐意接受你的建议。
 
-If there are other topics or areas of this book you feel could be expanded further, please feel free to let me know, or better yet, send a pull request upstream. I'm always interested in making this title as comprehensive as possible.
+## 提示
 
-Until next time, the very best of luck with the rest of your journey!
-
-## Notes
-
-I would like to thank the Backbone.js, Stack Overflow, DailyJS (Alex Young) and JavaScript communities for their help, references and contributions to this book. This project would not be possible without you so thank you! :)
+非常感谢Backbone.js, Stack Overflow, DailyJS (Alex Young)和JavaScript社区对此书帮助和贡献。没有他们这个项目不会这么顺利的完成。感谢！:)
 
 
 ---
-Where relevant, copyright Addy Osmani, 2012.
+copyright Addy Osmani, 2012。中文翻译 by 白汀，2013
 

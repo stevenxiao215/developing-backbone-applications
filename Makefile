@@ -1,5 +1,5 @@
 include_dir=build
-source=chapters-zh/*.md
+source=chapters/*.md
 title='Developing Backbone.js Applications'
 filename='backbone-fundamentals-zh'
 
@@ -7,7 +7,7 @@ filename='backbone-fundamentals-zh'
 #epub rtf pdf mobi
 all: html
 
-markdown:
+markdown: 
 	awk 'FNR==1{print ""}{print}' $(source) > $(filename).md
 
 html: markdown
@@ -37,18 +37,18 @@ html: markdown
 #		--normalize \
 #		--smart
 
-pdf: markdown
+#pdf: markdown
 	# You need `pdflatex`
 	# OS X: http://www.tug.org/mactex/
 	# Then find its path: find /usr/ -name "pdflatex"
 	# Then symlink it: ln -s /path/to/pdflatex /usr/local/bin
-	pandoc -s $(filename).md -o $(filename).pdf \
-		--title-prefix $(title) \
-		--normalize \
-		--smart \
-		--toc
+	#pandoc -s $(filename).md -o $(filename).pdf \
+	#	--title-prefix $(title) \
+	#	--normalize \
+	#	--smart \
+	#	--toc
 
-mobi: epub
+#mobi: epub
 	# Download: http://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000765211
 	# Symlink bin: ln -s /path/to/kindlegen /usr/local/bin
-	kindlegen $(filename).epub
+	#kindlegen $(filename).epub

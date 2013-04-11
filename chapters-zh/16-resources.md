@@ -1,6 +1,6 @@
-# ²Î¿¼×ÊÔ´
+# å‚è€ƒèµ„æº
 
-## Êé¼® &amp; ¿Î³Ì
+## ä¹¦ç± &amp; è¯¾ç¨‹
 
 * [PeepCode: Backbone.js Basics](https://peepcode.com/products/backbone-js)
 * [CodeSchool: Anatomy Of Backbone](http://www.codeschool.com/courses/anatomy-of-backbonejs)
@@ -11,7 +11,7 @@
 * [Backbone Tutorials](http://backbonetutorials.com/)
 * [Derick Bailey's Resources For Learning Backbone](http://lostechies.com/derickbailey/2011/09/13/resources-for-and-how-i-learned-backbone-js/)
 
-## À©Õ¹/¿â
+## æ‰©å±•/åº“
 
 * [MarionetteJS](http://marionettejs.com/)
 * [AuraJS](https://github.com/aurajs/aura)

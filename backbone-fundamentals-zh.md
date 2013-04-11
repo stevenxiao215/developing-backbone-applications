@@ -63,7 +63,7 @@ I assume your level of knowledge about JavaScript goes beyond the basics and as 
 * [Object-Oriented JavaScript](http://www.amazon.com/Object-Oriented-Javascript-Stoyan-Stefanov/dp/1847194141) by Stoyan Stefanov (Packt Publishing)
 
 
-# Introduction
+# 前言
 
 Frank Lloyd Wright once said “You can’t make an architect. You can however open the doors and windows toward the light as you see it.” In this book, I hope to shed some light on how to improve the structure of your web applications, opening doors to what will hopefully be more maintainable, readable applications in your future.
 
@@ -77,51 +77,45 @@ Without something to help tame the mess, you're likely to string together a set 
 
 In "Developing Backbone.js Applications," I and a number of other experienced authors will show you how to improve your web application structure using the popular JavaScript library, Backbone.js
 
-### What Is MVC?
+### 什么是MVC?
 
-A number of modern JavaScript frameworks provide developers an easy path to organizing their code using variations of a pattern known as MVC (Model-View-Controller). MVC separates the concerns in an application into three parts:
+现在有大量的框架给开发者提供一种简单的方式，MVC(Model-View-Controller)模式的变种，来组织他们的代码。MVC把我们在应用中关心的问题分隔成三部分：
 
-* Models represent the domain-specific knowledge and data in an application. Think of this as being a ‘type’ of data you can model — like a User, Photo, or Todo note. Models can notify observers when their state changes.
-* Views typically constitute the user interface in an application (e.g., markup and templates), but don’t have to be. They observe Models, but don’t directly communicate with them.
-* Controllers handle input (e.g., clicks, user actions) and update Models. 
+* Models描述了特定域信息和应用中的数据。可以认为是一“类”你可以模拟的数据 — 比如一个用户、照片或者Todo笔记。Models 应该要通知它的所有观察者它当前的状态(比如Views)。
+* Views通常被认为是应用中的用户界面(比如你的标记和模板)。但不一定是。Views需要知道已经存在的Models以便于观察它们，但不用直接跟它们通讯。
+* Controllers控制了应用中的输入(比如点击，用户操作)和视图(可以看作是输出)。当一个Controller更新一个Model的状态时(比如编辑Todo的内容)，它不会直接告诉View。这就是View和Model之间自然的观察关系。
 
-Thus, in an MVC application, user input is acted upon by Controllers which update Models. Views observe Models and update the user interface when changes occur.
+JavaScript‘MVC’框架可以帮助我们不用总是严格的遵循上面的模式来组织代码。有些框架会在View中包含Controller的功能(比如 Backbone.js)，有些框架会整合他们自己认为更有效的组件。
 
-JavaScript MVC frameworks don’t always strictly follow the above pattern. Some solutions (including Backbone.js) merge the responsibility of the Controller into the View, while other approaches add additional components into the mix.
+出于这种原因我们把这类框架称之为MV*模式，就是，你可能有View和Model，但是更可能还包含其它东西。
 
-For this reason we refer to such frameworks as following the MV* pattern; that is, you’re likely to have a Model and a View, but a distinct Controller might not be present and other components may come into play.
+### 什么是Backbone.js?
 
-### What is Backbone.js?
+![](img/backbonejsorg.png)
 
-![](img/backbonejsorg.jpg)
+Backbone.js是一个构建client端代码的轻量级JavaScript框架。它可以非常容易的管理和解耦应用，使你在长远中更容易维护代码。
 
-Backbone.js is a lightweight JavaScript library that adds structure to your client-side code. It makes it easy to manage and decouple concerns in your application, leaving you with code that is more maintainable in the long term.
+开发者通常使用Backbone.js创建单页应用或者SPA。简单的说，这些应用可以让浏览器在client端对数据的改变做出响应而不用从服务器端完整地加载你的标记，意味着不用整个重新刷新页面。
 
-Developers commonly use libraries like Backbone.js to create single-page applications (SPAs). SPAs are web applications that load into the browser and then react to data changes on the client side without requiring complete page refreshes from the server.
+在我写这本书的时候Backbone.js是一个成熟、流行的框架，有庞大的开发者社区，丰富的插件和扩展。它被Disqus、Walmart、SoundCloud还有Foursquare用来构建伟大的应用。
 
-Backbone is mature, popular, and has both a vibrant developer community as well as a wealth of plugins and extensions available that build upon it. It has been used to create non-trivial applications by companies such as Disqus, Walmart, SoundCloud and LinkedIn.
+### 你何时需要一个Javascript MV*框架?
 
-Backbone focuses on giving you helpful methods for querying and manipulating your data rather than re-inventing the JavaScript object model. It's a library, rather than a framework, that plays well with others and scales well, from embedded widgets to large-scale applications.
+当用JavaScript构建一个单页应用的时候，不管它包含一个复杂的用户界面还是简单的，尝试减少创建新Views时的HTTP请求，你可能会发现自己通过MV*框架，比如Backbone.js，创建了很多小块。
 
-As it's small, there is also less your users have to download on mobile or slower connections. The entire Backbone source can be read and understood in just a few hours.
+在起初，写个避免嵌套式代码的框架并不难，但是同样说写些关于Backbone的标准也不重要是不对的。
 
-### When Do I Need A JavaScript MVC Framework?
+如何架构一个应用比尝试组合DOM操作库，模板和路由来的更重要。成熟的MV*框架通常不仅包含可能你发现自己会写的一些模块，还包含在之后的过程中你可能会发现的问题的解决方案。这其中节省的时间你不可低估。
 
-When building a single-page application using JavaScript, whether it involves a complex user interface or is simply trying to reduce the number of HTTP requests required for new Views, you will likely find yourself inventing many of the pieces that make up an MV* framework.
+所以，你何处需要MV*框架而何处不需要?
 
-At the outset, it isn’t terribly difficult to write your own application framework that offers some opinionated way to avoid spaghetti code; however, to say that it is equally as trivial to write something as robust as Backbone would be a grossly incorrect assumption.
+如果你要开发一个只需要跟API或者后台数据服务通讯的应用，应用随着数据在浏览器中的变化会有偏重量级的展现和控制，你将会发现MV*框架非常有用。这类比较好的例子就是GMail和Google Docs。
 
-There’s a lot more that goes into structuring an application than tying together a DOM manipulation library, templating, and routing. Mature MV* frameworks typically include not only the pieces you would find yourself writing, but also include solutions to problems you’ll find yourself running into later on down the road. This is a time-saver that you shouldn’t underestimate the value of.
+这种应用通常下载一个包含所有脚本、样式、用户常用任务标记的载体，然后在后台完成添加一系列的行为。你可以在阅读email或者要写的一个文档之间来回切换而根本不需要这个应用去重新渲染整个页面。
 
-So, where will you likely need an MV* framework and where won’t you?
+但是，如果你要构建一个大部分繁琐的视图/页面依然依赖服务器端的应用，只需要一点Javascript或用jQuery实现一点交互，MV框架就可能有点过重了。当然有复杂的Web应用，对视图的局部刷新可以有效的结合单页应用的方式，但不管怎样，坚持简单的原则总会让你驾驭自如。
 
-If you’re writing an application where much of the heavy lifting for view rendering and data manipulation will be occurring in the browser, you may find a JavaScript MV* framework useful. Examples of applications that fall into this category are GMail, NewsBlur and the LinkedIn mobile app.
-
-These types of applications typically download a single payload containing all the scripts, stylesheets, and markup users need for common tasks and then perform a lot of additional behavior in the background. For instance, it’s trivial to switch between reading an email or document to writing one without sending a new page request to the server.
-
-If, however, you’re building an application that still relies on the server for most of the heavy-lifting of page/view rendering and you’re just using a little JavaScript or jQuery to make things more interactive, an MV* framework may be overkill. There certainly are complex Web applications where the partial rendering of views can be coupled with a single-page application effectively, but for everything else, you may find yourself better sticking to a simpler setup.
-
-Maturity in software (framework) development isn't simply about how long a framework has been around. It's about how solid the framework is and more importantly how well it's evolved to fill its role. Has it become more effective at solving common problems? Does it continue to improve as developers build larger and more complex applications with it?
+一个软件(框架)发展的成熟度不是简单的因其存在了多长时间。而是这个框架的可靠程度和它扮演的角色的重要程度。它在解决通用问题上是否有效？随着开发人员使用它构建更大、更复杂的应用框架是否持续改进？
 
 
 ### Why Consider Backbone.js?
@@ -181,33 +175,33 @@ Here is a peek at what you will be learning in each chapter:
 
 <i>Chapter 18, Appendix</i> returns to our design pattern discussion by contrasting MVC with the Model-View-Presenter (MVP) pattern and examines how Backbone.js relates to both. A walkthrough of writing a Backbone-like library from scratch and other topics are also covered.
 
-# Fundamentals
+# 基本原理
 
-Design patterns are proven solutions to common development problems that can help us improve the organization and structure of our applications. By using patterns, we benefit from the collective experience of skilled developers who have repeatedly solved similar problems.
+设计模式是一种可以提升应用程序的组织和架构的通用的开发方法。同过使用设计模式，我们可吸取众多开发者反复实践中总结出来的经验。
 
-Historically, developers creating desktop and server-class applications have had a wealth of design patterns available for them to lean on, but it's only been in the past few years that such patterns have been applied to client-side development.
+通常，开发者创建桌面和服务器类应用有丰富的设计模式供他们去选择，但是，在过去的仅仅几年中，这些模式已经应用到了客户端开发中。
 
-In this chapter, we're going to explore the evolution of the Model-View-Controller (MVC) design pattern and get our first look at how the Backbone.js framework allows us to apply this pattern to client-side development.
+在这一章中，我们将会探索改进的MVC模式以及如何使用Backbone.js框架在客户端开发中实现它。
 
 ## MVC
 
-MVC is an architectural design pattern that encourages improved application organization through a separation of concerns. It enforces the isolation of business data (Models) from user interfaces (Views), with a third component (Controllers) traditionally managing logic, user-input, and coordination of Models and Views. The pattern was originally designed by [Trygve Reenskaug](http://en.wikipedia.org/wiki/Trygve_Reenskaug) while working on Smalltalk-80 (1979), where it was initially called Model-View-Controller-Editor. MVC was described in depth in [“Design Patterns: Elements of Reusable Object-Oriented Software”](http://www.amazon.co.uk/Design-patterns-elements-reusable-object-oriented/dp/0201633612) (The "GoF" or “Gang of Four” book) in 1994, which played a role in popularizing its use.
+MVC(Model-View-Controller)是一种提倡通过分层来改进应用的设计模式。它强制通过第三个组件(Controller)来分离业务数据(Model)，用户界面(View)，控制器通常管理逻辑，用户输入，协调模型与视图间的通讯。这种模式最早是[Trygve Reenskaug](http://en.wikipedia.org/wiki/Trygve_Reenskaug)在Smalltaok-80(1979)中设计的，当初被称之为Model-View-Controller-Editor。1994,[“设计模式: 面向对象软件中可重用性元素”](http://www.amazon.co.uk/Design-patterns-elements-reusable-object-oriented/dp/0201633612) (“GOF”或者“四人帮”一书)中详细定义了MVC，这本书普及了它的应用。
 
 
 ### Smalltalk-80 MVC
 
-It's important to understand the issues that the original MVC pattern was aiming to solve as it has changed quite heavily since the days of its origin. Back in the 70's, graphical user-interfaces were few and far between. An approach known as [Separated Presentation](http://martinfowler.com/eaaDev/uiArchs.html) began to be used as a means to make a clear division between domain objects which modeled concepts in the real world (e.g., a photo, a person) and the presentation objects which were rendered to the user's screen.
+随着时间的推移MVC模式变得更加笨重，非常有必要去了解下它早的设计初衷。在70年代，图形用户界面并不多见。有一种方法叫[Separated Presentation(表现分离)](http://martinfowler.com/eaaDev/uiArchs.html)，可以清晰的分离模仿现实世界概念(比如一张图片、一个人)的域对象和被渲染到用户屏幕的描述对象。
 
-The Smalltalk-80 implementation of MVC took this concept further and had an objective of separating out the application logic from the user interface. The idea was that decoupling these parts of the application would also allow the reuse of Models for other interfaces in the application. There are some interesting points worth noting about Smalltalk-80's MVC architecture:
+Smalltalk-80实现的MVC把这个概念贯彻的更深入，而且有目的性的把应用逻辑从用户界面中分离出来。它的观点是解耦应用这些部分也可以把模型重用到应用中其它的用户界面。这里有些非常有趣的关于Smalltalk-80's MVC架构的事情：
 
-* A Domain element was known as a Model and was ignorant of the user-interface (Views and Controllers)
-* Presentation was taken care of by the View and the Controller, but there wasn't just a single View and Controller. A View-Controller pair was required for each element being displayed on the screen and so there was no true separation between them
-* The Controller's role in this pair was handling user input (such as key-presses and click events) and doing something sensible with them
-* The Observer pattern was used to update the View whenever the Model changed
+* 一个域元素被当做一个Model，而且用户界面(Views和Controllers)并不知道。
+* 表现是View和控制器所关心的，但并不仅有一个view和controller。每个要展现到屏幕的元素都需要有一个View-Controller的组合，所以它们并没有正真的被分离。
+* 在这个组合中，Controller扮演的是处理用户输入(比如键盘和鼠标点击事件)的角色，做些用户可感知的事情。
+* 它依赖观察者模式在Model变化的时候来更新View。
 
-Developers are sometimes surprised when they learn that the Observer pattern (nowadays commonly implemented as a Publish/Subscribe system) was included as a part of MVC's architecture decades ago. In Smalltalk-80's MVC, the View and Controller both observe the Model: anytime the Model changes, the Views react. A simple example of this is an application backed by stock market data - for the application to show real-time information, any change to the data in its Model should result in the View being refreshed instantly.
+有时，当开发者知道数十年前观察者模式(现在通常在发布/订阅系统中应用)也是MVC架构的一部分的时候，他们非常的惊讶。在Smalltalk-80的MVC中，View和Controller都观察了Model：Model改变的时候，View则做出响应。一个简单的例子就是基于股票市场数据的应用——因为它要展示实时的信息，所以在Models中的数据有任何改变都 要在View中立即刷新显示。
 
-Martin Fowler has done an excellent job of writing about the [origins](http://martinfowler.com/eaaDev/uiArchs.html) of MVC over the years and if you are interested in further historical information about Smalltalk-80's MVC, I recommend reading his work.
+Martin Fowler在过去的些年中在写关于MVC起源[origins](http://martinfowler.com/eaaDev/uiArchs.html) 方面做了很多杰出的工作。如果你有兴趣了解更多关于Smalltalk-80 MVC的信息，推荐你阅读他的相关成果。
 
 ### MVC Applied To The Web
 
@@ -553,9 +547,9 @@ Code School's course challenge app is built from the ground up using Backbone, t
 ![](img/code-school.png)
 
 
-# Backbone Basics
+# Backbone基本构成
 
-In this section, you'll learn the essentials of Backbone's models, views, collections, events, and routers. This isn't by any means a replacement for the official documentation, but it will help you understand many of the core concepts behind Backbone before you start building applications using it.
+在这一章中，你将学习到Backbone的基本元素，models、views、collections和routers。这并不是说这些内容就替代的官方文档，这会在你开始使用它构建应用前帮助你理解Backbone背后的一些核心观念。
 
 ### Getting setup
 
@@ -593,11 +587,11 @@ For Chrome, you can open up the DevTools via the Chrome menu in the top right ha
 Next, switch to the Console tab, from where you can enter in and run any piece of JavaScript code by hitting the return key. You can also use the Console as a multi-line editor using the Ctrl + Enter shortcut to move from the end of one line to the start of another.
  
 
-## Models
+## 模型(Models)
 
-Backbone models contain data for an application as well as the logic around this data. For example, we can use a model to represent the concept of a todo item including its attributes like title (todo content) and completed (current state of the todo).
+Backbone的models包含了应用中的交互是数据，以及数据的相关逻辑。比如，我们可以用一个model来代表一个todo对象，包含了它的标题(todo的内容)，已完成标识(todo当前的状态)。
 
-Models can be created by extending `Backbone.Model` as follows:
+Models可以通过继承`Backbone.Model`来创建：
 
 ```javascript
 var Todo = Backbone.Model.extend({});
@@ -618,9 +612,9 @@ var todo2 = new Todo({
 console.log(JSON.stringify(todo2));
 ```
 
-#### Initialization
+#### 初始化
 
-The `initialize()` method is called when a new instance of a model is created. Its use is optional; however you'll see why it's good practice to use it below.
+`initialize()`方法在当一个model创建一个新的实例是调用。它是可选的，不过你最好像下面这样去使用它，后面你会发现其好处的原因。
 
 ```javascript
 var Todo = Backbone.Model.extend({
@@ -633,9 +627,9 @@ var myTodo = new Todo();
 // Logs: This model has been initialized.
 ```
 
-**Default values**
+**默认值**
 
-There are times when you want your model to have a set of default values (e.g., in a scenario where a complete set of data isn't provided by the user). This can be set using a property called `defaults` in your model.
+当你想给model设置默认属性时(比如，当用户不会提供一份完整的数据时)，可以用`defaults`属性。
 
 ```javascript
 var Todo = Backbone.Model.extend({
@@ -675,7 +669,7 @@ console.log(JSON.stringify(todo3));
 
 **Model.get()**
 
-`Model.get()` provides easy access to a model's attributes.
+`Model.get()`提供了简单的对模型属性的访问。 
 
 ```javascript
 var Todo = Backbone.Model.extend({
@@ -698,7 +692,7 @@ console.log(todo2.get('title')); // Retrieved with model's get() method.
 console.log(todo2.get('completed')); // true
 ```
 
-If you need to read or clone all of a model's data attributes, use its `toJSON()` method. This method returns a copy of the attributes as an object (not a JSON string despite its name). (When `JSON.stringify()` is passed an object with a `toJSON()` method, it stringifies the return value of `toJSON()` instead of the original object. The examples in the previous section took advantage of this feature when they called `JSON.stringify()` to log model instances.)
+如果你想读取或者复制model的所有数据，可以使用它的`toJSON()`方法。这个方法复制其属性作为一个对象返回(不是JSON 字符串，虽然其名字有点像)。(当使用`JSON.stringify()`传入一个对象调用`toJSON()`方法的结果时，它字符串化`toJSON()`的返回值，而不是原始的对象。前面这个例子使用这个特性改进下，调用`JSON.stringify()`来log model的实例。)
 
 ```javascript
 var Todo = Backbone.Model.extend({
@@ -725,7 +719,7 @@ console.log(todo2.toJSON());
 
 **Model.set()**
 
-`Model.set()` sets a hash containing one or more attributes on the model. When any of these attributes alter the state of the model, a "change" event is triggered on it. Change events for each attribute are also triggered and can be bound to (e.g `change:name`, `change:age`).
+`Model.set()`给model设置包含一个或多个属性的hash对象。当这些属性任何一个改变model的状态时，"change"事件就会触发。每个属性的Change事件都可以触发和绑定(比如 `change:name`, `change:age`)。
 
 ```javascript
 var Todo = Backbone.Model.extend({
@@ -777,9 +771,9 @@ console.log(!Person.hasChanged(''));
 
 Remember where possible it is best practice to use `Model.set()`, or direct instantiation as explained earlier.
 
-#### Listening for changes to your model
+#### 监听model的变化
 
-If you want to receive a notification when a Backbone model changes you can bind a listener to the model for its change event. A convenient place to add listeners is in the `initialize()` function as shown below:
+如果你想在Backbone model改变接收到通知可以监听它的change事件。可以在`initialize()`函数中添加监听：
 
 ```javascript
 var Todo = Backbone.Model.extend({
@@ -861,7 +855,7 @@ console.log('Todo set as completed: ' + myTodo.get('completed'));
 
 #### Validation
 
-Backbone supports model validation through `model.validate()`, which allows checking the attribute values for a model prior to setting them. By default, validation occurs when the model is persisted using the `save()` method or when `set()` is called if `{validate:true}` is passed as an argument.
+Backbone支持通过`Model.validate()`对model进行验证，可以在设置model的属性前对值进行校验。默认情况下，验证会在model调用`save()`或者调用`set()`传入`{validate:true}`参数时触发。
 
 ```javascript
 var Person = new Backbone.Model({name: 'Jeremy'});
@@ -924,7 +918,7 @@ console.log('completed: ' + myTodo.get('completed')); // completed: false
 An example of this (by @fivetanley) is available [here](http://jsfiddle.net/2NdDY/7/).
 
 
-## Views
+## 视图(Views)
 
 Views in Backbone don't contain the HTML markup for your application; they contain the logic behind the presentation of the model's data to the user. This is usually achieved using JavaScript templating (e.g., Underscore Microtemplates, Mustache, jQuery-tmpl, etc.). A view's `render()` method can be bound to a model's `change()` event, enabling the view to instantly reflect model changes without requiring a full page refresh.
 
@@ -2576,24 +2570,24 @@ Backbone has many operations and options beyond those we have covered here and i
 
 
 
-# Exercise 1: Todos - Your First Backbone.js App
+# 练习1：Todos - 你的第一个Backbone.js应用
 
-Now that we've covered fundamentals, let's write our first Backbone.js application. We'll build the Backbone Todo List application exhibited on [TodoMVC.com](http://todomvc.com). Building a Todo List is a great way to learn Backbone’s conventions. It's a relatively simple application, yet technical challenges surrounding binding, persisting model data, routing, and template rendering provide opportunities to illustrate some core Backbone features.
+现在我们已经学完基本概念，让我们开始写第一个Backbone.js应用。我们将开发一个Backbone Todo List应用，在[TodoMVC.com](http://todomvc.com)可以看到。这是应用非常简单，技术上包含绑定(binding)，解析model数据，路由(routing)和模板渲染，可以借此机会说明下Backbone的一些核心特性。
 
 ![](img/todos_a.png)
 
-Let's consider the application's architecture at a high level. We'll need:
+我们先站在一个较高的架构角度想想我们需要些什么东西。
 
-* a `Todo` model to describe individual todo items
-* a `TodoList` collection to store and persist todos
-* a way of creating todos
-* a way to display a listing of todos
-* a way to edit existing todos
-* a way to mark a todo as completed
-* a way to delete todos
-* a way to filter the items that have been completed or are remaining
+* 一个`Todo` model来描述todo项实体
+* 一个`TodoList` collection对todos的持久化保存
+* 创建todos
+* 列举todos
+* 编辑存在的todos
+* 完成todos
+* 删除todos
+* 过滤出已完成项和未完成项
 
-Essentially, these features are classic [CRUD](http://en.wikipedia.org/wiki/Create,_read,_update_and_delete) methods. Let's get started!
+基本上是经典的[CRUD](http://en.wikipedia.org/wiki/Create,_read,_update_and_delete)方法。让我们开始吧!
 
 ## Static HTML
 
@@ -14146,9 +14140,9 @@ A jQuery ```$.ajax()``` request is used to connect to a test resource and assert
 
 Note: rather than including ```stop()```, we can simply exclude it and substitute ```test()``` with ```asyncTest()``` if we prefer. This improves readability when dealing with a mixture of asynchronous and synchronous tests in your suite. While this setup should work fine for many use-cases, there is no guarantee that the callback in our ```$.ajax()``` request will actually get called. To factor this into our tests, we can use ```expect()``` once again to define how many assertions we expect to see within our test. This is a healthy safety blanket as it ensures that if a test completes with an insufficient number of assertions, we know something went wrong and can fix it.
 
-# Resources
+# 参考资源
 
-## Books &amp; Courses
+## 书籍 &amp; 课程
 
 * [PeepCode: Backbone.js Basics](https://peepcode.com/products/backbone-js)
 * [CodeSchool: Anatomy Of Backbone](http://www.codeschool.com/courses/anatomy-of-backbonejs)
@@ -14159,7 +14153,7 @@ Note: rather than including ```stop()```, we can simply exclude it and substitut
 * [Backbone Tutorials](http://backbonetutorials.com/)
 * [Derick Bailey's Resources For Learning Backbone](http://lostechies.com/derickbailey/2011/09/13/resources-for-and-how-i-learned-backbone-js/)
 
-## Extensions/Libraries
+## 扩展/库
 
 * [MarionetteJS](http://marionettejs.com/)
 * [AuraJS](https://github.com/aurajs/aura)
@@ -14198,118 +14192,114 @@ Backbone is neither difficult to learn nor use, however the time and effort you 
 
 With that, I wish you the very best with your onward journey into the world of Backbone and will leave you with a quote from American writer [Henry Miller](http://en.wikipedia.org/wiki/Henry_Miller) -  “One’s destination is never a place, but a new way of seeing things.” 
 
-# SinonJS
+#SinonJS
 
-Similar to the section on testing Backbone.js apps using the Jasmine BDD framework, we're nearly ready to take what we've learned and write a number of QUnit tests for our Todo application.
+跟前面使用Jasmine BDD框架测试Backbone.js app类似，我们通过给Todo应用写一些QUnit测试来学习。
 
-Before we start though, you may have noticed that QUnit doesn't support test spies. Test spies are functions which record arguments, exceptions, and return values for any of their calls. They're typically used to test callbacks and how functions may be used in the application being tested. In testing frameworks, spies usually are anonymous functions or wrappers around functions which already exist.
+你可能注意到QUnit不支持spies。Test spies记录参数，异常并且返回值给其它的调用。通常用于测试回调，以及函数如何被使用。在测试框架中，spies可以是匿名也可以是包裹已有的函数。
 
 
-## What is SinonJS?
+##什么是SinonJS?
 
-In order for us to substitute support for spies in QUnit, we will be taking advantage of a mocking framework called [SinonJS](http://sinonjs.org/) by Christian Johansen. We will also be using the [SinonJS-QUnit adapter](http://sinonjs.org/qunit/) which provides seamless integration with QUnit (meaning setup is minimal). Sinon.JS is completely test-framework agnostic and should be easy to use with any testing framework, so it's ideal for our needs.
+在QUnit中我们可以用Christian Johansen编写的模拟框架[SinonJS](http://sinonjs.org/)来支持spies。同时还要使用[SinonJS-QUnit adapter](http://sinonjs.org/qunit/)来与QUnit进行无缝集成。Sinon.JS 是完全与测试框架无关的，而且可以容易的与任何测试框架一同使用，所以对于我们的需求它是非常理想的选择。
 
-The framework supports three features we'll be taking advantage of for unit testing our application:
+这个框架支持三项特性我们会在单元测试中用上：
 
-* **Anonymous spies**
-* **Spying on existing methods**
-* **A rich inspection interface**
+* **匿名spies**
+* **监测(Spying on)已有的方法**
+* **丰富的监视接口**
 
-#### Basic Spies
+使用```this.spy()```不传入任何参数则创建一个匿名的spy。可以与```jasmine.createSpy()```做比较， 下面是基本的使用SinonJS spy的例子：
 
-Using ```this.spy()``` without any arguments creates an anonymous spy. This is comparable to ```jasmine.createSpy()```. We can observe basic usage of a SinonJS spy in the following example:
-
+####Basic Spies:
 ```javascript
-test('should call all subscribers for a message exactly once', function () {
+test("should call all subscribers for a message exactly once", function () {
     var message = getUniqueString();
     var spy = this.spy();
 
     PubSub.subscribe( message, spy );
-    PubSub.publishSync( message, 'Hello World' );
+    PubSub.publishSync( message, "Hello World" );
 
-    ok( spy.calledOnce, 'the subscriber was called once' );
+    ok( spy1.calledOnce, "the subscriber was called once" );
 });
 ```
 
-#### Spying On Existing Functions
+同样可以使用```this.spy()```来监视下面例子中已有的函数(比如jQuery的```$.ajax```)。当监视了一个已有函数时，它的函数行为跟正常情况一样，但是我们可以访问到调用的相关数据用于测试。
 
-We can also use ```this.spy()``` to spy on existing functions (like jQuery's ```$.ajax```) in the example below. When spying on a function which already exists, the function behaves normally but we get access to data about its calls which can be very useful for testing purposes.
-
+####Spying On Existing Functions:
 ```javascript
-test( 'should inspect the jQuery.getJSON usage of jQuery.ajax', function () {
-    this.spy( jQuery, 'ajax' );
+test( "should inspect jQuery.getJSON's usage of jQuery.ajax", function () {
+    this.spy( jQuery, "ajax" );
 
-    jQuery.getJSON( '/todos/completed' );
+    jQuery.getJSON( "/todos/completed" );
 
     ok( jQuery.ajax.calledOnce );
-    equals( jQuery.ajax.getCall(0).args[0].url, '/todos/completed' );
-    equals( jQuery.ajax.getCall(0).args[0].dataType, 'json' );
+    equals( jQuery.ajax.getCall(0).args[0].url, "/todos/completed" );
+    equals( jQuery.ajax.getCall(0).args[0].dataType, "json" );
 });
 ```
 
-#### Inspection Interface
-
-SinonJS comes with a rich spy interface which allows us to test whether a spy was called with a specific argument, if it was called a specific number of times, and test against the values of arguments. A complete list of features supported in the interface can be found on [SinonJS.org](http://sinonjs.org/docs/), but let's take a look at some examples demonstrating some of the most commonly used ones:
+SinonJS提供了一套丰富的监视接口，可以测试一个spy是否使用指定的参数调用，是否被调用了指定的次数，以及测试调用时参数的值。接口支持的完整特性可以看这里(http://sinonjs.org/docs/)，我们通过一些例子来看下常用的特性：
 
 
-**Matching arguments: test a spy was called with a specific set of arguments:**
+####参数匹配：测试一个spy是否使用指定参数调用：
 
 ```javascript
-test( 'Should call a subscriber with standard matching': function () {
+test( "Should call a subscriber with standard matching": function () {
     var spy = sinon.spy();
 
-    PubSub.subscribe( 'message', spy );
-    PubSub.publishSync( 'message', { id: 45 } );
+    PubSub.subscribe( "message", spy );
+    PubSub.publishSync( "message", { id: 45 } );
 
     assertTrue( spy.calledWith( { id: 45 } ) );
 });
 ```
 
-**Stricter argument matching: test a spy was called at least once with specific arguments and no others:**
+####严格的参数匹配：测试一个spy使用指定的参数并且无其它参数，至少被调用一次： 
 
 ```javascript
-test( 'Should call a subscriber with strict matching': function () {
+test( "Should call a subscriber with strict matching": function () {
     var spy = sinon.spy();
 
-    PubSub.subscribe( 'message', spy );
-    PubSub.publishSync( 'message', 'many', 'arguments' );
-    PubSub.publishSync( 'message', 12, 34 );
+    PubSub.subscribe( "message", spy );
+    PubSub.publishSync( "message", "many", "arguments" );
+    PubSub.publishSync( "message", 12, 34 );
 
     // This passes
-    assertTrue( spy.calledWith('many') );
+    assertTrue( spy.calledWith("many") );
 
     // This however, fails
-    assertTrue( spy.calledWithExactly( 'many' ) );
+    assertTrue( spy.calledWithExactly( "many" ) );
 });
 ```
 
-**Testing call order: testing if a spy was called before or after another spy:**
+####测试调用顺序：测试一个spy是否在另一个spy之前或之后调用：
 
 ```javascript
-test( 'Should call a subscriber and maintain call order': function () {
+test( "Should call a subscriber and maintain call order": function () {
     var a = sinon.spy();
     var b = sinon.spy();
 
-    PubSub.subscribe( 'message', a );
-    PubSub.subscribe( 'event', b );
+    PubSub.subscribe( "message", a );
+    PubSub.subscribe( "event", b );
 
-    PubSub.publishSync( 'message', { id: 45 } );
-    PubSub.publishSync( 'event', [1, 2, 3] );
+    PubSub.publishSync( "message", { id: 45 } );
+    PubSub.publishSync( "event", [1, 2, 3] );
 
     assertTrue( a.calledBefore(b) );
     assertTrue( b.calledAfter(a) );
 });
 ```
 
-**Match execution counts: test a spy was called a specific number of times:**
+####匹配执行次数：测试一个是否被调用了指定的次数：
 
 ```javascript
-test( 'Should call a subscriber and check call counts', function () {
+test( "Should call a subscriber and check call counts", function () {
     var message = getUniqueString();
     var spy = this.spy();
 
     PubSub.subscribe( message, spy );
-    PubSub.publishSync( message, 'some payload' );
+    PubSub.publishSync( message, "some payload" );
 
 
     // Passes if spy was called once and only once.
@@ -14324,17 +14314,17 @@ test( 'Should call a subscriber and check call counts', function () {
 ```
 
 
-## Stubs and mocks
+##Stubs和mocks
 
-SinonJS also supports two other powerful features: stubs and mocks. Both stubs and mocks implement all of the features of the spy API, but have some added functionality.
+SinonJS还支持另外2个强大的特性：stubs和mocks。stubs和mocks都实现了spy API的所有特性，但是添加写其它功能。
 
-### Stubs
+###Stubs
 
-A stub allows us to replace any existing behaviour for a specific method with something else. They can be very useful for simulating exceptions and are most often used to write test cases when certain dependencies of your code-base may not yet be written.
+一个stub可以允许我们把指定的方法的行为替换成其它的东西。它可以用于模拟异常，常用于编写当必要依赖项代码还没编写时的测试。
 
-Let us briefly re-explore our Backbone Todo application, which contained a Todo model and a TodoList collection. For the purpose of this walkthrough, we want to isolate our TodoList collection and fake the Todo model to test how adding new models might behave.
+我们重新回到Backbone Todo application，包含一个Todo model和一个TodoList collection。作为演示，我们把TodoList collection单独隔离，仿造Todo model来测试添加新的models会发生什么。
 
-We can pretend that the models have yet to be written just to demonstrate how stubbing might be carried out. A shell collection just containing a reference to the model to be used might look like this:
+假设models并没有编写好，仅示范stubbing如何进行。一个包含model引用的collection外壳：
 
 ```javascript
 var TodoList = Backbone.Collection.extend({
@@ -14345,48 +14335,48 @@ var TodoList = Backbone.Collection.extend({
 this.todoList;
 ```
 
-Assuming our collection is instantiating new models itself, it's necessary for us to stub the model's constructor function for the the test. This can be done by creating a simple stub as follows:
+假设collection自身可以实例化models，我们需要为这个测试stub models的构造函数。可以像下面这样：
 
 ```javascript
-this.todoStub = sinon.stub( window, 'Todo' );
+this.todoStub = sinon.stub( window, "Todo" );
 ```
 
-The above creates a stub of the Todo method on the window object. When stubbing a persistent object, it's necessary to restore it to its original state. This can be done in a ```teardown()``` as follows:
+上面在window上创建了一个Todo方法的stub。当stubbing一个持久对象时，可能还需要恢复其原始状态。可以使用```teardown()``` ：
 
 ```javascript
 this.todoStub.restore();
 ```
 
-After this, we need to alter what the constructor returns, which can be efficiently done using a plain ```Backbone.Model``` constructor. While this isn't a Todo model, it does still provide us an actual Backbone model.
+然后，我们需要改变这个构造函数的返回，使用真实的```Backbone.Model```构造器。虽然它不是一个Todo model，但它给我们提供了一个实际的Backbone model。
 
 
 ```javascript
-setup: function() {
+teardown: function() {
     this.model = new Backbone.Model({
       id: 2,
-      title: 'Hello world'
+      title: "Hello world"
     });
     this.todoStub.returns( this.model );
 });
 ```
 
-The expectation here might be that this snippet would ensure our TodoList collection always instantiates a stubbed Todo model, but because a reference to the model in the collection is already present, we need to reset the model property of our collection as follows:
+这里的期望可能是这段代码可以确保TodoList collection总是实例化stubbed Todo model，不过collection已经存在一个model的引用，我们需要重新设置下collection的model属性：
 
 ```javascript
 this.todoList.model = Todo;
 ```
 
-The result of this is that when our TodoList collection instantiates new Todo models, it will return our plain Backbone model instance as desired. This allows us to write a test for the addition of new model literals as follows:
+这样做的结果就是，当TodoList collection实例化新的Todo models时，它会返回给我们一个纯净的Backbone model。下面编写一个spec测试下添加字面的model：
 
 ```javascript
-module( 'Should function when instantiated with model literals', {
+module( "Should function when instantiated with model literals", {
 
   setup:function() {
 
-    this.todoStub = sinon.stub(window, 'Todo');
+    this.todoStub = sinon.stub(window, "Todo");
     this.model = new Backbone.Model({
       id: 2,
-      title: 'Hello world'
+      title: "Hello world"
     });
 
     this.todoStub.returns(this.model);
@@ -14394,11 +14384,9 @@ module( 'Should function when instantiated with model literals', {
 
     // Let's reset the relationship to use a stub
     this.todos.model = Todo;
-    
-    // add a model
     this.todos.add({
       id: 2,
-      title: 'Hello world'
+      title: "Hello world"
     });
   },
 
@@ -14408,34 +14396,33 @@ module( 'Should function when instantiated with model literals', {
 
 });
 
-test('should add a model', function() {
+test("should add a model", function() {
     equal( this.todos.length, 1 );
 });
 
-test('should find a model by id', function() {
-    equal( this.todos.get(5).get('id'), 5 );
+test("should find a model by id", function() {
+    equal( this.todos.get(5).get("id"), 5 );
   });
 });
 ```
 
 
-### Mocks
+###Mocks
 
-Mocks are effectively the same as stubs, however they mock a complete API and have some built-in expectations for how they should be used. The difference between a mock and a spy is that as the expectations for their use are pre-defined and the test will fail if any of these are not met.
+Mocks实际上跟stubs一样，不过它们会模仿出完整的API并且如何使用它们有一些内置的期望。 mock也spy的区别就是因为它们使用的expectations是预定义的，如果有任何不符就会失败。
 
-Here's a snippet with sample usage of a mock based on PubSubJS. Here, we have a `clearTodo()` method as a callback and use mocks to verify its behavior.
-
+这有个基于PubSubJS使用mock的例子。有一个`clearTodo()` 方法做为回调，使用mocks来校验它的行为。
 ```javascript
-test('should call all subscribers when exceptions', function () {
+test("should call all subscribers when exceptions", function () {
     var myAPI = { clearTodo: function () {} };
 
     var spy = this.spy();
     var mock = this.mock( myAPI );
-    mock.expects( 'clearTodo' ).once().throws();
+    mock.expects( "clearTodo" ).once().throws();
 
-    PubSub.subscribe( 'message', myAPI.clearTodo );
-    PubSub.subscribe( 'message', spy );
-    PubSub.publishSync( 'message', undefined );
+    PubSub.subscribe( "message", myAPI.clearTodo );
+    PubSub.subscribe( "message", spy );
+    PubSub.publishSync( "message", undefined );
 
     mock.verify();
     ok( spy.calledOnce );
@@ -14444,41 +14431,43 @@ test('should call all subscribers when exceptions', function () {
 
 
 
-## Exercise
+练习
+====================
 
-We can now begin writing tests for our Todo application, which are listed and separated by component (e.g., Models, Collections, etc.). It's useful to pay attention to the name of the test, the logic being tested, and most importantly the assertions being made as this will give you some insight into how what we've learned can be applied to a complete application.
+现在我们可以开始给Todo application写测试specs了，根据组件(比如Models, Collections等)来列举和分隔。需要注意测试的名称，被测试的逻辑，以及最重要的断言，这些都可以让你体会到如何将所学到的应用到一个完整的项目中。
 
-To get the most out of this section, I recommend looking at the QUnit Koans included in the `practicals/qunit-koans` folder - this is a port of the Backbone.js Jasmine Koans over to QUnit.
+另外，建议你看下`practicals\qunit-koans`目录下的QUnit Koans - 这是我为这篇文章将Jasmine Koans转换成了QUnit。
 
-*In case you haven't had a chance to try out one of the Koans kits as yet, they are a set of unit tests using a specific testing framework that both demonstrate how a set of tests for an application may be written, but also leave some tests unfilled so that you can complete them as an exercise.*
+*如果你还没有尝试过Koans kits，它是一组使用特定测试框架的单元测试，展示了如何为一个application编写一组specs，同时也留了一些没有填充的测试作为练习。*
 
-### Models
+###Models
 
-For our models we want to at minimum test that:
+对于model我们需要测试下面几点：
 
-* New instances can be created with the expected default values
-* Attributes can be set and retrieved correctly
-* Changes to state correctly fire off custom events where needed
-* Validation rules are correctly enforced
+* 可以使用期望的默认值创建实例
+* 属性可以正常的设置和恢复
+* 状态的改变在需要时可以正确的触发自定义事件
+* 验证规则正确的执行
 
 ```javascript
 module( 'About Backbone.Model');
 
 test('Can be created with default values for its attributes.', function() {
-    expect( 3 );
+    expect( 1 );
 
     var todo = new Todo();
-    equal( todo.get('text'), '' );
-    equal( todo.get('done'), false );
-    equal( todo.get('order'), 0 );
+
+    equal( todo.get('text'), "" );
 });
 
 test('Will set attributes on the model instance when created.', function() {
-    expect( 1 );
+    expect( 3 );
 
     var todo = new Todo( { text: 'Get oil change for car.' } );
-    equal( todo.get('text'), 'Get oil change for car.' );
 
+    equal( todo.get('text'), "Get oil change for car." );
+    equal( todo.get('done'), false );
+    equal( todo.get('order'), 0 );
 });
 
 test('Will call a custom initialize function on the model instance when created.', function() {
@@ -14495,22 +14484,23 @@ test('Fires a custom event when the state changes.', function() {
     var todo = new Todo();
 
     todo.on( 'change', spy );
-    // Change the model state
-    todo.set( { text: 'new text' } );
+    // How would you update a property on the todo here?
+    // Hint: http://documentcloud.github.com/backbone/#Model-set
+    todo.set( { text: "new text" } );
 
-    ok( spy.calledOnce, 'A change event callback was correctly triggered' );
+    ok( spy.calledOnce, "A change event callback was correctly triggered" );
 });
 
 
-test('Can contain custom validation rules, and will trigger an invalid event on failed validation.', function() {
+test('Can contain custom validation rules, and will trigger an error event on failed validation.', function() {
     expect( 3 );
 
     var errorCallback = this.spy();
     var todo = new Todo();
 
-    todo.on('invalid', errorCallback);
-    // Change the model state in such a way that validation will fail
-    todo.set( { done: 'not a boolean' } );
+    todo.on('error', errorCallback);
+    // What would you need to set on the todo properties to cause validation to fail?
+    todo.set( { done: "not a boolean" } );
 
     ok( errorCallback.called, 'A failed validation correctly triggered an error' );
     notEqual( errorCallback.getCall(0), undefined );
@@ -14520,86 +14510,74 @@ test('Can contain custom validation rules, and will trigger an invalid event on 
 ```
 
 
-### Collections
+###Collections
 
-For our collection we'll want to test that:
+对于collection我们要测试到下面几点：
 
-* The Collection has a Todo Model
-* Uses localStorage for syncing
-* That done(), remaining() and clear() work as expected
-* The order for Todos is numerically correct
+* 可以添加新的Todo model对象或者对象的数组。
+* models的变化会触发必要的自定义事件。
+* 定义models结构对应的`url`属性是正确的。
+
 
 ```javascript
-  describe('Test Collection', function() {
+module( 'About Backbone.Collection');
 
-    beforeEach(function() {
+test( 'Can add Model instances as objects and arrays.', function() {
+    expect( 3 );
 
-      // Define new todos
-      this.todoOne = new Todo;
-      this.todoTwo = new Todo({
-        title: "Buy some milk"
-      });
+    var todos = new TodoList();
+    equal( todos.length, 0 );
 
-      // Create a new collection of todos for testing
-      return this.todos = new TodoList([this.todoOne, this.todoTwo]);
-    });
+    todos.add( { text: 'Clean the kitchen' } );
+    equal( todos.length, 1 );
 
-    it('Has the Todo model', function() {
-      return expect(this.todos.model).toBe(Todo);
-    });
+    todos.add([
+        { text: 'Do the laundry', done: true },
+        { text: 'Go to the gym' }
+    ]);
 
-    it('Uses local storage', function() {
-      return expect(this.todos.localStorage).toEqual(new Store('todos-backbone'));
-    });
+    equal( todos.length, 3 );
+});
 
-    describe('done', function() {
-      return it('returns an array of the todos that are done', function() {
-        this.todoTwo.done = true;
-        return expect(this.todos.done()).toEqual([this.todoTwo]);
-      });
-    });
+test( 'Can have a url property to define the basic url structure for all contained models.', function() {
+    expect( 1 );
+    var todos = new TodoList();
+    equal( todos.url, '/todos/' );
+});
 
-    describe('remaining', function() {
-      return it('returns an array of the todos that are not done', function() {
-        this.todoTwo.done = true;
-        return expect(this.todos.remaining()).toEqual([this.todoOne]);
-      });
-    });
+test('Fires custom named events when the models change.', function() {
+    expect(2);
 
-    describe('clear', function() {
-      return it('destroys the current todo from local storage', function() {
-        expect(this.todos.models).toEqual([this.todoOne, this.todoTwo]);
-        this.todos.clear(this.todoOne);
-        return expect(this.todos.models).toEqual([this.todoTwo]);
-      });
-    });
+    var todos = new TodoList();
+    var addModelCallback = this.spy();
+    var removeModelCallback = this.spy();
 
-    return describe('Order sets the order on todos ascending numerically', function() {
-      it('defaults to one when there arent any items in the collection', function() {
-        this.emptyTodos = new TodoApp.Collections.TodoList;
-        return expect(this.emptyTodos.order()).toEqual(0);
-      });
+    todos.on( 'add', addModelCallback );
+    todos.on( 'remove', removeModelCallback );
 
-      return it('Increments the order by one each time', function() {
-        expect(this.todos.order(this.todoOne)).toEqual(1);
-        return expect(this.todos.order(this.todoTwo)).toEqual(2);
-      });
-    });
+    // How would you get the 'add' event to trigger?
+    todos.add( {text:"New todo"} );
 
-  });
+    ok( addModelCallback.called );
+
+    // How would you get the 'remove' callback to trigger?
+    todos.remove( todos.last() );
+
+    ok( removeModelCallback.called );
+});
 ```
 
 
 
-### Views
+###Views
 
-For our views we want to ensure:
+对于views我们要确保下面几点：
 
-* They are being correctly tied to a DOM element when created
-* They can render, after which the DOM representation of the view should be visible
-* They support wiring up view methods to DOM elements
+* 创建时被正确的绑定到DOM元素。
+* view的每个DOM可见之后会渲染。
+* 支持view方法与DOM元素间的连接。
 
-One could also take this further and test that user interactions with the view correctly result in any models that need to be changed being updated correctly.
+也可以进一步测试用于与view的交互行为会正确触发models必要的更新。
 
 
 ```javascript
@@ -14628,10 +14606,13 @@ test('Is backed by a model instance, which provides the data.', function() {
 test('Can render, after which the DOM representation of the view will be visible.', function() {
    this.todoView.render();
 
-    // Append the DOM representation of the view to ul#todoList
-    $('ul#todoList').append(this.todoView.el);
+    // Hint: render() just builds the DOM representation of the view, but doesn't insert it into the DOM.
+    //       How would you append it to the ul#todoList?
+    //       How do you access the view's DOM representation?
+    //
+    // Hint: http://documentcloud.github.com/backbone/#View-el
 
-    // Check the number of li items rendered to the list
+    $('ul#todoList').append(this.todoView.el);
     equal($('#todoList').find('li').length, 1);
 });
 
@@ -14646,22 +14627,150 @@ asyncTest('Can wire up view methods to DOM elements.', function() {
 
         equal(viewElt.length > 0, true);
 
-        // Ensure QUnit knows we can continue
+        // Make sure that QUnit knows we can continue
         start();
     }, 1000, 'Expected DOM Elt to exist');
 
-    // Trigget the view to toggle the 'done' status on an item or items
-    $('#todoList li input.check').click();
 
-    // Check the done status for the model is true
-    equal( this.todoView.model.get('done'), true );
+    // Hint: How would you trigger the view, via a DOM Event, to toggle the 'done' status.
+    //       (See todos.js line 70, where the events hash is defined.)
+    //
+    // Hint: http://api.jquery.com/click
+
+    $('#todoList li input.check').click();
+    expect( this.todoView.model.get('done'), true );
 });
 ```
 
+###Events
 
-### App
+对于事件，我们需要做一些不一样的测试用例：
 
-It can also be useful to write tests for any application bootstrap you may have in place. For the following module, our setup instantiates and appends to a TodoApp view and we can test anything from local instances of views being correctly defined to application interactions correctly resulting in changes to instances of local collections.
+* 扩展纯对象，支持自定义事件
+* 绑定和触发对象的自定义事件
+* 当事件触发时让参数经过回调函数
+* 把一个传入的上下文绑定到一个事件的回调
+* 移除自定义事件
+
+还有一些其它细节将会在面的模块中：
+
+```javascript
+module( 'About Backbone.Events', {
+    setup: function() {
+        this.obj = {};
+        _.extend( this.obj, Backbone.Events );
+        this.obj.off(); // remove all custom events before each spec is run.
+    }
+});
+
+test('Can extend JavaScript objects to support custom events.', function() {
+    expect(3);
+
+    var basicObject = {};
+
+    // How would you give basicObject these functions?
+    // Hint: http://documentcloud.github.com/backbone/#Events
+    _.extend( basicObject, Backbone.Events );
+
+    equal( typeof basicObject.on, 'function' );
+    equal( typeof basicObject.off, 'function' );
+    equal( typeof basicObject.trigger, 'function' );
+});
+
+test('Allows us to bind and trigger custom named events on an object.', function() {
+    expect( 1 );
+
+    var callback = this.spy();
+
+    this.obj.on( 'basic event', callback );
+    this.obj.trigger( 'basic event' );
+
+    // How would you cause the callback for this custom event to be called?
+    ok( callback.called );
+});
+
+test('Also passes along any arguments to the callback when an event is triggered.', function() {
+    expect( 1 );
+
+    var passedArgs = [];
+
+    this.obj.on('some event', function() {
+        for (var i = 0; i < arguments.length; i++) {
+            passedArgs.push( arguments[i] );
+        }
+    });
+
+    this.obj.trigger( 'some event', 'arg1', 'arg2' );
+
+    deepEqual( passedArgs, ['arg1', 'arg2'] );
+});
+
+
+test('Can also bind the passed context to the event callback.', function() {
+    expect( 1 );
+
+    var foo = { color: 'blue' };
+    var changeColor = function() {
+        this.color = 'red';
+    };
+
+    // How would you get 'this.color' to refer to 'foo' in the changeColor function?
+    this.obj.on( 'an event', changeColor, foo );
+    this.obj.trigger( 'an event' );
+
+    equal( foo.color, 'red' );
+});
+
+test( "Uses 'all' as a special event name to capture all events bound to the object." , function() {
+    expect( 2 );
+
+    var callback = this.spy();
+
+    this.obj.on( 'all', callback );
+    this.obj.trigger( "custom event 1" );
+    this.obj.trigger( "custom event 2" );
+
+    equal( callback.callCount, 2 );
+    equal( callback.getCall(0).args[0], 'custom event 1' );
+});
+
+test('Also can remove custom events from objects.', function() {
+    expect( 5 );
+
+    var spy1 = this.spy();
+    var spy2 = this.spy();
+    var spy3 = this.spy();
+
+    this.obj.on( 'foo', spy1 );
+    this.obj.on( 'bar', spy1 );
+    this.obj.on( 'foo', spy2 );
+    this.obj.on( 'foo', spy3 );
+
+    // How do you unbind just a single callback for the event?
+    this.obj.off( 'foo', spy1 );
+    this.obj.trigger( 'foo' );
+
+    ok( spy2.called );
+
+    // How do you unbind all callbacks tied to the event with a single method
+    this.obj.off( 'foo' );
+    this.obj.trigger( 'foo' );
+
+    ok( spy2.callCount, 1 );
+    ok( spy2.calledOnce, "Spy 2 called once" );
+    ok( spy3.calledOnce, "Spy 3 called once" );
+
+    // How do you unbind all callbacks and events tied to the object with a single method?
+    this.obj.off( 'bar' );
+    this.obj.trigger( 'bar' );
+
+    equal( spy1.callCount, 0 );
+});
+```
+
+###App
+
+编写应用启动程序的测试specs也非常有必要。下面的模块，setup中启动和添加了一个TodoApp view，然后测试application内的view是否被正确的定义，view的交互是否触发collections的正确变化。
 
 ```javascript
 module( 'About Backbone Applications' , {
@@ -14680,30 +14789,22 @@ module( 'About Backbone Applications' , {
 test('Should bootstrap the application by initializing the Collection.', function() {
     expect( 2 );
 
-    // The todos collection should not be undefined
     notEqual( this.App.todos, undefined );
-
-    // The initial length of our todos should however be zero
     equal( this.App.todos.length, 0 );
 });
 
 test( 'Should bind Collection events to View creation.' , function() {
-
-      // Set the value of a brand new todo within the input box
-      $('#new-todo').val( 'Buy some milk' );
-
-      // Trigger the enter (return) key to be pressed inside #new-todo
-      // causing the new item to be added to the todos collection
+      $('#new-todo').val( 'Foo' );
       $('#new-todo').trigger(new $.Event( 'keypress', { keyCode: 13 } ));
 
-      // The length of our collection should now be 1
       equal( this.App.todos.length, 1 );
  });
 ```
 
-## Further Reading & Resources
+##更多阅读和资源
 
-That's it for this section on testing applications with QUnit and SinonJS. I encourage you to try out the [QUnit Backbone.js Koans](https://github.com/addyosmani/backbone-koans-qunit) and see if you can extend some of the examples. For further reading consider looking at some of the additional resources below:
+使用QUnit和SinonJS来测试应用这一节就这么多了。鼓励你尝试下[QUnit Backbone.js Koans](https://github.com/addyosmani/backbone-koans-qunit) 看是否能扩展里面的一些例子。
+可参看下面更多相关阅读资料：
 
 * **[Test-driven JavaScript Development (book)](http://tddjs.com/)**
 * **[SinonJS/QUnit Adapter](http://sinonjs.org/qunit/)**
@@ -15384,9 +15485,9 @@ Is there an active community of project contributors and users who would be able
 ---
 Where relevant, copyright Addy Osmani, 2012-2013.
 
-# Resources
+# �ο���Դ
 
-## Books &amp; Courses
+## �鼮 &amp; �γ�
 
 * [PeepCode: Backbone.js Basics](https://peepcode.com/products/backbone-js)
 * [CodeSchool: Anatomy Of Backbone](http://www.codeschool.com/courses/anatomy-of-backbonejs)
@@ -15397,7 +15498,7 @@ Where relevant, copyright Addy Osmani, 2012-2013.
 * [Backbone Tutorials](http://backbonetutorials.com/)
 * [Derick Bailey's Resources For Learning Backbone](http://lostechies.com/derickbailey/2011/09/13/resources-for-and-how-i-learned-backbone-js/)
 
-## Extensions/Libraries
+## ��չ/��
 
 * [MarionetteJS](http://marionettejs.com/)
 * [AuraJS](https://github.com/aurajs/aura)

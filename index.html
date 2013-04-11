@@ -35,19 +35,9 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <body>
 <p>
 	<h1>Developing Backbone.js Applications</h1>
-	<h3>By Addy Osmani <a href="http://twitter.com/addyosmani">@addyosmani</a></h3>
+	<h3>原著作者：Addy Osmani <a href="http://twitter.com/addyosmani">@addyosmani</a>，
+	翻译：白汀 <a href="http://weibo.com/472811737">@白汀UX</a></h3>
 </p>
-<div style="width:500px">
-
-<iframe src="http://ghbtns.com/github-btn.html?user=addyosmani&repo=backbone-fundamentals&type=watch&count=true"
-  allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
-
- <iframe allowtransparency="true" frameborder="0" scrolling="no" src="http://platform.twitter.com/widgets/tweet_button.1333103182.html#_=1333404284780&amp;count=horizontal&amp;id=twitter-widget-0&amp;lang=en&amp;original_referer=http%3A%2F%2Faddyosmani.github.com%2Fbackbone-fundamentals%2F&amp;size=m&amp;text=Developing%20Backbone.js%20Applications&amp;url=https%3A%2F%2Fgithub.com%2Faddyosmani%2Fbackbone-fundamentals&amp;via=addyosmani" class="twitter-share-button twitter-count-horizontal" style="width: 107px; height: 20px; " title="Twitter Tweet Button"></iframe>
-<script id="twitter-wjs" src="//platform.twitter.com/widgets.js"></script><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-
-  <p>&nbsp;<br></p>
-</div>
-
 <p><img src="img/oreilly.jpg"/></p>
 
 <a href="http://shop.oreilly.com/product/0636920025344/ReviewSubmit.do?sortby=publicationDate?pageId=0636920025344.IP"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://addyosmani.github.com/backbone-fundamentals/img/helpful.png" alt="Was this helpful? We'd love you to write a review."></a>
@@ -59,13 +49,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#credits">Credits</a></li>
 <li><a href="#reading">Reading</a></li>
 <li><a href="#introduction">Introduction</a><ul>
-<li><a href="#what-is-mvc">What Is MVC?</a></li>
-<li><a href="#what-is-backbone.js">What is Backbone.js?</a></li>
-<li><a href="#when-do-i-need-a-javascript-mvc-framework">When Do I Need A JavaScript MVC Framework?</a></li>
+<li><a href="#什么是mvc">什么是MVC?</a></li>
+<li><a href="#什么是backbone.js">什么是Backbone.js?</a></li>
+<li><a href="#你何时需要一个javascript-mv框架">你何时需要一个Javascript MV*框架?</a></li>
 <li><a href="#why-consider-backbone.js">Why Consider Backbone.js?</a></li>
 <li><a href="#setting-expectations">Setting Expectations</a></li>
 </ul></li>
-<li><a href="#fundamentals">Fundamentals</a><ul>
+<li><a href="#基本原理">基本原理</a><ul>
 <li><a href="#mvc">MVC</a><ul>
 <li><a href="#smalltalk-80-mvc">Smalltalk-80 MVC</a></li>
 <li><a href="#mvc-applied-to-the-web">MVC Applied To The Web</a></li>
@@ -570,34 +560,31 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p>When developing applications using just jQuery, the piece missing is a way to structure and organize your code. It’s very easy to create a JavaScript app that ends up a tangled mess of jQuery selectors and callbacks, all desperately trying to keep data in sync between the HTML for your UI, the logic in your JavaScript, and calls to your API for data.</p>
 <p>Without something to help tame the mess, you’re likely to string together a set of independant plugins and libraries to make up the functionality or build everything yourself from scratch and have to maintain it yourself. Backbone solves this problem for you, providing a way to cleanly organize code, separating responsibilities into recognizable pieces that are easy to maintain.</p>
 <p>In <q>Developing Backbone.js Applications,</q> I and a number of other experienced authors will show you how to improve your web application structure using the popular JavaScript library, Backbone.js</p>
-<h3 id="what-is-mvc"><a href="#TOC">What Is MVC?</a></h3>
-<p>A number of modern JavaScript frameworks provide developers an easy path to organizing their code using variations of a pattern known as MVC (Model-View-Controller). MVC separates the concerns in an application into three parts:</p>
+<h3 id="什么是mvc"><a href="#TOC">什么是MVC?</a></h3>
+<p>现在有大量的框架给开发者提供一种简单的方式，MVC(Model-View-Controller)模式的变种，来组织他们的代码。MVC把我们在应用中关心的问题分隔成三部分：</p>
 <ul>
-<li>Models represent the domain-specific knowledge and data in an application. Think of this as being a <q>type</q> of data you can model — like a User, Photo, or Todo note. Models can notify observers when their state changes.</li>
-<li>Views typically constitute the user interface in an application (e.g., markup and templates), but don’t have to be. They observe Models, but don’t directly communicate with them.</li>
-<li>Controllers handle input (e.g., clicks, user actions) and update Models.</li>
+<li>Models描述了特定域信息和应用中的数据。可以认为是一<q>类</q>你可以模拟的数据 — 比如一个用户、照片或者Todo笔记。Models 应该要通知它的所有观察者它当前的状态(比如Views)。</li>
+<li>Views通常被认为是应用中的用户界面(比如你的标记和模板)。但不一定是。Views需要知道已经存在的Models以便于观察它们，但不用直接跟它们通讯。</li>
+<li>Controllers控制了应用中的输入(比如点击，用户操作)和视图(可以看作是输出)。当一个Controller更新一个Model的状态时(比如编辑Todo的内容)，它不会直接告诉View。这就是View和Model之间自然的观察关系。</li>
 </ul>
-<p>Thus, in an MVC application, user input is acted upon by Controllers which update Models. Views observe Models and update the user interface when changes occur.</p>
-<p>JavaScript MVC frameworks don’t always strictly follow the above pattern. Some solutions (including Backbone.js) merge the responsibility of the Controller into the View, while other approaches add additional components into the mix.</p>
-<p>For this reason we refer to such frameworks as following the MV* pattern; that is, you’re likely to have a Model and a View, but a distinct Controller might not be present and other components may come into play.</p>
-<h3 id="what-is-backbone.js"><a href="#TOC">What is Backbone.js?</a></h3>
+<p>JavaScript‘MVC’框架可以帮助我们不用总是严格的遵循上面的模式来组织代码。有些框架会在View中包含Controller的功能(比如 Backbone.js)，有些框架会整合他们自己认为更有效的组件。</p>
+<p>出于这种原因我们把这类框架称之为MV*模式，就是，你可能有View和Model，但是更可能还包含其它东西。</p>
+<h3 id="什么是backbone.js"><a href="#TOC">什么是Backbone.js?</a></h3>
 <figure>
-<img src="img/backbonejsorg.jpg"><figcaption></figcaption>
+<img src="img/backbonejsorg.png"><figcaption></figcaption>
 </figure>
-<p>Backbone.js is a lightweight JavaScript library that adds structure to your client-side code. It makes it easy to manage and decouple concerns in your application, leaving you with code that is more maintainable in the long term.</p>
-<p>Developers commonly use libraries like Backbone.js to create single-page applications (SPAs). SPAs are web applications that load into the browser and then react to data changes on the client side without requiring complete page refreshes from the server.</p>
-<p>Backbone is mature, popular, and has both a vibrant developer community as well as a wealth of plugins and extensions available that build upon it. It has been used to create non-trivial applications by companies such as Disqus, Walmart, SoundCloud and LinkedIn.</p>
-<p>Backbone focuses on giving you helpful methods for querying and manipulating your data rather than re-inventing the JavaScript object model. It’s a library, rather than a framework, that plays well with others and scales well, from embedded widgets to large-scale applications.</p>
-<p>As it’s small, there is also less your users have to download on mobile or slower connections. The entire Backbone source can be read and understood in just a few hours.</p>
-<h3 id="when-do-i-need-a-javascript-mvc-framework"><a href="#TOC">When Do I Need A JavaScript MVC Framework?</a></h3>
-<p>When building a single-page application using JavaScript, whether it involves a complex user interface or is simply trying to reduce the number of HTTP requests required for new Views, you will likely find yourself inventing many of the pieces that make up an MV* framework.</p>
-<p>At the outset, it isn’t terribly difficult to write your own application framework that offers some opinionated way to avoid spaghetti code; however, to say that it is equally as trivial to write something as robust as Backbone would be a grossly incorrect assumption.</p>
-<p>There’s a lot more that goes into structuring an application than tying together a DOM manipulation library, templating, and routing. Mature MV* frameworks typically include not only the pieces you would find yourself writing, but also include solutions to problems you’ll find yourself running into later on down the road. This is a time-saver that you shouldn’t underestimate the value of.</p>
-<p>So, where will you likely need an MV* framework and where won’t you?</p>
-<p>If you’re writing an application where much of the heavy lifting for view rendering and data manipulation will be occurring in the browser, you may find a JavaScript MV* framework useful. Examples of applications that fall into this category are GMail, NewsBlur and the LinkedIn mobile app.</p>
-<p>These types of applications typically download a single payload containing all the scripts, stylesheets, and markup users need for common tasks and then perform a lot of additional behavior in the background. For instance, it’s trivial to switch between reading an email or document to writing one without sending a new page request to the server.</p>
-<p>If, however, you’re building an application that still relies on the server for most of the heavy-lifting of page/view rendering and you’re just using a little JavaScript or jQuery to make things more interactive, an MV* framework may be overkill. There certainly are complex Web applications where the partial rendering of views can be coupled with a single-page application effectively, but for everything else, you may find yourself better sticking to a simpler setup.</p>
-<p>Maturity in software (framework) development isn’t simply about how long a framework has been around. It’s about how solid the framework is and more importantly how well it’s evolved to fill its role. Has it become more effective at solving common problems? Does it continue to improve as developers build larger and more complex applications with it?</p>
+<p>Backbone.js是一个构建client端代码的轻量级JavaScript框架。它可以非常容易的管理和解耦应用，使你在长远中更容易维护代码。</p>
+<p>开发者通常使用Backbone.js创建单页应用或者SPA。简单的说，这些应用可以让浏览器在client端对数据的改变做出响应而不用从服务器端完整地加载你的标记，意味着不用整个重新刷新页面。</p>
+<p>在我写这本书的时候Backbone.js是一个成熟、流行的框架，有庞大的开发者社区，丰富的插件和扩展。它被Disqus、Walmart、SoundCloud还有Foursquare用来构建伟大的应用。</p>
+<h3 id="你何时需要一个javascript-mv框架"><a href="#TOC">你何时需要一个Javascript MV*框架?</a></h3>
+<p>当用JavaScript构建一个单页应用的时候，不管它包含一个复杂的用户界面还是简单的，尝试减少创建新Views时的HTTP请求，你可能会发现自己通过MV*框架，比如Backbone.js，创建了很多小块。</p>
+<p>在起初，写个避免嵌套式代码的框架并不难，但是同样说写些关于Backbone的标准也不重要是不对的。</p>
+<p>如何架构一个应用比尝试组合DOM操作库，模板和路由来的更重要。成熟的MV*框架通常不仅包含可能你发现自己会写的一些模块，还包含在之后的过程中你可能会发现的问题的解决方案。这其中节省的时间你不可低估。</p>
+<p>所以，你何处需要MV*框架而何处不需要?</p>
+<p>如果你要开发一个只需要跟API或者后台数据服务通讯的应用，应用随着数据在浏览器中的变化会有偏重量级的展现和控制，你将会发现MV*框架非常有用。这类比较好的例子就是GMail和Google Docs。</p>
+<p>这种应用通常下载一个包含所有脚本、样式、用户常用任务标记的载体，然后在后台完成添加一系列的行为。你可以在阅读email或者要写的一个文档之间来回切换而根本不需要这个应用去重新渲染整个页面。</p>
+<p>但是，如果你要构建一个大部分繁琐的视图/页面依然依赖服务器端的应用，只需要一点Javascript或用jQuery实现一点交互，MV框架就可能有点过重了。当然有复杂的Web应用，对视图的局部刷新可以有效的结合单页应用的方式，但不管怎样，坚持简单的原则总会让你驾驭自如。</p>
+<p>一个软件(框架)发展的成熟度不是简单的因其存在了多长时间。而是这个框架的可靠程度和它扮演的角色的重要程度。它在解决通用问题上是否有效？随着开发人员使用它构建更大、更复杂的应用框架是否持续改进？</p>
 <h3 id="why-consider-backbone.js"><a href="#TOC">Why Consider Backbone.js?</a></h3>
 <p>Backbone provides a minimal set of data-structuring (Models, Collections) and user interface (Views, URLs) primitives that are helpful when building dynamic applications using JavaScript. It’s not opinionated, meaning you have the freedom and flexibility to build the best experience for your web application how you see fit. You can either use the prescribed architecture it offers out of the box or extend it to meet your requirements.</p>
 <p>The library doesn’t focus on widgets or replacing the way you structure objects - it just supplies you with utilities for manipulating and querying data in your application. It also doesn’t prescribe a specific template engine - while you are free to use the Micro-templating offered by Underscore.js (one of it’s dependencies), views can bind to HTML constructed using your templating solution of choice.</p>
@@ -626,23 +613,23 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p><i>Chapter 16, Resources</i> provides references to additional Backbone-related resources.</p>
 <p><i>Chapter 17, Conclusions</i> wraps up the our tour through the world of Backbone.js development.</p>
 <p><i>Chapter 18, Appendix</i> returns to our design pattern discussion by contrasting MVC with the Model-View-Presenter (MVP) pattern and examines how Backbone.js relates to both. A walkthrough of writing a Backbone-like library from scratch and other topics are also covered.</p>
-<h1 id="fundamentals"><a href="#TOC">Fundamentals</a></h1>
-<p>Design patterns are proven solutions to common development problems that can help us improve the organization and structure of our applications. By using patterns, we benefit from the collective experience of skilled developers who have repeatedly solved similar problems.</p>
-<p>Historically, developers creating desktop and server-class applications have had a wealth of design patterns available for them to lean on, but it’s only been in the past few years that such patterns have been applied to client-side development.</p>
-<p>In this chapter, we’re going to explore the evolution of the Model-View-Controller (MVC) design pattern and get our first look at how the Backbone.js framework allows us to apply this pattern to client-side development.</p>
+<h1 id="基本原理"><a href="#TOC">基本原理</a></h1>
+<p>设计模式是一种可以提升应用程序的组织和架构的通用的开发方法。同过使用设计模式，我们可吸取众多开发者反复实践中总结出来的经验。</p>
+<p>通常，开发者创建桌面和服务器类应用有丰富的设计模式供他们去选择，但是，在过去的仅仅几年中，这些模式已经应用到了客户端开发中。</p>
+<p>在这一章中，我们将会探索改进的MVC模式以及如何使用Backbone.js框架在客户端开发中实现它。</p>
 <h2 id="mvc"><a href="#TOC">MVC</a></h2>
-<p>MVC is an architectural design pattern that encourages improved application organization through a separation of concerns. It enforces the isolation of business data (Models) from user interfaces (Views), with a third component (Controllers) traditionally managing logic, user-input, and coordination of Models and Views. The pattern was originally designed by <a href="http://en.wikipedia.org/wiki/Trygve_Reenskaug">Trygve Reenskaug</a> while working on Smalltalk-80 (1979), where it was initially called Model-View-Controller-Editor. MVC was described in depth in <a href="http://www.amazon.co.uk/Design-patterns-elements-reusable-object-oriented/dp/0201633612"><q>Design Patterns: Elements of Reusable Object-Oriented Software</q></a> (The <q>GoF</q> or <q>Gang of Four</q> book) in 1994, which played a role in popularizing its use.</p>
+<p>MVC(Model-View-Controller)是一种提倡通过分层来改进应用的设计模式。它强制通过第三个组件(Controller)来分离业务数据(Model)，用户界面(View)，控制器通常管理逻辑，用户输入，协调模型与视图间的通讯。这种模式最早是<a href="http://en.wikipedia.org/wiki/Trygve_Reenskaug">Trygve Reenskaug</a>在Smalltaok-80(1979)中设计的，当初被称之为Model-View-Controller-Editor。1994,<a href="http://www.amazon.co.uk/Design-patterns-elements-reusable-object-oriented/dp/0201633612"><q>设计模式: 面向对象软件中可重用性元素</q></a> (<q>GOF</q>或者<q>四人帮</q>一书)中详细定义了MVC，这本书普及了它的应用。</p>
 <h3 id="smalltalk-80-mvc"><a href="#TOC">Smalltalk-80 MVC</a></h3>
-<p>It’s important to understand the issues that the original MVC pattern was aiming to solve as it has changed quite heavily since the days of its origin. Back in the 70’s, graphical user-interfaces were few and far between. An approach known as <a href="http://martinfowler.com/eaaDev/uiArchs.html">Separated Presentation</a> began to be used as a means to make a clear division between domain objects which modeled concepts in the real world (e.g., a photo, a person) and the presentation objects which were rendered to the user’s screen.</p>
-<p>The Smalltalk-80 implementation of MVC took this concept further and had an objective of separating out the application logic from the user interface. The idea was that decoupling these parts of the application would also allow the reuse of Models for other interfaces in the application. There are some interesting points worth noting about Smalltalk-80’s MVC architecture:</p>
+<p>随着时间的推移MVC模式变得更加笨重，非常有必要去了解下它早的设计初衷。在70年代，图形用户界面并不多见。有一种方法叫<a href="http://martinfowler.com/eaaDev/uiArchs.html">Separated Presentation(表现分离)</a>，可以清晰的分离模仿现实世界概念(比如一张图片、一个人)的域对象和被渲染到用户屏幕的描述对象。</p>
+<p>Smalltalk-80实现的MVC把这个概念贯彻的更深入，而且有目的性的把应用逻辑从用户界面中分离出来。它的观点是解耦应用这些部分也可以把模型重用到应用中其它的用户界面。这里有些非常有趣的关于Smalltalk-80’s MVC架构的事情：</p>
 <ul>
-<li>A Domain element was known as a Model and was ignorant of the user-interface (Views and Controllers)</li>
-<li>Presentation was taken care of by the View and the Controller, but there wasn’t just a single View and Controller. A View-Controller pair was required for each element being displayed on the screen and so there was no true separation between them</li>
-<li>The Controller’s role in this pair was handling user input (such as key-presses and click events) and doing something sensible with them</li>
-<li>The Observer pattern was used to update the View whenever the Model changed</li>
+<li>一个域元素被当做一个Model，而且用户界面(Views和Controllers)并不知道。</li>
+<li>表现是View和控制器所关心的，但并不仅有一个view和controller。每个要展现到屏幕的元素都需要有一个View-Controller的组合，所以它们并没有正真的被分离。</li>
+<li>在这个组合中，Controller扮演的是处理用户输入(比如键盘和鼠标点击事件)的角色，做些用户可感知的事情。</li>
+<li>它依赖观察者模式在Model变化的时候来更新View。</li>
 </ul>
-<p>Developers are sometimes surprised when they learn that the Observer pattern (nowadays commonly implemented as a Publish/Subscribe system) was included as a part of MVC’s architecture decades ago. In Smalltalk-80’s MVC, the View and Controller both observe the Model: anytime the Model changes, the Views react. A simple example of this is an application backed by stock market data - for the application to show real-time information, any change to the data in its Model should result in the View being refreshed instantly.</p>
-<p>Martin Fowler has done an excellent job of writing about the <a href="http://martinfowler.com/eaaDev/uiArchs.html">origins</a> of MVC over the years and if you are interested in further historical information about Smalltalk-80’s MVC, I recommend reading his work.</p>
+<p>有时，当开发者知道数十年前观察者模式(现在通常在发布/订阅系统中应用)也是MVC架构的一部分的时候，他们非常的惊讶。在Smalltalk-80的MVC中，View和Controller都观察了Model：Model改变的时候，View则做出响应。一个简单的例子就是基于股票市场数据的应用——因为它要展示实时的信息，所以在Models中的数据有任何改变都 要在View中立即刷新显示。</p>
+<p>Martin Fowler在过去的些年中在写关于MVC起源<a href="http://martinfowler.com/eaaDev/uiArchs.html">origins</a> 方面做了很多杰出的工作。如果你有兴趣了解更多关于Smalltalk-80 MVC的信息，推荐你阅读他的相关成果。</p>
 <h3 id="mvc-applied-to-the-web"><a href="#TOC">MVC Applied To The Web</a></h3>
 <p>The web heavily relies on the HTTP protocol, which is stateless. This means that there is not a constantly open connection between the browser and server; each request instantiates a new communication channel between the two. Once the request initiator (e.g. a browser) gets a response the connection is closed. This fact creates a completely different context when compared to the one of the operating systems on which many of the original MVC ideas were developed. The MVC implementation has to conform to the web context.</p>
 <p>An example of a server-side web application framework which tries to apply MVC to the web context is <a href="http://guides.rubyonrails.org/">Ruby On Rails</a>.</p>
@@ -12614,16 +12601,6 @@ Backbone.sync = function(method, model, options) {
 </table>
 <p>Where relevant, copyright Addy Osmani, 2012-2013.</p>
 <script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-34317097-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
 
 </script>
 </body>

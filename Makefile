@@ -4,7 +4,8 @@ title='Developing Backbone.js Applications'
 filename='backbone-fundamentals-zh'
 
 
-all: html epub rtf pdf mobi
+#epub rtf pdf mobi
+all: html
 
 markdown:
 	awk 'FNR==1{print ""}{print}' $(source) > $(filename).md
@@ -20,21 +21,21 @@ html: markdown
 		--smart \
 		--toc
 
-epub: markdown
-	pandoc -s $(filename).md --normalize --smart -t epub -o $(filename).epub \
-		--epub-metadata $(include_dir)/metadata.xml \
-		--epub-stylesheet epub.css \
-		--epub-cover-image img/cover.jpg \
-		--title-prefix $(title) \
-		--normalize \
-		--smart \
-		--toc
+#epub: markdown
+#	pandoc -s $(filename).md --normalize --smart -t epub -o $(filename).epub \
+#		--epub-metadata $(include_dir)/metadata.xml \
+#		--epub-stylesheet epub.css \
+#		--epub-cover-image img/cover.jpg \
+#		--title-prefix $(title) \
+#		--normalize \
+#		--smart \
+#		--toc
 
-rtf: markdown
-	pandoc -s $(filename).md -o $(filename).rtf \
-		--title-prefix $(title) \
-		--normalize \
-		--smart
+#rtf: markdown
+#	pandoc -s $(filename).md -o $(filename).rtf \
+#		--title-prefix $(title) \
+#		--normalize \
+#		--smart
 
 pdf: markdown
 	# You need `pdflatex`

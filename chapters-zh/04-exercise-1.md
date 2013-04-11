@@ -1,21 +1,21 @@
-# Exercise 1: Todos - Your First Backbone.js App
+# 练习1：Todos - 你的第一个Backbone.js应用
 
-Now that we've covered fundamentals, let's write our first Backbone.js application. We'll build the Backbone Todo List application exhibited on [TodoMVC.com](http://todomvc.com). Building a Todo List is a great way to learn Backbone’s conventions. It's a relatively simple application, yet technical challenges surrounding binding, persisting model data, routing, and template rendering provide opportunities to illustrate some core Backbone features.
+现在我们已经学完基本概念，让我们开始写第一个Backbone.js应用。我们将开发一个Backbone Todo List应用，在[TodoMVC.com](http://todomvc.com)可以看到。这是应用非常简单，技术上包含绑定(binding)，解析model数据，路由(routing)和模板渲染，可以借此机会说明下Backbone的一些核心特性。
 
 ![](img/todos_a.png)
 
-Let's consider the application's architecture at a high level. We'll need:
+我们先站在一个较高的架构角度想想我们需要些什么东西。
 
-* a `Todo` model to describe individual todo items
-* a `TodoList` collection to store and persist todos
-* a way of creating todos
-* a way to display a listing of todos
-* a way to edit existing todos
-* a way to mark a todo as completed
-* a way to delete todos
-* a way to filter the items that have been completed or are remaining
+* 一个`Todo` model来描述todo项实体
+* 一个`TodoList` collection对todos的持久化保存
+* 创建todos
+* 列举todos
+* 编辑存在的todos
+* 完成todos
+* 删除todos
+* 过滤出已完成项和未完成项
 
-Essentially, these features are classic [CRUD](http://en.wikipedia.org/wiki/Create,_read,_update_and_delete) methods. Let's get started!
+基本上是经典的[CRUD](http://en.wikipedia.org/wiki/Create,_read,_update_and_delete)方法。让我们开始吧!
 
 ## Static HTML
 

@@ -1,115 +1,111 @@
-# SinonJS
+#SinonJS
 
-Similar to the section on testing Backbone.js apps using the Jasmine BDD framework, we're nearly ready to take what we've learned and write a number of QUnit tests for our Todo application.
+跟前面使用Jasmine BDD框架测试Backbone.js app类似，我们通过给Todo应用写一些QUnit测试来学习。
 
-Before we start though, you may have noticed that QUnit doesn't support test spies. Test spies are functions which record arguments, exceptions, and return values for any of their calls. They're typically used to test callbacks and how functions may be used in the application being tested. In testing frameworks, spies usually are anonymous functions or wrappers around functions which already exist.
+你可能注意到QUnit不支持spies。Test spies记录参数，异常并且返回值给其它的调用。通常用于测试回调，以及函数如何被使用。在测试框架中，spies可以是匿名也可以是包裹已有的函数。
 
 
-## What is SinonJS?
+##什么是SinonJS?
 
-In order for us to substitute support for spies in QUnit, we will be taking advantage of a mocking framework called [SinonJS](http://sinonjs.org/) by Christian Johansen. We will also be using the [SinonJS-QUnit adapter](http://sinonjs.org/qunit/) which provides seamless integration with QUnit (meaning setup is minimal). Sinon.JS is completely test-framework agnostic and should be easy to use with any testing framework, so it's ideal for our needs.
+在QUnit中我们可以用Christian Johansen编写的模拟框架[SinonJS](http://sinonjs.org/)来支持spies。同时还要使用[SinonJS-QUnit adapter](http://sinonjs.org/qunit/)来与QUnit进行无缝集成。Sinon.JS 是完全与测试框架无关的，而且可以容易的与任何测试框架一同使用，所以对于我们的需求它是非常理想的选择。
 
-The framework supports three features we'll be taking advantage of for unit testing our application:
+这个框架支持三项特性我们会在单元测试中用上：
 
-* **Anonymous spies**
-* **Spying on existing methods**
-* **A rich inspection interface**
+* **匿名spies**
+* **监测(Spying on)已有的方法**
+* **丰富的监视接口**
 
-#### Basic Spies
+使用```this.spy()```不传入任何参数则创建一个匿名的spy。可以与```jasmine.createSpy()```做比较， 下面是基本的使用SinonJS spy的例子：
 
-Using ```this.spy()``` without any arguments creates an anonymous spy. This is comparable to ```jasmine.createSpy()```. We can observe basic usage of a SinonJS spy in the following example:
-
+####Basic Spies:
 ```javascript
-test('should call all subscribers for a message exactly once', function () {
+test("should call all subscribers for a message exactly once", function () {
     var message = getUniqueString();
     var spy = this.spy();
 
     PubSub.subscribe( message, spy );
-    PubSub.publishSync( message, 'Hello World' );
+    PubSub.publishSync( message, "Hello World" );
 
-    ok( spy.calledOnce, 'the subscriber was called once' );
+    ok( spy1.calledOnce, "the subscriber was called once" );
 });
 ```
 
-#### Spying On Existing Functions
+同样可以使用```this.spy()```来监视下面例子中已有的函数(比如jQuery的```$.ajax```)。当监视了一个已有函数时，它的函数行为跟正常情况一样，但是我们可以访问到调用的相关数据用于测试。
 
-We can also use ```this.spy()``` to spy on existing functions (like jQuery's ```$.ajax```) in the example below. When spying on a function which already exists, the function behaves normally but we get access to data about its calls which can be very useful for testing purposes.
-
+####Spying On Existing Functions:
 ```javascript
-test( 'should inspect the jQuery.getJSON usage of jQuery.ajax', function () {
-    this.spy( jQuery, 'ajax' );
+test( "should inspect jQuery.getJSON's usage of jQuery.ajax", function () {
+    this.spy( jQuery, "ajax" );
 
-    jQuery.getJSON( '/todos/completed' );
+    jQuery.getJSON( "/todos/completed" );
 
     ok( jQuery.ajax.calledOnce );
-    equals( jQuery.ajax.getCall(0).args[0].url, '/todos/completed' );
-    equals( jQuery.ajax.getCall(0).args[0].dataType, 'json' );
+    equals( jQuery.ajax.getCall(0).args[0].url, "/todos/completed" );
+    equals( jQuery.ajax.getCall(0).args[0].dataType, "json" );
 });
 ```
 
-#### Inspection Interface
-
-SinonJS comes with a rich spy interface which allows us to test whether a spy was called with a specific argument, if it was called a specific number of times, and test against the values of arguments. A complete list of features supported in the interface can be found on [SinonJS.org](http://sinonjs.org/docs/), but let's take a look at some examples demonstrating some of the most commonly used ones:
+SinonJS提供了一套丰富的监视接口，可以测试一个spy是否使用指定的参数调用，是否被调用了指定的次数，以及测试调用时参数的值。接口支持的完整特性可以看这里(http://sinonjs.org/docs/)，我们通过一些例子来看下常用的特性：
 
 
-**Matching arguments: test a spy was called with a specific set of arguments:**
+####参数匹配：测试一个spy是否使用指定参数调用：
 
 ```javascript
-test( 'Should call a subscriber with standard matching': function () {
+test( "Should call a subscriber with standard matching": function () {
     var spy = sinon.spy();
 
-    PubSub.subscribe( 'message', spy );
-    PubSub.publishSync( 'message', { id: 45 } );
+    PubSub.subscribe( "message", spy );
+    PubSub.publishSync( "message", { id: 45 } );
 
     assertTrue( spy.calledWith( { id: 45 } ) );
 });
 ```
 
-**Stricter argument matching: test a spy was called at least once with specific arguments and no others:**
+####严格的参数匹配：测试一个spy使用指定的参数并且无其它参数，至少被调用一次： 
 
 ```javascript
-test( 'Should call a subscriber with strict matching': function () {
+test( "Should call a subscriber with strict matching": function () {
     var spy = sinon.spy();
 
-    PubSub.subscribe( 'message', spy );
-    PubSub.publishSync( 'message', 'many', 'arguments' );
-    PubSub.publishSync( 'message', 12, 34 );
+    PubSub.subscribe( "message", spy );
+    PubSub.publishSync( "message", "many", "arguments" );
+    PubSub.publishSync( "message", 12, 34 );
 
     // This passes
-    assertTrue( spy.calledWith('many') );
+    assertTrue( spy.calledWith("many") );
 
     // This however, fails
-    assertTrue( spy.calledWithExactly( 'many' ) );
+    assertTrue( spy.calledWithExactly( "many" ) );
 });
 ```
 
-**Testing call order: testing if a spy was called before or after another spy:**
+####测试调用顺序：测试一个spy是否在另一个spy之前或之后调用：
 
 ```javascript
-test( 'Should call a subscriber and maintain call order': function () {
+test( "Should call a subscriber and maintain call order": function () {
     var a = sinon.spy();
     var b = sinon.spy();
 
-    PubSub.subscribe( 'message', a );
-    PubSub.subscribe( 'event', b );
+    PubSub.subscribe( "message", a );
+    PubSub.subscribe( "event", b );
 
-    PubSub.publishSync( 'message', { id: 45 } );
-    PubSub.publishSync( 'event', [1, 2, 3] );
+    PubSub.publishSync( "message", { id: 45 } );
+    PubSub.publishSync( "event", [1, 2, 3] );
 
     assertTrue( a.calledBefore(b) );
     assertTrue( b.calledAfter(a) );
 });
 ```
 
-**Match execution counts: test a spy was called a specific number of times:**
+####匹配执行次数：测试一个是否被调用了指定的次数：
 
 ```javascript
-test( 'Should call a subscriber and check call counts', function () {
+test( "Should call a subscriber and check call counts", function () {
     var message = getUniqueString();
     var spy = this.spy();
 
     PubSub.subscribe( message, spy );
-    PubSub.publishSync( message, 'some payload' );
+    PubSub.publishSync( message, "some payload" );
 
 
     // Passes if spy was called once and only once.
@@ -124,17 +120,17 @@ test( 'Should call a subscriber and check call counts', function () {
 ```
 
 
-## Stubs and mocks
+##Stubs和mocks
 
-SinonJS also supports two other powerful features: stubs and mocks. Both stubs and mocks implement all of the features of the spy API, but have some added functionality.
+SinonJS还支持另外2个强大的特性：stubs和mocks。stubs和mocks都实现了spy API的所有特性，但是添加写其它功能。
 
-### Stubs
+###Stubs
 
-A stub allows us to replace any existing behaviour for a specific method with something else. They can be very useful for simulating exceptions and are most often used to write test cases when certain dependencies of your code-base may not yet be written.
+一个stub可以允许我们把指定的方法的行为替换成其它的东西。它可以用于模拟异常，常用于编写当必要依赖项代码还没编写时的测试。
 
-Let us briefly re-explore our Backbone Todo application, which contained a Todo model and a TodoList collection. For the purpose of this walkthrough, we want to isolate our TodoList collection and fake the Todo model to test how adding new models might behave.
+我们重新回到Backbone Todo application，包含一个Todo model和一个TodoList collection。作为演示，我们把TodoList collection单独隔离，仿造Todo model来测试添加新的models会发生什么。
 
-We can pretend that the models have yet to be written just to demonstrate how stubbing might be carried out. A shell collection just containing a reference to the model to be used might look like this:
+假设models并没有编写好，仅示范stubbing如何进行。一个包含model引用的collection外壳：
 
 ```javascript
 var TodoList = Backbone.Collection.extend({
@@ -145,48 +141,48 @@ var TodoList = Backbone.Collection.extend({
 this.todoList;
 ```
 
-Assuming our collection is instantiating new models itself, it's necessary for us to stub the model's constructor function for the the test. This can be done by creating a simple stub as follows:
+假设collection自身可以实例化models，我们需要为这个测试stub models的构造函数。可以像下面这样：
 
 ```javascript
-this.todoStub = sinon.stub( window, 'Todo' );
+this.todoStub = sinon.stub( window, "Todo" );
 ```
 
-The above creates a stub of the Todo method on the window object. When stubbing a persistent object, it's necessary to restore it to its original state. This can be done in a ```teardown()``` as follows:
+上面在window上创建了一个Todo方法的stub。当stubbing一个持久对象时，可能还需要恢复其原始状态。可以使用```teardown()``` ：
 
 ```javascript
 this.todoStub.restore();
 ```
 
-After this, we need to alter what the constructor returns, which can be efficiently done using a plain ```Backbone.Model``` constructor. While this isn't a Todo model, it does still provide us an actual Backbone model.
+然后，我们需要改变这个构造函数的返回，使用真实的```Backbone.Model```构造器。虽然它不是一个Todo model，但它给我们提供了一个实际的Backbone model。
 
 
 ```javascript
-setup: function() {
+teardown: function() {
     this.model = new Backbone.Model({
       id: 2,
-      title: 'Hello world'
+      title: "Hello world"
     });
     this.todoStub.returns( this.model );
 });
 ```
 
-The expectation here might be that this snippet would ensure our TodoList collection always instantiates a stubbed Todo model, but because a reference to the model in the collection is already present, we need to reset the model property of our collection as follows:
+这里的期望可能是这段代码可以确保TodoList collection总是实例化stubbed Todo model，不过collection已经存在一个model的引用，我们需要重新设置下collection的model属性：
 
 ```javascript
 this.todoList.model = Todo;
 ```
 
-The result of this is that when our TodoList collection instantiates new Todo models, it will return our plain Backbone model instance as desired. This allows us to write a test for the addition of new model literals as follows:
+这样做的结果就是，当TodoList collection实例化新的Todo models时，它会返回给我们一个纯净的Backbone model。下面编写一个spec测试下添加字面的model：
 
 ```javascript
-module( 'Should function when instantiated with model literals', {
+module( "Should function when instantiated with model literals", {
 
   setup:function() {
 
-    this.todoStub = sinon.stub(window, 'Todo');
+    this.todoStub = sinon.stub(window, "Todo");
     this.model = new Backbone.Model({
       id: 2,
-      title: 'Hello world'
+      title: "Hello world"
     });
 
     this.todoStub.returns(this.model);
@@ -194,11 +190,9 @@ module( 'Should function when instantiated with model literals', {
 
     // Let's reset the relationship to use a stub
     this.todos.model = Todo;
-    
-    // add a model
     this.todos.add({
       id: 2,
-      title: 'Hello world'
+      title: "Hello world"
     });
   },
 
@@ -208,34 +202,33 @@ module( 'Should function when instantiated with model literals', {
 
 });
 
-test('should add a model', function() {
+test("should add a model", function() {
     equal( this.todos.length, 1 );
 });
 
-test('should find a model by id', function() {
-    equal( this.todos.get(5).get('id'), 5 );
+test("should find a model by id", function() {
+    equal( this.todos.get(5).get("id"), 5 );
   });
 });
 ```
 
 
-### Mocks
+###Mocks
 
-Mocks are effectively the same as stubs, however they mock a complete API and have some built-in expectations for how they should be used. The difference between a mock and a spy is that as the expectations for their use are pre-defined and the test will fail if any of these are not met.
+Mocks实际上跟stubs一样，不过它们会模仿出完整的API并且如何使用它们有一些内置的期望。 mock也spy的区别就是因为它们使用的expectations是预定义的，如果有任何不符就会失败。
 
-Here's a snippet with sample usage of a mock based on PubSubJS. Here, we have a `clearTodo()` method as a callback and use mocks to verify its behavior.
-
+这有个基于PubSubJS使用mock的例子。有一个`clearTodo()` 方法做为回调，使用mocks来校验它的行为。
 ```javascript
-test('should call all subscribers when exceptions', function () {
+test("should call all subscribers when exceptions", function () {
     var myAPI = { clearTodo: function () {} };
 
     var spy = this.spy();
     var mock = this.mock( myAPI );
-    mock.expects( 'clearTodo' ).once().throws();
+    mock.expects( "clearTodo" ).once().throws();
 
-    PubSub.subscribe( 'message', myAPI.clearTodo );
-    PubSub.subscribe( 'message', spy );
-    PubSub.publishSync( 'message', undefined );
+    PubSub.subscribe( "message", myAPI.clearTodo );
+    PubSub.subscribe( "message", spy );
+    PubSub.publishSync( "message", undefined );
 
     mock.verify();
     ok( spy.calledOnce );
@@ -244,41 +237,43 @@ test('should call all subscribers when exceptions', function () {
 
 
 
-## Exercise
+练习
+====================
 
-We can now begin writing tests for our Todo application, which are listed and separated by component (e.g., Models, Collections, etc.). It's useful to pay attention to the name of the test, the logic being tested, and most importantly the assertions being made as this will give you some insight into how what we've learned can be applied to a complete application.
+现在我们可以开始给Todo application写测试specs了，根据组件(比如Models, Collections等)来列举和分隔。需要注意测试的名称，被测试的逻辑，以及最重要的断言，这些都可以让你体会到如何将所学到的应用到一个完整的项目中。
 
-To get the most out of this section, I recommend looking at the QUnit Koans included in the `practicals/qunit-koans` folder - this is a port of the Backbone.js Jasmine Koans over to QUnit.
+另外，建议你看下`practicals\qunit-koans`目录下的QUnit Koans - 这是我为这篇文章将Jasmine Koans转换成了QUnit。
 
-*In case you haven't had a chance to try out one of the Koans kits as yet, they are a set of unit tests using a specific testing framework that both demonstrate how a set of tests for an application may be written, but also leave some tests unfilled so that you can complete them as an exercise.*
+*如果你还没有尝试过Koans kits，它是一组使用特定测试框架的单元测试，展示了如何为一个application编写一组specs，同时也留了一些没有填充的测试作为练习。*
 
-### Models
+###Models
 
-For our models we want to at minimum test that:
+对于model我们需要测试下面几点：
 
-* New instances can be created with the expected default values
-* Attributes can be set and retrieved correctly
-* Changes to state correctly fire off custom events where needed
-* Validation rules are correctly enforced
+* 可以使用期望的默认值创建实例
+* 属性可以正常的设置和恢复
+* 状态的改变在需要时可以正确的触发自定义事件
+* 验证规则正确的执行
 
 ```javascript
 module( 'About Backbone.Model');
 
 test('Can be created with default values for its attributes.', function() {
-    expect( 3 );
+    expect( 1 );
 
     var todo = new Todo();
-    equal( todo.get('text'), '' );
-    equal( todo.get('done'), false );
-    equal( todo.get('order'), 0 );
+
+    equal( todo.get('text'), "" );
 });
 
 test('Will set attributes on the model instance when created.', function() {
-    expect( 1 );
+    expect( 3 );
 
     var todo = new Todo( { text: 'Get oil change for car.' } );
-    equal( todo.get('text'), 'Get oil change for car.' );
 
+    equal( todo.get('text'), "Get oil change for car." );
+    equal( todo.get('done'), false );
+    equal( todo.get('order'), 0 );
 });
 
 test('Will call a custom initialize function on the model instance when created.', function() {
@@ -295,22 +290,23 @@ test('Fires a custom event when the state changes.', function() {
     var todo = new Todo();
 
     todo.on( 'change', spy );
-    // Change the model state
-    todo.set( { text: 'new text' } );
+    // How would you update a property on the todo here?
+    // Hint: http://documentcloud.github.com/backbone/#Model-set
+    todo.set( { text: "new text" } );
 
-    ok( spy.calledOnce, 'A change event callback was correctly triggered' );
+    ok( spy.calledOnce, "A change event callback was correctly triggered" );
 });
 
 
-test('Can contain custom validation rules, and will trigger an invalid event on failed validation.', function() {
+test('Can contain custom validation rules, and will trigger an error event on failed validation.', function() {
     expect( 3 );
 
     var errorCallback = this.spy();
     var todo = new Todo();
 
-    todo.on('invalid', errorCallback);
-    // Change the model state in such a way that validation will fail
-    todo.set( { done: 'not a boolean' } );
+    todo.on('error', errorCallback);
+    // What would you need to set on the todo properties to cause validation to fail?
+    todo.set( { done: "not a boolean" } );
 
     ok( errorCallback.called, 'A failed validation correctly triggered an error' );
     notEqual( errorCallback.getCall(0), undefined );
@@ -320,86 +316,74 @@ test('Can contain custom validation rules, and will trigger an invalid event on 
 ```
 
 
-### Collections
+###Collections
 
-For our collection we'll want to test that:
+对于collection我们要测试到下面几点：
 
-* The Collection has a Todo Model
-* Uses localStorage for syncing
-* That done(), remaining() and clear() work as expected
-* The order for Todos is numerically correct
+* 可以添加新的Todo model对象或者对象的数组。
+* models的变化会触发必要的自定义事件。
+* 定义models结构对应的`url`属性是正确的。
+
 
 ```javascript
-  describe('Test Collection', function() {
+module( 'About Backbone.Collection');
 
-    beforeEach(function() {
+test( 'Can add Model instances as objects and arrays.', function() {
+    expect( 3 );
 
-      // Define new todos
-      this.todoOne = new Todo;
-      this.todoTwo = new Todo({
-        title: "Buy some milk"
-      });
+    var todos = new TodoList();
+    equal( todos.length, 0 );
 
-      // Create a new collection of todos for testing
-      return this.todos = new TodoList([this.todoOne, this.todoTwo]);
-    });
+    todos.add( { text: 'Clean the kitchen' } );
+    equal( todos.length, 1 );
 
-    it('Has the Todo model', function() {
-      return expect(this.todos.model).toBe(Todo);
-    });
+    todos.add([
+        { text: 'Do the laundry', done: true },
+        { text: 'Go to the gym' }
+    ]);
 
-    it('Uses local storage', function() {
-      return expect(this.todos.localStorage).toEqual(new Store('todos-backbone'));
-    });
+    equal( todos.length, 3 );
+});
 
-    describe('done', function() {
-      return it('returns an array of the todos that are done', function() {
-        this.todoTwo.done = true;
-        return expect(this.todos.done()).toEqual([this.todoTwo]);
-      });
-    });
+test( 'Can have a url property to define the basic url structure for all contained models.', function() {
+    expect( 1 );
+    var todos = new TodoList();
+    equal( todos.url, '/todos/' );
+});
 
-    describe('remaining', function() {
-      return it('returns an array of the todos that are not done', function() {
-        this.todoTwo.done = true;
-        return expect(this.todos.remaining()).toEqual([this.todoOne]);
-      });
-    });
+test('Fires custom named events when the models change.', function() {
+    expect(2);
 
-    describe('clear', function() {
-      return it('destroys the current todo from local storage', function() {
-        expect(this.todos.models).toEqual([this.todoOne, this.todoTwo]);
-        this.todos.clear(this.todoOne);
-        return expect(this.todos.models).toEqual([this.todoTwo]);
-      });
-    });
+    var todos = new TodoList();
+    var addModelCallback = this.spy();
+    var removeModelCallback = this.spy();
 
-    return describe('Order sets the order on todos ascending numerically', function() {
-      it('defaults to one when there arent any items in the collection', function() {
-        this.emptyTodos = new TodoApp.Collections.TodoList;
-        return expect(this.emptyTodos.order()).toEqual(0);
-      });
+    todos.on( 'add', addModelCallback );
+    todos.on( 'remove', removeModelCallback );
 
-      return it('Increments the order by one each time', function() {
-        expect(this.todos.order(this.todoOne)).toEqual(1);
-        return expect(this.todos.order(this.todoTwo)).toEqual(2);
-      });
-    });
+    // How would you get the 'add' event to trigger?
+    todos.add( {text:"New todo"} );
 
-  });
+    ok( addModelCallback.called );
+
+    // How would you get the 'remove' callback to trigger?
+    todos.remove( todos.last() );
+
+    ok( removeModelCallback.called );
+});
 ```
 
 
 
-### Views
+###Views
 
-For our views we want to ensure:
+对于views我们要确保下面几点：
 
-* They are being correctly tied to a DOM element when created
-* They can render, after which the DOM representation of the view should be visible
-* They support wiring up view methods to DOM elements
+* 创建时被正确的绑定到DOM元素。
+* view的每个DOM可见之后会渲染。
+* 支持view方法与DOM元素间的连接。
 
-One could also take this further and test that user interactions with the view correctly result in any models that need to be changed being updated correctly.
+也可以进一步测试用于与view的交互行为会正确触发models必要的更新。
 
 
 ```javascript
@@ -428,10 +412,13 @@ test('Is backed by a model instance, which provides the data.', function() {
 test('Can render, after which the DOM representation of the view will be visible.', function() {
    this.todoView.render();
 
-    // Append the DOM representation of the view to ul#todoList
-    $('ul#todoList').append(this.todoView.el);
+    // Hint: render() just builds the DOM representation of the view, but doesn't insert it into the DOM.
+    //       How would you append it to the ul#todoList?
+    //       How do you access the view's DOM representation?
+    //
+    // Hint: http://documentcloud.github.com/backbone/#View-el
 
-    // Check the number of li items rendered to the list
+    $('ul#todoList').append(this.todoView.el);
     equal($('#todoList').find('li').length, 1);
 });
 
@@ -446,22 +433,150 @@ asyncTest('Can wire up view methods to DOM elements.', function() {
 
         equal(viewElt.length > 0, true);
 
-        // Ensure QUnit knows we can continue
+        // Make sure that QUnit knows we can continue
         start();
     }, 1000, 'Expected DOM Elt to exist');
 
-    // Trigget the view to toggle the 'done' status on an item or items
-    $('#todoList li input.check').click();
 
-    // Check the done status for the model is true
-    equal( this.todoView.model.get('done'), true );
+    // Hint: How would you trigger the view, via a DOM Event, to toggle the 'done' status.
+    //       (See todos.js line 70, where the events hash is defined.)
+    //
+    // Hint: http://api.jquery.com/click
+
+    $('#todoList li input.check').click();
+    expect( this.todoView.model.get('done'), true );
 });
 ```
 
+###Events
 
-### App
+对于事件，我们需要做一些不一样的测试用例：
 
-It can also be useful to write tests for any application bootstrap you may have in place. For the following module, our setup instantiates and appends to a TodoApp view and we can test anything from local instances of views being correctly defined to application interactions correctly resulting in changes to instances of local collections.
+* 扩展纯对象，支持自定义事件
+* 绑定和触发对象的自定义事件
+* 当事件触发时让参数经过回调函数
+* 把一个传入的上下文绑定到一个事件的回调
+* 移除自定义事件
+
+还有一些其它细节将会在面的模块中：
+
+```javascript
+module( 'About Backbone.Events', {
+    setup: function() {
+        this.obj = {};
+        _.extend( this.obj, Backbone.Events );
+        this.obj.off(); // remove all custom events before each spec is run.
+    }
+});
+
+test('Can extend JavaScript objects to support custom events.', function() {
+    expect(3);
+
+    var basicObject = {};
+
+    // How would you give basicObject these functions?
+    // Hint: http://documentcloud.github.com/backbone/#Events
+    _.extend( basicObject, Backbone.Events );
+
+    equal( typeof basicObject.on, 'function' );
+    equal( typeof basicObject.off, 'function' );
+    equal( typeof basicObject.trigger, 'function' );
+});
+
+test('Allows us to bind and trigger custom named events on an object.', function() {
+    expect( 1 );
+
+    var callback = this.spy();
+
+    this.obj.on( 'basic event', callback );
+    this.obj.trigger( 'basic event' );
+
+    // How would you cause the callback for this custom event to be called?
+    ok( callback.called );
+});
+
+test('Also passes along any arguments to the callback when an event is triggered.', function() {
+    expect( 1 );
+
+    var passedArgs = [];
+
+    this.obj.on('some event', function() {
+        for (var i = 0; i < arguments.length; i++) {
+            passedArgs.push( arguments[i] );
+        }
+    });
+
+    this.obj.trigger( 'some event', 'arg1', 'arg2' );
+
+    deepEqual( passedArgs, ['arg1', 'arg2'] );
+});
+
+
+test('Can also bind the passed context to the event callback.', function() {
+    expect( 1 );
+
+    var foo = { color: 'blue' };
+    var changeColor = function() {
+        this.color = 'red';
+    };
+
+    // How would you get 'this.color' to refer to 'foo' in the changeColor function?
+    this.obj.on( 'an event', changeColor, foo );
+    this.obj.trigger( 'an event' );
+
+    equal( foo.color, 'red' );
+});
+
+test( "Uses 'all' as a special event name to capture all events bound to the object." , function() {
+    expect( 2 );
+
+    var callback = this.spy();
+
+    this.obj.on( 'all', callback );
+    this.obj.trigger( "custom event 1" );
+    this.obj.trigger( "custom event 2" );
+
+    equal( callback.callCount, 2 );
+    equal( callback.getCall(0).args[0], 'custom event 1' );
+});
+
+test('Also can remove custom events from objects.', function() {
+    expect( 5 );
+
+    var spy1 = this.spy();
+    var spy2 = this.spy();
+    var spy3 = this.spy();
+
+    this.obj.on( 'foo', spy1 );
+    this.obj.on( 'bar', spy1 );
+    this.obj.on( 'foo', spy2 );
+    this.obj.on( 'foo', spy3 );
+
+    // How do you unbind just a single callback for the event?
+    this.obj.off( 'foo', spy1 );
+    this.obj.trigger( 'foo' );
+
+    ok( spy2.called );
+
+    // How do you unbind all callbacks tied to the event with a single method
+    this.obj.off( 'foo' );
+    this.obj.trigger( 'foo' );
+
+    ok( spy2.callCount, 1 );
+    ok( spy2.calledOnce, "Spy 2 called once" );
+    ok( spy3.calledOnce, "Spy 3 called once" );
+
+    // How do you unbind all callbacks and events tied to the object with a single method?
+    this.obj.off( 'bar' );
+    this.obj.trigger( 'bar' );
+
+    equal( spy1.callCount, 0 );
+});
+```
+
+###App
+
+编写应用启动程序的测试specs也非常有必要。下面的模块，setup中启动和添加了一个TodoApp view，然后测试application内的view是否被正确的定义，view的交互是否触发collections的正确变化。
 
 ```javascript
 module( 'About Backbone Applications' , {
@@ -480,30 +595,22 @@ module( 'About Backbone Applications' , {
 test('Should bootstrap the application by initializing the Collection.', function() {
     expect( 2 );
 
-    // The todos collection should not be undefined
     notEqual( this.App.todos, undefined );
-
-    // The initial length of our todos should however be zero
     equal( this.App.todos.length, 0 );
 });
 
 test( 'Should bind Collection events to View creation.' , function() {
-
-      // Set the value of a brand new todo within the input box
-      $('#new-todo').val( 'Buy some milk' );
-
-      // Trigger the enter (return) key to be pressed inside #new-todo
-      // causing the new item to be added to the todos collection
+      $('#new-todo').val( 'Foo' );
       $('#new-todo').trigger(new $.Event( 'keypress', { keyCode: 13 } ));
 
-      // The length of our collection should now be 1
       equal( this.App.todos.length, 1 );
  });
 ```
 
-## Further Reading & Resources
+##更多阅读和资源
 
-That's it for this section on testing applications with QUnit and SinonJS. I encourage you to try out the [QUnit Backbone.js Koans](https://github.com/addyosmani/backbone-koans-qunit) and see if you can extend some of the examples. For further reading consider looking at some of the additional resources below:
+使用QUnit和SinonJS来测试应用这一节就这么多了。鼓励你尝试下[QUnit Backbone.js Koans](https://github.com/addyosmani/backbone-koans-qunit) 看是否能扩展里面的一些例子。
+可参看下面更多相关阅读资料：
 
 * **[Test-driven JavaScript Development (book)](http://tddjs.com/)**
 * **[SinonJS/QUnit Adapter](http://sinonjs.org/qunit/)**

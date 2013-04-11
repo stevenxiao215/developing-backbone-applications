@@ -1,6 +1,6 @@
-# Backbone Basics
+# Backbone基本构成
 
-In this section, you'll learn the essentials of Backbone's models, views, collections, events, and routers. This isn't by any means a replacement for the official documentation, but it will help you understand many of the core concepts behind Backbone before you start building applications using it.
+在这一章中，你将学习到Backbone的基本元素，models、views、collections和routers。这并不是说这些内容就替代的官方文档，这会在你开始使用它构建应用前帮助你理解Backbone背后的一些核心观念。
 
 ### Getting setup
 
@@ -38,11 +38,11 @@ For Chrome, you can open up the DevTools via the Chrome menu in the top right ha
 Next, switch to the Console tab, from where you can enter in and run any piece of JavaScript code by hitting the return key. You can also use the Console as a multi-line editor using the Ctrl + Enter shortcut to move from the end of one line to the start of another.
  
 
-## Models
+## 模型(Models)
 
-Backbone models contain data for an application as well as the logic around this data. For example, we can use a model to represent the concept of a todo item including its attributes like title (todo content) and completed (current state of the todo).
+Backbone的models包含了应用中的交互是数据，以及数据的相关逻辑。比如，我们可以用一个model来代表一个todo对象，包含了它的标题(todo的内容)，已完成标识(todo当前的状态)。
 
-Models can be created by extending `Backbone.Model` as follows:
+Models可以通过继承`Backbone.Model`来创建：
 
 ```javascript
 var Todo = Backbone.Model.extend({});
@@ -63,9 +63,9 @@ var todo2 = new Todo({
 console.log(JSON.stringify(todo2));
 ```
 
-#### Initialization
+#### 初始化
 
-The `initialize()` method is called when a new instance of a model is created. Its use is optional; however you'll see why it's good practice to use it below.
+`initialize()`方法在当一个model创建一个新的实例是调用。它是可选的，不过你最好像下面这样去使用它，后面你会发现其好处的原因。
 
 ```javascript
 var Todo = Backbone.Model.extend({
@@ -78,9 +78,9 @@ var myTodo = new Todo();
 // Logs: This model has been initialized.
 ```
 
-**Default values**
+**默认值**
 
-There are times when you want your model to have a set of default values (e.g., in a scenario where a complete set of data isn't provided by the user). This can be set using a property called `defaults` in your model.
+当你想给model设置默认属性时(比如，当用户不会提供一份完整的数据时)，可以用`defaults`属性。
 
 ```javascript
 var Todo = Backbone.Model.extend({
@@ -120,7 +120,7 @@ console.log(JSON.stringify(todo3));
 
 **Model.get()**
 
-`Model.get()` provides easy access to a model's attributes.
+`Model.get()`提供了简单的对模型属性的访问。 
 
 ```javascript
 var Todo = Backbone.Model.extend({
@@ -143,7 +143,7 @@ console.log(todo2.get('title')); // Retrieved with model's get() method.
 console.log(todo2.get('completed')); // true
 ```
 
-If you need to read or clone all of a model's data attributes, use its `toJSON()` method. This method returns a copy of the attributes as an object (not a JSON string despite its name). (When `JSON.stringify()` is passed an object with a `toJSON()` method, it stringifies the return value of `toJSON()` instead of the original object. The examples in the previous section took advantage of this feature when they called `JSON.stringify()` to log model instances.)
+如果你想读取或者复制model的所有数据，可以使用它的`toJSON()`方法。这个方法复制其属性作为一个对象返回(不是JSON 字符串，虽然其名字有点像)。(当使用`JSON.stringify()`传入一个对象调用`toJSON()`方法的结果时，它字符串化`toJSON()`的返回值，而不是原始的对象。前面这个例子使用这个特性改进下，调用`JSON.stringify()`来log model的实例。)
 
 ```javascript
 var Todo = Backbone.Model.extend({
@@ -170,7 +170,7 @@ console.log(todo2.toJSON());
 
 **Model.set()**
 
-`Model.set()` sets a hash containing one or more attributes on the model. When any of these attributes alter the state of the model, a "change" event is triggered on it. Change events for each attribute are also triggered and can be bound to (e.g `change:name`, `change:age`).
+`Model.set()`给model设置包含一个或多个属性的hash对象。当这些属性任何一个改变model的状态时，"change"事件就会触发。每个属性的Change事件都可以触发和绑定(比如 `change:name`, `change:age`)。
 
 ```javascript
 var Todo = Backbone.Model.extend({
@@ -222,9 +222,9 @@ console.log(!Person.hasChanged(''));
 
 Remember where possible it is best practice to use `Model.set()`, or direct instantiation as explained earlier.
 
-#### Listening for changes to your model
+#### 监听model的变化
 
-If you want to receive a notification when a Backbone model changes you can bind a listener to the model for its change event. A convenient place to add listeners is in the `initialize()` function as shown below:
+如果你想在Backbone model改变接收到通知可以监听它的change事件。可以在`initialize()`函数中添加监听：
 
 ```javascript
 var Todo = Backbone.Model.extend({
@@ -306,7 +306,7 @@ console.log('Todo set as completed: ' + myTodo.get('completed'));
 
 #### Validation
 
-Backbone supports model validation through `model.validate()`, which allows checking the attribute values for a model prior to setting them. By default, validation occurs when the model is persisted using the `save()` method or when `set()` is called if `{validate:true}` is passed as an argument.
+Backbone支持通过`Model.validate()`对model进行验证，可以在设置model的属性前对值进行校验。默认情况下，验证会在model调用`save()`或者调用`set()`传入`{validate:true}`参数时触发。
 
 ```javascript
 var Person = new Backbone.Model({name: 'Jeremy'});
@@ -369,7 +369,7 @@ console.log('completed: ' + myTodo.get('completed')); // completed: false
 An example of this (by @fivetanley) is available [here](http://jsfiddle.net/2NdDY/7/).
 
 
-## Views
+## 视图(Views)
 
 Views in Backbone don't contain the HTML markup for your application; they contain the logic behind the presentation of the model's data to the user. This is usually achieved using JavaScript templating (e.g., Underscore Microtemplates, Mustache, jQuery-tmpl, etc.). A view's `render()` method can be bound to a model's `change()` event, enabling the view to instantly reflect model changes without requiring a full page refresh.
 

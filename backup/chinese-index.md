@@ -8084,7 +8084,7 @@ test("should call all subscribers when exceptions", function () {
 
 
 
-实践
+练习
 ====================
 
 现在我们可以开始给Todo application写测试specs了，根据组件(比如Models, Collections等)来列举和分隔。需要注意测试的名称，被测试的逻辑，以及最重要的断言，这些都可以让你体会到如何将所学到的应用到一个完整的项目中。

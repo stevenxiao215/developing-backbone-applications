@@ -1,21 +1,21 @@
 #SinonJS
 
-��ǰ��ʹ��Jasmine BDD��ܲ���Backbone.js app���ƣ�����ͨ����TodoӦ��дһЩQUnit������ѧϰ��
+跟前面使用Jasmine BDD框架测试Backbone.js app类似，我们通过给Todo应用写一些QUnit测试来学习。
 
-�����ע�⵽QUnit��֧��spies��Test spies��¼�������쳣���ҷ���ֵ�������ĵ��á�ͨ�����ڲ��Իص����Լ�������α�ʹ�á��ڲ��Կ���У�spies����������Ҳ�����ǰ������еĺ�����
+你可能注意到QUnit不支持spies。Test spies记录参数，异常并且返回值给其它的调用。通常用于测试回调，以及函数如何被使用。在测试框架中，spies可以是匿名也可以是包裹已有的函数。
 
 
-##ʲô��SinonJS?
+##什么是SinonJS?
 
-��QUnit�����ǿ�����Christian Johansen��д��ģ����[SinonJS](http://sinonjs.org/)��֧��spies��ͬʱ��Ҫʹ��[SinonJS-QUnit adapter](http://sinonjs.org/qunit/)����QUnit�����޷켯�ɡ�Sinon.JS ����ȫ����Կ���޹صģ����ҿ������׵����κβ��Կ��һͬʹ�ã����Զ������ǵ��������Ƿǳ������ѡ��
+在QUnit中我们可以用Christian Johansen编写的模拟框架[SinonJS](http://sinonjs.org/)来支持spies。同时还要使用[SinonJS-QUnit adapter](http://sinonjs.org/qunit/)来与QUnit进行无缝集成。Sinon.JS 是完全与测试框架无关的，而且可以容易的与任何测试框架一同使用，所以对于我们的需求它是非常理想的选择。
 
-������֧�������������ǻ��ڵ�Ԫ���������ϣ�
+这个框架支持三项特性我们会在单元测试中用上：
 
-* **����spies**
-* **���(Spying on)���еķ���**
-* **�ḻ�ļ��ӽӿ�**
+* **匿名spies**
+* **监测(Spying on)已有的方法**
+* **丰富的监视接口**
 
-ʹ��```this.spy()```�������κβ����򴴽�һ��������spy��������```jasmine.createSpy()```���Ƚϣ� �����ǻ�����ʹ��SinonJS spy�����ӣ�
+使用```this.spy()```不传入任何参数则创建一个匿名的spy。可以与```jasmine.createSpy()```做比较， 下面是基本的使用SinonJS spy的例子：
 
 ####Basic Spies:
 ```javascript
@@ -30,7 +30,7 @@ test("should call all subscribers for a message exactly once", function () {
 });
 ```
 
-ͬ������ʹ��```this.spy()```�������������������еĺ���(����jQuery��```$.ajax```)����������һ�����к���ʱ�����ĺ�����Ϊ���������һ�����������ǿ��Է��ʵ����õ�����������ڲ��ԡ�
+同样可以使用```this.spy()```来监视下面例子中已有的函数(比如jQuery的```$.ajax```)。当监视了一个已有函数时，它的函数行为跟正常情况一样，但是我们可以访问到调用的相关数据用于测试。
 
 ####Spying On Existing Functions:
 ```javascript
@@ -45,10 +45,10 @@ test( "should inspect jQuery.getJSON's usage of jQuery.ajax", function () {
 });
 ```
 
-SinonJS�ṩ��һ�׷ḻ�ļ��ӽӿڣ����Բ���һ��spy�Ƿ�ʹ��ָ���Ĳ������ã��Ƿ񱻵�����ָ���Ĵ������Լ����Ե���ʱ������ֵ���ӿ�֧�ֵ��������Կ��Կ�����(http://sinonjs.org/docs/)������ͨ��һЩ���������³��õ����ԣ�
+SinonJS提供了一套丰富的监视接口，可以测试一个spy是否使用指定的参数调用，是否被调用了指定的次数，以及测试调用时参数的值。接口支持的完整特性可以看这里(http://sinonjs.org/docs/)，我们通过一些例子来看下常用的特性：
 
 
-####����ƥ�䣺����һ��spy�Ƿ�ʹ��ָ���������ã�
+####参数匹配：测试一个spy是否使用指定参数调用：
 
 ```javascript
 test( "Should call a subscriber with standard matching": function () {
@@ -61,7 +61,7 @@ test( "Should call a subscriber with standard matching": function () {
 });
 ```
 
-####�ϸ�Ĳ���ƥ�䣺����һ��spyʹ��ָ���Ĳ����������������������ٱ�����һ�Σ� 
+####严格的参数匹配：测试一个spy使用指定的参数并且无其它参数，至少被调用一次： 
 
 ```javascript
 test( "Should call a subscriber with strict matching": function () {
@@ -79,7 +79,7 @@ test( "Should call a subscriber with strict matching": function () {
 });
 ```
 
-####���Ե���˳�򣺲���һ��spy�Ƿ�����һ��spy֮ǰ��֮����ã�
+####测试调用顺序：测试一个spy是否在另一个spy之前或之后调用：
 
 ```javascript
 test( "Should call a subscriber and maintain call order": function () {
@@ -97,7 +97,7 @@ test( "Should call a subscriber and maintain call order": function () {
 });
 ```
 
-####ƥ��ִ�д���������һ���Ƿ񱻵�����ָ���Ĵ�����
+####匹配执行次数：测试一个是否被调用了指定的次数：
 
 ```javascript
 test( "Should call a subscriber and check call counts", function () {
@@ -120,17 +120,17 @@ test( "Should call a subscriber and check call counts", function () {
 ```
 
 
-##Stubs��mocks
+##Stubs和mocks
 
-SinonJS��֧������2��ǿ������ԣ�stubs��mocks��stubs��mocks��ʵ����spy API���������ԣ���������д�������ܡ�
+SinonJS还支持另外2个强大的特性：stubs和mocks。stubs和mocks都实现了spy API的所有特性，但是添加写其它功能。
 
 ###Stubs
 
-һ��stub�����������ǰ�ָ���ķ�������Ϊ�滻�������Ķ���������������ģ���쳣�������ڱ�д����Ҫ��������뻹û��дʱ�Ĳ��ԡ�
+一个stub可以允许我们把指定的方法的行为替换成其它的东西。它可以用于模拟异常，常用于编写当必要依赖项代码还没编写时的测试。
 
-�������»ص�Backbone Todo application������һ��Todo model��һ��TodoList collection����Ϊ��ʾ�����ǰ�TodoList collection�������룬����Todo model�����������µ�models�ᷢ��ʲô��
+我们重新回到Backbone Todo application，包含一个Todo model和一个TodoList collection。作为演示，我们把TodoList collection单独隔离，仿造Todo model来测试添加新的models会发生什么。
 
-����models��û�б�д�ã���ʾ��stubbing��ν��С�һ������model���õ�collection��ǣ�
+假设models并没有编写好，仅示范stubbing如何进行。一个包含model引用的collection外壳：
 
 ```javascript
 var TodoList = Backbone.Collection.extend({
@@ -141,19 +141,19 @@ var TodoList = Backbone.Collection.extend({
 this.todoList;
 ```
 
-����collection��������ʵ����models��������ҪΪ�������stub models�Ĺ��캯��������������������
+假设collection自身可以实例化models，我们需要为这个测试stub models的构造函数。可以像下面这样：
 
 ```javascript
 this.todoStub = sinon.stub( window, "Todo" );
 ```
 
-������window�ϴ�����һ��Todo������stub����stubbingһ���־ö���ʱ�����ܻ���Ҫ�ָ���ԭʼ״̬������ʹ��```teardown()``` ��
+上面在window上创建了一个Todo方法的stub。当stubbing一个持久对象时，可能还需要恢复其原始状态。可以使用```teardown()``` ：
 
 ```javascript
 this.todoStub.restore();
 ```
 
-Ȼ��������Ҫ�ı�������캯���ķ��أ�ʹ����ʵ��```Backbone.Model```����������Ȼ������һ��Todo model�������������ṩ��һ��ʵ�ʵ�Backbone model��
+然后，我们需要改变这个构造函数的返回，使用真实的```Backbone.Model```构造器。虽然它不是一个Todo model，但它给我们提供了一个实际的Backbone model。
 
 
 ```javascript
@@ -166,13 +166,13 @@ teardown: function() {
 });
 ```
 
-�����������������δ������ȷ��TodoList collection����ʵ����stubbed Todo model������collection�Ѿ�����һ��model�����ã�������Ҫ����������collection��model���ԣ�
+这里的期望可能是这段代码可以确保TodoList collection总是实例化stubbed Todo model，不过collection已经存在一个model的引用，我们需要重新设置下collection的model属性：
 
 ```javascript
 this.todoList.model = Todo;
 ```
 
-�������Ľ�����ǣ���TodoList collectionʵ�����µ�Todo modelsʱ�����᷵�ظ�����һ��������Backbone model�������дһ��spec���������������model��
+这样做的结果就是，当TodoList collection实例化新的Todo models时，它会返回给我们一个纯净的Backbone model。下面编写一个spec测试下添加字面的model：
 
 ```javascript
 module( "Should function when instantiated with model literals", {
@@ -215,9 +215,9 @@ test("should find a model by id", function() {
 
 ###Mocks
 
-Mocksʵ���ϸ�stubsһ�����������ǻ�ģ�³�������API�������ʹ��������һЩ���õ������� mockҲspy�����������Ϊ����ʹ�õ�expectations��Ԥ����ģ�������κβ����ͻ�ʧ�ܡ�
+Mocks实际上跟stubs一样，不过它们会模仿出完整的API并且如何使用它们有一些内置的期望。 mock也spy的区别就是因为它们使用的expectations是预定义的，如果有任何不符就会失败。
 
-���и�����PubSubJSʹ��mock�����ӡ���һ��`clearTodo()` ������Ϊ�ص���ʹ��mocks��У��������Ϊ��
+这有个基于PubSubJS使用mock的例子。有一个`clearTodo()` 方法做为回调，使用mocks来校验它的行为。
 ```javascript
 test("should call all subscribers when exceptions", function () {
     var myAPI = { clearTodo: function () {} };
@@ -237,23 +237,23 @@ test("should call all subscribers when exceptions", function () {
 
 
 
-��ϰ
+练习
 ====================
 
-�������ǿ��Կ�ʼ��Todo applicationд����specs�ˣ��������(����Models, Collections��)���оٺͷָ�����Ҫע����Ե����ƣ������Ե��߼����Լ�����Ҫ�Ķ��ԣ���Щ������������ᵽ��ν���ѧ����Ӧ�õ�һ����������Ŀ�С�
+现在我们可以开始给Todo application写测试specs了，根据组件(比如Models, Collections等)来列举和分隔。需要注意测试的名称，被测试的逻辑，以及最重要的断言，这些都可以让你体会到如何将所学到的应用到一个完整的项目中。
 
-���⣬�����㿴��`practicals\qunit-koans`Ŀ¼�µ�QUnit Koans - ������Ϊ��ƪ���½�Jasmine Koansת������QUnit��
+另外，建议你看下`practicals\qunit-koans`目录下的QUnit Koans - 这是我为这篇文章将Jasmine Koans转换成了QUnit。
 
-*����㻹û�г��Թ�Koans kits������һ��ʹ���ض����Կ�ܵĵ�Ԫ���ԣ�չʾ�����Ϊһ��application��дһ��specs��ͬʱҲ����һЩû�����Ĳ�����Ϊ��ϰ��*
+*如果你还没有尝试过Koans kits，它是一组使用特定测试框架的单元测试，展示了如何为一个application编写一组specs，同时也留了一些没有填充的测试作为练习。*
 
 ###Models
 
-����model������Ҫ�������漸�㣺
+对于model我们需要测试下面几点：
 
-* ����ʹ��������Ĭ��ֵ����ʵ��
-* ���Կ������������úͻָ�
-* ״̬�ĸı�����Ҫʱ������ȷ�Ĵ����Զ����¼�
-* ��֤������ȷ��ִ��
+* 可以使用期望的默认值创建实例
+* 属性可以正常的设置和恢复
+* 状态的改变在需要时可以正确的触发自定义事件
+* 验证规则正确的执行
 
 ```javascript
 module( 'About Backbone.Model');
@@ -318,11 +318,11 @@ test('Can contain custom validation rules, and will trigger an error event on fa
 
 ###Collections
 
-����collection����Ҫ���Ե����漸�㣺
+对于collection我们要测试到下面几点：
 
-* ���������µ�Todo model������߶�������顣
-* models�ı仯�ᴥ����Ҫ���Զ����¼���
-* ����models�ṹ��Ӧ��`url`��������ȷ�ġ�
+* 可以添加新的Todo model对象或者对象的数组。
+* models的变化会触发必要的自定义事件。
+* 定义models结构对应的`url`属性是正确的。
 
 
 ```javascript
@@ -377,13 +377,13 @@ test('Fires custom named events when the models change.', function() {
 
 ###Views
 
-����views����Ҫȷ�����漸�㣺
+对于views我们要确保下面几点：
 
-* ����ʱ����ȷ�İ󶨵�DOMԪ�ء�
-* view��ÿ��DOM�ɼ�֮�����Ⱦ��
-* ֧��view������DOMԪ�ؼ�����ӡ�
+* 创建时被正确的绑定到DOM元素。
+* view的每个DOM可见之后会渲染。
+* 支持view方法与DOM元素间的连接。
 
-Ҳ���Խ�һ������������view�Ľ�����Ϊ����ȷ����models��Ҫ�ĸ��¡�
+也可以进一步测试用于与view的交互行为会正确触发models必要的更新。
 
 
 ```javascript
@@ -450,15 +450,15 @@ asyncTest('Can wire up view methods to DOM elements.', function() {
 
 ###Events
 
-�����¼���������Ҫ��һЩ��һ���Ĳ���������
+对于事件，我们需要做一些不一样的测试用例：
 
-* ��չ������֧���Զ����¼�
-* �󶨺ʹ���������Զ����¼�
-* ���¼�����ʱ�ò��������ص�����
-* ��һ������������İ󶨵�һ���¼��Ļص�
-* �Ƴ��Զ����¼�
+* 扩展纯对象，支持自定义事件
+* 绑定和触发对象的自定义事件
+* 当事件触发时让参数经过回调函数
+* 把一个传入的上下文绑定到一个事件的回调
+* 移除自定义事件
 
-����һЩ����ϸ�ڽ��������ģ���У�
+还有一些其它细节将会在面的模块中：
 
 ```javascript
 module( 'About Backbone.Events', {
@@ -576,7 +576,7 @@ test('Also can remove custom events from objects.', function() {
 
 ###App
 
-��дӦ����������Ĳ���specsҲ�ǳ��б�Ҫ�������ģ�飬setup��������������һ��TodoApp view��Ȼ�����application�ڵ�view�Ƿ���ȷ�Ķ��壬view�Ľ����Ƿ񴥷�collections����ȷ�仯��
+编写应用启动程序的测试specs也非常有必要。下面的模块，setup中启动和添加了一个TodoApp view，然后测试application内的view是否被正确的定义，view的交互是否触发collections的正确变化。
 
 ```javascript
 module( 'About Backbone Applications' , {
@@ -607,10 +607,10 @@ test( 'Should bind Collection events to View creation.' , function() {
  });
 ```
 
-##�����Ķ�����Դ
+##更多阅读和资源
 
-ʹ��QUnit��SinonJS������Ӧ����һ�ھ���ô���ˡ������㳢����[QUnit Backbone.js Koans](https://github.com/addyosmani/backbone-koans-qunit) ���Ƿ�����չ�����һЩ���ӡ�
-�ɲο������������Ķ����ϣ�
+使用QUnit和SinonJS来测试应用这一节就这么多了。鼓励你尝试下[QUnit Backbone.js Koans](https://github.com/addyosmani/backbone-koans-qunit) 看是否能扩展里面的一些例子。
+可参看下面更多相关阅读资料：
 
 * **[Test-driven JavaScript Development (book)](http://tddjs.com/)**
 * **[SinonJS/QUnit Adapter](http://sinonjs.org/qunit/)**

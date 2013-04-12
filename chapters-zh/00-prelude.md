@@ -2,29 +2,30 @@
 
 ![](img/logo.jpg)
 
-Not so long ago, "data-rich web application" was an oxymoron. Today, these applications are everywhere and you need to know how to build them.
+以前，"富数据web应用"还是一种很矛盾的说法。今天，这中应用随处可见，以至于我们不得不掌握如何去构建它们。
 
-Traditionally, web applications left the heavy-lifting of data to servers that pushed HTML to the browser in complete page loads. The use of client-side JavaScript was limited to improving the user experience. Now this relationship has been inverted - client applications pull raw data from the server and render it into the browser when and where it is needed.
+传统方式，web应用把繁重的数据放到服务器端处理然后在完整的页面载入后把HTML推向浏览器。客户端的JavaScript对于提升用户体验所做的事情非常有限。现在这种关系反过来了——客户端应用再需要的时候从服务器端拉去原始数据然后渲染到浏览器。
 
-Think of the Ajax shopping cart which doesn't require a refresh on the page when adding an item to your basket. Initially, jQuery became the go-to library for this paradigm. It's nature was to make Ajax requests then update text on the page and so on. However, this pattern with jQuery revealed that we have implicit model data on the client side. With the server no longer being the only place that knows about our item count, it was a hint that there was a natural tension and pull of this evolution. 
+想下那个Ajax的购物车，当添加商品到篮子里时不需要刷新页面。最初，jQuery成为处理这类范例的热门库。它的原理就是通过Ajax请求然后更新页面中的文本和其它内容。不过，这种使用jQuery的模式在客户端暗含里数据模型。服务器不再是唯一知道商品数量的地方了，it was a hint that there was a natural tension and pull of this evolution. 
 
-The rise of arbitrary code on the client-side which can talk to the server however it sees fit has meant an increase in client-side complexity. Good architecture on the client has gone from an afterthought to essential - you can't just hack together some jQuery code and expect it to scale as your application grows. Most likely, you would end up with a nightmarish tangle of UI callbacks entwined with business logic, destined to be discarded by the poor soul who inherits your code.
+随着客户端与服务器端交互的代码变多，客户端将变得跟加复杂。对客户端的一个经过深思的良好的架构已是必不可少了—— 你不能仅仅是缩减一些jQuery代码以期望能适应应用的增长。最有可能的是，UI的回调与业务逻辑纠缠在一起最终给你带来是一个噩梦，你的代码命中注定要被接手的那个倒霉鬼丢弃掉。
 
-Thankfully, there are a growing number of JavaScript libraries that can help improve the structure and maintainability of your code, making it easier to build ambitious interfaces without a great deal of effort. [Backbone.js](http://documentcloud.github.com/backbone/) has quickly become one of the most popular open-source solutions to these issues and in this book we will take you through an in-depth walkthrough of it.
+幸好，现在逐渐有很多JavaScript库可以帮助你改进代码的架构并且让代码更有可维护性，不用费太大力气就可以轻易的构建出绚丽的界面。[Backbone.js](http://documentcloud.github.com/backbone/) 很快成为非常流程的解决这种问题的方案之一，这本书我将带你深入了解它。
 
-Begin with the fundamentals, work your way through the exercises, and learn how to build an application that is both cleanly organized and maintainable. If you are a developer looking to write code that can be more easily read, structured, and extended - this guide can help.
+从基本原理开始，通过练习实践，学习如何构建结构清晰可维护的应用。如果你是一个开发者想知道如何编写易阅读，有组织，易扩展的代码——这本教程将对你有所帮助。
 
-Improving developer education is important to me, which is why this book is released under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported [license](http://creativecommons.org/licenses/by-nc-sa/3.0/). This means you can purchase or grab a copy of the book for [free](http://addyosmani.github.com/backbone-fundamentals/) or help to further [improve](https://github.com/addyosmani/backbone-fundamentals/) it. Corrections to existing material are always welcome and I hope that together we can provide the community with an up-to-date resource that is of help. 
+对我来说改善开发者的培养更为重要，这就是为什么这本书将遵循署名-非商业性使用-相同方式共享 3.0[协议](http://creativecommons.org/licenses/by-nc-sa/3.0/cn/)发布。这就意味着你可以免费获取这本书的[拷贝](http://addyosmani.github.com/backbone-fundamentals/) 或者帮助(改进)(https://github.com/addyosmani/backbone-fundamentals/)它。 也非常欢迎修正原文中的素材，希望我们能一起为开发社区提供最新的资源帮助。
 
-My extended thanks go out to [Jeremy Ashkenas](https://github.com/jashkenas) and [DocumentCloud](documentcloud.org) for creating Backbone.js and [these](https://github.com/addyosmani/backbone-fundamentals/contributors) members of the community for their assistance making this project far better than I could have imagined.
 
-## Target Audience
+另外非常感谢 [Jeremy Ashkenas](https://github.com/jashkenas) 创建Backbone.js，[DocumentCloud](documentcloud.org)，以及[这些](https://github.com/addyosmani/backbone-fundamentals/contributors)社区成员的帮助，使得这个项目远比我想像中的要好。
 
-This book is targeted at novice to intermediate developers wishing to learn how to better structure their client-side code. An understanding of JavaScript fundamentals is required to get the most out of it, however we have tried to provide a basic description of these concepts where possible.
+## 面向读者
 
-## Acknowledgements
+这本书面向的那些希望学习如何更好的构建客户端代码的中级开发者。已掌握JavaScript的基本原理和知识，不过必要的时候会在文中做些基本的描述。
 
-I am indebted to the fantastic work done by the technical reviewers who helped review and improve this book. Their knowledge, energy, and passion have helped shape it into a better learning resource and they continue to serve as a source of inspiration. Thanks go out to:
+## 致谢
+
+我非常感激那些技术评审人员及其给力的工作，帮助校对和改进这本书。他们的知识，精力和激情促使这本书成文更好的学习资源and they continue to serve as a source of inspiration. Thanks go out to:
 
 * [Marc Friedman](https://github.com/dcmaf)
 * [Derick Bailey](https://github.com/derickbailey)
@@ -37,7 +38,7 @@ I am indebted to the fantastic work done by the technical reviewers who helped r
 
 I would also like to thank my loving family for their patience and support while I worked on this book, as well as my brilliant editor Mary Treseler.
 
-## Credits
+## 相关人员
 
 None of this work would have been possible without the time and effort invested by the other developers and authors in the community who helped contribute to it. I would like to extend my thanks to: 
 
@@ -51,7 +52,7 @@ None of this work would have been possible without the time and effort invested 
 
 as well as our other excellent [contributors](https://github.com/addyosmani/backbone-fundamentals/graphs/contributors) that made this project possible.
 
-## Reading
+## 阅读
 
 I assume your level of knowledge about JavaScript goes beyond the basics and as such certain topics such as object literals are skipped. If you need to learn more about the language, I am happy to suggest:
 

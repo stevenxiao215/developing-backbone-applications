@@ -1,55 +1,55 @@
 # Unit Testing
 
-One definition of unit testing is the process of taking the smallest piece of testable code in an application, isolating it from the remainder of your codebase, and determining if it behaves exactly as expected.
+单元测试的定义就是把整个应用中小片可测试的代码从代码库中隔离，然后检验它的行为是否跟期望的一致。
 
-For an application to be considered 'well-tested', each function should ideally have its own separate unit tests where it's tested against the different conditions you expect it to handle. All tests must pass before functionality is considered 'complete'. This allows developers to both modify a unit of code and its dependencies with a level of confidence about whether these changes have caused any breakage.
+一个被称为'好'测试的应用，很明显功能上应该有分开的单元测试，以验证不同情况下它的正确性。所有测试应该在功能完成之前介入。这可以让开发者修改一块代码的时候通过单元测试确认他的修改是否会引发问题，建立代码质量的信心。
 
-A basic example of unit testing is where a developer asserts that passing specific values to a sum function results in the correct value being returned. For an example more relevant to this book, we may wish to assert that adding a new Todo item to a list correctly adds a Model of a specific type to a Todos Collection.
+一个最基本的单元测试例子，开发者想要断言传入指定的value給一个sum函数其返回结果是否正确。与我们这本书有关的例子就是，我们想要断言一个用户添加一个新的Todo项到列表中，是否添加了一个指定类型的Model到Todos Collection。
 
-When building modern web-applications, it's typically considered best-practice to include automated unit testing as a part of your development process. In the following chapters we are going to look at three different solutions for unit testing your Backbone.js apps - Jasmine, QUnit and SinonJS.
+构建现代的web应用时，通常认为最好的实践方式是在开发过程中引入自动的单元测试。这里我们关注下使用Jasmine的方案，当然也有很多其它选择值得考虑，包括QUnit。
 
 # Jasmine
 
-## Behavior-Driven Development
+## 行为-驱动开发
 
-In this section, we'll be taking a look at how to unit test Backbone applications using a popular JavaScript testing framework called [Jasmine](http://pivotal.github.com/jasmine/) from Pivotal Labs.
+这一节，我们会讲述如何使用一个流行的测试框架[Jasmine](http://pivotal.github.com/jasmine/)来测试Backbone应用，这个框架来自Pivotal Labs。
 
-Jasmine describes itself as a behavior-driven development (BDD) framework for testing JavaScript code. Before we jump into how the framework works, it's useful to understand exactly what [BDD](http://en.wikipedia.org/wiki/Behavior_Driven_Development) is.
+Jasmine自称是一个用于测试JavaScript代码的行为-驱动开发(Behavior-Driven Development，BDD)的框架。在开始使用这个框架之前，我们先来弄清楚下什么是[BDD](http://en.wikipedia.org/wiki/Behavior_Driven_Development)。
 
-BDD is a second-generation testing approach first described by [Dan North](http://dannorth.net/introducing-bdd/) (the authority on BDD) which attempts to test the behavior of software. It's considered second-generation as it came out of merging ideas from Domain driven design (DDD) and lean software development. BDD helps teams deliver high-quality software by answering many of the more confusing questions early on in the agile process. Such questions commonly include those concerning documentation and testing.
+BDD是一种第二代测试方法，由[Dan North](http://dannorth.net/introducing-bdd/) (BDD方面的权威)首次定义，它是试图测试软件的行为。称之为第二代是因为其想法来自于领域驱动设计(Domain driven design，DDD)和精益软件开发，通过在敏捷过程中回答许多令人困惑的问题来帮助团队产出高质量软件。这类问题通常包含相关文档和测试。
 
-If you were to read a book on BDD, it's likely that it would be described as being 'outside-in and pull-based'. The reason for this is that it borrows the idea of 'pulling features' from Lean manufacturing which effectively ensures that the right software solutions are being written by a) focusing on the expected outputs of the system and b) ensuring these outputs are achieved.
+如果阅读过一本关于BDD的书籍，有可能它会被描述成'由外及内的、基于拉(pull)的(outside-in and pull-based)'。原因就是它从精益生产借鉴了pull特性， 通过a) 注重系统的预期输出(outputs),b) 确保这些输出被达到，这2两点有效的确保开发出正确的软件方案。
 
-BDD recognizes that there are usually multiple stakeholders in a project and not a single amorphous user of the system. These different groups will be affected by the software being written in differing ways and will have varying opinions of what quality in the system means to them. It's for this reason that it's important to understand who the software will be bringing value to and exactly what in it will be valuable to them.
+BDD提出在一个项目中通常有多元利益体并且系统不是只有一个单一的无形用户。这些不同的群体，将会以不同的形式影响所编写的软件，而且软件系统的质量对于他们的意义他们有不同的理解。所以，要明白对于这个软件谁会给你带来价值以及软件会给他们带来什么价值，这点非常重要。
 
-Finally, BDD relies on automation. Once you've defined the quality expected, your team will want to check on the functionality of the solution being built regularly and compare it to the results they expect. In order to facilitate this efficiently, the process has to be automated. BDD relies heavily on the automation of specification-testing and Jasmine is a tool which can assist with this.
+最后，BDD依赖于自动化。一旦定义好你期望的质量，你的团队可能就会定期的检查正在做的功能是否与他们期望的一致。为了促进效率，这个过程需要自动完成。BDDIn order to facilitate this efficiently, the process has to be automated. BDD严重依赖于自动规格测试，而Jasmine正好是一个做这件事的工具。
 
-BDD helps both developers and non-technical stakeholders:
-
-
-* Better understand and represent the models of the problems being solved
-* Explain supported test cases in a language that non-developers can read
-* Focus on minimizing translation of the technical code being written and the domain language spoken by the business
-
-What this means is that developers should be able to show Jasmine unit tests to a project stakeholder and (at a high level, thanks to a common vocabulary being used) they'll ideally be able to understand what the code supports.
-
-Developers often implement BDD in unison with another testing paradigm known as [TDD](http://en.wikipedia.org/wiki/Test-driven_development) (test-driven development). The main idea behind TDD is using the following development process:
-
-1. Write unit tests which describe the functionality you would like your code to support
-2. Watch these tests fail (as the code to support them hasn't yet been written)
-3. Write code to make the tests pass
-4. Rinse, repeat, and refactor
-
-In this chapter we're going to use BDD (with TDD) to write unit tests for a Backbone application.
-
-***Note:*** I've seen a lot of developers also opt for writing tests to validate behavior of their code after having written it. While this is fine, note that it can come with pitfalls such as only testing for behavior your code currently supports, rather than the behavior needed to fully solve the problem.
+BDD可以帮助开发者和非技术的利益相关者做到：
 
 
-## Suites, Specs, & Spies
+* 更好的理解和提出解决问题的模式
+* 把测试用例以非开发人员也能读懂的方式解释清楚
+* 着眼于最小化编写的技术代码到业务表达语言之间的转换。
 
-When using Jasmine, you'll be writing suites and specifications (specs). Suites basically describe scenarios while specs describe what can be done in these scenarios.
+这就意味着开发者要把Jasmine单元测试给项目的利益相关者做展示，然后他们在观念上要理解代码的用途。
 
-Each spec is a JavaScript function, described with a call to ```it()``` using a description string and a function. The description should describe the behaviour the particular unit of code should exhibit and, keeping in mind BDD, it should ideally be meaningful. Here's an example of a basic spec:
+开发者经常跟另外一种测试方法[TDD](http://en.wikipedia.org/wiki/Test-driven_development) (test-driven development)一样来实施BDD。TDD背后的主要观点：
+
+* 编写单元测试描述你的代码想要支持的功能
+* 看着这些测试失败(因为要支持这些功能的代码写好)
+* 编写代码让测试通过
+* 清理，重复和重构
+
+这一章我们将会用这两种方式(BDD和TDD)来为Backbone应用编写单元测试。
+
+***提示*** 我看到很多开发者仍然是在完成编码之后才编写测试来做验证。虽然这也还不错，不过容易调入陷入，它只能测试到你现在代码所支持的行为，而不一定完整包含我们原本设计需要支持的功能。
+
+
+##Suites, Specs & Spies
+
+使用Jasmine时，要编写suites(套件)和specs(specifications，规格说明)。Suites主要描述场景，specs描述在这些场景l里要做些什么。
+
+每个spec就是一个一个JavaScript函数，调用```it()```来描述，传入一个描述字符串和一个function。描述语要描述出指定单元代码的展现结果，牢记BDD的观念，表述应该有意义。下面是一个简单的例子：
 
 ```javascript
 it('should be incrementing in value', function(){
@@ -58,7 +58,7 @@ it('should be incrementing in value', function(){
 });
 ```
 
-On its own, a spec isn't particularly useful until expectations are set about the behavior of the code. Expectations in specs are defined using the ```expect()``` function and an [expectation matcher](https://github.com/pivotal/jasmine/wiki/Matchers) (e.g., ```toEqual()```, ```toBeTruthy()```, ```toContain()```). A revised example using an expectation matcher would look like:
+就其本身而言，一个spec如果没有设置行为代码的期望结果就没有什么用处了。使用```expect()```函数和[expectation matcher](https://github.com/pivotal/jasmine/wiki/Matchers) (比如```toEqual()```, ```toBeTruthy()```, ```toContain()```)来定义期望结果。示例：
 
 ```javascript
 it('should be incrementing in value', function(){
@@ -68,11 +68,11 @@ it('should be incrementing in value', function(){
 });
 ```
 
-The above code passes our behavioral expectation as ```counter``` equals 1. Notice how easy it was to read the expectation on the last line (you probably grokked it without any explanation).
+上面代码中对```counter```的期望值要等于1。这种代码读起来非常简单(凭直觉就可以理解了，无需任何解释)。
 
-Specs are grouped into suites which we describe using Jasmine's ```describe()``` function, again passing a string as a description and a function as we did for ```it()```. The name/description for your suite is typically that of the component or module you're testing.
+一组Specs就构成了suites，通过Jasmine的```describe()```函数定义，传入一个描述字符串和一个函数。suite的名称或者描述通常是需要测试的组件或者模块。
 
-Jasmine will use the description as the group name when it reports the results of the specs you've asked it to run. A simple suite containing our sample spec could look like:
+Jasmine会把它作为给出报告时运行specs的分组名称。下面是一个简单的示例：
 
 ```javascript
 describe('Stats', function(){
@@ -86,7 +86,7 @@ describe('Stats', function(){
 });
 ```
 
-Suites also share a functional scope, so it's possible to declare variables and functions inside a describe block which are accessible within specs:
+Suites共享一个函数域，所以可以在describe函数内声明变量， specs里的函数也可以访问到：
 
 ```javascript
 describe('Stats', function(){
@@ -106,11 +106,11 @@ describe('Stats', function(){
 });
 ```
 
-***Note:*** Suites are executed in the order in which they are described, which can be useful to know if you would prefer to see test results for specific parts of your application reported first.
+***提示：*** Suites是按其定义的顺序执行，如果你要看整个应用测试报告的某个特定部分的测试结果，这可能非常有用。
 
-Jasmine also supports **spies** - a way to mock, spy, and fake behavior in our unit tests. Spies replace the function they're spying on, allowing us to simulate behavior we would like to mock (i.e., test without using the actual implementation).
+Jasmine同样支持**spies(监视)** ——在单元测试中一种模仿，监视，和伪造行为的方法。Spies会替换它们监视的函数，可以模仿我们想要伪造的行为。
 
-In the example below, we're spying on the ```setComplete``` method of a dummy Todo function to test that arguments can be passed to it as expected.
+在下面这个例子中，我们用一个虚拟的Todo function监视```setComplete```方法，测试传入的参数是否符合期望。
 
 ```javascript
 var Todo = function(){
@@ -137,75 +137,55 @@ describe('a simple spy', function(){
 });
 ```
 
-You are more likely to use spies for testing [asynchronous](http://en.wikipedia.org/wiki/Asynchronous_communication) behavior in your application such as AJAX requests. Jasmine supports:
+更有可能会用到spies的地方是测试[asynchronous(异步)](http://en.wikipedia.org/wiki/Asynchronous_communication)行为，比如AJAX请求。Jasmine支持：
 
-* Writing tests which can mock AJAX requests using spies. This allows us to test both the code that initiates the AJAX request and the code executed upon its completion. It's also possible to mock/fake the server responses. The benefit of this type of testing is that it's faster as no real calls are being made to a server. The ability to simulate any response from the server is also of great benefit.
-* Asynchronous tests which don't rely on spies
+* 使用spies模仿AJAX请求来编写测试。可以在AJAX请求之前和请求之后运行测试代码。也可以伪造服务器端的响应，这种类型的测试好处就是更快，不需要等待实际的服务器调用。
+* 异步测试部需要依赖spies
 
-This example of the first kind of test shows how to fake an AJAX request and verify that the request was both calling the correct URL and executed a callback where one was provided.
+第一种测试，可以伪造AJAX请求，验证请求的URL是否正确以及执行回调，如果有的话。
 
 ```javascript
-it('the callback should be executed on success', function () {
-
-    // `andCallFake()` calls a passed function when a spy
-    // has been called
-    spyOn($, 'ajax').andCallFake(function(options) {
+it("the callback should be executed on success", function () {
+    spyOn($, "ajax").andCallFake(function(options) {
         options.success();
     });
 
-    // Create a new spy
     var callback = jasmine.createSpy();
-
-    // Exexute the spy callback if the
-    // request for Todo 15 is successful
     getTodo(15, callback);
 
-    // Verify that the URL of the most recent call
-    // matches our expected Todo item.
-    expect($.ajax.mostRecentCall.args[0]['url']).toEqual('/todos/15');
-
-    // `expect(x).toHaveBeenCalled()` will pass if `x` is a
-    // spy and was called.
+    expect($.ajax.mostRecentCall.args[0]["url"]).toEqual("/todos/15");
     expect(callback).toHaveBeenCalled();
 });
 
 function getTodo(id, callback) {
     $.ajax({
-        type: 'GET',
-        url: '/todos/'' + id,
-        dataType: 'json',
+        type: "GET",
+        url: "/todos/" + id,
+        dataType: "json",
         success: callback
     });
 }
 ```
 
-All of these are Spy-specific matchers and are documented on the Jasmine [wiki](https://github.com/pivotal/jasmine/wiki/Spies).
+```andCallFake()```，```toHaveBeenCalled()```是匹配方法，所有Spy可用的匹配方法可以看Jasmine [wiki](https://github.com/pivotal/jasmine/wiki/Spies)。
 
-For the second type of test (asynchronous tests), we can take the above further by taking advantage of three other methods Jasmine supports:
+第二种测试(异步测试)，我们可以用Jasmine支持的下面这三个方法对前面的例子做些改进：
 
-* [waits(timeout)](https://github.com/pivotal/jasmine/wiki/Asynchronous-specs) - a native timeout before the next block is run
-* [waitsFor(function, optional message, optional timeout)](https://github.com/pivotal/jasmine/wiki/Asynchronous-specs) - a way to pause specs until some other work has completed. Jasmine waits until the supplied function returns true here before it moves on to the next block.
-* [runs(function)](https://github.com/pivotal/jasmine/wiki/Asynchronous-specs) - a block which runs as if it was directly called. They exist so that we can test asynchronous processes. 
+* runs(function) - 立即运行一个代码块
+* waits(timeout) - 下一个代码块执行前等待一段时间
+* waitsFor(function, optional message, optional timeout)——暂停specs知道某些工作完成。Jasmine会等待这里提供的函数返回true然后再继续执行下一块代码。
+
 
 ```javascript
-it('should make an actual AJAX request to a server', function () {
+it("should make an actual AJAX request to a server", function () {
 
-    // Create a new spy
     var callback = jasmine.createSpy();
-
-    // Exexute the spy callback if the
-    // request for Todo 16 is successful
     getTodo(16, callback);
 
-    // Pause the spec until the callback count is
-    // greater than 0
     waitsFor(function() {
         return callback.callCount > 0;
     });
 
-    // Once the wait is complete, our runs() block
-    // will check to ensure our spy callback has been
-    // called
     runs(function() {
         expect(callback).toHaveBeenCalled();
     });
@@ -213,19 +193,19 @@ it('should make an actual AJAX request to a server', function () {
 
 function getTodo(id, callback) {
     $.ajax({
-        type: 'GET',
-        url: 'todos.json',
-        dataType: 'json',
+        type: "GET",
+        url: "todos.json",
+        dataType: "json",
         success: callback
     });
 }
 ```
 
-***Note:*** It's useful to remember that when making real requests to a web server in your unit tests, this has the potential to massively slow down the speed at which tests run (due to many factors including server latency). As this also introduces an external dependency that can (and should) be minimized in your unit testing, it is strongly recommended that you opt for spies to remove the dependency on a web server.
+***提示：*** 当在单元测试中创建真实的服务器端请求时，会极大的拖慢测试运行的速度(有很多因素，包括服务器延迟)。同时也引入了外部依赖，原本可以(也应该要)最小化你的单元测试，所以强烈推荐你选择spies，避免使用真实的服务器端调用。
 
 ## beforeEach() and afterEach()
 
-Jasmine also supports specifying code that can be run before each (```beforeEach()```) and after each (```afterEach()```) test. This is useful for enforcing consistent conditions (such as resetting variables that may be required by specs). In the following example, ```beforeEach()``` is used to create a new sample Todo model which specs can use for testing attributes.
+Jasmine同样支持在每个测试之前(```beforeEach()```)或者之后(```afterEach```)执行特定的代码。这对强制为一致的条件非常有用(比如重置specs引入的变量)。下面这个例子中，```beforeEach()```中创建一个specs用于测试属性的Todo model。
 
 ```javascript
 beforeEach(function(){
@@ -240,7 +220,7 @@ it('should contain a text value if not the default value', function(){
 });
 ```
 
-Each nested ```describe()``` in your tests can have their own ```beforeEach()``` and ```afterEach()``` methods which support including setup and teardown methods relevant to a particular suite. 
+每个```describe()```中都可嵌套自己的```beforeEach()```和```afterEach()```方法，支持对应suite相关的setup和teardown方法。
 
 
 
@@ -357,105 +337,134 @@ describe("Todo tests", function(){
 });
 ```
 
-In the previous section you may have noticed that we initially declared ```this.todo``` within the scope of our ```beforeEach()``` call and were then able to continue using this reference in ```afterEach()```. 
+前面你可能注意到```beforeEach()```调用中我们定义了一个变量```this.todo```，然后在```afterEach()```也可以继续使用它。这要归功于Jasmine的共享函数域。共享域可以让所有块(包括```runs()```)访问的```this```的属性都是相同的，除了声明的变量之外(```var```声明的变量)。
 
-This is again down to shared function scope, which allows such declaractions to be common to all blocks (including ```runs()```). 
+##获取安装
 
-Variables declared outside of the shared scope (i.e within the local scope `var todo=...`) will however not be shared.
+现在我们来分析下基本原理，先下载Jasmine并且做好编写测试前的准备。
 
-## Getting set up
+官方独立版本可以从这里[下载](https://github.com/pivotal/jasmine/downloads)。
 
-Now that we've reviewed some fundamentals, let's go through downloading Jasmine and getting everything set up to write tests.
+下载到的包中还有一个SpecRunner.html文件。 Jasmine代码仓库可以从用git从这里获取https://github.com/pivotal/jasmine.git。
 
-A standalone release of Jasmine can be [downloaded](https://github.com/pivotal/jasmine/downloads) from the official release page.
+我们来看下SpecRunner.html文件(下面示例代码可能相对于新版本的Jasmine较老了)：
 
-You'll need a file called SpecRunner.html in addition to the release. It can be downloaded from https://github.com/pivotal/jasmine/tree/master/lib/jasmine-core/example or as part of a download of the complete Jasmine [repo](https://github.com/pivotal/jasmine/zipball/master). Alternatively, you can ```git clone``` the main Jasmine repository from https://github.com/pivotal/jasmine.git.
-
-Let's review [SpecRunner.html.jst](https://github.com/pivotal/jasmine/blob/master/lib/templates/SpecRunner.html.jst):
-
-It first includes both Jasmine and the necessary CSS required for reporting:
-
-    <link rel="stylesheet" type="text/css" href="lib/jasmine-<%= jasmineVersion %>/jasmine.css">
-    <script type="text/javascript" src="lib/jasmine-<%= jasmineVersion %>/jasmine.js"></script>
-    <script type="text/javascript" src="lib/jasmine-<%= jasmineVersion %>/jasmine-html.js"></script>
-    <script type="text/javascript" src="lib/jasmine-<%= jasmineVersion %>/boot.js"></script>
-
-Next come the sources being tested:
-
-    <!-- include source files here... -->
-    <script type="text/javascript" src="src/Player.js"></script>
-    <script type="text/javascript" src="src/Song.js"></script>
-
-Finally, some sample tests are included:
-
-    <!-- include spec files here... -->
-    <script type="text/javascript" src="spec/SpecHelper.js"></script>
-    <script type="text/javascript" src="spec/PlayerSpec.js"></script>
+首先引入Jasmine和必要用于report的css：
 
 
-***Note:*** Below this section of SpecRunner is code responsible for running the actual tests. Given that we won't be covering modifying this code, I'm going to skip reviewing it. I do however encourage you to take a look through [PlayerSpec.js](https://github.com/pivotal/jasmine/blob/master/lib/jasmine-core/example/spec/PlayerSpec.js) and [SpecHelper.js](https://github.com/pivotal/jasmine/blob/master/lib/jasmine-core/example/spec/SpecHelper.js). They're a useful basic example to go through how a minimal set of tests might work.
+	<link rel="stylesheet" type="text/css" href="lib/jasmine-1.1.0.rc1/jasmine.css"/>
+	<script type="text/javascript" src="lib/jasmine-1.1.0.rc1/jasmine.js"></script>
+	<script type="text/javascript" src="lib/jasmine-1.1.0.rc1/jasmine-html.js"></script>
 
-Also note that for the purposes of introduction, some of the examples in this section will be testing aspects of Backbone.js itself, just to give you a feel for how Jasmine works. You generally will not need to write testing ensuring a framework is working as expected.
+
+然后，引入一些测试：
 
 
-## TDD With Backbone
+	<script type="text/javascript" src="spec/SpecHelper.js"></script>
+	<script type="text/javascript" src="spec/PlayerSpec.js"></script>
 
-When developing applications with Backbone, it can be necessary to test both individual modules of code as well as models, views, collections, and routers. Taking a TDD approach to testing, let's review some specs for testing these Backbone components using the popular Backbone [Todo](https://github.com/addyosmani/todomvc/tree/master/todo-example/backbone) application. 
+
+最后是需要被测试的代码：
+
+
+	<script type="text/javascript" src="src/Player.js"></script>
+	<script type="text/javascript" src="src/Song.js"></script>
+
+
+***提示：*** SpecRunner后面的代码是负责运行测试。 这里不做分析，鼓励你看看PlayerSpec.js和SpecHelper.js的代码。这是个如何做一组测试的很好的例子。
+
+##TDD With Backbone
+
+当使用Backbone开发应用时，需要测试个别的模块代码同时也要测试models, views, collections和routers。采用TDD测试方法，我们来看下测试Backbone [Todo](https://github.com/addyosmani/todomvc/tree/gh-pages/architecture-examples/backbone)这个示例项目中Backbone组件的一些specs。这一节我们将使用一个由Larry Myers修改版本的Backbone Koans项目， 在`practicals\jasmine-koans`目录下。
 
 ## Models
 
-The complexity of Backbone models can vary greatly depending on what your application is trying to achieve. In the following example, we're going to test default values, attributes, state changes, and validation rules.
+Backbone models的复杂程度完全依赖于应用要实现的功能。下面例子中，我们将测试默认值，属性，状态改变，和验证规则。
 
-First, we begin our suite for model testing using ```describe()```:
+首先，使用```describe()```创建suite：
 
 ```javascript
 describe('Tests for Todo', function() {
 ```
 
-Models should ideally have default values for attributes. This helps ensure that when creating instances without a value set for any specific attribute, a default one (e.g., an empty string) is used instead. The idea here is to allow your application to interact with models without any unexpected behavior.
+Model的属性理想上应该有默认值。可以确保创建实例时未指定值的话可以使用默认值替代。这里的意思主要是与models交互是可以避免一些意外的行为。
 
-In the following spec, we create a new Todo without any attributes passed then check to find out what the value of the ```text``` attribute is. As no value has been set, we expect a default value of `''` to be returned.
+下面这个spec，创建一个Todo没有传入任何属性，然后检查下```text```属性的值是什么。因为没有设置任何值，所以我们期望的值是返回```""```。
 
 ```javascript
 it('Can be created with default values for its attributes.', function() {
     var todo = new Todo();
-    expect(todo.get('text')).toBe('');
+    expect(todo.get('text')).toBe("");
 });
 ```
 
-If testing this spec before your models have been written, you'll incur a failing test, as expected. What's required for the spec to pass is a default value for the attribute ```text```. We can set this and some other useful defaults (which we'll be using shortly) in our Todo model as follows:
+如果你在编写model前测试这个spec的话，会引发失败。这个spec需要传入一个```text```属性的默认值。示例：
 
 ```javascript
+
 window.Todo = Backbone.Model.extend({
 
     defaults: {
-      text: '',
+      text: "",
       done:  false,
       order: 0
     }
+
 ```
 
-Next, it is common to include validation logic in your models to ensure that input passed from users or other modules in the application are valid.
-
-A Todo app may wish to validate the text input supplied in case it contains rude words. Similarly if we're storing the ```done``` state of a Todo item using booleans, we need to validate that truthy/falsy values are passed and not just any arbitrary string.
-
-In the following spec, we take advantage of the fact that validations which fail model.validate() trigger an "invalid" event. This allows us to test if validations are correctly failing when invalid input is supplied.
-
-We create an errorCallback spy using Jasmine's built in ```createSpy()``` method which allows us to spy on the invalid event as follows:
+接下来，我们测试下model在初始化之后会把属性值设为传入的值。另外也测试下其它几个属性的默认值是否是我们期望的。
 
 ```javascript
-it('Can contain custom validation rules, and will trigger an invalid event on failed validation.', function() {
+it('Will set passed attributes on the model instance when created.', function() {
+    var todo = new Todo({ text: 'Get oil change for car.' });
 
-    var errorCallback = jasmine.createSpy('-invalid event callback-');
+    // what are the values expected here for each of the
+    // attributes in our Todo?
+
+    expect(todo.get('text')).toBe("Get oil change for car.");
+    expect(todo.get('done')).toBe(false);
+    expect(todo.get('order')).toBe(0);
+});
+```
+Backbone models支持model.change()事件，当model的状态改变时触发。下面这个例子中，通过设置Todo model属性值来改变它的'state(状态)'，状态改变的原因非常值得测试，因为应用中可能有状态依赖的事件，比如当model被修改时想要显示一个确认视图。
+
+```javascript
+it('Fires a custom event when the state changes.', function() {
+
+    var spy = jasmine.createSpy('-change event callback-');
 
     var todo = new Todo();
 
-    todo.on('invalid', errorCallback);
+    // how do we monitor changes of state?
+    todo.on('change', spy);
+
+    // what would you need to do to force a change of state?
+    todo.set({ text: 'Get oil change for car.' });
+
+    expect(spy).toHaveBeenCalled();
+});
+```
+
+通常在model中引入验证逻辑来确保来自用户的输入(或者其它模块)是有效的'(valid)'。Todo app可能会验证text输入框输入进来的内容没有粗鲁的单词。 同样的，
+当保存Todo项```done```状态时，需要验证传入的值是true/false， 而不是字符串。
+
+在下面的spec中，我们用了一些是验证失败的值，让model.validate()触发"error"事件。检验一下传入无效值是是否会真的触发失败。
+
+使用Jasmine内置```createSpy()```方法创建一个errorCallback spy，就可以检测error事件了：
+
+```javascript
+it('Can contain custom validation rules, and will trigger an error event on failed validation.', function() {
+
+    var errorCallback = jasmine.createSpy('-error event callback-');
+
+    var todo = new Todo();
+
+    todo.on('error', errorCallback);
 
     // What would you need to set on the todo properties to
     // cause validation to fail?
 
-    todo.set({done:'a non-boolean value'});
+    todo.set({done:'a non-integer value'});
 
     var errorArgs = errorCallback.mostRecentCall.args;
 
@@ -465,8 +474,7 @@ it('Can contain custom validation rules, and will trigger an invalid event on fa
 });
 
 ```
-
-The code to make the above failing test support validation is relatively simple. In our model, we override the validate() method (as recommended in the Backbone docs), checking to make sure a model both has a 'done' property and that its value is a valid boolean before allowing it to pass.
+要让上面这段失败测试代码支持验证非常简单。这个model中，我们重写validate()方法(像Backbone文档推荐的那样)，检查model有'done'属性并且给它传入值时是一个合法的布尔值。
 
 ```javascript
 validate: function(attrs) {
@@ -476,9 +484,14 @@ validate: function(attrs) {
 }
 ```
 
-If you would like to review the final code for our Todo model, you can find it below:
+这个完整的Todo model代码如下：
 
 ```javascript
+var NAUGHTY_WORDS = /crap|poop|hell|frogs/gi;
+
+function sanitize(str) {
+    return str.replace(NAUGHTY_WORDS, 'rainbows');
+}
 
 window.Todo = Backbone.Model.extend({
 
@@ -489,7 +502,7 @@ window.Todo = Backbone.Model.extend({
     },
 
     initialize: function() {
-        this.set({text: this.get('text')}, {silent: true});
+        this.set({text: sanitize(this.get('text'))}, {silent: true});
     },
 
     validate: function(attrs) {
@@ -499,7 +512,7 @@ window.Todo = Backbone.Model.extend({
     },
 
     toggle: function() {
-        this.save({done: !this.get('done')});
+        this.save({done: !this.get("done")});
     }
 
 });
@@ -508,17 +521,17 @@ window.Todo = Backbone.Model.extend({
 
 ## Collections
 
-We now need to define specs to test a Backbone collection of Todo models (a TodoList). Collections are responsible for a number of list tasks including managing order and filtering.
+现在我们需要定义specs来测试Backbone Todo model的collection(一个TodoList)。Collections处理列表的排序，过滤等。
 
-A few specific specs that come to mind when working with collections are:
+测试collections时可能会有下面这些明确的specs：
 
-* Making sure we can add new Todo models as both objects and arrays
-* Attribute testing to make sure attributes such as the base URL of the collection are values we expect
-* Purposefully adding items with a status of ```done:true``` and checking against how many items the collection thinks have been completed vs. those that are remaining
+* 可以添加新的Todo model对象或者对象的数组。
+* 属性测试，确保类似collection的base URL是我们期望的值。
+* 有意的添加状态```done:true```的todo项， 然后检查collection认为已完成项的数量和未完成项的数量。
 
-In this section we're going to cover the first two of these with the third left as an extended exercise you can try on your own.
+这一节我们只会讲到前2个问题，第三个问题作为读者的扩着练习。
 
-Testing that Todo models can be added to a collection as objects or arrays is relatively trivial. First, we initialize a new TodoList collection and check to make sure its length (i.e., the number of Todo models it contains) is 0. Next, we add new Todos, both as objects and arrays, checking the length property of the collection at each stage to ensure the overall count is what we expect:
+测试Todo models可通过一个对象或者数组来添加相对简单。首先，初始化一个TodoList collection，确保其长度为0。然后，添加新的Todos，对象和数组两种情况都添加一次，然后检查collection的length属性是否符合期望值：
 
 ```javascript
 describe('Tests for TodoList', function() {
@@ -544,7 +557,7 @@ describe('Tests for TodoList', function() {
 ...
 ```
 
-Similar to model attributes, it's also quite straight-forward to test attributes in collections. Here we have a spec that ensures the collection url (i.e., the url reference to the collection's location on the server) is what we expect it to be:
+跟model的属性一样，测试collections的属性也非常简单。下面是一个简单的测试collection.url的spec例子：
 
 ```javascript
 it('Can have a url property to define the basic url structure for all contained models.', function() {
@@ -556,9 +569,9 @@ it('Can have a url property to define the basic url structure for all contained 
 
 ```
 
-For the third spec (which you will write as an exercise), note that the implementation for our collection will have methods for filtering how many Todo items are done and how many are remaining - we'll call these ```done()``` and ```remaining()```. Consider writing a spec which creates a new collection and adds one new model that has a preset ```done``` state of ```true``` and two others that have the default ```done``` state of ```false```. Testing the length of what's returned using ```done()``` and ```remaining()``` will tell us whether the state management in our application is working or needs a little tweaking.
+对于第三个spec，collection会实现``done()```和```remaining()```方法，分别过滤已完成Todo项和未完成项。编写一个spec，创建一个collection，添加一个```done```状态为为```true```的model，2个```done```状态为```false```的model。然后测试调用```done()```和```remaining()```方法返回的结果的length，看是否正常。
 
-The final implementation for our TodoList collection can be found below:
+TodoList collection实现代码可以像下面这样：
 
 
 ```javascript
@@ -594,32 +607,33 @@ The final implementation for our TodoList collection can be found below:
 
 ## Views
 
-Before we take a look at testing Backbone views, let's briefly review a jQuery plugin that can assist with writing Jasmine specs for them.
+在开始测试Backbone views前，先简短的来看一个编写Jasmine specs的jQuery plugin。
 
 **The Jasmine jQuery Plugin**
 
-As we know our Todo application will be using jQuery for DOM manipulation, there's a useful jQuery plugin called [jasmine-jquery](https://github.com/velesin/jasmine-jquery) we can use to help simplify BDD testing of the rendering performed by our views.
+Todo application使用jQuery来做DOM操作，有一个[jasmine-jquery](https://github.com/velesin/jasmine-jquery) 插件可以帮助简化BDD测试view创建的元素。
 
-The plugin provides a number of additional Jasmine [matchers](https://github.com/pivotal/jasmine/wiki/Matchers) to help test jQuery-wrapped sets such as:
 
-* ```toBe(jQuerySelector)``` e.g., ```expect($('<div id="some-id"></div>')).toBe('div#some-id')```
-* ```toBeChecked()``` e.g., ```expect($('<input type="checkbox" checked="checked"/>')).toBeChecked()```
-* ```toBeSelected()``` e.g., ```expect($('<option selected="selected"></option>')).toBeSelected()```
+这个插件提供了很多额外的Jasmine [matchers](https://github.com/pivotal/jasmine/wiki/Matchers) 以帮助测试jQuery包装的sets：
 
-and [many others](https://github.com/velesin/jasmine-jquery). The complete list of matchers supported can be found on the project homepage. It's useful to know that similar to the standard Jasmine matchers, the custom matchers above can be inverted using the .not prefix (i.e ```expect(x).not.toBe(y)```):
+* ```toBe(jQuerySelector)```示例 ： ```expect($('<div id="some-id"></div>')).toBe('div#some-id')```
+* ```toBeChecked()``` 示例：```expect($('<input type="checkbox" checked="checked"/>')).toBeChecked()```
+* ```toBeSelected()``` 示例 ```expect($('<option selected="selected"></option>')).toBeSelected()```
+
+更多可以参看 [这里](https://github.com/velesin/jasmine-jquery)。它支持的完整matchers可以在项目主页上找到。它跟标准的Jasmine matchers类似，上面的matchers可以加.not前缀反过来使用(比如```expect(x).not.toBe(y)```)：
 
 ```javascript
 expect($('<div>I am an example</div>')).not.toHaveText(/other/)
 ```
 
-jasmine-jquery also includes a fixtures module that can be used to load arbitrary HTML content we wish to use in our tests. Fixtures can be used as follows:
+jasmine-jquery同时包含一个固定装置模型(fixtures model)，可以加载任意HTML内容到时候。可以像下面这样使用：
 
-Include some HTML in an external fixtures file:
+在一个外部文件中包含一段HTML：
 
 some.fixture.html:
 ```<div id="sample-fixture">some HTML content</div>```
 
-Then inside our actual test we would load it as follows:
+然后，实际测试时想下面这样载入：
 
 ```javascript
 loadFixtures('some.fixture.html')
@@ -627,9 +641,9 @@ $('some-fixture').myTestedPlugin();
 expect($('#some-fixture')).to<the rest of your matcher would go here>
 ```
 
-The jasmine-jquery plugin loads fixtures from a directory named spec/javascripts/fixtures by default. If you wish to configure this path you can do so by initially setting ```jasmine.getFixtures().fixturesPath = 'your custom path'```.
+jasmine-jquery插件默认会从一个特定目录加载fixtures：spec/javascripts/fixtures。如果想配置这个路径的话在初始化设置中```jasmine.getFixtures().fixturesPath = 'your custom path'```。
 
-Finally, jasmine-jquery includes support for spying on jQuery events without the need for any extra plumbing work. This can be done using the ```spyOnEvent()``` and ```assert(eventName).toHaveBeenTriggered(selector)``` functions. For example:
+最后，jasmine-jquery包含对jQuery事件spying的支持，而且不需要什么额外的工作。可使用```spyOnEvent()```和```assert(eventName).toHaveBeenTriggered(selector)```方法来完成。下面是一个示例：
 
 ```javascript
 spyOnEvent($('#el'), 'click');
@@ -637,15 +651,16 @@ $('#el').click();
 expect('click').toHaveBeenTriggeredOn($('#el'));
 ```
 
-### View testing
 
-In this section we will review the three dimensions of specs writing for Backbone Views: initial setup, view rendering, and templating. The latter two of these are the most commonly tested, however we'll see shortly why writing specs for the initialization of your views can also be of benefit.
+### View测试
 
-#### Initial setup
+这一小节我们从三个维度来看下编写Backbone Views的specs：初始化，view渲染和模板生成。后两个跟通常的测试差不多，不过我会简短的说下为什么对views的初始化编写specs也是有好处的。
 
-At their most basic, specs for Backbone views should validate that they are being correctly tied to specific DOM elements and are backed by valid data models. The reason to consider doing this is that these specs can identify issues which will trip up more complex tests later on. Also, they're fairly simple to write given the overall value offered.
+#### 初始化
 
-To help ensure a consistent testing setup for our specs, we use ```beforeEach()``` to append both an empty ```<ul>``` (#todoList) to the DOM and initialize a new instance of a TodoView using an empty Todo model. ```afterEach()``` is used to remove the previous #todoList  ```<ul>``` as well as the previous instance of the view.
+最基本的，为Backbone views写的specs需要验证view被正确的绑定到指定的DOM元素，被有效的数据model支持。考虑这样做的原因是，如果这些specs失败的话会导致后面一些更复杂的测试也失败，而且这些specs写起来比较简单，可以提供一个整体的价值。
+
+为确保一致的测试配置条件，使用```beforeEach()```追加一个空的```UL``` (#todoList)到DOM并且用一个空的Todo model初始化一个TodoView实例。在```afterEach()```中移除前面的#todoList  ```UL```和view实例。
 
 ```javascript
 describe('Tests for TodoView', function() {
@@ -664,9 +679,9 @@ describe('Tests for TodoView', function() {
 ...
 ```
 
-The first spec useful to write is a check that the TodoView we've created is using the correct ```tagName``` (element or className). The purpose of this test is to make sure it's been correctly tied to a DOM element when it was created.
+第一个spec就是检查我们创建的TodoView使用了正确的```tagName```(元素或者className)。目的就是确保创建时正确的绑定到DOM元素。
 
-Backbone views typically create empty DOM elements once initialized, however these elements are not attached to the visible DOM in order to allow them to be constructed without an impact on the performance of rendering.
+Backbone views通常一旦初始化会创建一些空的DOM元素，不过这些元素不会附加到可见的DOM中， 目的是在不影响性能和渲染的情况下让他们构建出来。
 
 ```javascript
 it('Should be tied to a DOM element when created, based off the property provided.', function() {
@@ -675,15 +690,15 @@ it('Should be tied to a DOM element when created, based off the property provide
 });
 ```
 
-Once again, if the TodoView has not already been written, we will experience failing specs. Thankfully, solving this is as simple as creating a new Backbone.View with a specific ```tagName```.
+如果TodoView还没编写好的话，specs就会失败。通过指定```tagName```创建一个Backbone.View。
 
 ```javascript
 var todoView = Backbone.View.extend({
-    tagName:  'li'
+    tagName:  "li"
 });
 ```
 
-If instead of testing against the ```tagName``` you would prefer to use a className instead, we can take advantage of jasmine-jquery's ```toHaveClass()``` matcher:
+也可以通过测试className来替代```tagName```，可以使用更高级的jasmine-jquery matcher ```toHaveClass()```来完成。
 
 ```
 it('Should have a class of "todos"'), function(){
@@ -691,9 +706,9 @@ it('Should have a class of "todos"'), function(){
 });
 ```
 
-The ```toHaveClass()``` matcher operates on jQuery objects and if the plugin hadn't been used, an exception would have been thrown. It is of course also possible to test for the className by accessing el.className if you don't use jasmine-jquery.
+```toHaveClass()``` matcher对jQuery操作，而且如果没有使用这个插件的话就会引发异常(如果没有使用jasmine-jquery插件也可通过获取el.className来判断)。
 
-You may have noticed that in ```beforeEach()```, we passed our view an initial (albeit unfilled) Todo model. Views should be backed by a model instance which provides data. As this is quite important to our view's ability to function, we can write a spec to ensure a model is defined (using the ```toBeDefined()``` matcher) and then test attributes of the model to ensure defaults both exist and are the values we expect them to be.
+你可能注意到```beforeEach()```中我们传入里一个新创建的Todo给view。Views应该基于一个有数据的model实例。因为它对view的功能非常重要，我们可以写一个spec来确保model是一定义(使用```toBeDefined()``` matcher) 并且测试model有默认属性，而且是我们期望的值。
 
 ```javascript
 it('Is backed by a model instance, which provides the data.', function() {
@@ -705,40 +720,41 @@ it('Is backed by a model instance, which provides the data.', function() {
 });
 ```
 
-#### View rendering
+
+#### View渲染
 
 
-Next we're going to take a look at writing specs for view rendering. Specifically, we want to test that our TodoView elements are actually rendering as expected.
+接下来看下给view渲染编写specs。特别是，我们想测试下TodoView实际被渲染出来的元素是否符合期望。
 
-In smaller applications, those new to BDD might argue that visual confirmation of view rendering could replace unit testing of views. The reality is that when dealing with applications that might grow to a large number of views, it makes sense to automate this process as much as possible from the get-go. There are also aspects of rendering that require verification beyond what is visually presented on-screen (which we'll see very shortly).
+对于小的额applications，有些BDD新手认为视觉上确认view的渲染可以替代view的单元测试。实际上，开发的应用可能变成多视个view时，通常从开端就劲量让这个过程自动化。同样也有aspects来验证屏幕上所看到的渲染效果。
 
-We're going to begin testing views by writing two specs. The first spec will check that the view's ```render()``` method is correctly returning the view instance, which is necessary for chaining. Our second spec will check that the HTML produced is exactly what we expect based on the properties of the model instance that's been associated with our TodoView.
+我们编写两个spec来测试view。第一个测试检车view的```render()```方法正确的返回view实例，可以用于链式调用。第二个测试检查生成的HTML是基于TodoView相关联的mode实例的属性所期望的结果。
 
-Unlike some of the previous specs we've covered, this section will make greater use of ```beforeEach()``` to both demonstrate how to use nested suites and also ensure a consistent set of conditions for our specs. In our first example we're simply going to create a sample model (based on Todo) and instantiate a TodoView with it.
+不同于前面我们写的specs，这一节我们会大量使用```beforeEach()```彰显如何使用嵌套的suites，以及确保specs的条件一致。第一个TodoView的spec，将创建一个简单的model (基于Todo)，然后用这个model初始化一个TodoView。
 
 ```javascript
-describe('TodoView', function() {
+describe("TodoView", function() {
 
   beforeEach(function() {
     this.model = new Backbone.Model({
-      text: 'My Todo',
+      text: "My Todo",
       order: 1,
       done: false
     });
     this.view = new TodoView({model:this.model});
   });
 
-  describe('Rendering', function() {
+  describe("Rendering", function() {
 
-    it('returns the view object', function() {
+    it("returns the view object", function() {
       expect(this.view.render()).toEqual(this.view);
     });
 
-    it('produces the correct HTML', function() {
+    it("produces the correct HTML", function() {
       this.view.render();
 
-      // let's use jasmine-jquery's toContain() to avoid
-      // testing for the complete content of a todo's markup
+      //let's use jasmine-jquery's toContain() to avoid
+      //testing for the complete content of a todo's markup
       expect(this.view.el.innerHTML)
         .toContain('<label class="todo-content">My Todo</label>');
     });
@@ -748,12 +764,9 @@ describe('TodoView', function() {
 });
 ```
 
+这些specs一旦运行，只有第二个('produces the correct HTML')失败。第一个spec ('returns the view object')，测试```render()```返回的TodoView实例， 可以通过因为这是Backbone的默认行为。我们并没有重写```render()```方法。
 
-When these specs are run, only the second one ('produces the correct HTML') fails. Our first spec ('returns the view object'), which is testing that the TodoView instance is returned from ```render()```, passes since this is Backbone's default behavior and we haven't overwritten the ```render()``` method with our own version yet.
-
-**Note:** For the purposes of maintaining readability, all template examples in this section will use a minimal version of the following Todo view template. As it's relatively trivial to expand this, please feel free to refer to this sample if needed:
-
-
+**提示：** 为了维护可读性，这一节中所有的模板例子都将使用下面这个最小化版本的Todo view模板。需要使用时可以返回来查看：
 
 	<div class="todo <%= done ? 'done' : '' %>">
 	        <div class="display">
@@ -768,31 +781,49 @@ When these specs are run, only the second one ('produces the correct HTML') fail
 
 
 
-The second spec fails with the following message:
+第二个spec失败会有下面这段提示：
 
 ```Expected '' to contain '<label class="todo-content">My Todo</label>'.```
 
-The reason for this is the default behavior for render() doesn't create any markup. Let's write a replacement for render() which fixes this:
+原因是render()的默认行为不创建任何标签。我们来编写一个替代的render()来解决它：
 
 ```javascript
 render: function() {
-  var template = '<label class="todo-content">+++PLACEHOLDER+++</label>';
+  var template = '<label class="todo-content"><%= text %></label>';
   var output = template
-    .replace('+++PLACEHOLDER+++', this.model.get('text'));
+    .replace("<%= text %>", this.model.get('text'));
   this.$el.html(output);
   return this;
 }
 ```
 
-The above specifies an inline string template and replaces fields found in the template within the "+++PLACEHOLDER+++" blocks with their corresponding values from the associated model. As we're also returning the TodoView instance from the method, the first spec will still pass.
+上面指定了一行模板字符串，然后用model对应的属性值替换"<% %>"区域内的内容。同时也返回TodoView实例，所以第一个spec也可以通过。像这样在spec中使用HTML字符串来进行测试有非常大的缺点。即便是模板微小的变化(一个tab或者空格符)就会导致spec失败，即便渲染结果是一样的。实际应用中模板也会更复杂，将耗费更多的时间去维护。更好的测试渲染输出结果的方法是使用jQuery来选择和检查。
 
-It would be impossible to discuss unit testing without mentioning fixtures. Fixtures typically contain test data (e.g., HTML) that is loaded in when needed (either locally or from an external file) for unit testing. So far we've been establishing jQuery expectations based on the view's el property. This works for a number of cases, however, there are instances where it may be necessary to render markup into the document. The most optimal way to handle this within specs is through using fixtures (another feature brought to us by the jasmine-jquery plugin).
-
-Re-writing the last spec to use fixtures would look as follows:
+基于这个思想，我们来重写这个spec，使用jasmine-jquery提供的自定义matchers：
 
 
 ```javascript
-describe('TodoView', function() {
+describe("Template", function() {
+
+  beforeEach(function() {
+    this.view.render();
+  });
+
+  it("has the correct text content", function() {
+    expect(this.view.$('.todo-content'))
+      .toHaveText('My Todo');
+  });
+
+});
+```
+
+讨论单元测试不提到fixtures是不可能的。Fixtures通常包含单元测试当需要时(可以是本地或者从外部文件)载入的测试数据(比如HTML)。 一直以来我们都是把jQuery的期望建立在view的el属性上。大部分情况这是有效的，不过，有时我们需要把标签渲染到document。再specs中处理这个问题的最理想方式就是使用fixtures (jasmine-jquery插件带给我们的另外一个特性)。
+
+使用fixtures重写上面这个spec：
+
+
+```javascript
+describe("TodoView", function() {
 
   beforeEach(function() {
     ...
@@ -801,13 +832,13 @@ describe('TodoView', function() {
 
   ...
 
-  describe('Template', function() {
+  describe("Template", function() {
 
     beforeEach(function() {
       $('.todos').append(this.view.render().el);
     });
 
-    it('has the correct text content', function() {
+    it("has the correct text content", function() {
       expect($('.todos').find('.todo-content'))
         .toHaveText('My Todo');
     });
@@ -817,13 +848,13 @@ describe('TodoView', function() {
 });
 ```
 
-What we're now doing in the above spec is appending the rendered todo item into the fixture. We then set expectations against the fixture, which may be something desirable when a view is setup against an element which already exists in the DOM. It would be necessary to provide both the fixture and test the ```el``` property correctly picking up the element expected when the view is instantiated.
+在上面这个spec中，把渲染的todo元素append到fixture。然后对这个fixture设置期望，当view对应到一个已经存在的DOM元素之后的一些desirable。有必要提供fixture和测试当view初始化的时候```el```属性是否指向正确的元素。
 
 
-#### Rendering with a templating system
+#### 使用模板系统进行渲染
 
 
-When a user marks a Todo item as complete (done), we may wish to provide them with visual feedback (such as a striked line through the text) to differentiate the item from those that are remaining. This can be done by attaching a new class to the item. Let's begin by writing a test:
+当一个用户设置一个Tood项为完成(done)是，我们期望给他一点视觉上的反馈(比如文本上加一条横线)以区分其余的的项。可以通过给这个项附加一个class来实现。下面开始编写测试：
 
 
 ```javascript
@@ -842,13 +873,14 @@ describe('When a todo is done', function() {
 });
 ```
 
-This will fail with the following message:
+这样会失败，并引发下面消息：
 
 ```Expected '<label class="todo-content">My Todo</label>'
 to have class 'done'.
 ```
 
-which can be fixed in the existing render() method as follows:
+
+可以在render()方法中解决：
 
 
 ```javascript
@@ -865,14 +897,13 @@ render: function() {
 }
 ```
 
+不过，很快它就会变得不那么方便了。随着模板中逻辑的增加，它就会变得越复杂。我们可以通过使用模板库轻易的解决这个问题。有许多模板库也能很好的与测试方案一起配合的很好，比如Jasmine。
 
-However, this can get unwieldily fairly quickly. As the level of complexity and logic in our templates increase, so do the challenges associated with testing them. We can ease this process by taking advantage of modern templating libraries, many of which have already been demonstrated to work well with testing solutions such as Jasmine. 
+JavaScript模板系统(比如Handlebars, Mustache 以及Underscore的Micro-templating)在模板字符串中支持条件逻辑。这就意味着我们可以一行字符串内使用if/else/三元表单时，可以构建更强大的模板。
 
-JavaScript templating systems (such as [Handlebars](http://handlebarsjs.com/), [Mustache](http://mustache.github.com/), and Underscore's own [micro-templating](http://underscorejs.org/#template)) support conditional logic in template strings. What this effectively means is that we can add if/else/ternery expressions inline which can then be evaluated as needed, allowing us to build even more powerful templates.
+在我们的案例中，这里我们选择Underscore内置的Microtemplating，不需要添加额外额文件，而且对现有specs也不需要做太多的修改。
 
-In our case, we are going to use the micro-templating found in Underscore.js as no additional files are required to use it and we can easily modify our existing specs to use it without a great deal of effort.
-
-Assuming our template is defined using a script tag of ID `myTemplate`:
+假设模板定义在ID `myTemplate`的script标签中:
 
 ```
 <script type="text/template" id="myTemplate">
@@ -889,7 +920,7 @@ Assuming our template is defined using a script tag of ID `myTemplate`:
 </script>
 ```
 
-Our TodoView can be modified to use Underscore templating as follows:
+TodoView可以使用Underscore模板修改成下面这样:
 
 ```javascript
 var TodoView = Backbone.View.extend({
@@ -964,16 +995,16 @@ beforeEach(function() {
 This will now also pass without any issues, however as mentioned, this last approach probably only makes sense if you're working with smaller, highly dynamic templates. 
 
 
-## Conclusions
+## 总结
 
-We have now covered how to write Jasmine tests for Backbone.js models, collections, and views. While testing routing can at times be desirable, some developers feel it can be more optimal to leave this to third-party tools such as Selenium, so do keep this in mind.
+现在我们已经讨论如何为Backbone.js应用中的models, views和collections编写Jasmine测试。虽然测试路由(routing)有时是可取的，有些开发者认为它可以由第三方工具更好的完成比如Selenium，所以请记住这点。
 
-## Exercise
+## 练习
 
-As an exercise, I recommend now trying the Jasmine Koans in `practicals\jasmine-koans` and trying to fix some of the purposefully failing tests it has to offer. This is an excellent way of not just learning how Jasmine specs and suites work, but working through the examples (without peeking back) will also put your Backbone skills to the test too.
+A作为练习，推荐大家尝试下Jasmine Koans，在`practicals\jasmine-joans`目录下，然后尝试fix一些里面有意提供的失败的测试。这是一种很好的了解Jasmine specs 和 suites工作原理和学习Backbone技巧的方式。
 
 
-## Further reading
+## 扩展阅读
 * [Testing Backbone Apps With SinonJS](http://tinnedfruit.com/2011/04/26/testing-backbone-apps-with-jasmine-sinon-3.html) by James Newbry
 * [Jasmine + Backbone Revisited](http://japhr.blogspot.com/2011/11/jasmine-backbonejs-revisited.html)
 * [Backbone, PhantomJS and Jasmine](http://japhr.blogspot.com/2011/12/phantomjs-and-backbonejs-and-requirejs.html)
